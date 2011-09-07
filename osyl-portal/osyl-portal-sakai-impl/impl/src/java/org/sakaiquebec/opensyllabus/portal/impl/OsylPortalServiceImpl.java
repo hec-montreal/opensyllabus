@@ -207,11 +207,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 			    createCODirectorySite(canonicalCourse);
 		    if (coSite != null) {
 			boolean accepted = false;
-			if ((!isNull(program)
-				&& !isNull(responsible)
-				&& (program.equals("ALL") || isFoundField(
-					program, coSite.getProgram())) && isFoundField(
-				responsible, coSite.getResponsible()))) {
+			if ((program.equals("ALL") || isFoundField(program, coSite.getProgram()) 
+				&& (responsible.equals("ALL") || isFoundField(responsible, coSite.getResponsible())))) {
 			    // 0 0 0 0
 			    if (isNull(courseNumber) && isNull(courseTitle)
 				    && isNull(instructor) && isNull(trimester)) {
