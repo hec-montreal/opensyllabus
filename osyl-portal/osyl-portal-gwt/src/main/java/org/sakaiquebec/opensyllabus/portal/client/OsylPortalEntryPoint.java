@@ -42,6 +42,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -172,6 +173,7 @@ public class OsylPortalEntryPoint implements EntryPoint,
 	    l.addClickHandler(new ClickHandler() {
 
 		public void onClick(ClickEvent event) {
+		    view.setViewKey("NavigationHomePage");	    
 		    changeLocale(locale, view.getViewKey());
 		}
 
@@ -179,24 +181,26 @@ public class OsylPortalEntryPoint implements EntryPoint,
 	    l.setStylePrimaryName("Portal_link");
 	    localePanel.add(l);
 	}
-	localePanel.setStylePrimaryName("NHP_localePanel");
-	
-	//Search link
+
+	// Search link
 	Label lblVoid = new HTML("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 	localePanel.add(lblVoid);
-	Label lblSearch = new Label(PortalController.getInstance().getMessage("button_search"));
+	Label lblSearch =
+		new Label(PortalController.getInstance().getMessage(
+			"button_search"));
 	lblSearch.addClickHandler(new ClickHandler() {
-    
-	public void onClick(ClickEvent event) {
-	    	CODirectorySite site;
-	    	site = new CODirectorySite();
+
+	    public void onClick(ClickEvent event) {
+		CODirectorySite site = new CODirectorySite();
 		setView(new ArchivesPage(site));
 	    }
 	});
-	
+
 	lblSearch.setStylePrimaryName("Portal_link");
 	localePanel.add(lblSearch);
-	
+
+	localePanel.setStylePrimaryName("NHP_localePanel");
+
 	VerticalPanel vp = new VerticalPanel();
 	vp.add(localePanel);
 	vp.add(view);
