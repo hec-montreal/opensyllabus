@@ -77,11 +77,11 @@ public class OsylPortalServiceImpl implements OsylPortalService {
     private Map<String, List<CODirectorySite>> courseListByAcadCareerMap;
 
     private Map<String, List<CODirectorySite>> courseListByResponsibleMap;
-   
+
     private List<CODirectorySite> courseListByFields;
 
     private List<String> currentSessions;
-    
+
     private String webappDir = System.getProperty("catalina.home")
 	    + File.separator + "webapps" + File.separator
 	    + "osyl-portal-sakai-tool" + File.separator;// Ugly but don't know
@@ -108,9 +108,9 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    UserDirectoryService userDirectoryService) {
 	this.userDirectoryService = userDirectoryService;
     }
-    
+
     private OsylSecurityService osylSecurityService;
-    
+
     public void setOsylSecurityService(OsylSecurityService osylSecurityService) {
 	this.osylSecurityService = osylSecurityService;
     }
@@ -189,7 +189,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		}
 	    }
 	}
-	courseListByAcadCareerMap = temp_courseListByAcadCareerMap;	
+	courseListByAcadCareerMap = temp_courseListByAcadCareerMap;
 	courseListByResponsibleMap = temp_courseListByResponsibleMap;
     }
 
@@ -207,7 +207,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 			    createCODirectorySite(canonicalCourse);
 		    if (coSite != null) {
 			boolean accepted = false;
-			if ((program.equals("ALL") || isFoundField(program, coSite.getProgram()) 
+			if ((program.equals("ALL") || isFoundField(program, coSite.getProgram())
 				&& (responsible.equals("ALL") || isFoundField(responsible, coSite.getResponsible())))) {
 			    // 0 0 0 0
 			    if (isNull(courseNumber) && isNull(courseTitle)
@@ -422,7 +422,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	}
 	return allSections;
     }
-    
+
     private List<String> getRightSessions(List<CODirectorySite> courses,
 	    String trimester) {
 	List<String> rigthSessions = new ArrayList<String>();
@@ -435,7 +435,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 			if (isSessionInSite(trimester, s)
 				&& !rigthSessions.contains(trimester)) {
 			    rigthSessions.add(trimester);
-			    return rigthSessions;			    
+			    return rigthSessions;
 			}
 		    }
 		}
@@ -480,19 +480,19 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    }
 	}
 	return true;
-    }  
-    
+    }
+
     private boolean isFieldInCollection (String field, Map<String, String> map) {
 	for (Iterator<Entry<String, String>> sortedSIterator =
 	    map.entrySet().iterator(); sortedSIterator.hasNext();) {
 	    Entry<String, String> entry =  sortedSIterator.next();
 	    if (entry.getKey().matches("(?i)." + field+"*") || entry.getKey().toLowerCase().indexOf(field.toLowerCase()) > 0){
 		return true;
-	    } 
+	    }
 	}
 	return false;
     }
-   
+
     private boolean isFoundField(String field, String attribut) {
 	if (!isNull(field) && !isNull(attribut)) {
 	    if (attribut.toLowerCase().contains(field.toLowerCase())) {
@@ -512,7 +512,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    return true;
 	}
     }
-    
+
     public CODirectorySite getCODirectorySite(String siteId) {
 	CODirectorySite coDirectorySite =
 		createCODirectorySite(courseManagementService
@@ -580,21 +580,21 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		String trimesters = coDirectorySite.getSearchedTrimesters();
 		if (trimesters != null) {
 		    if (trimesters.indexOf(searchedTrimesters(section)) > 0){
-			trimesters = trimesters + "," + searchedTrimesters(section);    
+			trimesters = trimesters + "," + searchedTrimesters(section);
 		    }
 		} else {
 		    trimesters = searchedTrimesters(section);
 		}
 		coDirectorySite.setSearchedTrimesters(trimesters);
 	    }
-	    
+
 	    if (section.getCategory() != null
 		    && !section.getCategory().equals("")) {
 		coDirectorySite.setResponsible(section.getCategory());
 	    }
 	}
     }
-    
+
     private void fillArchivedSectionsForCODirectorySite(
 	    CODirectorySite coDirectorySite, CourseOffering courseOffering) {
 	Set<Section> sections =
@@ -625,7 +625,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		String trimesters = coDirectorySite.getSearchedTrimesters();
 		if (trimesters != null) {
 		    if (trimesters.indexOf(searchedTrimesters(section)) > 0){
-			trimesters = trimesters + "," + searchedTrimesters(section);    
+			trimesters = trimesters + "," + searchedTrimesters(section);
 		    }
 		} else {
 		    trimesters = searchedTrimesters(section);
@@ -680,15 +680,14 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		    courseId =
 			    courseIdFront + "-" + courseIdMiddle + "-"
 				    + courseIdBack;
-
 		}
 	    } else
 		courseId = canCourseId;
 	}
 	return courseId;
     }
-    
-    
+
+
     private String searchedTrimesters(Section section) {
 	String sessionTitle = null;
 	String courseOffId = section.getCourseOfferingEid();
@@ -806,11 +805,11 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    String responsible, String trimester) {
 
 	buildFilteredCoursesFromCM(courseNumber, courseTitle, instructor, program, responsible, trimester);
-	
+
 	return  courseListByFields;
     }
-    
-	    
+
+
     public String getDescription(String siteId) {
 	String description = "";
 	try {
@@ -852,6 +851,6 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	}
 	Collections.sort(sessionsList);
 	return sessionsList;
-    }     
+    }
 
 }
