@@ -744,10 +744,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    site = siteService.addSite(siteTitle, SITE_TYPE);
 		    // we add the tools
 		    addHomePage(site, lang);
+		    log.info("Added home page");
 		    addTool(site, "sakai.announcements");
+		    log.info("Added announcement page");
 		    addTool(site, "sakai.opensyllabus.tool");
+		    log.info("Added opensyllabus page");
 		    addTool(site, "sakai.resources");
+		    log.info("Added resources page");
 		    addTool(site, "sakai.siteinfo");
+		    log.info("Added site info page");
 		}
 		site.setTitle(siteTitle);
 		site.setPublished(true);
@@ -1350,6 +1355,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    // securityService.popAdvisor();
 	}
 
+	log.info("Finished adding new tool");
 	return toolConf;
     }
 
