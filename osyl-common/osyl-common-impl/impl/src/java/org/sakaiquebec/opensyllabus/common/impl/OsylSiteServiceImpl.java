@@ -1381,7 +1381,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	Properties iframeProps = iframeCfg.getPlacementConfig();
 	iframeProps.put("height", "600px");
 	iframeCfg.save();
-	site.setInfoUrl("/library/image/image_daip.jpg");
+	//site.setInfoUrl("/library/image/image_daip.jpg");
 
 	// 2nd tool
 	ToolConfiguration synAnncCfg =
