@@ -743,7 +743,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		} else {
 		    site = siteService.addSite(siteTitle, SITE_TYPE);
 		    // we add the tools
-		    addHomePage(site, lang);
+		    //addHomePage(site, lang);
 		    log.info("Added home page");
 		    addTool(site, "sakai.announcements");
 		    log.info("Added announcement page");
@@ -1381,33 +1381,33 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	Properties iframeProps = iframeCfg.getPlacementConfig();
 	iframeProps.put("height", "600px");
 	iframeCfg.save();
-	//site.setInfoUrl("/library/image/image_daip.jpg");
+	// site.setInfoUrl("/library/image/image_daip.jpg");
 
 	// 2nd tool
-//	ToolConfiguration synAnncCfg =
-//		addTool(site, homePage, "sakai.synoptic.announcement");
-//	synAnncCfg.setLayoutHints("0,1");
-//	Properties props = synAnncCfg.getPlacementConfig();
-//	props.put("days", "31");
-//	synAnncCfg.save();
-//
-//	// 3nd tool
-//	if (Locale.CANADA_FRENCH.toString().equals(locale)) {
-//	    toolTitle = HEC_MONTREAL_RULES_TITLE_FR_CA;
-//	} else {
-//	    toolTitle = HEC_MONTREAL_RULES_TITLE_EN;
-//	}
-//	iframeCfg =
-//		addTool(site, homePage, "sakai.rutgers.linktool", toolTitle);
-//	iframeCfg.setLayoutHints("1,1");
-//
-//	iframeProps = iframeCfg.getPlacementConfig();
-//	iframeProps.put("height", "400px");
-//	// instructors won't be able to change this iFrame unless they get
-//	// site.upd permission
-//	iframeProps.put("url", HEC_MONTREAL_RULES_FILE_BASE_NAME + locale
-//		+ HEC_MONTREAL_RULES_FILE_EXTENSION);
-//	iframeCfg.save();
+	ToolConfiguration synAnncCfg =
+		addTool(site, homePage, "sakai.synoptic.announcement");
+	synAnncCfg.setLayoutHints("0,1");
+	Properties props = synAnncCfg.getPlacementConfig();
+	props.put("days", "31");
+	synAnncCfg.save();
+
+	// 3nd tool
+	if (Locale.CANADA_FRENCH.toString().equals(locale)) {
+	    toolTitle = HEC_MONTREAL_RULES_TITLE_FR_CA;
+	} else {
+	    toolTitle = HEC_MONTREAL_RULES_TITLE_EN;
+	}
+	iframeCfg =
+		addTool(site, homePage, "sakai.rutgers.linktool", toolTitle);
+	iframeCfg.setLayoutHints("1,1");
+
+	iframeProps = iframeCfg.getPlacementConfig();
+	iframeProps.put("height", "400px");
+	// instructors won't be able to change this iFrame unless they get
+	// site.upd permission
+	iframeProps.put("url", HEC_MONTREAL_RULES_FILE_BASE_NAME + locale
+		+ HEC_MONTREAL_RULES_FILE_EXTENSION);
+	iframeCfg.save();
 
     }
 
