@@ -761,69 +761,69 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		siteService.save(site);
 
 		// we add the directories
-		String directoryId;
-
-		osylContentService.initSiteAttachments(site);
-		directoryId =
-			contentHostingService.getSiteCollection(site.getId());
-		ContentCollectionEdit cce =
-			contentHostingService.editCollection(directoryId);
-		cce.setHidden();
-		contentHostingService.commitCollection(cce);
+//		String directoryId;
+//
+//		osylContentService.initSiteAttachments(site);
+//		directoryId =
+//			contentHostingService.getSiteCollection(site.getId());
+//		ContentCollectionEdit cce =
+//			contentHostingService.editCollection(directoryId);
+//		cce.setHidden();
+//		contentHostingService.commitCollection(cce);
 
 		// we add the default citationList
 		// TODO I18N
-		String citationListName =
-			"Références bibliographiques du cours";
-		CitationCollection citationList =
-			citationService.addCollection();
-		ContentResourceEdit cre =
-			contentHostingService.addResource(directoryId,
-				citationListName, null, 1);
-		cre.setResourceType(CitationService.CITATION_LIST_ID);
-		cre.setContentType(ResourceType.MIME_TYPE_HTML);
-
-		ResourcePropertiesEdit props = cre.getPropertiesEdit();
-		props.addProperty(
-			ContentHostingService.PROP_ALTERNATE_REFERENCE,
-			org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
-		props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
-			ResourceType.MIME_TYPE_HTML);
-		props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
-			citationListName);
-
-		cre.setContent(citationList.getId().getBytes());
-		contentHostingService.commitResource(cre,
-			NotificationService.NOTI_NONE);
-
-		COConfigSerialized coConfig = null;
-		COSerialized co = null;
-
-		String configPath =
-			ServerConfigurationService.getString(
-				"opensyllabus.configs.path", null);
-		if (configPath == null)
-		    configPath =
-			    System.getProperty("catalina.home")
-				    + File.separator + "webapps"
-				    + File.separator + "osyl-editor-sakai-tool";// TODO
-		// SAKAI-860
-		SchemaHelper schemaHelper = new SchemaHelper(configPath);
-		String version = schemaHelper.getSchemaVersion();
-
-		try {
-		    coConfig = configDao.getConfigByRef(configRef);
-		    co =
-			    new COSerialized(idManager.createUuid(), lang,
-				    "shared", "", site.getId(), "sectionId",
-				    coConfig, null, "shortDescription",
-				    "description", "title", false, null, null,
-				    version);
-		    resourceDao.createOrUpdateCourseOutline(co);
-
-		} catch (Exception e) {
-		    log.error("createSite", e);
-		}
+//		String citationListName =
+//			"Références bibliographiques du cours";
+//		CitationCollection citationList =
+//			citationService.addCollection();
+//		ContentResourceEdit cre =
+//			contentHostingService.addResource(directoryId,
+//				citationListName, null, 1);
+//		cre.setResourceType(CitationService.CITATION_LIST_ID);
+//		cre.setContentType(ResourceType.MIME_TYPE_HTML);
+//
+//		ResourcePropertiesEdit props = cre.getPropertiesEdit();
+//		props.addProperty(
+//			ContentHostingService.PROP_ALTERNATE_REFERENCE,
+//			org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
+//		props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
+//			ResourceType.MIME_TYPE_HTML);
+//		props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
+//			citationListName);
+//
+//		cre.setContent(citationList.getId().getBytes());
+//		contentHostingService.commitResource(cre,
+//			NotificationService.NOTI_NONE);
+//
+//		COConfigSerialized coConfig = null;
+//		COSerialized co = null;
+//
+//		String configPath =
+//			ServerConfigurationService.getString(
+//				"opensyllabus.configs.path", null);
+//		if (configPath == null)
+//		    configPath =
+//			    System.getProperty("catalina.home")
+//				    + File.separator + "webapps"
+//				    + File.separator + "osyl-editor-sakai-tool";// TODO
+//		// SAKAI-860
+//		SchemaHelper schemaHelper = new SchemaHelper(configPath);
+//		String version = schemaHelper.getSchemaVersion();
+//
+//		try {
+//		    coConfig = configDao.getConfigByRef(configRef);
+//		    co =
+//			    new COSerialized(idManager.createUuid(), lang,
+//				    "shared", "", site.getId(), "sectionId",
+//				    coConfig, null, "shortDescription",
+//				    "description", "title", false, null, null,
+//				    version);
+//		    resourceDao.createOrUpdateCourseOutline(co);
+//
+//		} catch (Exception e) {
+//		    log.error("createSite", e);
+//		}
 
 	    } finally {
 		securityService.popAdvisor();
