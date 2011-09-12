@@ -768,7 +768,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			contentHostingService.getSiteCollection(site.getId());
 		ContentCollectionEdit cce =
 			contentHostingService.editCollection(directoryId);
-		cce.setHidden();
+//		cce.setHidden();
 		contentHostingService.commitCollection(cce);
 
 		// we add the default citationList
