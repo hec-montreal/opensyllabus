@@ -761,15 +761,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		siteService.save(site);
 
 		// we add the directories
-//		String directoryId;
-//
-//		osylContentService.initSiteAttachments(site);
-//		directoryId =
-//			contentHostingService.getSiteCollection(site.getId());
-//		ContentCollectionEdit cce =
-//			contentHostingService.editCollection(directoryId);
-//		cce.setHidden();
-//		contentHostingService.commitCollection(cce);
+		String directoryId;
+
+		osylContentService.initSiteAttachments(site);
+		directoryId =
+			contentHostingService.getSiteCollection(site.getId());
+		ContentCollectionEdit cce =
+			contentHostingService.editCollection(directoryId);
+		cce.setHidden();
+		contentHostingService.commitCollection(cce);
 
 		// we add the default citationList
 		// TODO I18N
