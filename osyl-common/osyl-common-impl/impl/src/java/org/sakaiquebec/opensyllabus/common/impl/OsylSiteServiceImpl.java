@@ -1368,6 +1368,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	homePage.getPropertiesEdit().addProperty(SitePage.IS_HOME_PAGE,
 		Boolean.TRUE.toString());
 
+	log.info("La langue Locale.CANADA_FRENCH.toString() " + Locale.CANADA_FRENCH.toString() + "  locale  " + locale );
 	// 1st tool
 	String toolTitle;
 	if (Locale.CANADA_FRENCH.toString().equals(locale)) {
