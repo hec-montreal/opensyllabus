@@ -21,7 +21,6 @@
 
 package org.sakaiquebec.opensyllabus.manager.server;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,19 +31,14 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.exception.PermissionException;
-import org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService;// HEC ONLY SAKAI-2723
-import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
+import org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService;// HEC ONLY SAKAI-2723 
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
-import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
-import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 import org.sakaiquebec.opensyllabus.shared.exception.SessionCompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
-import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
-import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -61,16 +55,9 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     public static final long serialVersionUID = 56L;
 
     private static Log log = LogFactory.getLog(OsylManagerGwtServiceImpl.class);
-    private OsylManagerBackingBean osylManagerServices;
+    protected OsylManagerBackingBean osylManagerServices;
     private ServletContext servletContext = null;
     private WebApplicationContext webAppContext = null;
-
-    // The cache for published Course Outlines
-    private static HashMap<String, COSerialized> publishedCoCache;
-    // The cache for serialized configurations
-    private static HashMap<String, COConfigSerialized> configCache;
-    // Whether the cache is used (value set from sakai.properties)
-    private static boolean cacheEnabled = true;
 
     /**
      * {@inheritDoc}
@@ -215,35 +202,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     public Vector<Map<String, String>> publish(String siteId) throws Exception,
 	    FusionException, PermissionException {
 	String webappDir = getServletContext().getRealPath("/");
-	//return osylManagerServices.getOsylPublishService().publish(webappDir,siteId);
-	Vector<Map<String, String>> publicationResults =
-		new Vector<Map<String, String>>();
-	//String siteId = osylManagerServices.getOsylSiteService().getCurrentSiteId();
-	try {
-	    if (OsylDirectoryService.SITE_TYPE.equals(osylManagerServices
-		    .getOsylSiteService().getSiteType(siteId)))
-		publicationResults =
-			osylManagerServices.getOsylDirectoryPublishService()
-				.publish(webappDir, siteId);
-	    else
-		publicationResults =
-			osylManagerServices.getOsylPublishService().publish(
-				webappDir, siteId);
-	    // We invalidate the cached published CO for this siteId
-	    /**
-	    if (cacheEnabled) {
-		publishedCoCache.remove(siteId
-			+ SecurityInterface.ACCESS_ATTENDEE);
-		publishedCoCache.remove(siteId
-			+ SecurityInterface.ACCESS_COMMUNITY);
-		publishedCoCache.remove(siteId
-			+ SecurityInterface.ACCESS_PUBLIC);
-	    }
-	    **/
-	} catch (Exception e) {
-	    throw e;
-	}
-	return publicationResults;
+	return osylManagerServices.getOsylPublishService().publish(webappDir,
+		siteId);
     }
 
     public void deleteSite(String siteId) throws Exception, PermissionException {
