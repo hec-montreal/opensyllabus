@@ -83,16 +83,7 @@ public class OsylManagerBackingBean {
 	return osylSecurityService;
     }
     
-    private OsylPublishService osylDirectoryPublishService;
-    
-    public OsylPublishService getOsylDirectoryPublishService() {
-	return osylDirectoryPublishService;
-    }
 
-    public void setOsylDirectoryPublishService(OsylPublishService osylPublishService) {
-	this.osylDirectoryPublishService = osylPublishService;
-    }
-    
     /**
      * Init method called at initialization of the bean.
      */
