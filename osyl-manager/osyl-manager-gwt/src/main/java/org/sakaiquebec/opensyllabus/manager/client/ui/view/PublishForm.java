@@ -36,7 +36,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -141,79 +140,32 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 
 	public void onSuccess(Vector<Map<String, String>> serverResponse) {
 	    Map<String, String> pdfGenerationResults = serverResponse.get(1);
-	    int siteRows = pdfGenerationResults.size();
 
-	    if (coSites.size() > 1) {
-		if (pdfGenerationResults != null) {
-		    for (Entry<String, String> entry : pdfGenerationResults
-			    .entrySet()) {
-			Image publishImage =
+	    if (pdfGenerationResults != null) {
+
+		for (Entry<String, String> entry : pdfGenerationResults
+			.entrySet()) {
+		    Image publishImage =
+			    new Image(controller.getImageBundle().check16());
+		    publishImage.setTitle(messages.publishAction_publish_ok());
+		    Image pdfGenImage = null;
+
+		    if (entry.getValue().equals(PDF_GENERATION_FAILED)) {
+			pdfGenImage =
+				new Image(controller.getImageBundle().cross16());
+			pdfGenImage.setTitle(messages
+				.publishAction_pdfGen_nok());
+		    } else if (entry.getValue()
+			    .equals(PDF_GENERATION_SUCCEEDED)) {
+			pdfGenImage =
 				new Image(controller.getImageBundle().check16());
-			publishImage.setTitle(messages
-				.publishAction_publish_ok());
-			Image pdfGenImage = null;
-			if (entry.getValue().equals(PDF_GENERATION_FAILED)) {
-			    pdfGenImage =
-				    new Image(controller.getImageBundle()
-					    .cross16());
-			    pdfGenImage.setTitle(messages
-				    .publishAction_pdfGen_nok());
-			} else if (entry.getValue().equals(
-				PDF_GENERATION_SUCCEEDED)) {
-			    pdfGenImage =
-				    new Image(controller.getImageBundle()
-					    .check16());
-			    pdfGenImage.setTitle(messages
-				    .publishAction_pdfGen_ok());
-			}
-			grid.setWidget(siteIndex + 1, 1, publishImage);
-			grid.setWidget(siteIndex + 1, 2, pdfGenImage);
+			pdfGenImage
+				.setTitle(messages.publishAction_pdfGen_ok());
 		    }
-
+		    grid.setWidget(siteIndex + 1, 1, publishImage);
+		    grid.setWidget(siteIndex + 1, 2, pdfGenImage);
 		}
-	    } else {
-		if (serverResponse != null) {
-		    Label publishedVersion =
-			    new Label(messages
-				    .publishAction_publish_publishedVersion());
-		    Label versionPDF =
-			    new Label(messages
-				    .publishAction_publish_versionPDF());
-		    grid.resize(siteRows + 1, 3);
-		    grid.setWidget(0, 1, publishedVersion);
-		    grid.setWidget(0, 2, versionPDF);
 
-		    int i = 1;
-		    for (Entry<String, String> entry : serverResponse.get(1)
-			    .entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			Label siteId = new Label(key);
-			Image pdfGenImage = null;
-			Image publishImage =
-				new Image(controller.getImageBundle().check16());
-			publishImage.setTitle(messages
-				.publishAction_publish_ok());
-			if (entry.getValue().equals(PDF_GENERATION_FAILED)) {
-			    pdfGenImage =
-				    new Image(controller.getImageBundle()
-					    .cross16());
-			    pdfGenImage.setTitle(messages
-				    .publishAction_pdfGen_nok());
-			} else if (entry.getValue().equals(
-				PDF_GENERATION_SUCCEEDED)) {
-			    pdfGenImage =
-				    new Image(controller.getImageBundle()
-					    .check16());
-			    pdfGenImage.setTitle(messages
-				    .publishAction_pdfGen_ok());
-			}
-			grid.setWidget(i, 0, siteId);
-			grid.setWidget(i, 1, publishImage);
-			grid.setWidget(i, 2, pdfGenImage);
-			i++;
-		    }
-		}
 	    }
 	    responseReceive();
 	}
@@ -227,9 +179,8 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
 	    } else {
-		if (coSites.size()>1) {
-		    controller.publish(coSites.get(siteIndex + 1).getSiteId(), new PublishAsynCallBack(siteIndex + 1));
-		}
+		controller.publish(coSites.get(siteIndex + 1).getSiteId(),
+			new PublishAsynCallBack(siteIndex + 1));
 	    }
 	}
     }
@@ -246,8 +197,7 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 		.setStylePrimaryName("OsylManager-form-publicationText");
 	mainPanel.add(publishInProgess);
 
-	grid = new Grid(coSites.size()+5, 3);
-	
+	grid = new Grid(coSites.size() + 1, 3);
 	this.coSites = coSites;
 	asynCB_return = 0;
 	Image image = new Image(controller.getImageBundle().ajaxloader());
@@ -258,7 +208,6 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 		new Label(messages.publishAction_publish_versionPDF());
 	grid.setWidget(0, 1, publishedVersion);
 	grid.setWidget(0, 2, versionPDF);
-	
 	for (int r = 0; r < coSites.size(); r++) {
 	    String siteId = coSites.get(r).getSiteId();
 	    Label versionSite = new Label(siteId);
@@ -295,10 +244,11 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 	hz.add(okButton);
 
 	mainPanel.add(hz);
-	
 	mainPanel.setCellHorizontalAlignment(hz,
 		HasHorizontalAlignment.ALIGN_CENTER);
-		
-	controller.publish(coSites.get(0).getSiteId(), new PublishAsynCallBack(0));
+
+	controller.publish(coSites.get(0).getSiteId(), new PublishAsynCallBack(
+		0));
+
     }
 }
