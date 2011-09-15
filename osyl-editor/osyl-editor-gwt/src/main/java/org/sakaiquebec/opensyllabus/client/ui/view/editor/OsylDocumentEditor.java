@@ -372,7 +372,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 					    COPropertiesType.VISIBILITY,
 					    "" + contextVisible);
 			    OsylEditorEntryPoint.getInstance()
-			    .changePropertyInMap(cr, "" + contextVisible);
+				    .changePropertyInMap(cr,
+					    "" + contextVisible);
 			    getView().closeAndSaveEdit(true);
 			} catch (Exception e) {
 			    com.google.gwt.user.client.Window
@@ -393,8 +394,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    String typage = "";
 	    boolean resourceIncompatibility = false;
 	    final Map<String, String> cr2 =
-		    OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
-			    .get(getResourceURI());
+		    OsylEditorEntryPoint.getInstance()
+			    .getResourceContextTypeMap().get(getResourceURI());
 
 	    final String resType =
 		    typeResourceListBox.getValue(typeResourceListBox
@@ -430,7 +431,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 					    COPropertiesType.ASM_RESOURCE_TYPE,
 					    resType);
 			    OsylEditorEntryPoint.getInstance()
-			    .changePropertyInMap(cr2, resType);
+				    .changePropertyInMap(cr2, resType);
 			    getView().closeAndSaveEdit(true);
 			} catch (Exception e) {
 			    com.google.gwt.user.client.Window
@@ -483,7 +484,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 					    COPropertiesType.LICENSE,
 					    contextLicence);
 			    OsylEditorEntryPoint.getInstance()
-			    .changePropertyInMap(lcr, contextLicence);
+				    .changePropertyInMap(lcr, contextLicence);
 			    getView().closeAndSaveEdit(true);
 			} catch (Exception e) {
 			    com.google.gwt.user.client.Window
@@ -757,6 +758,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     }
 
     private void onSave() {
+	boolean licenceIncompatibility = false;
+	boolean resourceIncompatibility = false;
 	// -----------------------------------------------------------------------
 	// Check resource type incompatibility
 	// -----------------------------------------------------------------------
@@ -764,7 +767,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	final Map<String, String> cr =
 		OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
 			.get(getResourceURI());
-	boolean resourceIncompatibility = false;
 	final String resType =
 		typeResourceListBox.getValue(typeResourceListBox
 			.getSelectedIndex());
@@ -790,12 +792,12 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
 		public void onClick(ClickEvent event) {
 		    try {
-			OsylEditorEntryPoint
-				.getInstance()
-				.changePropertyForResource(cr,
-					COPropertiesType.ASM_RESOURCE_TYPE, resType);
 			OsylEditorEntryPoint.getInstance()
-			    .changePropertyInMap(cr, resType);
+				.changePropertyForResource(cr,
+					COPropertiesType.ASM_RESOURCE_TYPE,
+					resType);
+			OsylEditorEntryPoint.getInstance().changePropertyInMap(
+				cr, resType);
 			onSave();
 		    } catch (Exception e) {
 			com.google.gwt.user.client.Window
@@ -807,53 +809,58 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    osylOkCancelDialog.show();
 	    osylOkCancelDialog.centerAndFocus();
 	}
-	// -----------------------------------------------------------------------
-	// Check licence incompatibility
-	// -----------------------------------------------------------------------
-	String licence = "";
-	boolean licenceIncompatibility = false;
-	final String contextLicence = getLicence();
-	final Map<String, String> lcr =
-		OsylEditorEntryPoint.getInstance()
-			.getDocumentContextLicenceMap().get(getResourceURI());
+	if (!resourceIncompatibility) {
+	    // -----------------------------------------------------------------------
+	    // Check licence incompatibility
+	    // -----------------------------------------------------------------------
+	    String licence = "";
+	    final String contextLicence = getLicence();
+	    final Map<String, String> lcr =
+		    OsylEditorEntryPoint.getInstance()
+			    .getDocumentContextLicenceMap()
+			    .get(getResourceURI());
 
-	if (lcr != null) {
-	    for (Entry<String, String> entry : lcr.entrySet()) {
-		String id = entry.getKey();
-		if (!id.equals(getView().getModel().getId())) {
-		    licence = entry.getValue();
-		    if (!licence.equals(contextLicence)) {
-			licenceIncompatibility = true;
-			break;
+	    if (lcr != null) {
+		for (Entry<String, String> entry : lcr.entrySet()) {
+		    String id = entry.getKey();
+		    if (!id.equals(getView().getModel().getId())) {
+			licence = entry.getValue();
+			if (!licence.equals(contextLicence)) {
+			    licenceIncompatibility = true;
+			    break;
+			}
 		    }
 		}
 	    }
-	}
-	if (licenceIncompatibility) {
-	    OsylOkCancelDialog osylOkCancelDialog =
-		    new OsylOkCancelDialog(getView().getUiMessage(
-			    "Global.warning"), getView().getUiMessage(
-			    "DocumentEditor.document.licenceIncompatibility"));
+	    if (licenceIncompatibility) {
+		OsylOkCancelDialog osylOkCancelDialog =
+			new OsylOkCancelDialog(
+				getView().getUiMessage("Global.warning"),
+				getView()
+					.getUiMessage(
+						"DocumentEditor.document.licenceIncompatibility"));
 
-	    osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
-		public void onClick(ClickEvent event) {
-		    try {
-			OsylEditorEntryPoint.getInstance()
-				.changePropertyForResource(lcr,
-					COPropertiesType.LICENSE,
-					contextLicence);
-			OsylEditorEntryPoint.getInstance()
-			    .changePropertyInMap(lcr, contextLicence);
-			onSave();
-		    } catch (Exception e) {
-			com.google.gwt.user.client.Window
-				.alert("Unable to delete object. Error=" + e);
-			e.printStackTrace();
+		osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
+		    public void onClick(ClickEvent event) {
+			try {
+			    OsylEditorEntryPoint.getInstance()
+				    .changePropertyForResource(lcr,
+					    COPropertiesType.LICENSE,
+					    contextLicence);
+			    OsylEditorEntryPoint.getInstance()
+				    .changePropertyInMap(lcr, contextLicence);
+			    onSave();
+			} catch (Exception e) {
+			    com.google.gwt.user.client.Window
+				    .alert("Unable to delete object. Error="
+					    + e);
+			    e.printStackTrace();
+			}
 		    }
-		}
-	    });
-	    osylOkCancelDialog.show();
-	    osylOkCancelDialog.centerAndFocus();
+		});
+		osylOkCancelDialog.show();
+		osylOkCancelDialog.centerAndFocus();
+	    }
 	}
 
 	if (!resourceIncompatibility && !licenceIncompatibility) {

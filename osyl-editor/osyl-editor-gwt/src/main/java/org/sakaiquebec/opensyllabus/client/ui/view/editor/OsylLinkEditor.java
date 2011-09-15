@@ -381,7 +381,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	String typage = "";
 	final Map<String, String> cr =
 		OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
-			.get(getLink());
+			.get(LinkValidator.parseLink(getLink()));
 	boolean resourceIncompatibility = false;
 	final String resType =
 		typeResourceListBox.getValue(typeResourceListBox
@@ -436,7 +436,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	final Map<String, String> cv =
 		OsylEditorEntryPoint.getInstance()
 			.getResourceContextVisibilityMap()
-			.get(getLink());
+			.get(LinkValidator.parseLink(getLink()));
 
 	if (cv != null) {
 	    for (Entry<String, String> entry : cv.entrySet()) {
