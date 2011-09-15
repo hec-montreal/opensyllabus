@@ -1743,12 +1743,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	log.trace("getAllCoAndSiteInfo (Site List ##### START #####)"
 		+ elapsed(start));
 	List<String> accessedSites =
-		getSitesForUser(currentUser, SiteService.SITE_VISIT);
+		getSitesForUser(currentUser, SiteService.SITE_VISIT, searchTerm
+			.toLowerCase(), academicSession.toLowerCase());
 
 	log.trace("getAllCoAndSiteInfo (Site List ##### SITES #####)"
 		+ elapsed(start));
 
-	if (accessedSites != null) {
+	if (accessedSites != null && accessedSites.size()>0) {
 	    allSitesInfo = new ArrayList<COSite>();
 	    int accessedSitesSize = accessedSites.size();
 	    for (int i = 0; i < accessedSitesSize; i++) {
@@ -1845,6 +1846,88 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return l;
     }
 
+    @SuppressWarnings("unchecked")
+    protected List<String> getSitesForUser(String userId, String permission,
+	    String searchTerm, String academicSession) {
+	log.debug("getSitesForUser ["
+		+ sessionManager.getCurrentSession().getUserEid() + "/"
+		+ permission + "]");
+
+	List<String> l = new ArrayList<String>();
+	if (searchTerm.equals("")) {
+	    searchTerm=null;
+	}
+	// Is super user
+	boolean superUser = securityService.isSuperUser();
+	// Has access from !site.helper
+	AuthzGroup siteHelperRealm;
+	try {
+	    siteHelperRealm = authzGroupService.getAuthzGroup("!site.helper");
+	    Role userRole = siteHelperRealm.getUserRole(userId);
+	    boolean helperAccess = false;
+	    
+	    if (userRole != null)
+		//Has the role to open the site
+		helperAccess = userRole.isAllowed(permission);
+
+	    if (helperAccess || superUser) {
+		List<Site> allSites =
+				siteService.getSites(SiteService.SelectionType.ANY,
+					null, searchTerm, null,
+					SiteService.SortType.NONE, null);		    
+
+		for (Site site : allSites) {
+		    if (site != null
+			    && "course".equals(site.getType())
+			    && searchTerm != null
+			    && site.getTitle().toLowerCase().contains(
+				    searchTerm)
+			    && site.getTitle().toLowerCase().contains(
+				    parseAcademicSession(academicSession))
+			    || site != null
+			    && "course".equals(site.getType())
+			    && searchTerm == null
+			    && site.getTitle().toLowerCase().contains(
+				    parseAcademicSession(academicSession))) {
+			l.add(site.getId());
+		    }
+		}
+
+	    } else {
+		// get the groups from Sakai
+		Set<String> authzGroupIds =
+			authzGroupService.getAuthzGroupsIsAllowed(userId,
+				permission, null);
+
+		Iterator<String> it = authzGroupIds.iterator();
+		while (it.hasNext()) {
+		    String authzGroupId = it.next();
+		    Reference r = entityManager.newReference(authzGroupId);
+		    if (r.isKnownType()) {
+			// check if this is a Sakai Site or Group
+			if (r.getType().equals(SiteService.APPLICATION_ID)) {
+			    String type = r.getSubType();
+			    if (SAKAI_SITE_TYPE.equals(type)) {
+				// this is a Site
+				String siteId = r.getId();
+				l.add(siteId);
+			    }
+			}
+		    }
+		}
+	    }
+
+	} catch (GroupNotDefinedException e) {
+	    e.printStackTrace();
+	}
+
+	if (l.isEmpty()) {
+	    log.info("Empty list of siteIds for user:" + userId
+		    + ", permission: " + permission);
+	}
+	return l;
+    }
+    
     public List<CMAcademicSession> getAcademicSessions() {
 	List<AcademicSession> acadSessionsList =
 		courseManagementService.getAcademicSessions();
