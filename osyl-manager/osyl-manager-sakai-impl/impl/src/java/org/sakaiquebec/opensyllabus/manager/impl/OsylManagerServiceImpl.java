@@ -1736,44 +1736,26 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    String academicSession, boolean withFrozenSites) {
 	long start = System.currentTimeMillis();
 	List<COSite> allSitesInfo = null;
-	COSite info = null;
 	String currentUser = sessionManager.getCurrentSessionUserId();
-	int siteCount = 0;
 
 	log.trace("getAllCoAndSiteInfo (Site List ##### START #####)"
 		+ elapsed(start));
-	List<String> accessedSites =
+	
+	allSitesInfo =
 		getSitesForUser(currentUser, SiteService.SITE_VISIT, searchTerm
-			.toLowerCase(), academicSession.toLowerCase());
+			.toLowerCase(), academicSession.toLowerCase(),
+			withFrozenSites);
 
 	log.trace("getAllCoAndSiteInfo (Site List ##### SITES #####)"
 		+ elapsed(start));
 
-	if (accessedSites != null && accessedSites.size()>0) {
-	    allSitesInfo = new ArrayList<COSite>();
-	    int accessedSitesSize = accessedSites.size();
-	    for (int i = 0; i < accessedSitesSize; i++) {
-		info =
-			getCoAndSiteInfo(accessedSites.get(i), searchTerm,
-				academicSession, COURSE_TYPE_SITE);
-		if (info != null) {		    
-		    if (info.isCoIsFrozen() && withFrozenSites) {
-			allSitesInfo.add(info);
-			siteCount++;
-		    } else if (!info.isCoIsFrozen() && info.getType().equalsIgnoreCase(COURSE_TYPE_SITE)) {
-			    allSitesInfo.add(info);
-			    siteCount++;
-		    }
-		}
-	    }
-	}
 	// TODO: move this to the end of getOsylPackage() with a specific
 	// path instead of iterating through all the sites!!!
 	new DeleteExpiredTemporaryExportFiles(allSitesInfo).start();
 	// deleteExpiredTemporaryExportFiles(allSitesInfo);
 	return allSitesInfo;
-    }  
-    
+    }
+
     @SuppressWarnings("unchecked")
     protected List<String> getSitesForUser(String userId, String permission) {
 	log.debug("getSitesForUser ["
@@ -1847,21 +1829,25 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     @SuppressWarnings("unchecked")
-    protected List<String> getSitesForUser(String userId, String permission,
-	    String searchTerm, String academicSession) {
+    protected List<COSite> getSitesForUser(String userId, String permission,
+	    String searchTerm, String academicSession, boolean withFrozenSites) {
 	log.debug("getSitesForUser ["
 		+ sessionManager.getCurrentSession().getUserEid() + "/"
 		+ permission + "]");
-
-	List<String> l = new ArrayList<String>();
+	List<COSite> allSitesInfo = new ArrayList<COSite>();
+	String term = "";
+		
 	if (searchTerm.equals("")) {
-	    searchTerm=null;
+	    term = null;
+	} else {
+	    term = searchTerm;
 	}
+
 	// Is super user
 	boolean superUser = securityService.isSuperUser();
 	// Has access from !site.helper
 	AuthzGroup siteHelperRealm;
-	try {
+	try {	    
 	    siteHelperRealm = authzGroupService.getAuthzGroup("!site.helper");
 	    Role userRole = siteHelperRealm.getUserRole(userId);
 	    boolean helperAccess = false;
@@ -1871,11 +1857,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		helperAccess = userRole.isAllowed(permission);
 
 	    if (helperAccess || superUser) {
-		List<Site> allSites =
-				siteService.getSites(SiteService.SelectionType.ANY,
-					null, searchTerm, null,
-					SiteService.SortType.NONE, null);		    
-
+		List<Site> allSites =  siteService.getSites(SiteService.SelectionType.ANY,
+				    null, term, null,
+				    SiteService.SortType.NONE, null);
 		for (Site site : allSites) {
 		    if (site != null
 			    && "course".equals(site.getType())
@@ -1888,8 +1872,21 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    && "course".equals(site.getType())
 			    && searchTerm == null
 			    && site.getTitle().toLowerCase().contains(
-				    parseAcademicSession(academicSession))) {
-			l.add(site.getId());
+				    parseAcademicSession(academicSession).toLowerCase())) {				    
+			// *********************************************
+			COSite info =
+				getCoAndSiteInfo(site.getId(), searchTerm,
+					academicSession, COURSE_TYPE_SITE);
+			if (info != null) {
+			    if (info.isCoIsFrozen() && withFrozenSites) {
+				allSitesInfo.add(info);
+			    } else if (!info.isCoIsFrozen()
+				    && info.getType().equalsIgnoreCase(
+					    COURSE_TYPE_SITE)) {
+				allSitesInfo.add(info);
+			    }
+			}
+			// *********************************************
 		    }
 		}
 
@@ -1899,7 +1896,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			authzGroupService.getAuthzGroupsIsAllowed(userId,
 				permission, null);
 
-		Iterator<String> it = authzGroupIds.iterator();
+		Iterator<String> it = authzGroupIds.iterator();		
 		while (it.hasNext()) {
 		    String authzGroupId = it.next();
 		    Reference r = entityManager.newReference(authzGroupId);
@@ -1910,7 +1907,20 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    if (SAKAI_SITE_TYPE.equals(type)) {
 				// this is a Site
 				String siteId = r.getId();
-				l.add(siteId);
+				// *********************************************
+				COSite info =
+					getCoAndSiteInfo(siteId, searchTerm,
+						academicSession, COURSE_TYPE_SITE);
+				if (info != null) {
+				    if (info.isCoIsFrozen() && withFrozenSites) {
+					allSitesInfo.add(info);
+				    } else if (!info.isCoIsFrozen()
+					    && info.getType().equalsIgnoreCase(
+						    COURSE_TYPE_SITE)) {
+					allSitesInfo.add(info);
+				    }
+				}
+				// *********************************************				
 			    }
 			}
 		    }
@@ -1921,11 +1931,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    e.printStackTrace();
 	}
 
-	if (l.isEmpty()) {
+	if (allSitesInfo.isEmpty()) {
 	    log.info("Empty list of siteIds for user:" + userId
 		    + ", permission: " + permission);
 	}
-	return l;
+	return allSitesInfo;
     }
     
     public List<CMAcademicSession> getAcademicSessions() {
