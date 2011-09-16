@@ -1867,7 +1867,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    && site.getTitle().toLowerCase().contains(
 				    searchTerm)
 			    && site.getTitle().toLowerCase().contains(
-				    parseAcademicSession(academicSession))
+				    parseAcademicSession(academicSession).toLowerCase())
 			    || site != null
 			    && "course".equals(site.getType())
 			    && searchTerm == null
