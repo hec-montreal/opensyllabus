@@ -93,8 +93,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     private static Log log = LogFactory.getLog(OsylPublishServiceImpl.class);
 
-    private static final String SITE_SHAREABLE = "00";
-
     // SPRING INJECTIONS
     protected OsylSecurityService osylSecurityService;
 
@@ -184,17 +182,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     }
 
     // END HEC ONLY SAKAI-2723
-
     // END SPRING INJECTION
-    Map<String, String> documentVisibilityMap;
-
-    /**
-     * Map the security associated to the document published, access to public
-     * users or not
-     */
-    Map<String, String> documentSecurityMap;
-
-    protected Vector<String> publishedSiteIds;
 
     /**
      * Init method called at initialization of the bean.
@@ -252,7 +240,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    long start = System.currentTimeMillis();
 	    log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		    + "] publish site [" + siteId + "]");
-	    publishedSiteIds = new Vector<String>();
+	    Vector<String> publishedSiteIds = new Vector<String>();
 	    Vector<Map<String, String>> publicationResults =
 		    new Vector<Map<String, String>>();
 
@@ -337,16 +325,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    resourceDao.createOrUpdateCourseOutline(publishedCO);
 		}
 
-		// Retrieve documents associated to the course outline and its
-		// parents
-		setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
+		copyWorkToPublish(siteId, coModeled.getDocumentSecurityMap(),
+			coModeled.getDocumentVisibilityMap());
 
-		setDocumentVisibilityMap(coModeled.getDocumentVisibilityMap());
-
-		copyWorkToPublish(siteId, getDocumentSecurityMap(),
-			getDocumentVisibilityMap());
-
-		publication(co.getSiteId(), webappDir);
+		publishedSiteIds = publication(co.getSiteId(), webappDir);
 
 		// change publication date
 		TreeMap<String, String> publicationProperties =
@@ -379,7 +361,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			coContent.getProperty(COPropertiesType.PUBLISHED));
 		publicationResults.add(publicationProperties);
 
-		publicationResults.add(generatePublishedSitesPdf(webappDir));
+		publicationResults.add(generatePublishedSitesPdf(publishedSiteIds,webappDir));
 
 	    } finally {
 		securityService.popAdvisor();
@@ -396,7 +378,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	}
     }
 
-    protected Map<String, String> generatePublishedSitesPdf(String webappdir) {
+    protected Map<String, String> generatePublishedSitesPdf(Vector<String> publishedSiteIds,String webappdir) {
 	Map<String, String> pdfGenerationResults =
 		new HashMap<String, String>();
 
@@ -619,22 +601,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	}
     }
 
-    private boolean collectionExists(String collectionId) {
-	try {
-	    contentHostingService.getCollection(collectionId);
-	} catch (IdUnusedException e) {
-	    return false;
-	} catch (TypeException e) {
-	    log.warn("This is not a valid collection id: " + collectionId);
-	    return false;
-	} catch (PermissionException e) {
-	    log.warn("You are not allowed to access this collection id: "
-		    + collectionId);
-	}
-
-	return true;
-    }
-
     protected File createPrintVersion(COSerialized coSerialized,
 	    String webappdir) throws Exception {
 	try {
@@ -783,9 +749,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return d;
     }
 
-    private void publication(String siteId, String webappDir) throws Exception,
+    private Vector<String> publication(String siteId, String webappDir) throws Exception,
 	    FusionException {
-
+	Vector<String> publishedSiteIds=new Vector<String>();
 	COSerialized hierarchyFussionedCO =
 		osylSiteService.getSerializedCourseOutline(siteId, webappDir);
 	if (hierarchyFussionedCO.isIncompatibleWithHisParent()) {
@@ -832,34 +798,18 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    // pdf later.
 
 	    publishedSiteIds.add(siteId);
-	    publishChildren(siteId, webappDir);
+	    publishedSiteIds.addAll(publishChildren(siteId, webappDir));
 	}
+	return publishedSiteIds;
     }
 
-    private Map<String, String> getDocumentVisibilityMap() {
-	return documentVisibilityMap;
-    }
-
-    private void setDocumentVisibilityMap(
-	    Map<String, String> documentVisibilityMap) {
-	this.documentVisibilityMap = documentVisibilityMap;
-    }
-
-    private Map<String, String> getDocumentSecurityMap() {
-	return documentSecurityMap;
-    }
-
-    private void setDocumentSecurityMap(Map<String, String> documentSecurityMap) {
-	this.documentSecurityMap = documentSecurityMap;
-    }
-
-    private void publishChildren(String siteId, String webappDir) {
-	List<CORelation> coRelationList;
+    private Vector<String> publishChildren(String siteId, String webappDir) {
+	List<CORelation> coRelationList=new ArrayList<CORelation>();
+	Vector<String> publishedSiteids= new Vector<String>();
 	try {
 	    coRelationList = coRelationDao.getCourseOutlineChildren(siteId);
 	} catch (Exception e1) {
 	    e1.printStackTrace();
-	    coRelationList = new ArrayList<CORelation>();
 	}
 	for (Iterator<CORelation> coRelationIter = coRelationList.iterator(); coRelationIter
 		.hasNext();) {
@@ -868,11 +818,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		log.info("user ["
 			+ sessionManager.getCurrentSession().getUserEid()
 			+ "] publish child site [" + childId + "]");
-		publication(childId, webappDir);
+		publishedSiteids.addAll(publication(childId, webappDir));
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
 	}
+	return publishedSiteids;
     }
 
     /*
@@ -1083,9 +1034,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// BEGIN HEC ONLY SAKAI-2723
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
-	String siteShareable =
-		publishedCO.getSiteId().substring(
-			publishedCO.getSiteId().lastIndexOf(".") + 1);
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
 	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)) {
 		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
