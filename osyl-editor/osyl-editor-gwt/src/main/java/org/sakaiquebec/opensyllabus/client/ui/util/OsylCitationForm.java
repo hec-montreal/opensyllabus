@@ -672,6 +672,7 @@ public class OsylCitationForm extends WindowPanel implements
 			    OsylEditorEntryPoint.getInstance()
 			    .changePropertyInMap(cr, resType);
 			    onSave();
+			    getController().getMainView().getWorkspaceView().refreshView();
 			} catch (Exception e) {
 			    com.google.gwt.user.client.Window
 				    .alert("Unable to delete object. Error="

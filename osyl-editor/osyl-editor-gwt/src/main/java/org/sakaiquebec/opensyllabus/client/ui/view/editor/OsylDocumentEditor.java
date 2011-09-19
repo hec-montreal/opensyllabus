@@ -375,6 +375,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				    .changePropertyInMap(cr,
 					    "" + contextVisible);
 			    getView().closeAndSaveEdit(true);
+			    getController().getMainView().getWorkspaceView().refreshView();
 			} catch (Exception e) {
 			    com.google.gwt.user.client.Window
 				    .alert("Unable to delete object. Error="
@@ -435,6 +436,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 			    OsylEditorEntryPoint.getInstance()
 				    .changePropertyInMap(cr2, resType);
 			    getView().closeAndSaveEdit(true);
+			    getController().getMainView().getWorkspaceView().refreshView();
 			} catch (Exception e) {
 			    com.google.gwt.user.client.Window
 				    .alert("Unable to delete object. Error="
@@ -488,6 +490,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 			    OsylEditorEntryPoint.getInstance()
 				    .changePropertyInMap(lcr, contextLicence);
 			    getView().closeAndSaveEdit(true);
+			    getController().getMainView().getWorkspaceView().refreshView();
 			} catch (Exception e) {
 			    com.google.gwt.user.client.Window
 				    .alert("Unable to delete object. Error="
@@ -803,6 +806,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 			OsylEditorEntryPoint.getInstance().changePropertyInMap(
 				cr, resType);
 			onSave();
+			getController().getMainView().getWorkspaceView().refreshView();
 		    } catch (Exception e) {
 			com.google.gwt.user.client.Window
 				.alert("Unable to delete object. Error=" + e);
@@ -854,6 +858,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 			    OsylEditorEntryPoint.getInstance()
 				    .changePropertyInMap(lcr, contextLicence);
 			    onSave();
+			    getController().getMainView().getWorkspaceView().refreshView();
 			} catch (Exception e) {
 			    com.google.gwt.user.client.Window
 				    .alert("Unable to delete object. Error="

@@ -28,7 +28,6 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylLinkEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
-import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -66,7 +65,10 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 		getModel().getResource().getProperty(
 			COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_URI);
-	if (formerLink !=null && !(((OsylLinkEditor) getEditor()).getLink()).equals(formerLink)) {
+	if (formerLink != null
+		&& !formerLink.trim().equals("")
+		&& !(((OsylLinkEditor) getEditor()).getLink())
+			.equals(formerLink)) {
 	    OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
 		    .get(formerLink).remove(getModel().getId());
 

@@ -418,6 +418,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 			OsylEditorEntryPoint.getInstance()
 			    .changePropertyInMap(cr, resType);
 			getView().closeAndSaveEdit(true);
+			getController().getMainView().getWorkspaceView().refreshView();
 		    } catch (Exception e) {
 			com.google.gwt.user.client.Window
 				.alert("Unable to delete object. Error=" + e);

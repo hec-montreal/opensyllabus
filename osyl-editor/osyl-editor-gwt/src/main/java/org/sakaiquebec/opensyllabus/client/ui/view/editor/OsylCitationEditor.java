@@ -443,6 +443,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			    OsylEditorEntryPoint.getInstance()
 				    .changePropertyInMap(cr, resType);
 			    getView().closeAndSaveEdit(true);
+			    getController().getMainView().getWorkspaceView().refreshView();
 			} catch (Exception e) {
 			    com.google.gwt.user.client.Window
 				    .alert("Unable to delete object. Error="
@@ -501,6 +502,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			OsylEditorEntryPoint.getInstance().changePropertyInMap(
 				cv, "" + contextVisible);
 			getView().closeAndSaveEdit(true);
+			getController().getMainView().getWorkspaceView().refreshView();
 		    } catch (Exception e) {
 			com.google.gwt.user.client.Window
 				.alert("Unable to delete object. Error=" + e);
@@ -942,6 +944,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			OsylEditorEntryPoint.getInstance().changePropertyInMap(
 				cr, resType);
 			onSave();
+			getController().getMainView().getWorkspaceView().refreshView();
 		    } catch (Exception e) {
 			com.google.gwt.user.client.Window
 				.alert("Unable to delete object. Error=" + e);
