@@ -1857,23 +1857,22 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		helperAccess = userRole.isAllowed(permission);
 
 	    if (helperAccess || superUser) {
+		String[] typesToSearch = new String[]{COURSE_TYPE_SITE};
 		List<Site> allSites =  siteService.getSites(SiteService.SelectionType.ANY,
-				    null, term, null,
+			typesToSearch, term, null,
 				    SiteService.SortType.NONE, null);
+		String acadSessionLowerCase = parseAcademicSession(academicSession).toLowerCase();
+		String searchTermLowerCase = searchTerm.toLowerCase();
 		for (Site site : allSites) {
 		    if (site != null
-			    && "course".equals(site.getType())
+			    && COURSE_TYPE_SITE.equals(site.getType())
 			    && searchTerm != null
-			    && site.getTitle().toLowerCase().contains(
-				    searchTerm)
-			    && site.getTitle().toLowerCase().contains(
-				    parseAcademicSession(academicSession).toLowerCase())
+			    && site.getTitle().toLowerCase().indexOf(searchTermLowerCase)>=0
+			    && site.getTitle().toLowerCase().indexOf(acadSessionLowerCase)>=0
 			    || site != null
-			    && "course".equals(site.getType())
+			    && COURSE_TYPE_SITE.equals(site.getType())
 			    && searchTerm == null
-			    && site.getTitle().toLowerCase().contains(
-				    parseAcademicSession(academicSession).toLowerCase())) {				    
-			// *********************************************
+			    && site.getTitle().toLowerCase().indexOf(acadSessionLowerCase)>=0) {
 			COSite info =
 				getCoAndSiteInfo(site.getId(), searchTerm,
 					academicSession, COURSE_TYPE_SITE);
@@ -1886,7 +1885,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 				allSitesInfo.add(info);
 			    }
 			}
-			// *********************************************
 		    }
 		}
 
@@ -1907,7 +1905,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    if (SAKAI_SITE_TYPE.equals(type)) {
 				// this is a Site
 				String siteId = r.getId();
-				// *********************************************
 				COSite info =
 					getCoAndSiteInfo(siteId, searchTerm,
 						academicSession, COURSE_TYPE_SITE);
@@ -1920,7 +1917,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 					allSitesInfo.add(info);
 				    }
 				}
-				// *********************************************				
 			    }
 			}
 		    }
@@ -1937,7 +1933,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 	return allSitesInfo;
     }
-    
+
     public List<CMAcademicSession> getAcademicSessions() {
 	List<AcademicSession> acadSessionsList =
 		courseManagementService.getAcademicSessions();
