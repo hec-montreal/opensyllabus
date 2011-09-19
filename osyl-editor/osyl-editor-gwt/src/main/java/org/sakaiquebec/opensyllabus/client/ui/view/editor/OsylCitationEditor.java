@@ -421,6 +421,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		}
 	    }
 	    if (resourceIncompatibility) {
+		if("".equals(typage))
+			typage=RES_TYPE_NO_TYPE;
 		OsylOkCancelDialog osylOkCancelDialog =
 			new OsylOkCancelDialog(
 				getView().getUiMessage("Global.warning"),
@@ -921,6 +923,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    }
 	}
 	if (resourceIncompatibility) {
+	    if("".equals(typage))
+		typage=RES_TYPE_NO_TYPE;
 	    OsylOkCancelDialog osylOkCancelDialog =
 		    new OsylOkCancelDialog(getView().getUiMessage(
 			    "Global.warning"), getView().getUiMessage(

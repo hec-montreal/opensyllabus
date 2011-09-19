@@ -399,6 +399,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    }
 	}
 	if (resourceIncompatibility) {
+	    if("".equals(typage))
+		typage=RES_TYPE_NO_TYPE;
 	    OsylOkCancelDialog osylOkCancelDialog =
 		    new OsylOkCancelDialog(getView().getUiMessage(
 			    "Global.warning"), getView().getUiMessage(

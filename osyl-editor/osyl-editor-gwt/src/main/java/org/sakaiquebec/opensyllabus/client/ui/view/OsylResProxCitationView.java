@@ -78,10 +78,22 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
      * {@inheritDoc}
      */
     protected void updateModel() {
+	String uri = getEditor().getResourceURI();
+	String formerUri =
+		getModel().getResource().getProperty(
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI);
+	if (formerUri !=null && !formerUri.trim().equals("") && !uri.equals(formerUri)) {
+	    OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
+		    .get(formerUri).remove(getModel().getId());
+	    OsylEditorEntryPoint.getInstance()
+		    .getResourceContextVisibilityMap().get(formerUri)
+		    .remove(getModel().getId());
+	}
 	getModel().getResource().setProperties(new COProperties());
 	updateMetaInfo();
 
-	String uri = getEditor().getResourceURI();
+	
 
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());

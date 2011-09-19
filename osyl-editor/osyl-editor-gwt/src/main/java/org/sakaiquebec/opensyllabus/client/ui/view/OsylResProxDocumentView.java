@@ -27,8 +27,11 @@ import java.util.StringTokenizer;
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylDocumentEditor;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylLinkEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+
+import com.google.gwt.user.client.Window;
 
 /**
  * Class providing display and edition capabilities for Document resources.
@@ -63,6 +66,18 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 
     protected void updateModel() {
 	updateMetaInfo();
+	String uri = getEditor().getResourceURI();
+	String formerUri =
+		getModel().getResource().getProperty(
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI);
+	if (formerUri!=null && !formerUri.trim().equals("") &&!uri.equals(formerUri)) {
+	    OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
+		    .get(formerUri).remove(getModel().getId());
+	    OsylEditorEntryPoint.getInstance()
+		    .getResourceContextVisibilityMap().get(formerUri)
+		    .remove(getModel().getId());
+	}
 	getModel().setLabel(getEditor().getText());
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
@@ -72,7 +87,7 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 
 	// FIXME This is a workaround. Should be deleted after we have a way to
 	// display the fileBrowser showing the previously selected file.
-	String uri = getEditor().getResourceURI();
+	
 	if (uri != null) {
 	    getModel().getResource().addProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI, uri);

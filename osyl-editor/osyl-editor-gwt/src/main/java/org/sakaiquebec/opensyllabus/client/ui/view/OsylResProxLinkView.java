@@ -62,6 +62,20 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 
     protected void updateModel() {
 	updateMetaInfo();
+	String formerLink =
+		getModel().getResource().getProperty(
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI);
+	if (formerLink !=null && !(((OsylLinkEditor) getEditor()).getLink()).equals(formerLink)) {
+	    OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
+		    .get(formerLink).remove(getModel().getId());
+
+	    // DocumentContextVisibilityMap
+	    OsylEditorEntryPoint.getInstance()
+		    .getResourceContextVisibilityMap().get(formerLink)
+		    .remove(getModel().getId());
+	}
+
 	getModel().setLabel(getEditor().getText());
 	getModel().addProperty(COPropertiesType.COMMENT,
 		((OsylLinkEditor) getEditor()).getDescription());

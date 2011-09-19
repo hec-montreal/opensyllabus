@@ -650,6 +650,8 @@ public class OsylCitationForm extends WindowPanel implements
 		}
 	    }
 	    if (resourceIncompatibility) {
+		if("".equals(typage))
+			typage=OsylAbstractResProxEditor.RES_TYPE_NO_TYPE;
 		OsylOkCancelDialog osylOkCancelDialog =
 			new OsylOkCancelDialog(
 				uiMessages.getMessage("Global.warning"),
