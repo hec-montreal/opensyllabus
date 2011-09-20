@@ -1857,6 +1857,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		helperAccess = userRole.isAllowed(permission);
 
 	    if (helperAccess || superUser) {
+		//Condition site == "course"
 		String[] typesToSearch = new String[]{COURSE_TYPE_SITE};
 		List<Site> allSites =  siteService.getSites(SiteService.SelectionType.ANY,
 			typesToSearch, term, null,
@@ -1864,15 +1865,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		String acadSessionLowerCase = parseAcademicSession(academicSession).toLowerCase();
 		String searchTermLowerCase = searchTerm.toLowerCase();
 		for (Site site : allSites) {
+		    //It's not necessary check site.getType() for both conditions
+		    //&& COURSE_TYPE_SITE.equals(site.getType()
+		    //It's not necessary check site.getTitle() for first condition
+		    //&& site.getTitle().toLowerCase().indexOf(searchTermLowerCase)>=0
+		    //&& searchTerm != null for first condition
+		    //&& searchTerm == null for second condition
 		    if (site != null
-			    && COURSE_TYPE_SITE.equals(site.getType())
-			    && searchTerm != null
-			    && site.getTitle().toLowerCase().indexOf(searchTermLowerCase)>=0
-			    && site.getTitle().toLowerCase().indexOf(acadSessionLowerCase)>=0
-			    || site != null
-			    && COURSE_TYPE_SITE.equals(site.getType())
-			    && searchTerm == null
-			    && site.getTitle().toLowerCase().indexOf(acadSessionLowerCase)>=0) {
+			    && site.getTitle().toLowerCase().indexOf(
+				    acadSessionLowerCase) >= 0) {
 			COSite info =
 				getCoAndSiteInfo(site.getId(), searchTerm,
 					academicSession, COURSE_TYPE_SITE);
