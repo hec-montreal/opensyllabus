@@ -771,10 +771,17 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    String searchTerm) {
 
 	Map<String, String> siteMap = new HashMap<String, String>();
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")	
+	String term = "";
+	if (searchTerm.equals("")) {
+	    term = null;
+	} else {
+	    term = searchTerm;
+	}
+	String[] typesToSearch = new String[]{COURSE_TYPE_SITE};	
 	List<Site> sites =
-		siteService.getSites(SiteService.SelectionType.ACCESS, null,
-			null, null, SiteService.SortType.TITLE_ASC, null);
+		siteService.getSites(SiteService.SelectionType.ACCESS, typesToSearch,
+			term, null, SiteService.SortType.TITLE_ASC, null);
 	for (Iterator<Site> siteIterator = sites.iterator(); siteIterator
 		.hasNext();) {
 	    Site site = (Site) siteIterator.next();
@@ -1695,7 +1702,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }	        
     
     /** {@inheritDoc} */
-    public List<COSite> getAllCoAndSiteInfo(String searchTerm,
+    public List<COSite> getAllCoAndSiteInfoOld(String searchTerm,
 	    String academicSession) {
 	long start = System.currentTimeMillis();
 	List<COSite> allSitesInfo = null;
@@ -1706,7 +1713,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	log.trace("getAllCoAndSiteInfo (Site List ##### START #####)"
 		+ elapsed(start));
 	List<String> accessedSites =
-		getSitesForUser(currentUser, SiteService.SITE_VISIT);
+		getSitesForUserOld(currentUser, SiteService.SITE_VISIT);
 
 	log.trace("getAllCoAndSiteInfo (Site List ##### SITES #####)"
 		+ elapsed(start));
@@ -1724,6 +1731,30 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		}
 	    }
 	}
+	// TODO: move this to the end of getOsylPackage() with a specific
+	// path instead of iterating through all the sites!!!
+	new DeleteExpiredTemporaryExportFiles(allSitesInfo).start();
+	// deleteExpiredTemporaryExportFiles(allSitesInfo);
+	return allSitesInfo;
+    }
+
+    /** {@inheritDoc} */
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm,
+	    String academicSession) {
+	long start = System.currentTimeMillis();
+	List<COSite> allSitesInfo = null;
+	COSite info = null;
+	String currentUser = sessionManager.getCurrentSessionUserId();
+
+	log.trace("getAllCoAndSiteInfo (Site List ##### START #####)"
+		+ elapsed(start));
+	allSitesInfo =
+		getSitesForUser(currentUser, SiteService.SITE_VISIT, searchTerm
+			.toLowerCase(), academicSession.toLowerCase(), false);
+
+	log.trace("getAllCoAndSiteInfo (Site List ##### SITES #####)"
+		+ elapsed(start));
+
 	// TODO: move this to the end of getOsylPackage() with a specific
 	// path instead of iterating through all the sites!!!
 	new DeleteExpiredTemporaryExportFiles(allSitesInfo).start();
@@ -1757,7 +1788,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     @SuppressWarnings("unchecked")
-    protected List<String> getSitesForUser(String userId, String permission) {
+    protected List<String> getSitesForUserOld(String userId, String permission) {
 	log.debug("getSitesForUser ["
 		+ sessionManager.getCurrentSession().getUserEid() + "/"
 		+ permission + "]");
