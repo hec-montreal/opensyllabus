@@ -394,6 +394,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    getUiMessage("CitationEditor.save.error.citationUndefined");
 	} else if (saveButton.isEnabled()) {
 	    message += getUiMessage("CitationEditor.ChangeUrl.Save");
+	    ok=false;
+	}else{
 	    // -----------------------------------------------------------------------
 	    // Check resource type incompatibility
 	    // -----------------------------------------------------------------------
