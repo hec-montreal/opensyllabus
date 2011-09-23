@@ -1966,33 +1966,41 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    cfgId = null;
 	}
 
-	try {
-	    if (cfgId == null) {
-		String configPath =
-			ServerConfigurationService.getString(
-				"opensyllabus.configs.path", null);
-		if (configPath == null)
-		    configPath =
-			    System.getProperty("catalina.home")
-				    + File.separator + "webapps"
-				    + File.separator + "osyl-editor-sakai-tool";// TODO
-		// SAKAI-860
-		SchemaHelper schemaHelper = new SchemaHelper(configPath);
-		String version = schemaHelper.getSchemaVersion();
+	if (cfgId == null) {
+	    String configPath =
+		    ServerConfigurationService.getString(
+			    "opensyllabus.configs.path", null);
+	    if (configPath == null)
+		configPath =
+			System.getProperty("catalina.home") + File.separator
+				+ "webapps" + File.separator
+				+ "osyl-editor-sakai-tool";// TODO
+	    // SAKAI-860
+	    SchemaHelper schemaHelper = new SchemaHelper(configPath);
+	    String version = schemaHelper.getSchemaVersion();
+	    try {
 		config =
 			osylConfigService.getConfigByRefAndVersion(
 				osylConfigService.getDefaultConfig(), version,
 				webappDir);
-	    } else {
+	    } catch (Exception e) {
+		log.error(
+			"The course outline default configuration can not be retrieve, the configuration will be used",
+			e);
+	    }
+	} else {
+	    try {
 		config =
 			osylConfigService.getConfig(cfgId,
 				thisCo.getConfigVersion(), webappDir);
+	    } catch (Exception e) {
+		log.error(
+			"The course outline configuration can not be retrieved",
+			e);
 	    }
-	} catch (Exception e) {
-	    log.error(e);
 	}
 	return config;
-    }
+   }
 
     public void convertAndSave(String webapp, COSerialized co) throws Exception {
 	SchemaHelper schemaHelper = new SchemaHelper(webapp);
