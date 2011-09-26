@@ -83,17 +83,22 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 		getModel().getResource().getProperty(
 			COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_URI);
-	if (formerUri !=null && !formerUri.trim().equals("") && !uri.equals(formerUri)) {
-	    OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
-		    .get(formerUri).remove(getModel().getId());
-	    OsylEditorEntryPoint.getInstance()
-		    .getResourceContextVisibilityMap().get(formerUri)
-		    .remove(getModel().getId());
+	if (formerUri != null && !formerUri.trim().equals("")
+		&& !uri.equals(formerUri)) {
+	    if (OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
+		    .get(formerUri) != null) {
+		OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
+			.get(formerUri).remove(getModel().getId());
+	    }
+	    if (OsylEditorEntryPoint.getInstance().getResourceContextVisibilityMap()
+		    .get(formerUri) != null) {
+		OsylEditorEntryPoint.getInstance()
+			.getResourceContextVisibilityMap().get(formerUri)
+			.remove(getModel().getId());
+	    }
 	}
 	getModel().getResource().setProperties(new COProperties());
 	updateMetaInfo();
-
-	
 
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
@@ -230,7 +235,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	// .getSelectedCitationProperty(
 	// COPropertiesType.IDENTIFIER,
 	// COPropertiesType.IDENTIFIER_TYPE_NOLINK));
-	
+
 	// update resTypeContextVisibilitymap
 	Map<String, String> cr =
 		OsylEditorEntryPoint
@@ -253,10 +258,11 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			+ "/"
 			+ getEditor().getSelectedCitationProperty(
 				CitationSchema.CITATIONID), cr);
-	
+
 	// update resContextVisibilitymap
 	Map<String, String> cv =
-		OsylEditorEntryPoint.getInstance()
+		OsylEditorEntryPoint
+			.getInstance()
 			.getResourceContextVisibilityMap()
 			.get(uri
 				+ "/"
@@ -267,7 +273,9 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	}
 	cv.put(getModel().getId(),
 		getModel().getProperty(COPropertiesType.VISIBILITY));
-	OsylEditorEntryPoint.getInstance().getResourceContextVisibilityMap()
+	OsylEditorEntryPoint
+		.getInstance()
+		.getResourceContextVisibilityMap()
 		.put(uri
 			+ "/"
 			+ getEditor().getSelectedCitationProperty(

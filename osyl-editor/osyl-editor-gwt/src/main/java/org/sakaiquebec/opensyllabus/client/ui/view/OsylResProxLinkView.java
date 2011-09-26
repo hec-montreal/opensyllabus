@@ -31,6 +31,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 
 /**
  * Class providing display and edition capabilities for Hyperlink resources.
@@ -69,13 +70,18 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 		&& !formerLink.trim().equals("")
 		&& !(((OsylLinkEditor) getEditor()).getLink())
 			.equals(formerLink)) {
-	    OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
-		    .get(formerLink).remove(getModel().getId());
-
+	    if (OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
+		    .get(formerLink) != null){
+		OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
+			.get(formerLink).remove(getModel().getId());
+	    }
 	    // DocumentContextVisibilityMap
-	    OsylEditorEntryPoint.getInstance()
-		    .getResourceContextVisibilityMap().get(formerLink)
-		    .remove(getModel().getId());
+	    if (OsylEditorEntryPoint.getInstance()
+		    .getResourceContextVisibilityMap().get(formerLink) != null){
+		OsylEditorEntryPoint.getInstance()
+			.getResourceContextVisibilityMap().get(formerLink)
+			.remove(getModel().getId());
+	    }
 	}
 
 	getModel().setLabel(getEditor().getText());

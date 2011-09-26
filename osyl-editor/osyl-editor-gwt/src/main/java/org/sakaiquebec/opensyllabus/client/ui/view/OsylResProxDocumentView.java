@@ -71,23 +71,31 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 		getModel().getResource().getProperty(
 			COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_URI);
-	if (formerUri!=null && !formerUri.trim().equals("") &&!uri.equals(formerUri)) {
-	    OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
-		    .get(formerUri).remove(getModel().getId());
-	    OsylEditorEntryPoint.getInstance()
-		    .getResourceContextVisibilityMap().get(formerUri)
-		    .remove(getModel().getId());
+	if (formerUri != null && !formerUri.trim().equals("")
+		&& !uri.equals(formerUri)) {
+	    if (OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
+		    .get(formerUri) != null) {
+		OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
+			.get(formerUri).remove(getModel().getId());
+	    }
+	    if (OsylEditorEntryPoint.getInstance()
+		    .getResourceContextVisibilityMap().get(formerUri) != null) {
+		OsylEditorEntryPoint.getInstance()
+			.getResourceContextVisibilityMap().get(formerUri)
+			.remove(getModel().getId());
+	    }
 	}
 	getModel().setLabel(getEditor().getText());
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
-	//Document resource type	
-	getModel().getResource().addProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+	// Document resource type
+	getModel().getResource().addProperty(
+		COPropertiesType.ASM_RESOURCE_TYPE,
 		getEditor().getTypeDocument());
 
 	// FIXME This is a workaround. Should be deleted after we have a way to
 	// display the fileBrowser showing the previously selected file.
-	
+
 	if (uri != null) {
 	    getModel().getResource().addProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI, uri);
@@ -111,11 +119,12 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 		cr = new HashMap<String, String>();
 	    }
 	    cr.put(getModel().getId(),
-		    getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE));
+		    getModel().getResource().getProperty(
+			    COPropertiesType.ASM_RESOURCE_TYPE));
 	    OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
 		    .put(uri, cr);
-	    
-	    //update documentContextLicenceMAp
+
+	    // update documentContextLicenceMAp
 	    Map<String, String> cl =
 		    OsylEditorEntryPoint.getInstance()
 			    .getDocumentContextLicenceMap().get(uri);
@@ -123,10 +132,11 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 		cl = new HashMap<String, String>();
 	    }
 	    cl.put(getModel().getId(),
-		    getModel().getResource().getProperty(COPropertiesType.LICENSE));
-	    OsylEditorEntryPoint.getInstance()
-		    .getDocumentContextLicenceMap().put(uri, cl);
-	    
+		    getModel().getResource().getProperty(
+			    COPropertiesType.LICENSE));
+	    OsylEditorEntryPoint.getInstance().getDocumentContextLicenceMap()
+		    .put(uri, cl);
+
 	}
     }
 
@@ -143,8 +153,9 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 		getEditor().getLicence());
 	getModel().getResource().addProperty(COPropertiesType.DESCRIPTION,
 		getEditor().getResourceDescription());
-	//Document resource type	
-	getModel().getResource().addProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+	// Document resource type
+	getModel().getResource().addProperty(
+		COPropertiesType.ASM_RESOURCE_TYPE,
 		getEditor().getTypeDocument());
     }
 

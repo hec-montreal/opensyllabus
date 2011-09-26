@@ -39,6 +39,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
@@ -374,7 +375,6 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    ok = false;
 	    messages = getView().getUiMessage("LinkEditor.unvalidLink");
 	}
-
 	// -----------------------------------------------------------------------
 	// Check resource type incompatibility
 	// -----------------------------------------------------------------------
@@ -440,7 +440,6 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 		OsylEditorEntryPoint.getInstance()
 			.getResourceContextVisibilityMap()
 			.get(LinkValidator.parseLink(getLink()));
-
 	if (cv != null) {
 	    for (Entry<String, String> entry : cv.entrySet()) {
 		String id = entry.getKey();
