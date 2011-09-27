@@ -265,24 +265,16 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 			.getCurrentSessionUserId());
 	try {
 	    Site s = siteService.getSite(userSiteId);
-	    AuthzGroup siteHelperRealm = authzService.getAuthzGroup(SITE_HELPER);
-	    Role userRole = siteHelperRealm.getRole(userSiteId);
 	    
 	    //Allow access if super user
 	    if (securityService.isSuperUser())
 		return true;
 	    
-	    //Allow access if user have the associated permission in site helper
-	    if (userRole != null && userRole.isAllowed(permission))
-		return true;
-	    
+    
 	    if (securityService.unlock(permission, s.getReference()))
 		return true;
 	    return false;
 	} catch (IdUnusedException e) {
-	    e.printStackTrace();
-	    return false;
-	} catch (GroupNotDefinedException e) {
 	    e.printStackTrace();
 	    return false;
 	}
