@@ -1761,33 +1761,44 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	// If we want to retrieve all course we have access to change empty to
 	// null
-	if (searchTerm.equals(""))
-	    searchTerm = null;
+	if (searchTerm.trim().equals(""))
+	    searchTerm = "";
 
-	String[] typesToSearch = new String[] { COURSE_TYPE_SITE };
+	Set<String> authzGroupIds =
+		authzGroupService.getAuthzGroupsIsAllowed(userId, permission,
+			null);
 
-	List<Site> allSites =
-		siteService.getSites(SiteService.SelectionType.ANY,
-			typesToSearch, searchTerm, null,
-			SiteService.SortType.NONE, null);
-
-	String acadSession = parseAcademicSession(academicSession);
-	for (Site site : allSites) {
-	    if (site != null && site.getTitle().indexOf(acadSession) >= 0) {
-		COSite info =
-			getCoAndSiteInfo(site.getId(), searchTerm,
-				academicSession, COURSE_TYPE_SITE);
-		if (info != null) {
-		    if (info.isCoIsFrozen() && withFrozenSites) {
-			allSitesInfo.add(info);
-		    } else if (!info.isCoIsFrozen()
-			    && info.getType()
-				    .equalsIgnoreCase(COURSE_TYPE_SITE)) {
-			allSitesInfo.add(info);
+	Iterator<String> it = authzGroupIds.iterator();
+	while (it.hasNext()) {
+	    String authzGroupId = it.next();
+	    Reference r = entityManager.newReference(authzGroupId);
+	    if (r.isKnownType()) {
+		// check if this is a Sakai Site or Group
+		if (r.getType().equals(SiteService.APPLICATION_ID)) {
+		    String type = r.getSubType();
+		    if (SAKAI_SITE_TYPE.equals(type)) {
+			// this is a Site
+			String siteId = r.getId();
+			COSite info =
+				getCoAndSiteInfo(siteId, searchTerm,
+					academicSession, COURSE_TYPE_SITE);
+			if (info != null) {
+			    if (info.isCoIsFrozen() && withFrozenSites) {
+				allSitesInfo.add(info);
+			    } else if (!info.isCoIsFrozen()
+				    && info.getType().equalsIgnoreCase(
+					    COURSE_TYPE_SITE)) {
+				allSitesInfo.add(info);
+			    }
+			}
 		    }
 		}
 	    }
+	}
 
+	if (allSitesInfo.isEmpty()) {
+	    log.info("Empty list of siteIds for user:" + userId
+		    + ", permission: " + permission);
 	}
 
 	return allSitesInfo;
