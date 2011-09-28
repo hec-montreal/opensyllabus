@@ -415,7 +415,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    String id = entry.getKey();
 		    if (!id.equals(getView().getModel().getId())) {
 			typage = entry.getValue();
-			if (!typage.equals(resType)) {
+			if (typage!=null && !typage.equals(resType)) {
 			    resourceIncompatibility = true;
 			    break;
 			}
@@ -927,7 +927,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    }
 	}
 	if (resourceIncompatibility) {
-	    if("".equals(typage))
+	    if(typage==null || "".equals(typage))
 		typage=RES_TYPE_NO_TYPE;
 	    OsylOkCancelDialog osylOkCancelDialog =
 		    new OsylOkCancelDialog(getView().getUiMessage(
