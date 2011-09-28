@@ -1701,49 +1701,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return coIsFrozen;
     }	        
     
-    /** {@inheritDoc} */
-    public List<COSite> getAllCoAndSiteInfoOld(String searchTerm,
-	    String academicSession) {
-	long start = System.currentTimeMillis();
-	List<COSite> allSitesInfo = null;
-	COSite info = null;
-	String currentUser = sessionManager.getCurrentSessionUserId();
-	int siteCount = 0;
-
-	log.trace("getAllCoAndSiteInfo (Site List ##### START #####)"
-		+ elapsed(start));
-	List<String> accessedSites =
-		getSitesForUserOld(currentUser, SiteService.SITE_VISIT);
-
-	log.trace("getAllCoAndSiteInfo (Site List ##### SITES #####)"
-		+ elapsed(start));
-
-	if (accessedSites != null) {
-	    allSitesInfo = new ArrayList<COSite>();
-	    int accessedSitesSize = accessedSites.size();
-	    for (int i = 0; i < accessedSitesSize; i++) {
-		info =
-			getCoAndSiteInfo(accessedSites.get(i), searchTerm,
-				academicSession);
-		if (info != null) {
-		    allSitesInfo.add(info);
-		    siteCount++;
-		}
-	    }
-	}
-	// TODO: move this to the end of getOsylPackage() with a specific
-	// path instead of iterating through all the sites!!!
-	new DeleteExpiredTemporaryExportFiles(allSitesInfo).start();
-	// deleteExpiredTemporaryExportFiles(allSitesInfo);
-	return allSitesInfo;
-    }
 
     /** {@inheritDoc} */
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
 	    String academicSession) {
 	long start = System.currentTimeMillis();
 	List<COSite> allSitesInfo = null;
-	COSite info = null;
 	String currentUser = sessionManager.getCurrentSessionUserId();
 
 	log.trace("getAllCoAndSiteInfo (Site List ##### START #####)"
@@ -1787,77 +1750,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return allSitesInfo;
     }
 
-    @SuppressWarnings("unchecked")
-    protected List<String> getSitesForUserOld(String userId, String permission) {
-	log.debug("getSitesForUser ["
-		+ sessionManager.getCurrentSession().getUserEid() + "/"
-		+ permission + "]");
-
-	List<String> l = new ArrayList<String>();
-
-	// Is super user
-	boolean superUser = securityService.isSuperUser();
-	// Has access from !site.helper
-	AuthzGroup siteHelperRealm;
-	try {
-	    siteHelperRealm = authzGroupService.getAuthzGroup("!site.helper");
-	    Role userRole = siteHelperRealm.getUserRole(userId);
-	    boolean helperAccess = false;
-	    
-	    if (userRole != null)
-		helperAccess = userRole.isAllowed(permission) // Has
-									       // the
-									       // right
-									       // to
-									       // open
-									       // the
-									       // site
-	    ;
-
-	    if (helperAccess || superUser) {
-		List<Site> allSites =
-			siteService.getSites(SiteService.SelectionType.ANY,
-				"course", null, null,
-				SiteService.SortType.NONE, null);
-
-		for (Site site : allSites) {
-		    l.add(site.getId());
-		}
-
-	    } else {
-		// get the groups from Sakai
-		Set<String> authzGroupIds =
-			authzGroupService.getAuthzGroupsIsAllowed(userId,
-				permission, null);
-
-		Iterator<String> it = authzGroupIds.iterator();
-		while (it.hasNext()) {
-		    String authzGroupId = it.next();
-		    Reference r = entityManager.newReference(authzGroupId);
-		    if (r.isKnownType()) {
-			// check if this is a Sakai Site or Group
-			if (r.getType().equals(SiteService.APPLICATION_ID)) {
-			    String type = r.getSubType();
-			    if (SAKAI_SITE_TYPE.equals(type)) {
-				// this is a Site
-				String siteId = r.getId();
-				l.add(siteId);
-			    }
-			}
-		    }
-		}
-	    }
-
-	} catch (GroupNotDefinedException e) {
-	    e.printStackTrace();
-	}
-
-	if (l.isEmpty()) {
-	    log.info("Empty list of siteIds for user:" + userId
-		    + ", permission: " + permission);
-	}
-	return l;
-    }
 
     @SuppressWarnings("unchecked")
     protected List<COSite> getSitesForUser(String userId, String permission,
@@ -1866,103 +1758,38 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		+ sessionManager.getCurrentSession().getUserEid() + "/"
 		+ permission + "]");
 	List<COSite> allSitesInfo = new ArrayList<COSite>();
-	String term = "";
-		
-	if (searchTerm.equals("")) {
-	    term = null;
-	} else {
-	    term = searchTerm;
-	}
 
-	// Is super user
-	boolean superUser = securityService.isSuperUser();
-	// Has access from !site.helper
-	AuthzGroup siteHelperRealm;
-	try {	    
-	    siteHelperRealm = authzGroupService.getAuthzGroup("!site.helper");
-	    Role userRole = siteHelperRealm.getUserRole(userId);
-	    boolean helperAccess = false;
-	    
-	    if (userRole != null)
-		//Has the role to open the site
-		helperAccess = userRole.isAllowed(permission);
+	// If we want to retrieve all course we have access to change empty to
+	// null
+	if (searchTerm.equals(""))
+	    searchTerm = null;
 
-	    if (helperAccess || superUser) {
-		//Condition site == "course"
-		String[] typesToSearch = new String[]{COURSE_TYPE_SITE};
-		List<Site> allSites =  siteService.getSites(SiteService.SelectionType.ANY,
-			typesToSearch, term, null,
-				    SiteService.SortType.NONE, null);
-		String acadSessionLowerCase = parseAcademicSession(academicSession).toLowerCase();
-		String searchTermLowerCase = searchTerm.toLowerCase();
-		for (Site site : allSites) {
-		    //It's not necessary check site.getType() for both conditions
-		    //&& COURSE_TYPE_SITE.equals(site.getType()
-		    //It's not necessary check site.getTitle() for first condition
-		    //&& site.getTitle().toLowerCase().indexOf(searchTermLowerCase)>=0
-		    //&& searchTerm != null for first condition
-		    //&& searchTerm == null for second condition
-		    if (site != null
-			    && site.getTitle().toLowerCase().indexOf(
-				    acadSessionLowerCase) >= 0) {
-			COSite info =
-				getCoAndSiteInfo(site.getId(), searchTerm,
-					academicSession, COURSE_TYPE_SITE);
-			if (info != null) {
-			    if (info.isCoIsFrozen() && withFrozenSites) {
-				allSitesInfo.add(info);
-			    } else if (!info.isCoIsFrozen()
-				    && info.getType().equalsIgnoreCase(
-					    COURSE_TYPE_SITE)) {
-				allSitesInfo.add(info);
-			    }
-			}
-		    }
-		}
+	String[] typesToSearch = new String[] { COURSE_TYPE_SITE };
 
-	    } else {
-		// get the groups from Sakai
-		Set<String> authzGroupIds =
-			authzGroupService.getAuthzGroupsIsAllowed(userId,
-				permission, null);
+	List<Site> allSites =
+		siteService.getSites(SiteService.SelectionType.ANY,
+			typesToSearch, searchTerm, null,
+			SiteService.SortType.NONE, null);
 
-		Iterator<String> it = authzGroupIds.iterator();		
-		while (it.hasNext()) {
-		    String authzGroupId = it.next();
-		    Reference r = entityManager.newReference(authzGroupId);
-		    if (r.isKnownType()) {
-			// check if this is a Sakai Site or Group
-			if (r.getType().equals(SiteService.APPLICATION_ID)) {
-			    String type = r.getSubType();
-			    if (SAKAI_SITE_TYPE.equals(type)) {
-				// this is a Site
-				String siteId = r.getId();
-				COSite info =
-					getCoAndSiteInfo(siteId, searchTerm,
-						academicSession, COURSE_TYPE_SITE);
-				if (info != null) {
-				    if (info.isCoIsFrozen() && withFrozenSites) {
-					allSitesInfo.add(info);
-				    } else if (!info.isCoIsFrozen()
-					    && info.getType().equalsIgnoreCase(
-						    COURSE_TYPE_SITE)) {
-					allSitesInfo.add(info);
-				    }
-				}
-			    }
-			}
+	String acadSession = parseAcademicSession(academicSession);
+	for (Site site : allSites) {
+	    if (site != null && site.getTitle().indexOf(acadSession) >= 0) {
+		COSite info =
+			getCoAndSiteInfo(site.getId(), searchTerm,
+				academicSession, COURSE_TYPE_SITE);
+		if (info != null) {
+		    if (info.isCoIsFrozen() && withFrozenSites) {
+			allSitesInfo.add(info);
+		    } else if (!info.isCoIsFrozen()
+			    && info.getType()
+				    .equalsIgnoreCase(COURSE_TYPE_SITE)) {
+			allSitesInfo.add(info);
 		    }
 		}
 	    }
 
-	} catch (GroupNotDefinedException e) {
-	    e.printStackTrace();
 	}
 
-	if (allSitesInfo.isEmpty()) {
-	    log.info("Empty list of siteIds for user:" + userId
-		    + ", permission: " + permission);
-	}
 	return allSitesInfo;
     }
 
