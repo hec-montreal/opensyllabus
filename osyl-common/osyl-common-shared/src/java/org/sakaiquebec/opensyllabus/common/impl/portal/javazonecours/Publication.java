@@ -486,7 +486,7 @@ public class Publication {
 		// ---------------------------------------------------
 
 		Transformer transformer = (Transformer) transformersTable.get(xsltName);
-
+		
 		try {
 			transformer.transform(xml, result);
 
@@ -505,6 +505,7 @@ public class Publication {
 			outTrace.append("a.");
 		processXSLT(new DOMSource(xml), xsltName, new DOMResult(result),
 				outTrace, trace);
+		System.err.println("The file " + xsltName + " has been processed");
 		if (trace)
 			outTrace.append("b.");
 	}
