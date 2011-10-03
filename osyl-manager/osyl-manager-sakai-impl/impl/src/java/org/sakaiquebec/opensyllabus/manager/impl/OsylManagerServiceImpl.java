@@ -1592,7 +1592,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		&& siteType.equals(site.getType())
 		&& searchTerm != null
 		&& site.getTitle().toLowerCase().contains(
-			searchTerm.toLowerCase())
+			searchTerm)
 		&& site.getTitle().toLowerCase().contains(
 			parseAcademicSession(academicSession).toLowerCase())) {
 	    // Retrieve site info		
@@ -1737,7 +1737,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	
 	allSitesInfo =
 		getSitesForUser(currentUser, SiteService.SITE_VISIT, searchTerm
-			.toLowerCase(), academicSession.toLowerCase(),
+			, academicSession,
 			withFrozenSites);
 
 	log.trace("getAllCoAndSiteInfo (Site List ##### SITES #####)"
@@ -1763,6 +1763,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	// null
 	if (searchTerm.trim().equals(""))
 	    searchTerm = "";
+	else 
+	    searchTerm = searchTerm.toLowerCase();
 
 	Set<String> authzGroupIds =
 		authzGroupService.getAuthzGroupsIsAllowed(userId, permission,
