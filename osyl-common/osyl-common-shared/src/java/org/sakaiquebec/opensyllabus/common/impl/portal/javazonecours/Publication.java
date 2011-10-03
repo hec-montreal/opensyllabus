@@ -505,7 +505,6 @@ public class Publication {
 			outTrace.append("a.");
 		processXSLT(new DOMSource(xml), xsltName, new DOMResult(result),
 				outTrace, trace);
-		System.err.println("The file " + xsltName + " has been processed");
 		if (trace)
 			outTrace.append("b.");
 	}
@@ -675,6 +674,8 @@ public class Publication {
 			ps_Insert.setString(4, nivSecu);
 			ps_Insert.setString(5, type);
 			ps_Insert.execute();
+			System.err.println("The file " + ressId + ".hml has been processed");
+
 		} catch (Exception e) {
 			System.err.println("========= Erreur dans InsertInDB() : " + e);
 		} finally {
