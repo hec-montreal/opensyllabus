@@ -1300,6 +1300,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	Section courseS = null;
 	if (courseSets == null)
 	    return null;
+	List<AcademicSession> acadSessions = courseManagementService.getCurrentAcademicSessions();
+
+	for (AcademicSession acadSession: acadSessions){
+	    log.info("Le titre est " + acadSession.getTitle());
+	}
+	
 	for (Iterator<CourseSet> cSets = courseSets.iterator(); cSets.hasNext();) {
 	    courseSet = cSets.next();
 	    courseOffs =
@@ -1763,7 +1769,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	// null
 	if (searchTerm.trim().equals(""))
 	    searchTerm = "";
-	else 
+	else if (searchTerm != null)
 	    searchTerm = searchTerm.toLowerCase();
 
 	Set<String> authzGroupIds =
