@@ -1767,7 +1767,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	// If we want to retrieve all course we have access to change empty to
 	// null
-	if (searchTerm.trim().equals(""))
+	if (searchTerm!=null && searchTerm.trim().equals(""))
 	    searchTerm = "";
 	else if (searchTerm != null)
 	    searchTerm = searchTerm.toLowerCase();
