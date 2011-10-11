@@ -21,11 +21,9 @@
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -47,8 +45,6 @@ import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationItem;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationListItem;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxCitationView;
-import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
-import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COProperty;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
@@ -78,6 +74,7 @@ import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sun.java.swing.plaf.windows.resources.windows;
 
 /**
  * Document editor to be used within {@link OsylAbstractView}. The edition mode
@@ -202,7 +199,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	setViewerDesc(htmlViewerDesc);
 
 	HTML htmlViewerType =
-		new HTML((getView().getDocType() == null) ? "" : "["
+		new HTML((getView().getDocType() == null || getView()
+			.getDocType().equals("")) ? "" : "["
 			+ getView().getCoMessage(
 				RES_TYPE_MESSAGE_PREFIX
 					+ getView().getDocType()) + "]");
@@ -325,7 +323,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		"Osyl-UnitView-Content");
 
 	getMainPanel().add(getViewerPanel());
-
     }
 
     private void setViewerLink(HTML html) {
@@ -394,8 +391,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    getUiMessage("CitationEditor.save.error.citationUndefined");
 	} else if (saveButton.isEnabled()) {
 	    message += getUiMessage("CitationEditor.ChangeUrl.Save");
-	    ok=false;
-	}else{
+	    ok = false;
+	} else {
 	    // -----------------------------------------------------------------------
 	    // Check resource type incompatibility
 	    // -----------------------------------------------------------------------
@@ -415,7 +412,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    String id = entry.getKey();
 		    if (!id.equals(getView().getModel().getId())) {
 			typage = entry.getValue();
-			if (typage!=null && !typage.equals(resType)) {
+			if (typage != null && !typage.equals(resType)) {
 			    resourceIncompatibility = true;
 			    break;
 			}
@@ -423,8 +420,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		}
 	    }
 	    if (resourceIncompatibility) {
-		if("".equals(typage))
-			typage=RES_TYPE_NO_TYPE;
+		if ("".equals(typage))
+		    typage = RES_TYPE_NO_TYPE;
 		OsylOkCancelDialog osylOkCancelDialog =
 			new OsylOkCancelDialog(
 				getView().getUiMessage("Global.warning"),
@@ -445,7 +442,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			    OsylEditorEntryPoint.getInstance()
 				    .changePropertyInMap(cr, resType);
 			    getView().closeAndSaveEdit(true);
-			    getController().getMainView().getWorkspaceView().refreshView();
+			    getController().getMainView().getWorkspaceView()
+				    .refreshView();
 			} catch (Exception e) {
 			    com.google.gwt.user.client.Window
 				    .alert("Unable to delete object. Error="
@@ -504,7 +502,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			OsylEditorEntryPoint.getInstance().changePropertyInMap(
 				cv, "" + contextVisible);
 			getView().closeAndSaveEdit(true);
-			getController().getMainView().getWorkspaceView().refreshView();
+			getController().getMainView().getWorkspaceView()
+				.refreshView();
 		    } catch (Exception e) {
 			com.google.gwt.user.client.Window
 				.alert("Unable to delete object. Error=" + e);
@@ -545,7 +544,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     } // enterEdit
 
     public void enterView() {
-
 	// We keep track that we are now in view-mode
 	setInEditionMode(false);
 	getMainPanel().clear();
@@ -767,11 +765,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	typeResourceListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
-		if (typeResourceListBox.getSelectedIndex() > 0) {
-		    saveButton.setEnabled(true);
-		} else {
-		    saveButton.setEnabled(false);
-		}
+		saveButton.setEnabled(true);
 		setTypeResource(typeResourceListBox
 			.getValue(typeResourceListBox.getSelectedIndex()));
 	    }
@@ -790,7 +784,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-		onSave();
+		if (saveButton.isEnabled())
+		    onSave();
 	    }
 	});
 
@@ -927,8 +922,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    }
 	}
 	if (resourceIncompatibility) {
-	    if(typage==null || "".equals(typage))
-		typage=RES_TYPE_NO_TYPE;
+	    if (typage == null || "".equals(typage))
+		typage = RES_TYPE_NO_TYPE;
 	    OsylOkCancelDialog osylOkCancelDialog =
 		    new OsylOkCancelDialog(getView().getUiMessage(
 			    "Global.warning"), getView().getUiMessage(
@@ -946,7 +941,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			OsylEditorEntryPoint.getInstance().changePropertyInMap(
 				cr, resType);
 			onSave();
-			getController().getMainView().getWorkspaceView().refreshView();
 		    } catch (Exception e) {
 			com.google.gwt.user.client.Window
 				.alert("Unable to delete object. Error=" + e);
@@ -983,40 +977,38 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 					    COPropertiesType.IDENTIFIER_TYPE_LIBRARY));
 		}
 
-		OsylEditorEntryPoint
-		    .getInstance()
-		    .changePropertyForResource(
-			    cr,
-			    COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE,
-			    getSelectedCitationProperty(
-				    COPropertiesType.IDENTIFIER,
-				    COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE));
+		OsylEditorEntryPoint.getInstance().changePropertyForResource(
+			cr,
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE,
+			getSelectedCitationProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE));
 
-		OsylEditorEntryPoint
-		    .getInstance()
-		    .changePropertyForResource(
-			    cr,
-			    COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
-			    getSelectedCitationProperty(
-				    COPropertiesType.IDENTIFIER,
-				    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK));
+		OsylEditorEntryPoint.getInstance().changePropertyForResource(
+			cr,
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
+			getSelectedCitationProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_OTHERLINK));
 
 		try {
 		    String otherLinkLbl =
-			   	getSelectedCitationPropertyAttr(
-					    COPropertiesType.IDENTIFIER,
-					    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
-					    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL);
+			    getSelectedCitationPropertyAttr(
+				    COPropertiesType.IDENTIFIER,
+				    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
+				    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL);
 
 		    if (otherLinkLbl != null) {
 			OsylEditorEntryPoint
-			    .getInstance().addAttributeToProperty(cr,
-				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
-				COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL,
-				otherLinkLbl);
+				.getInstance()
+				.addAttributeToProperty(
+					cr,
+					COPropertiesType.IDENTIFIER,
+					COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
+					COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL,
+					otherLinkLbl);
 		    }
 		} catch (Exception e) {
 		    // The property is probably null - See SAKAI-1560
@@ -1125,6 +1117,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     @Override
     public String getText() {
 	throw new IllegalStateException("Should not be used with citation");
+	
     }
 
     @Override

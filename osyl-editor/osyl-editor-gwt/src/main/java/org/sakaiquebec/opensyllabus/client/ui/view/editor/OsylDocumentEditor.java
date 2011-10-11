@@ -716,7 +716,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-		onSave();
+		if(saveButton.isEnabled())
+		    onSave();
 	    }
 	});
 
@@ -806,7 +807,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 			OsylEditorEntryPoint.getInstance().changePropertyInMap(
 				cr, resType);
 			onSave();
-			getController().getMainView().getWorkspaceView().refreshView();
 		    } catch (Exception e) {
 			com.google.gwt.user.client.Window
 				.alert("Unable to delete object. Error=" + e);
@@ -858,7 +858,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 			    OsylEditorEntryPoint.getInstance()
 				    .changePropertyInMap(lcr, contextLicence);
 			    onSave();
-			    getController().getMainView().getWorkspaceView().refreshView();
 			} catch (Exception e) {
 			    com.google.gwt.user.client.Window
 				    .alert("Unable to delete object. Error="
