@@ -23,8 +23,8 @@ package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -42,9 +42,9 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -71,7 +71,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
     private CheckBox announceChexBox;
 
     private TextArea contentTextArea;
-    
+
     private TextBox titleTextBox;
 
     private VerticalPanel announcePanel;
@@ -91,6 +91,12 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 
     private DateTimeFormat timeFormat;
 
+    private ImageAndTextButton publishButton;
+
+    private ImageAndTextButton cancelButton;
+
+    private HorizontalPanel buttonPanel;
+
     /**
      * Constructor.
      * 
@@ -108,7 +114,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	label.setStylePrimaryName("Osyl-PublishView-Title");
 	mainPanel.add(label);
 	HTML voidLabel = new HTML("<p>&nbsp;</p>");
-	voidLabel.setStylePrimaryName("Osyl-PublishView-Label");	
+	voidLabel.setStylePrimaryName("Osyl-PublishView-Label");
 	mainPanel.add(voidLabel);
 	osylPublishedListView = new OsylPublishedListView(getController());
 	osylPublishedListView.setWidth("100%");
@@ -117,40 +123,42 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	setSize("420px", "250px");
 	mainPanel.add(voidLabel);
 	announceChexBox =
-		new CheckBox(uiMessages
-			.getMessage("publish.announce.checkboxLabel"));
-	mainPanel.add(voidLabel);	
+		new CheckBox(
+			uiMessages.getMessage("publish.announce.checkboxLabel"));
+	mainPanel.add(voidLabel);
 	mainPanel.add(announceChexBox);
 	mainPanel.add(voidLabel);
-	
+
 	announcePanel = new VerticalPanel();
-	Label announceLabel = new Label(uiMessages
-			.getMessage("publish.announce.label"));
+	Label announceLabel =
+		new Label(uiMessages.getMessage("publish.announce.label"));
 	announceLabel.setStylePrimaryName("Osyl-PublishView-Label");
 	HTML spaceLabel = new HTML("&nbsp;");
 	spaceLabel.setStylePrimaryName("Osyl-PublishView-Label");
-	announcePanel.add(spaceLabel);	
+	announcePanel.add(spaceLabel);
 	announcePanel.add(announceLabel);
-	announcePanel.add(spaceLabel);	
-	titleTextBox = new TextBox();	
+	announcePanel.add(spaceLabel);
+	titleTextBox = new TextBox();
 	contentTextArea = new TextArea();
 	Date date = new Date();
 	dateString = dateFormat.format(date);
 	timeString = timeFormat.format(date);
-	Label titleLabel = new Label(uiMessages.getMessage("publish.announce.title"));
-	Label texteLabel = new Label(uiMessages.getMessage("publish.announce.text"));
+	Label titleLabel =
+		new Label(uiMessages.getMessage("publish.announce.title"));
+	Label texteLabel =
+		new Label(uiMessages.getMessage("publish.announce.text"));
 	titleLabel.setStylePrimaryName("Osyl-PublishView-Label-important");
 	texteLabel.setStylePrimaryName("Osyl-PublishView-Label-important");
 	titleTextBox.setText(coMessages.getMessage("announce.publish.subject"));
 	contentTextArea.setText(coMessages.getMessage(
-		"announce.publish.content", dateString, timeString));	
+		"announce.publish.content", dateString, timeString));
 	titleTextBox.setWidth("400px");
 	contentTextArea.setSize("400px", "75px");
 	announcePanel.add(spaceLabel);
 	announcePanel.add(spaceLabel);
-	announcePanel.add(titleLabel);	
-	announcePanel.add(titleTextBox);		
-	announcePanel.add(texteLabel);	
+	announcePanel.add(titleLabel);
+	announcePanel.add(titleTextBox);
+	announcePanel.add(texteLabel);
 	announcePanel.add(contentTextArea);
 	announcePanel.add(spaceLabel);
 	announcePanel.setVisible(false);
@@ -166,7 +174,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 		});
 
 	// Add a button panel
-	HorizontalPanel buttonPanel = new HorizontalPanel();
+	buttonPanel = new HorizontalPanel();
 	mainPanel.add(buttonPanel);
 
 	// Add a 'Publish' button.
@@ -177,7 +185,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 		AbstractImagePrototype.create(osylImageBundle.publish());
 	ImageAndTextButton publishButton = new ImageAndTextButton(
 	// TODO: Bug with ImageBundle, we have to use
-		// AbstractImagePrototype
+	// AbstractImagePrototype
 		imgPublishButton, uiMessages.getMessage("publish"));
 	publishButton.addClickHandler(new PublishLinkClickHandler());
 	publishButton.setStylePrimaryName("Osyl-PublishView-genericButton");
@@ -192,9 +200,9 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	// });
 	AbstractImagePrototype imgCloseButton =
 		AbstractImagePrototype.create(osylImageBundle.action_cancel());
-	ImageAndTextButton cancelButton = new ImageAndTextButton(
+	cancelButton = new ImageAndTextButton(
 	// TODO: Bug with ImageBundle, we have to use
-		// AbstractImagePrototype
+	// AbstractImagePrototype
 		imgCloseButton, uiMessages.getMessage("close"));
 	cancelButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
@@ -216,9 +224,9 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 
 	public void onClick(ClickEvent event) {
 	    osylPublishedListView.setPublishingNow();
-
 	    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 		public void onSuccess(Void serverResponse) {
+		    mainPanel.remove(buttonPanel);
 		    publish();
 		}
 
@@ -226,7 +234,8 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 		    final OsylAlertDialog alertBox =
 			    new OsylAlertDialog(false, true, getController()
 				    .getUiMessage("publish.error")
-				    + " : " + error.toString());
+				    + " : "
+				    + error.toString());
 		    alertBox.show();
 		    osylPublishedListView.verifiyPublishState(false, null);
 		}
@@ -254,6 +263,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 			    notifyOnPublish();
 			osylPublishedListView.verifiyPublishState(true,
 				serverResponse.get(1));
+			mainPanel.add(buttonPanel);
 		    }
 
 		    public void onFailure(Throwable error) {
@@ -270,8 +280,12 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 						.getMessage("publish.fusionException");
 			    }
 			    final OsylAlertDialog alertBox =
-				    new OsylAlertDialog(false, true, uiMessages
-					    .getMessage("Global.warning"), msg);
+				    new OsylAlertDialog(
+					    false,
+					    true,
+					    uiMessages
+						    .getMessage("Global.warning"),
+					    msg);
 			    alertBox.show();
 			} else if (error instanceof PdfGenerationException) {
 			    final OsylAlertDialog alertBox =
@@ -292,6 +306,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 			    alertBox.show();
 			}
 			osylPublishedListView.verifiyPublishState(false, null);
+			mainPanel.add(buttonPanel);
 		    }
 		};
 	osylController.publishCourseOutline(callback);
@@ -311,15 +326,14 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	    }
 	};
 	String content = contentTextArea.getText();
-	String subject = titleTextBox.getText(); 
+	String subject = titleTextBox.getText();
 	Date d = new Date();
 	content = content.replace(dateString, dateFormat.format(d));
 	content = content.replace(timeString, timeFormat.format(d));
-	getController().notifyOnPublish(getController().getSiteId(),
-			subject, content,
-		notifyCallback);
+	getController().notifyOnPublish(getController().getSiteId(), subject,
+		content, notifyCallback);
     }
-	
+
     public OsylController getController() {
 	return osylController;
     }
