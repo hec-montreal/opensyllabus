@@ -298,7 +298,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	try {
 	    String osylCoISO88591 = "";
 	    try {
-		osylCo = osylCo.replaceAll("’", "'");
+		osylCo = osylCo.replaceAll("ï¿½", "'");
 		osylCoISO88591 =
 			new String(osylCo.getBytes("UTF-8"), "ISO-8859-1");
 	    } catch (UnsupportedEncodingException e1) {
@@ -323,86 +323,86 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * documents
      * @return true if all documents have been written successfully
      */
-    private boolean writeDocumentsInZC(String siteId, String lang, String acces,
-	    Map<String, String> documentSecurityMap,
-	    Map<String, String> documentVisibityMap,
-	    Map<String, String> documents, String zcco, Connection dbConn)
-	    throws Exception {
-	// TODO: ajouter osylPrinVersion.pdf aux documents transferes
-
-	log.debug("Writing documents of site " + siteId
-		+ "in public portal database...");
-
-	boolean written = false;
-	String accesDoc = null;
-	String visibilite = null;
-	String ressType = null;
-	byte[] ressContent = null;
-	int ressSize = 0;
-	StringBuffer outTrace = null;
-	Publication p = new Publication();
-	String courseNumber = getCourseNumber();
-
-	Document xmlSourceDoc = null;
-
-	if (null != zcco && !("".equals(zcco))) {
-	    xmlSourceDoc = p.buildDOM(zcco);
-	}
-
-	Set<String> docSecKeyValues = documentSecurityMap.keySet();
-	String doc = null;
-	HashMap hache = getDocsIds(dbConn, lang, xmlSourceDoc, outTrace, false);
-	//It uses access from each document
-	for (String docSecKey : docSecKeyValues) {
-	    accesDoc = documentSecurityMap.get(docSecKey);
-	    doc = documents.get(docSecKey);
-	    if (docSecKey != null && !"".equalsIgnoreCase(docSecKey)) {
-		visibilite = documentVisibityMap.get(docSecKey);
-		// Exclude the string "/publish" itsself to get the real
-		// filename
-		//It searches documents inside courses through a course as "community" 
-		//because that includes all documents
-		if (ACCESS_COMMUNITY.equals(acces)) {				
-			if ((accesDoc.equals(ACCESS_PUBLIC) && "true".equals(visibilite))
-				|| (accesDoc.equals(ACCESS_COMMUNITY) && "true".equals(visibilite))) {		
-			    try {
-				ContentResource content =
-					contentHostingService.getResource(doc);
-				// TODO: verifier les types des documents sont
-				// compatibles dans ZoneCours
-				if (content != null) {
-				    ressType = content.getContentType();
-				    ressContent = content.getContent();
-				    ressSize = (int) content.getContentLength();
-	
-				    log.debug("Writing documents of site " + siteId
-					    + "in public portal database...");
-				    if (docSecKey != null
-					    && hache
-						    .get(courseNumber + "_" + docSecKey) != null)
-					writeDocInZcDb(courseNumber + "_" + docSecKey,
-						lang, accesDoc, ressType, ressSize,
-						content.streamContent(), ressContent,
-						siteId, dbConn);
-				}
-			    } catch (PermissionException e) {
-				log.error("writeDocumentsInZC(): " + e);
-			    } catch (IdUnusedException e) {
-				log.error("writeDocumentsInZC(): " + e);
-			    } catch (TypeException e) {
-				log.error("writeDocumentsInZC(): " + e);
-			    } catch (ServerOverloadException e) {
-				log.error("writeDocumentsInZC(): " + e);
-			    }
-			    written = true;
-			}
-	    }
-	    }
-	}
-	log.debug("All public documents of site " + siteId
-		+ "have been written in public portal database...");
-	return written;
-    }
+//    private boolean writeDocumentsInZC(String siteId, String lang, String acces,
+//	    Map<String, String> documentSecurityMap,
+//	    Map<String, String> documentVisibityMap,
+//	    Map<String, String> documents, String zcco, Connection dbConn)
+//	    throws Exception {
+//	// TODO: ajouter osylPrinVersion.pdf aux documents transferes
+//
+//	log.debug("Writing documents of site " + siteId
+//		+ "in public portal database...");
+//
+//	boolean written = false;
+//	String accesDoc = null;
+//	String visibilite = null;
+//	String ressType = null;
+//	byte[] ressContent = null;
+//	int ressSize = 0;
+//	StringBuffer outTrace = null;
+//	Publication p = new Publication();
+//	String courseNumber = getCourseNumber();
+//
+//	Document xmlSourceDoc = null;
+//
+//	if (null != zcco && !("".equals(zcco))) {
+//	    xmlSourceDoc = p.buildDOM(zcco);
+//	}
+//
+//	Set<String> docSecKeyValues = documentSecurityMap.keySet();
+//	String doc = null;
+//	HashMap hache = getDocsIds(dbConn, lang, xmlSourceDoc, outTrace, false);
+//	//It uses access from each document
+//	for (String docSecKey : docSecKeyValues) {
+//	    accesDoc = documentSecurityMap.get(docSecKey);
+//	    doc = documents.get(docSecKey);
+//	    if (docSecKey != null && !"".equalsIgnoreCase(docSecKey)) {
+//		visibilite = documentVisibityMap.get(docSecKey);
+//		// Exclude the string "/publish" itsself to get the real
+//		// filename
+//		//It searches documents inside courses through a course as "community" 
+//		//because that includes all documents
+//		if (ACCESS_COMMUNITY.equals(acces)) {				
+//			if ((accesDoc.equals(ACCESS_PUBLIC) && "true".equals(visibilite))
+//				|| (accesDoc.equals(ACCESS_COMMUNITY) && "true".equals(visibilite))) {		
+//			    try {
+//				ContentResource content =
+//					contentHostingService.getResource(doc);
+//				// TODO: verifier les types des documents sont
+//				// compatibles dans ZoneCours
+//				if (content != null) {
+//				    ressType = content.getContentType();
+//				    ressContent = content.getContent();
+//				    ressSize = (int) content.getContentLength();
+//	
+//				    log.debug("Writing documents of site " + siteId
+//					    + "in public portal database...");
+//				    if (docSecKey != null
+//					    && hache
+//						    .get(courseNumber + "_" + docSecKey) != null)
+//					writeDocInZcDb(courseNumber + "_" + docSecKey,
+//						lang, accesDoc, ressType, ressSize,
+//						content.streamContent(), ressContent,
+//						siteId, dbConn);
+//				}
+//			    } catch (PermissionException e) {
+//				log.error("writeDocumentsInZC(): " + e);
+//			    } catch (IdUnusedException e) {
+//				log.error("writeDocumentsInZC(): " + e);
+//			    } catch (TypeException e) {
+//				log.error("writeDocumentsInZC(): " + e);
+//			    } catch (ServerOverloadException e) {
+//				log.error("writeDocumentsInZC(): " + e);
+//			    }
+//			    written = true;
+//			}
+//	    }
+//	    }
+//	}
+//	log.debug("All public documents of site " + siteId
+//		+ "have been written in public portal database...");
+//	return written;
+//    }
 
     /**
      * Writes one document in the public portal database
@@ -417,46 +417,46 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @param siteId The identifier of the site containing the document
      * @throws Exception
      */
-    private void writeDocInZcDb(String koId, String lang, String acces,
-	    String ressType, int ressSize, InputStream ressContent,
-	    byte[] content, String siteId, Connection dbConn) throws Exception {
-	log.debug("Writing document  " + koId + "in public portal database...");
-
-	boolean exist =
-		selectDocInDocZone(koId, lang, acces, ressType, ressSize,
-			content, siteId, dbConn);
-
-	String nivSecu = getSecurityLabel(acces);
-
-	// Check if the record is already on the table
-	if (!exist) {
-
-	    insertDocInDocZone(dbConn, koId, lang, acces, ressType, ressSize,
-		    ressContent, content, siteId);
-	    ressContent.close();
-	    // Add the information to the relational table
-	    // Clean the place to avoid unique constraint violation
-	    deleteRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);
-	    // By default, security is zero for all documents belonging to
-	    // portal
-	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu); // it was
-	    // "0"
-
-	} else {
-
-	    updateDocZone(dbConn, koId, lang, acces, ressType, ressSize,
-		    ressContent, content, siteId);
-	    ressContent.close();
-	    // Clean the place to avoid unique constraint violation
-	    deleteRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);
-	    // By default, security is zero for all documents belonging to
-	    // portal
-	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu); // it was
-	    // "0"
-
-	}
-	log.debug("Document " + koId + " has been written in the database");
-    }
+//    private void writeDocInZcDb(String koId, String lang, String acces,
+//	    String ressType, int ressSize, InputStream ressContent,
+//	    byte[] content, String siteId, Connection dbConn) throws Exception {
+//	log.debug("Writing document  " + koId + "in public portal database...");
+//
+//	boolean exist =
+//		selectDocInDocZone(koId, lang, acces, ressType, ressSize,
+//			content, siteId, dbConn);
+//
+//	String nivSecu = getSecurityLabel(acces);
+//
+//	// Check if the record is already on the table
+//	if (!exist) {
+//
+//	    insertDocInDocZone(dbConn, koId, lang, acces, ressType, ressSize,
+//		    ressContent, content, siteId);
+//	    ressContent.close();
+//	    // Add the information to the relational table
+//	    // Clean the place to avoid unique constraint violation
+//	    deleteRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);
+//	    // By default, security is zero for all documents belonging to
+//	    // portal
+//	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu); // it was
+//	    // "0"
+//
+//	} else {
+//
+//	    updateDocZone(dbConn, koId, lang, acces, ressType, ressSize,
+//		    ressContent, content, siteId);
+//	    ressContent.close();
+//	    // Clean the place to avoid unique constraint violation
+//	    deleteRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);
+//	    // By default, security is zero for all documents belonging to
+//	    // portal
+//	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu); // it was
+//	    // "0"
+//
+//	}
+//	log.debug("Document " + koId + " has been written in the database");
+//    }
 
     /**
      * Tells if a document is already in the database
@@ -471,33 +471,33 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @param siteId The identifier of the site containing the document
      * @return true if the document is in the database false otherwise
      */
-    private boolean selectDocInDocZone(String koId, String lang, String acces,
-	    String ressType, int ressSize, byte[] content, String siteId,
-	    Connection dbConn) {
-	boolean isthere = false;
-	String requete_select = null;
-	PreparedStatement ps_select = null;
-	ResultSet rSet_select = null;
-	String nivSecu = getSecurityLabel(acces);
-
-	requete_select =
-		"select * from doczone where koId like ? "; // AND nivSecu=?
-	try {
-	    ps_select = dbConn.prepareStatement(requete_select);
-	    ps_select.setString(1, koId);
-	    //ps_select.setString(2, nivSecu);
-	    rSet_select = ps_select.executeQuery();
-
-	    if (rSet_select.next())
-		isthere = true;
-
-	    ps_select.close();
-	    rSet_select.close();
-	} catch (SQLException e) {
-	    log.error("selectDocInDocZone(): " + e);
-	}
-	return isthere;
-    }
+//    private boolean selectDocInDocZone(String koId, String lang, String acces,
+//	    String ressType, int ressSize, byte[] content, String siteId,
+//	    Connection dbConn) {
+//	boolean isthere = false;
+//	String requete_select = null;
+//	PreparedStatement ps_select = null;
+//	ResultSet rSet_select = null;
+//	String nivSecu = getSecurityLabel(acces);
+//
+//	requete_select =
+//		"select * from doczone where koId like ? "; // AND nivSecu=?
+//	try {
+//	    ps_select = dbConn.prepareStatement(requete_select);
+//	    ps_select.setString(1, koId);
+//	    //ps_select.setString(2, nivSecu);
+//	    rSet_select = ps_select.executeQuery();
+//
+//	    if (rSet_select.next())
+//		isthere = true;
+//
+//	    ps_select.close();
+//	    rSet_select.close();
+//	} catch (SQLException e) {
+//	    log.error("selectDocInDocZone(): " + e);
+//	}
+//	return isthere;
+//    }
 
     /**
      * Inserts a document in the public portal database
@@ -514,77 +514,77 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @throws IOException
      * @throws Exception
      */
-    private void insertDocInDocZone(Connection dbConn, String koId,
-	    String lang, String acces, String ressType, int ressSize,
-	    InputStream ressContent, byte[] content, String siteId)
-	    throws IOException, Exception {
-	log.debug("insertDocInDocZone - debut");
-
-	String requete_ins = null;
-	PreparedStatement ps_ins = null;
-	ResultSet rSet_ins = null;
-
-	String requeteSQL = null;
-	PreparedStatement ps = null;
-	ResultSet rset = null;
-	BLOB blob;
-
-	String nivSecu = getSecurityLabel(acces);
-
-	try {
-
-	    requete_ins =
-		    "INSERT INTO DocZone (koId, lang, nivSecu, ressType, dateMAJ, docContent) VALUES(?,?,?,?,sysdate,empty_blob())";
-	    ps_ins = dbConn.prepareStatement(requete_ins);
-	    ps_ins.setString(1, koId);
-	    ps_ins.setString(2, lang);
-	    ps_ins.setString(3, nivSecu);
-	    ps_ins.setString(4, ressType);
-	    ps_ins.execute();
-	    ps_ins.close();
-
-	    requeteSQL =
-		    "SELECT docContent FROM DocZone WHERE koId=? FOR UPDATE";
-	    ps = dbConn.prepareStatement(requeteSQL);
-	    ps.setString(1, koId);
-	    //ps.setString(2, nivSecu);
-
-	    rset = ps.executeQuery();
-
-	    if (rset.next()) {
-		blob = ((OracleResultSet) rset).getBLOB(1);
-		OutputStream blobOutput =
-			((oracle.sql.BLOB) blob).getBinaryOutputStream();
-
-		byte[] buffer = new byte[10 * 1024];
-
-		int nread = 0; // Number of bytes read
-		while ((nread = ressContent.read(buffer)) != -1) {
-		    blobOutput.write(buffer, 0, nread);
-
-		    log.trace(nread);
-		}
-		ressContent.close();
-		blobOutput.close();
-
-	    }
-
-	    log.debug("The resource " + koId + " has been transferred.");
-
-	} catch (SQLException e) {
-	    log.error("insertDocInDocZone(): " + e);
-	} finally {
-	    Statement stmt = dbConn.createStatement();
-	    stmt.execute("commit");
-	    rset.close();
-	    ps.close();
-	    stmt.close();
-
-	}
-	log.debug("The document " + koId + " NivSec: " + nivSecu
-		+ " has been transferred");
-
-    }
+//    private void insertDocInDocZone(Connection dbConn, String koId,
+//	    String lang, String acces, String ressType, int ressSize,
+//	    InputStream ressContent, byte[] content, String siteId)
+//	    throws IOException, Exception {
+//	log.debug("insertDocInDocZone - debut");
+//
+//	String requete_ins = null;
+//	PreparedStatement ps_ins = null;
+//	ResultSet rSet_ins = null;
+//
+//	String requeteSQL = null;
+//	PreparedStatement ps = null;
+//	ResultSet rset = null;
+//	BLOB blob;
+//
+//	String nivSecu = getSecurityLabel(acces);
+//
+//	try {
+//
+//	    requete_ins =
+//		    "INSERT INTO DocZone (koId, lang, nivSecu, ressType, dateMAJ, docContent) VALUES(?,?,?,?,sysdate,empty_blob())";
+//	    ps_ins = dbConn.prepareStatement(requete_ins);
+//	    ps_ins.setString(1, koId);
+//	    ps_ins.setString(2, lang);
+//	    ps_ins.setString(3, nivSecu);
+//	    ps_ins.setString(4, ressType);
+//	    ps_ins.execute();
+//	    ps_ins.close();
+//
+//	    requeteSQL =
+//		    "SELECT docContent FROM DocZone WHERE koId=? FOR UPDATE";
+//	    ps = dbConn.prepareStatement(requeteSQL);
+//	    ps.setString(1, koId);
+//	    //ps.setString(2, nivSecu);
+//
+//	    rset = ps.executeQuery();
+//
+//	    if (rset.next()) {
+//		blob = ((OracleResultSet) rset).getBLOB(1);
+//		OutputStream blobOutput =
+//			((oracle.sql.BLOB) blob).getBinaryOutputStream();
+//
+//		byte[] buffer = new byte[10 * 1024];
+//
+//		int nread = 0; // Number of bytes read
+//		while ((nread = ressContent.read(buffer)) != -1) {
+//		    blobOutput.write(buffer, 0, nread);
+//
+//		    log.trace(nread);
+//		}
+//		ressContent.close();
+//		blobOutput.close();
+//
+//	    }
+//
+//	    log.debug("The resource " + koId + " has been transferred.");
+//
+//	} catch (SQLException e) {
+//	    log.error("insertDocInDocZone(): " + e);
+//	} finally {
+//	    Statement stmt = dbConn.createStatement();
+//	    stmt.execute("commit");
+//	    rset.close();
+//	    ps.close();
+//	    stmt.close();
+//
+//	}
+//	log.debug("The document " + koId + " NivSec: " + nivSecu
+//		+ " has been transferred");
+//
+//    }
 
     // ---------------------------------------------------
     /**
@@ -595,24 +595,24 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @param planId The identifier of the course outline
      * @throws Exception
      */
-    public void deleteRessourceSecuriteDB(Connection connexion, String koId,
-	    String planId, String acces) throws Exception {
-	// ---------------------------------------------------
-	String requeteSQL_del = null;
-	Statement stmt_del = connexion.createStatement();
-
-	String xmlKoId = getKoId(planId);
-	String nivSecu = getSecurityLabel(acces);
-
-	requeteSQL_del =
-		" DELETE FROM DocSecu WHERE koId = '" + koId + "' AND planId='"
-			+ xmlKoId + "'";
-	log.debug(requeteSQL_del + " ...");
-	stmt_del.execute(requeteSQL_del);
-	log.debug("request ok: " + requeteSQL_del);
-
-	stmt_del.close();
-    }
+//    public void deleteRessourceSecuriteDB(Connection connexion, String koId,
+//	    String planId, String acces) throws Exception {
+//	// ---------------------------------------------------
+//	String requeteSQL_del = null;
+//	Statement stmt_del = connexion.createStatement();
+//
+//	String xmlKoId = getKoId(planId);
+//	String nivSecu = getSecurityLabel(acces);
+//
+//	requeteSQL_del =
+//		" DELETE FROM DocSecu WHERE koId = '" + koId + "' AND planId='"
+//			+ xmlKoId + "'";
+//	log.debug(requeteSQL_del + " ...");
+//	stmt_del.execute(requeteSQL_del);
+//	log.debug("request ok: " + requeteSQL_del);
+//
+//	stmt_del.close();
+//    }
 
     // ---------------------------------------------------
     /**
@@ -622,20 +622,20 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @param koId The identifier of the document
      * @throws Exception
      */
-    public void deleteRessourceFromDB(Connection connexion, String koId,
-	    String acces) throws Exception {
-	// ---------------------------------------------------
-	String requeteSQL_delRess = null;
-	Statement stmt_delRess = connexion.createStatement();
-	String nivSecu = getSecurityLabel(acces);
-	requeteSQL_delRess = " DELETE FROM DocZone WHERE koId = '" + koId + "'";		
-	//" DELETE FROM DocZone WHERE koId = '" + koId + "' AND nivSecu = '" + nivSecu + "'";
-	log.debug(requeteSQL_delRess + " ...");
-	stmt_delRess.execute(requeteSQL_delRess);
-	log.debug("request ok: " + requeteSQL_delRess);
-
-	stmt_delRess.close();
-    }
+//    public void deleteRessourceFromDB(Connection connexion, String koId,
+//	    String acces) throws Exception {
+//	// ---------------------------------------------------
+//	String requeteSQL_delRess = null;
+//	Statement stmt_delRess = connexion.createStatement();
+//	String nivSecu = getSecurityLabel(acces);
+//	requeteSQL_delRess = " DELETE FROM DocZone WHERE koId = '" + koId + "'";		
+//	//" DELETE FROM DocZone WHERE koId = '" + koId + "' AND nivSecu = '" + nivSecu + "'";
+//	log.debug(requeteSQL_delRess + " ...");
+//	stmt_delRess.execute(requeteSQL_delRess);
+//	log.debug("request ok: " + requeteSQL_delRess);
+//
+//	stmt_delRess.close();
+//    }
 
     // ---------------------------------------------------
     /**
@@ -647,33 +647,33 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @param nivSecu The security level to be inserted
      * @throws Exception
      */
-    public void insertRessourceSecuriteDB(Connection connexion, String koId,
-	    String planId, String nivSecu) throws Exception {
-	// ---------------------------------------------------
-	String requeteSQL_sec = null;
-	PreparedStatement ps_sec = null;
-
-	try {
-	    requeteSQL_sec =
-		    "INSERT INTO DocSecu (koId, planId, nivSecu) VALUES(?,?,?)";
-	    ps_sec = connexion.prepareStatement(requeteSQL_sec);
-
-	    String xmlKoId = getKoId(planId);
-	    ps_sec.setString(1, koId);
-	    ps_sec.setString(2, xmlKoId);
-	    ps_sec.setString(3, nivSecu);
-	    ps_sec.execute();
-	} catch (Exception e) {
-	    log.error("Erreur dans insertRessourceSecuriteDB() : " + e);
-	}
-
-	finally {
-	    Statement stmt_sec = connexion.createStatement();
-	    stmt_sec.execute("commit");
-	    ps_sec.close();
-	    stmt_sec.close();
-	}
-    }
+//    public void insertRessourceSecuriteDB(Connection connexion, String koId,
+//	    String planId, String nivSecu) throws Exception {
+//	// ---------------------------------------------------
+//	String requeteSQL_sec = null;
+//	PreparedStatement ps_sec = null;
+//
+//	try {
+//	    requeteSQL_sec =
+//		    "INSERT INTO DocSecu (koId, planId, nivSecu) VALUES(?,?,?)";
+//	    ps_sec = connexion.prepareStatement(requeteSQL_sec);
+//
+//	    String xmlKoId = getKoId(planId);
+//	    ps_sec.setString(1, koId);
+//	    ps_sec.setString(2, xmlKoId);
+//	    ps_sec.setString(3, nivSecu);
+//	    ps_sec.execute();
+//	} catch (Exception e) {
+//	    log.error("Erreur dans insertRessourceSecuriteDB() : " + e);
+//	}
+//
+//	finally {
+//	    Statement stmt_sec = connexion.createStatement();
+//	    stmt_sec.execute("commit");
+//	    ps_sec.close();
+//	    stmt_sec.close();
+//	}
+//    }
 
     /**
      * Updates a document content in the public portal database
@@ -689,40 +689,40 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @param siteId The identifier of the site containing the document
      */
 
-    private void updateDocZone(Connection dbConn, String koId, String lang,
-	    String acces, String ressType, int ressSize,
-	    InputStream ressContent, byte[] content, String siteId) {
-
-	String requete_upd = null;
-	PreparedStatement ps_upd = null;
-	ResultSet rSet_upd = null;
-	String nivSecu = getSecurityLabel(acces);
-	// Check if the record is already on the table
-
-	// Add the document content in the record
-	requete_upd =
-		"update doczone set doccontent = ?, datemaj= sysdate, nivSecu=?  WHERE koId=? ";
-	try {
-	    ps_upd = dbConn.prepareStatement(requete_upd);
-	    ps_upd.setBinaryStream(1, ressContent, ressSize);
-	    ps_upd.setString(2, nivSecu);	    
-	    ps_upd.setString(3, koId);
-	    ps_upd.execute();
-
-	    ps_upd.close();
-	    try {
-		ressContent.close();
-	    } catch (IOException e) {
-		log.warn("updateDocZone: Unable to close stream");
-	    }
-
-	    log.debug("The resource " + koId + " has been transferred.");
-	} catch (SQLException e) {
-	    log.error("updateDocZone(): " + e);
-	}
-
-	log.debug("The document " + koId + " has been updated");
-    }
+//    private void updateDocZone(Connection dbConn, String koId, String lang,
+//	    String acces, String ressType, int ressSize,
+//	    InputStream ressContent, byte[] content, String siteId) {
+//
+//	String requete_upd = null;
+//	PreparedStatement ps_upd = null;
+//	ResultSet rSet_upd = null;
+//	String nivSecu = getSecurityLabel(acces);
+//	// Check if the record is already on the table
+//
+//	// Add the document content in the record
+//	requete_upd =
+//		"update doczone set doccontent = ?, datemaj= sysdate, nivSecu=?  WHERE koId=? ";
+//	try {
+//	    ps_upd = dbConn.prepareStatement(requete_upd);
+//	    ps_upd.setBinaryStream(1, ressContent, ressSize);
+//	    ps_upd.setString(2, nivSecu);	    
+//	    ps_upd.setString(3, koId);
+//	    ps_upd.execute();
+//
+//	    ps_upd.close();
+//	    try {
+//		ressContent.close();
+//	    } catch (IOException e) {
+//		log.warn("updateDocZone: Unable to close stream");
+//	    }
+//
+//	    log.debug("The resource " + koId + " has been transferred.");
+//	} catch (SQLException e) {
+//	    log.error("updateDocZone(): " + e);
+//	}
+//
+//	log.debug("The document " + koId + " has been updated");
+//    }
 
     /**
      * {@inheritDoc}
@@ -802,11 +802,11 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    lang = published.getLang().substring(0, 2);
 	    sent = writeXmlInZC(zcco, koId, lang, dbConn);
 	    // Save the documents in the zonecours database
-	    sent =
-		    sent
-			    && writeDocumentsInZC(siteId, lang, acces,
-				    documentSecurityMap, documentVisibilityMap,
-				    documents, zcco, dbConn);
+//	    sent =
+//		    sent
+//			    && writeDocumentsInZC(siteId, lang, acces,
+//				    documentSecurityMap, documentVisibilityMap,
+//				    documents, zcco, dbConn);
 	    if (sent) {
 		log.debug("The transfer to the ZoneCours "
 			+ "database is complete and successful");
@@ -969,47 +969,47 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @return A hashmap with all documents and their identifiers
      * @throws Exception
      */
-    private HashMap getDocsIds(Connection connexion, String lang, Document xml,
-	    StringBuffer outTrace, boolean trace) throws Exception {
-	// ---------------------------------------------------
-	ArrayList ressAl = new ArrayList();
-	HashMap docs = new HashMap();
-
-	NodeList docExts = xml.getElementsByTagName("ressource");
-	if (xml != null) {
-	    int nbDocExts = docExts.getLength();
-	    log.debug("Nombre de ressources : " + nbDocExts);
-	    for (int i = 1; i < nbDocExts + 1; i++) {
-		boolean nouveau = true;
-		Element ressource = (Element) docExts.item(i - 1);
-		String ressourceId = ressource.getAttribute("koId");
-		String type = ressource.getAttribute("type");
-		String nivSecu = ressource.getAttribute("securite");
-		String fileName =
-			"<font color='red'>ERREUR - pas de fichier ou d'url associe au document</font>";
-		String extension = "inconnu";
-		ressAl.add(ressourceId);
-		boolean isTXDoc = "TX_Document".equals(type);
-		NodeList urls = ressource.getElementsByTagName("url");
-		if (urls != null && isTXDoc) {
-		    Element url = (Element) urls.item(0);
-		    if (url != null && url.hasChildNodes()) {
-			NodeList children = url.getChildNodes();
-			if (children.item(0) instanceof org.w3c.dom.CharacterData) {
-			    log.debug("--- document " + i + ": " + ressourceId
-				    + " ---");
-			    org.w3c.dom.CharacterData text =
-				    (org.w3c.dom.CharacterData) children
-					    .item(0);
-			    fileName = text.getData();
-			}
-			docs.put(ressourceId, fileName);
-		    }
-		}
-	    }
-	}
-	return docs;
-    }
+//    private HashMap getDocsIds(Connection connexion, String lang, Document xml,
+//	    StringBuffer outTrace, boolean trace) throws Exception {
+//	// ---------------------------------------------------
+//	ArrayList ressAl = new ArrayList();
+//	HashMap docs = new HashMap();
+//
+//	NodeList docExts = xml.getElementsByTagName("ressource");
+//	if (xml != null) {
+//	    int nbDocExts = docExts.getLength();
+//	    log.debug("Nombre de ressources : " + nbDocExts);
+//	    for (int i = 1; i < nbDocExts + 1; i++) {
+//		boolean nouveau = true;
+//		Element ressource = (Element) docExts.item(i - 1);
+//		String ressourceId = ressource.getAttribute("koId");
+//		String type = ressource.getAttribute("type");
+//		String nivSecu = ressource.getAttribute("securite");
+//		String fileName =
+//			"<font color='red'>ERREUR - pas de fichier ou d'url associe au document</font>";
+//		String extension = "inconnu";
+//		ressAl.add(ressourceId);
+//		boolean isTXDoc = "TX_Document".equals(type);
+//		NodeList urls = ressource.getElementsByTagName("url");
+//		if (urls != null && isTXDoc) {
+//		    Element url = (Element) urls.item(0);
+//		    if (url != null && url.hasChildNodes()) {
+//			NodeList children = url.getChildNodes();
+//			if (children.item(0) instanceof org.w3c.dom.CharacterData) {
+//			    log.debug("--- document " + i + ": " + ressourceId
+//				    + " ---");
+//			    org.w3c.dom.CharacterData text =
+//				    (org.w3c.dom.CharacterData) children
+//					    .item(0);
+//			    fileName = text.getData();
+//			}
+//			docs.put(ressourceId, fileName);
+//		    }
+//		}
+//	    }
+//	}
+//	return docs;
+//    }
 
     public void unpublish(String siteId, String lang) {
 	String koId = getKoId(siteId);
