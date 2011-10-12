@@ -601,10 +601,12 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		courseManagementService.getSections(courseOffering.getEid());
 	for (Section section : sections) {
 	    if (!section.getEid().endsWith("00")) {
-		Set<String> instructors =
+		Set<String> instructors =null;
+		if(section.getEnrollmentSet()!=null)
+		instructors =
 			section.getEnrollmentSet().getOfficialInstructors();
 		String userName = "";
-		if (!instructors.isEmpty()) {
+		if (instructors!=null && !instructors.isEmpty()) {
 		    try {
 			User user =
 				userDirectoryService
