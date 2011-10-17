@@ -745,14 +745,18 @@
 			&lt;td width = "700px" align = "left"> 
 			
 				&lt;span class='titreRessource'>
+<!--				
 					<xsl:if test="contains(global/url,'http://') or contains(global/url,'ftp://')">
 						&lt;a href='<xsl:value-of select="global/url"/>' target='_blank'>
 					</xsl:if>
 					<xsl:if test="not(contains(global/url,'http://')) and not(contains(global/url,'ftp://'))">
 						&lt;a href='documents/<xsl:value-of select="@koId"/>.<xsl:value-of select="substring-after(substring-after(global/url,'/'),'/')"/>' target='_blank'>
 					</xsl:if>
-						<xsl:value-of select="local/libelle"/>&lt;/a>
-						
+-->
+						<xsl:value-of select="local/libelle"/>
+<!--
+						&lt;/a>
+-->						
 						<xsl:call-template name="boutonsVote">
 							<xsl:with-param name="koid" select="global/code"/>
 							<xsl:with-param name="docid" select="@koid"/>
@@ -828,14 +832,18 @@
 			&lt;td  align = "left"> 
 			
 					&lt;span class='titreRessource'>
+<!--
 						<xsl:if	test="contains(global/url,'http://') or contains(global/url,'ftp://')">
 							&lt;a href='<xsl:value-of select="global/url" />' target='_blank'>
 						</xsl:if>
 						<xsl:if	test="not(contains(global/url,'http://')) and not(contains(global/url,'ftp://'))">
 							&lt;a href='documents/<xsl:value-of select="@koId" />.<xsl:value-of select="substring-after(global/url,'/')" />' target='_blank'>
 						</xsl:if>
+-->
 						<xsl:value-of select="local/libelle" />
+<!--
 							&lt;/a>
+-->
 
 					&lt;/span><!-- titreRessource -->
 					<xsl:call-template name="boutonsVote">
