@@ -1440,11 +1440,9 @@ public class OsylController implements SavePushButtonEventHandler,
 
     public void sendEvent(String citationLinkClickEvent, String resource) {
 	AsyncCallback<Void> voidCallback = new AsyncCallback<Void>() {
-	    @Override
 	    public void onFailure(Throwable caught) {
 	    }
 
-	    @Override
 	    public void onSuccess(Void result) {
 	    }
 	};

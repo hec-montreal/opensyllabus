@@ -66,20 +66,17 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
 	}
     }
 
-    @Override
     public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer) {
 	return osylPortalServices.getOsylPortalService()
 		.getCoursesForAcadCareer(acadCareer);
 
     }
 
-    @Override
     public List<CODirectorySite> getCoursesForResponsible(String responsible) {
 	return osylPortalServices.getOsylPortalService()
 		.getCoursesForResponsible(responsible);
     }
 
-    @Override
     public List<CODirectorySite> getCoursesForFields(String courseNumber,
 	    String courseTitle, String instructor, String program,
 	    String responsible, String trimester) {
@@ -89,12 +86,10 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
 			    responsible, trimester);
     }
     
-    @Override
     public String getDescription(String siteId) {
 	return osylPortalServices.getOsylPortalService().getDescription(siteId);
     }
 
-    @Override
     public CODirectorySite getCODirectorySite(String courseNumber) {
 	return osylPortalServices.getOsylPortalService().getCODirectorySite(courseNumber);
     }

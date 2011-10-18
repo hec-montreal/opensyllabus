@@ -119,7 +119,6 @@ public class DirectoryCoursePage extends AbstractPortalView {
 	Label archives = new Label(getMessage("directoryCoursePage_archives"));
 	archives.addClickHandler(new ClickHandler() {
 	    
-	    @Override
 	    public void onClick(ClickEvent event) {
 		  getController().setView(
 			    new ArchivesPage(site));

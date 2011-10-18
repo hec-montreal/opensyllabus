@@ -515,12 +515,11 @@ public class CoursesPage extends AbstractPortalView {
 				public void onClick(ClickEvent event) {
 				    AsyncCallback<String> asyncCallback =
 					    new AsyncCallback<String>() {
-						@Override
+						
 						public void onFailure(
 							Throwable caught) {
 						}
 
-						@Override
 						public void onSuccess(
 							String result) {
 						    Window

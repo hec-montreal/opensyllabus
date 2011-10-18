@@ -90,7 +90,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     
     }
 
-    @Override
     public void sendEvent(String eventType, String resource) {
 	
     }

@@ -169,11 +169,9 @@ public class CoursesTable extends AbstractPortalView {
 			AsyncCallback<String> asyncCallback =
 				new AsyncCallback<String>() {
 
-				    @Override
 				    public void onFailure(Throwable caught) {
 				    }
 
-				    @Override
 				    public void onSuccess(String result) {
 					Window.open("/sdata/c/attachment/"
 						+ sectionSiteId

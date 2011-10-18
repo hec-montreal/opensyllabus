@@ -416,7 +416,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	osylServices.getOsylSiteService().addAnnounce(siteId, subject, body);
     }
 
-    @Override
     public void sendEvent(String eventType, String resource) {
 	try {
 	    osylServices.getOsylSiteService().sendEvent(eventType, resource,
