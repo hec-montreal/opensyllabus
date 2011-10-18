@@ -370,7 +370,6 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	callback.onSuccess(null);
     }
 
-    @Override
     public void sendEvent(String eventType, String resource,
 	    AsyncCallback<Void> voidCallback) {
 	voidCallback.onSuccess(null);
