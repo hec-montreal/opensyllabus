@@ -226,6 +226,8 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	    osylPublishedListView.setPublishingNow();
 	    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 		public void onSuccess(Void serverResponse) {
+		    mainPanel.remove(announceChexBox);
+		    mainPanel.remove(announcePanel);
 		    mainPanel.remove(buttonPanel);
 		    publish();
 		}
@@ -263,6 +265,8 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 			    notifyOnPublish();
 			osylPublishedListView.verifiyPublishState(true,
 				serverResponse.get(1));
+			mainPanel.add(announceChexBox);
+			mainPanel.add(announcePanel);
 			mainPanel.add(buttonPanel);
 		    }
 
@@ -306,6 +310,8 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 			    alertBox.show();
 			}
 			osylPublishedListView.verifiyPublishState(false, null);
+			mainPanel.add(announceChexBox);
+			mainPanel.add(announcePanel);
 			mainPanel.add(buttonPanel);
 		    }
 		};
