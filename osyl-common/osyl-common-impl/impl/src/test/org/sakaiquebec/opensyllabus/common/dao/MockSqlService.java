@@ -55,143 +55,115 @@ public class MockSqlService implements SqlService{
 	super();
     }
 
-    @Override
     public Connection borrowConnection() throws SQLException {
 	return null;
     }
 
-    @Override
     public void returnConnection(Connection conn) {
     }
 
-    @Override
     public boolean transact(Runnable callback, String tag) {
 	return false;
     }
 
-    @Override
     public List dbRead(String sql) {
 	return null;
     }
 
-    @Override
     public List dbRead(String sql, Object[] fields, SqlReader reader) {
 	return null;
     }
 
-    @Override
     public List dbRead(Connection conn, String sql, Object[] fields,
 	    SqlReader reader) {
 	return null;
     }
 
-    @Override
     public void dbReadBinary(String sql, Object[] fields, byte[] value) {
     }
 
-    @Override
     public void dbReadBinary(Connection conn, String sql, Object[] fields,
 	    byte[] value) {
     }
 
-    @Override
     public InputStream dbReadBinary(String sql, Object[] fields, boolean big)
 	    throws ServerOverloadException {
 	return null;
     }
 
-    @Override
     public Long dbInsert(Connection callerConnection, String sql,
 	    Object[] fields, String autoColumn) {
 	return null;
     }
 
-    @Override
     public Long dbInsert(Connection callerConnection, String sql,
 	    Object[] fields, String autoColumn, InputStream last, int lastLength) {
 	return null;
     }
 
-    @Override
     public boolean dbWrite(String sql) {
 	return false;
     }
 
-    @Override
     public boolean dbWrite(String sql, String var) {
 	return false;
     }
 
-    @Override
     public boolean dbWriteBinary(String sql, Object[] fields, byte[] var,
 	    int offset, int len) {
 	return false;
     }
 
-    @Override
     public boolean dbWrite(String sql, Object[] fields) {
 	return false;
     }
 
-    @Override
     public boolean dbWrite(Connection connection, String sql, Object[] fields) {
 	return false;
     }
 
-    @Override
     public boolean dbWriteFailQuiet(Connection connection, String sql,
 	    Object[] fields) {
 	return false;
     }
 
-    @Override
     public boolean dbWrite(String sql, Object[] fields, String lastField) {
 	return false;
     }
 
-    @Override
     public void dbReadBlobAndUpdate(String sql, byte[] content) {
     }
 
-    @Override
     public Connection dbReadLock(String sql, StringBuilder field) {
 	return null;
     }
 
-    @Override
     public void dbUpdateCommit(String sql, Object[] fields, String var,
 	    Connection conn) {
     }
 
-    @Override
     public void dbCancel(Connection conn) {
     }
 
-    @Override
     public GregorianCalendar getCal() {
 	return null;
     }
-
-    @Override
+    
     public String getVendor() {
 	return vendor;
     }
 
-    @Override
     public void ddl(ClassLoader loader, String resource) {
     }
 
-    @Override
     public Long getNextSequence(String tableName, Connection conn) {
 	return null;
     }
 
-    @Override
     public String getBooleanConstant(boolean value) {
 	return null;
     }
 
-    @Override
     public Connection dbReadLock(String sql, SqlReader reader) {
 	return null;
     }
