@@ -278,7 +278,7 @@
 	<fo:block font-size="13pt" font-weight="bold" space-before="15pt" space-after="5pt">
 		<xsl:choose>
 			<xsl:when test="$lang = 'FR'">
-				<xsl:text>Sommaires des évaluations</xsl:text>
+				<xsl:text>Sommaire des évaluations</xsl:text>
 			</xsl:when>
 			<xsl:when test="$lang = 'EN'">
 				<xsl:text>Assessment Summary</xsl:text>
