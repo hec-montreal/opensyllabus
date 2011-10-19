@@ -12,7 +12,7 @@
 
 	<groupId>org.sakaiquebec.opensyllabus.admingwt</groupId>
 	<artifactId>osyl-admin-gwt</artifactId>
-	<!--  Note: we create a jar to shade it in the associated tool -->
+	<!-- Note: we create a jar to shade it in the associated tool -->
 	<packaging>jar</packaging>
 
 	<name>Sakai Quebec OpenSyllabus AdminGWT Project</name>
@@ -30,17 +30,28 @@
 			<artifactId>gwt-user</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+			<classifier>sources</classifier>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<outputDirectory>war/WEB-INF/classes</outputDirectory>
 		<plugins>
-			<!--
-				The following is done just before packaging to jar phase : Adding in
-				the target jar artefact the compiled javascript folder, the java
-				source code
-			-->
+			<!-- The following is done just before packaging to jar phase : Adding 
+				in the target jar artefact the compiled javascript folder, the java source 
+				code -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -62,9 +73,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--
-				Cleaning specific GWT files
-			-->
+			<!-- Cleaning specific GWT files -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
@@ -87,10 +96,8 @@
 
 	<profiles>
 		<profile>
-			<!--
-				This profile is active by default, the gwt-maven-plugin will check
-				its self if a compilation is required ex: mvn clean install
-			-->
+			<!-- This profile is active by default, the gwt-maven-plugin will check 
+				its self if a compilation is required ex: mvn clean install -->
 			<id>full</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -119,10 +126,7 @@
 			</build>
 		</profile>
 		<profile>
-			<!--
-				Launching hosted mode by profile call, ex:
-				 mvn clean install -Phosted
-			-->
+			<!-- Launching hosted mode by profile call, ex: mvn clean install -Phosted -->
 			<id>hosted</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
