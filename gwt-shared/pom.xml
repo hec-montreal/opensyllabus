@@ -143,21 +143,6 @@
 									<generatePom>true</generatePom>
 								</configuration>
 							</execution>
-							<execution>
-								<id>jtidy-r938</id>
-								<phase>install</phase>
-								<goals>
-									<goal>install-file</goal>
-								</goals>
-								<configuration>
-									<file>${basedir}/lib/jtidy-r938.jar</file>
-									<groupId>org.w3c</groupId>
-									<artifactId>jtidy</artifactId>
-									<version>r938</version>
-									<packaging>jar</packaging>
-									<generatePom>true</generatePom>
-								</configuration>
-							</execution>
 						</executions>
 					</plugin>
 					<plugin>

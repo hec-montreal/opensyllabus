@@ -16,7 +16,7 @@
 	<name>osyl-common-impl</name>
 
 	<dependencies>
-		<!--  opensyllabus -->
+		<!-- opensyllabus -->
 		<dependency>
 			<groupId>org.sakaiquebec.opensyllabus</groupId>
 			<artifactId>osyl-common-api</artifactId>
@@ -26,7 +26,7 @@
 			<artifactId>osyl-common-shared</artifactId>
 		</dependency>
 
-		<!--  sakai -->
+		<!-- sakai -->
 		<dependency>
 			<groupId>org.sakaiproject.kernel</groupId>
 			<artifactId>sakai-kernel-api</artifactId>
@@ -35,11 +35,11 @@
 			<groupId>org.sakaiproject.kernel</groupId>
 			<artifactId>sakai-component-manager</artifactId>
 		</dependency>
-		
-	    <dependency>
-	      <groupId>org.sakaiproject</groupId>
-	      <artifactId>sakai-message-api</artifactId>
-	    </dependency>
+
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-message-api</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.sakaiproject.kernel</groupId>
@@ -53,10 +53,10 @@
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-presence-api</artifactId>
 		</dependency>
-    	<dependency>
-      		<groupId>org.sakaiproject</groupId>
-      		<artifactId>sakai-assignment-api</artifactId>
-    	</dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-assignment-api</artifactId>
+		</dependency>
 
 		<!-- spring and hibernate -->
 		<dependency>
@@ -70,9 +70,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		      	<groupId>org.sakaiproject.edu-services.course-management</groupId>
-		      	<artifactId>coursemanagement-api</artifactId>
-      		</dependency>
+			<groupId>org.sakaiproject.edu-services.course-management</groupId>
+			<artifactId>coursemanagement-api</artifactId>
+		</dependency>
 
 		<!-- misc -->
 		<dependency>
@@ -99,7 +99,7 @@
 			<artifactId>jmock-legacy</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--  Test runtime dependencies -->
+		<!-- Test runtime dependencies -->
 		<dependency>
 			<groupId>hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
@@ -125,7 +125,7 @@
 			<version>10.2.0.4.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.w3c</groupId>
+			<groupId>net.sf.jtidy</groupId>
 			<artifactId>jtidy</artifactId>
 			<version>r938</version>
 		</dependency>
@@ -147,7 +147,7 @@
 	<build>
 		<defaultGoal>validate</defaultGoal>
 		<resources>
-			<!--  TODO -->
+			<!-- TODO -->
 			<resource>
 				<directory>${basedir}/src/java</directory>
 				<includes>
@@ -158,16 +158,14 @@
 		</resources>
 		<testResources>
 			<testResource>
-				<!--
-					FIXME: remove this band-aid please! The IMPL package should be
-					self-contained and not depend on a runtime component.
-				-->
+				<!-- FIXME: remove this band-aid please! The IMPL package should be self-contained 
+					and not depend on a runtime component. -->
 				<directory>${basedir}/../pack/src/webapp/WEB-INF</directory>
 				<includes>
 					<include>spring-hibernate.xml</include>
 				</includes>
 			</testResource>
-			<!--  Use the IMPL hibernate settings -->
+			<!-- Use the IMPL hibernate settings -->
 			<testResource>
 				<directory>${basedir}/src/test</directory>
 				<includes>
