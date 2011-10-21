@@ -29,7 +29,7 @@ if (request.getParameter("c")!= null)
 	v = Integer.parseInt(request.getParameter("c"));
 //-------------------------------
 if (v == 0) {
-	String url = "zcPublier3.jsp?c=2&file="+request.getParameter("file")+"&lang="+request.getParameter("lang");
+	String url = "zcPublier3.jsp?c=2&file="+request.getParameter("file")+"&lang="+request.getParameter("lang")+"&nivSecu="+request.getParameter("nivSecu");
 	//------------ TRACE -----------
 	String tr = request.getParameter("trace");
 
