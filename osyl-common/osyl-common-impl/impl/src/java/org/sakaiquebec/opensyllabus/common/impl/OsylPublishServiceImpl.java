@@ -324,6 +324,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    publishedCO.setContent(co.getContent());
 		    resourceDao.createOrUpdateCourseOutline(publishedCO);
 		}
+		log.info("Creation of prepublish version for site ["
+			    +  siteId 
+			    + "] took " + (System.currentTimeMillis() - start) + " ms");
 
 		copyWorkToPublish(siteId, coModeled.getDocumentSecurityMap(),
 			coModeled.getDocumentVisibilityMap());
@@ -470,23 +473,36 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public void createPublishPrintVersion(String siteId, String webappdir)
 	    throws PdfGenerationException {
 	try {
+	    long start = System.currentTimeMillis();
 	    COSerialized coSerializedAttendee =
 		    getSerializedPublishedCourseOutlineForAccessType(siteId,
 			    SecurityInterface.ACCESS_ATTENDEE, webappdir);
 	    File fAttendee =
 		    createPrintVersion(coSerializedAttendee, webappdir);
-
+	    log.info("Attendee PDF version for site ["
+		    +  siteId 
+		    + "] took " + (System.currentTimeMillis() - start) + " ms");
+	    
+	    start = System.currentTimeMillis();
 	    COSerialized coSerializedCommunity =
 		    getSerializedPublishedCourseOutlineForAccessType(siteId,
 			    SecurityInterface.ACCESS_COMMUNITY, webappdir);
 	    File fCommunity =
 		    createPrintVersion(coSerializedCommunity, webappdir);
+	    log.info("Community PDF version for site ["
+		    +  siteId 
+		    + "] took " + (System.currentTimeMillis() - start) + " ms");
 
+	    start = System.currentTimeMillis();
 	    COSerialized coSerializedPublic =
 		    getSerializedPublishedCourseOutlineForAccessType(siteId,
 			    SecurityInterface.ACCESS_PUBLIC, webappdir);
 	    File fPublic = createPrintVersion(coSerializedPublic, webappdir);
+	    log.info("Public PDF version for site ["
+		    +  siteId 
+		    + "] took " + (System.currentTimeMillis() - start) + " ms");
 
+	    start = System.currentTimeMillis();
 	    if (fAttendee != null && fCommunity != null && fPublic != null) {
 		String publishDirectory = "";
 		publishDirectory =
@@ -503,6 +519,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		createPdfInResource(siteId, publishDirectory, fPublic,
 			SecurityInterface.ACCESS_PUBLIC);
 	    }
+	    log.info("Recording PDF versions for site ["
+		    +  siteId 
+		    + "] took " + (System.currentTimeMillis() - start) + " ms");
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    throw new PdfGenerationException(e);
@@ -751,6 +770,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     private Vector<String> publication(String siteId, String webappDir) throws Exception,
 	    FusionException {
+	long start = System.currentTimeMillis();
 	Vector<String> publishedSiteIds=new Vector<String>();
 	COSerialized hierarchyFussionedCO =
 		osylSiteService.getSerializedCourseOutline(siteId, webappDir);
@@ -798,6 +818,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    // pdf later.
 
 	    publishedSiteIds.add(siteId);
+	    log.info("Creation of version public, community and attendee for site ["
+		    +  siteId 
+		    + "] took " + (System.currentTimeMillis() - start) + " ms");
 	    publishedSiteIds.addAll(publishChildren(siteId, webappDir));
 	}
 	return publishedSiteIds;
@@ -838,6 +861,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     private void copyWorkToPublish(String siteId,
 	    Map<String, String> documentSecurityMap,
 	    Map<String, String> documentVisibilityMap) throws Exception {
+	long start= System.currentTimeMillis();
 	String val2 = contentHostingService.getSiteCollection(siteId);
 	String refString =
 		contentHostingService.getReference(val2).substring(8);
@@ -859,6 +883,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    e);
 	    throw e;
 	}
+	log.info("Documents copy from resource to attachments for site ["
+		    +  siteId 
+		    + "] took " + (System.currentTimeMillis() - start) + " ms");
     }
 
     private void deletePublishedContent(String siteId) throws Exception {
