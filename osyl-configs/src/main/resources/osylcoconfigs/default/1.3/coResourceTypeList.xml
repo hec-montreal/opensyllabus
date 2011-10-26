@@ -20,6 +20,7 @@
 	<item value="annual_report" />
 	<item value="governement_report" />
 	<item value="international_organization_report" />
+	<item value="data" />
 	<item value="document" />
 	<item value="pedagogical_document" />
 	<item value="book"/>
