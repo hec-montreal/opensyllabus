@@ -33,6 +33,7 @@ import org.sakaiquebec.opensyllabus.client.controller.event.FiresClosePushButton
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresEditPushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresPublishPushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresSavePushButtonEvents;
+import org.sakaiquebec.opensyllabus.client.controller.event.OsylModelUpdatedEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
@@ -73,7 +74,7 @@ import com.google.gwt.user.datepicker.client.DatePicker;
 public class OsylToolbarView extends OsylViewableComposite implements
 	FiresSavePushButtonEvents, FiresPublishPushButtonEvents,
 	ViewContextSelectionEventHandler, FiresClosePushButtonEvents,
-	FiresEditPushButtonEvents, UpdateCOStructureElementEventHandler {
+	FiresEditPushButtonEvents, UpdateCOStructureElementEventHandler, OsylModelUpdatedEventHandler {
 
     private OsylTextToolbar osylToolbar;
 
@@ -87,6 +88,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
     public OsylToolbarView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
 	osylToolbar = new OsylTextToolbar(getController());
+	
+	disableSavePushButton();
+	osylController.getModelController().addEventHandler(this);
+	
 	initWidget(getOsylToolbar());
     }
 
@@ -175,7 +180,6 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    setDeleteDateButtonCommand();
 	} else {
 	    if (getModel() != null) {
-		setSavePushButtonCommand();
 		setHomePushButtonCommand();
 		setViewAllPushButtonCommand();
 		setPublishPushButtonCommand();
@@ -192,7 +196,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		/* Preview mode specific menu buttons */
 		getOsylToolbar().getClosePushButton().setVisible(false);
 
-		/* Edition type menu buttons */
+		/* Edition type menu buttons */		
 		getOsylToolbar().getSavePushButton().setVisible(true);
 		getOsylToolbar().getPreviewSeparator().setVisible(true);
 		getOsylToolbar().getViewMenuItem().setVisible(true);
@@ -292,6 +296,20 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	}
     } // refreshView
 
+    
+    public void enableSavePushButton(){
+	setSavePushButtonCommand();
+	getOsylToolbar().enableSavePushButton();
+	
+    }
+    
+    public void disableSavePushButton(){
+	getOsylToolbar().getSavePushButton().setCommand(null);
+	getOsylToolbar().disableSavePushButton();
+    }
+    
+    
+    
     private void createAllowedCOUnitStructureAddAction(COUnitStructure model) {
 	List<COModelInterface> subModels =
 		getController().getOsylConfig().getOsylConfigRuler()
@@ -595,6 +613,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
 
     public void onUpdateModel(UpdateCOStructureElementEvent event) {
 	refreshView();
+    }
+
+    public void onModelUpdated(OsylModelUpdatedEvent event) {
+	enableSavePushButton();
     }
 
 }

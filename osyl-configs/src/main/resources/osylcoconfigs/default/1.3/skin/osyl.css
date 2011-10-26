@@ -204,6 +204,11 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	text-decoration:underline;
   	cursor:pointer;
 }
+.gwt-MenuBar td.gwt-MenuItem-disabled:hover {
+	text-decoration:none;
+  	cursor:default;
+}
+
 .gwt-MenuBar-vertical td.gwt-MenuItem-selected, .gwt-MenuBar-vertical td.gwt-MenuItem-selected:hover  {
 	text-decoration:none;
 	background-color:#DCEFFD;

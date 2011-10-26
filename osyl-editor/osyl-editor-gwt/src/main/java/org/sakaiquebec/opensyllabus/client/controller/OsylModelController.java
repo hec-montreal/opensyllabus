@@ -20,9 +20,13 @@
 
 package org.sakaiquebec.opensyllabus.client.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
+import org.sakaiquebec.opensyllabus.client.controller.event.OsylModelUpdatedEventHandler;
+import org.sakaiquebec.opensyllabus.client.controller.event.OsylModelUpdatedEventHandler.OsylModelUpdatedEvent;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
@@ -53,6 +57,8 @@ public class OsylModelController implements
 	UpdateCOContentResourceProxyEventHandler,
 	UpdateCOUnitContentEventHandler, UpdateCOStructureElementEventHandler,
 	UpdateCOUnitEventHandler, UpdateCOUnitStructureEventHandler {
+
+    private List<OsylModelUpdatedEventHandler> modelUpdateEventHandlerList;
 
     private boolean modelDirty = false;
 
@@ -96,6 +102,10 @@ public class OsylModelController implements
     public void setModelDirty(boolean b) {
 	System.out.println("= =================== == = = = DIRTY");
 	modelDirty = b;
+	
+	if(modelDirty){
+	    fireModelUpdated();
+	}
     }
 
     /** {@inheritDoc} */
@@ -176,6 +186,32 @@ public class OsylModelController implements
 	setModelDirty(true);
     }
 
+    
+    public void addEventHandler(OsylModelUpdatedEventHandler handler) {
+	if (modelUpdateEventHandlerList == null) {
+	    modelUpdateEventHandlerList =
+		    new ArrayList<OsylModelUpdatedEventHandler>();
+	}
+	modelUpdateEventHandlerList.add(handler);
+    }
+
+    public void removeEventHandler(OsylModelUpdatedEventHandler handler) {
+	if (modelUpdateEventHandlerList != null) {
+	    modelUpdateEventHandlerList.remove(handler);
+	}
+    }
+    
+    private void fireModelUpdated() {
+
+	if (modelUpdateEventHandlerList != null) {
+	    for (OsylModelUpdatedEventHandler handler : modelUpdateEventHandlerList) {
+		handler.onModelUpdated(new OsylModelUpdatedEvent(this));
+	    }
+
+	}
+
+    }	    
+	    
     /**
      * Registers the specified model item to be tracked by this Model Controller
      * for changes. This is done by adding itself as an event handler to the

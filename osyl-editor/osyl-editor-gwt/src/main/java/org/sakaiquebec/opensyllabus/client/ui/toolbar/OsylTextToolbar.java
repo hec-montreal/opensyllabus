@@ -475,6 +475,25 @@ public class OsylTextToolbar extends Composite {
 	return menuItem;
     }
 
+    public void enableSavePushButton(){
+	
+	String enabledImageHTML = AbstractImagePrototype.create(getOsylImageBundle().save()).getHTML();
+	String message = uiMessages.getMessage("toolbar.button.save");
+	
+	getSavePushButton().setHTML(enabledImageHTML + message); 
+	getSavePushButton().setEnabled(true);
+    }
+
+    public void disableSavePushButton(){
+	
+	String disabledImageHTML = AbstractImagePrototype.create(getOsylImageBundle().save_disabled()).getHTML();
+	String message = uiMessages.getMessage("toolbar.button.save");
+	
+	getSavePushButton().setHTML(disabledImageHTML + message); 	
+	getSavePushButton().setEnabled(false);
+    }
+    
+    
     public OsylController getOsylController() {
 	return osylController;
     }
@@ -570,6 +589,7 @@ public class OsylTextToolbar extends Composite {
     public void setSavePushButton(MenuItem savePushButton) {
 	this.savePushButton = savePushButton;
     }
+    
 
     public OsylMenuBar getAddMenuBar() {
 	return addMenuBar;
