@@ -1,4 +1,4 @@
-//FILE HEC ONLY SAKAI-2723
+//FILE HEC ONLY SAKAI-2723, SAKAI-2974
 
 /******************************************************************************
  * $Id: $
@@ -22,18 +22,20 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.common.impl.portal.publish3;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
+import java.sql.*;
+
+import org.w3c.dom.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherService;
+import org.sakaiquebec.opensyllabus.common.impl.portal.javazonecours.Publication;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -41,104 +43,299 @@ import org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherServic
  */
 public class ZCPublisherServiceImpl implements ZCPublisherService {
 
-    private static Log log = LogFactory.getLog(ZCPublisherServiceImpl.class);
+	private static Log log = LogFactory.getLog(ZCPublisherServiceImpl.class);
 
-    private String parameter = null;
+	private Map attributeMap;
 
-    String urlConn = null;
+	String urlConn = null;
 
-    public void init() {
-	log.info("INIT from ZCPublisherImpl");
-    }
+	public void init() {
+		log.info("INIT from ZCPublisherImpl");
+	}
 
-    public void publier(String koId, String langue, String nivSec) {
+	public void publier(String koId, String langue, String nivSec) {
 
-	if (koId != null && koId.length() > 0 && langue != null
-		&& langue.length() > 0)
-	    parameter = "?file=" + koId + "&lang=" + langue + "&c=2&nivSecu=" + nivSec;
+		if (koId != null && koId.length() > 0 && langue != null)
+			try {
+				conversion(koId, langue, nivSec, "2", null, null, null);
+			} catch (MalformedURLException e) {
+				log.error(e.getMessage());
+			} catch (IOException e) {
+				log.error(e.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	}
 
-	if (parameter != null)
-	    urlConn =
-		    ServerConfigurationService.getServerUrl() + URL_CONN_PUBLIER
-			    + parameter;
+	@SuppressWarnings("unchecked")
+	public void conversion(String xkoId, String xlangue, String xnivSec,
+			String xc, String xforce, String xtrace, String xn)
+			throws Exception {
+		// There are dummy parameters because they were used in zcPublier3.jsp
+		String koId = xkoId;
+		String langue = xlangue;
+		String nivSec = xnivSec;
 
-	if (urlConn != null) {
+		// ------------ FORCE -----------
+		boolean force = false;
+		String frc = xforce;
+		if (frc != null && frc.equals("1"))
+			force = true;
 
-	    try {
-		URL url = new URL(urlConn);
-		URLConnection conn = url.openConnection();
-		conn.setDoOutput(true);
-		OutputStreamWriter request =
-			new OutputStreamWriter(conn.getOutputStream());
+		// ------------ TRACE -----------
+		boolean trace = false;
+		String tr = xtrace;
+		if (tr != null && tr.equals("1"))
+			trace = true;
+		// -------------------------------
+		boolean ok = true;
+		StringBuffer outPrint = new StringBuffer();
+		StringBuffer outTrace = new StringBuffer();
 
-		request.write(parameter);
-		request.flush();
+		Publication publication = new Publication();
 
-		BufferedReader br =
-			new BufferedReader(new InputStreamReader(conn
-				.getInputStream()));
+		// ================ chargement des xslt =============
+		int n = 999;
 
-		String line;
+		if (xn != null)
+			n = Integer.parseInt(xn);
 
-		while ((line = br.readLine()) != null) {
-		    log.trace(line);
+		String xsltDirName = ServerConfigurationService
+				.getString("osyl.to.zc.file.directory")
+				+ "/xml2html/";
+
+		attributeMap = new HashMap();
+
+		// Original xsltDirName is not used
+		// String xsltDirName = getServletContext().getRealPath("/")
+		// + File.separator + "publish3" + File.separator + "xslt"
+		// + File.separator;
+
+		String[] xsltNamesTable = { "securite0.xsl" // 0
+				, "securite1.xsl" // 1
+				, "securite2.xsl" // 2
+				, "testSecurite1.xsl" // 3
+				, "testSecurite2.xsl" // 4
+				, "parseDocInt.xsl" // 5
+				, "parseDocExt.xsl" // 6
+				, "fr-10.xsl" // 7
+				, "fr-11.xsl" // 8 Présentation
+				, "fr-11a.xsl" // 9 Présentation Annuaire
+				, "fr-12.xsl" // 10 Coordonnées
+				, "fr-13.xsl" // 11
+				, "fr-14.xsl" // 12
+				, "fr-15.xsl" // 13
+				, "fr-16.xsl" // 14
+				, "fr-17.xsl" // 15
+				, "fr-18.xsl" // 16
+				, "fr-19.xsl" // 17
+				, "fr-20.xsl" // 18
+				, "fr-21.xsl" // 19
+				, "fr-22.xsl", "en-10.xsl" // 20
+				, "en-11.xsl" // 21
+				, "en-11a.xsl" // 22
+				, "en-12.xsl" // 23
+				, "en-13.xsl" // 24
+				, "en-14.xsl" // 25
+				, "en-15.xsl" // 26
+				, "en-16.xsl" // 27
+				, "en-17.xsl" // 28
+				, "en-18.xsl" // 29
+				, "en-19.xsl" // 30
+				, "en-20.xsl" // 31
+				, "en-21.xsl" // 32
+				, "en-22.xsl", "es-10.xsl" // 33
+				, "es-11.xsl" // 34
+				, "es-11a.xsl" // 35
+				, "es-12.xsl" // 36
+				, "es-13.xsl" // 37
+				, "es-14.xsl" // 38
+				, "es-15.xsl" // 39
+				, "es-16.xsl" // 40
+				, "es-17.xsl" // 41
+				, "es-18.xsl" // 42
+				, "es-19.xsl" // 43
+				, "es-20.xsl" // 44
+				, "es-21.xsl" // 45
+				, "es-22.xsl" };
+
+		publication.transformersTable = new Hashtable();
+
+		for (int i = 0; i < xsltNamesTable.length; i++) {
+			Document xslt = null;
+			String xsltName = xsltNamesTable[i];
+			if (attributeMap.get(xsltName) == null || i == n || n == 9999) { // ||
+				// application.getAttribute(xsltName)
+				// ==
+				// null
+				String xsltFileName = xsltName;
+				if (xsltName.indexOf("-") > 0) {
+					String lang = xsltName.substring(0, 2);
+					xsltFileName = xsltName.substring(3, xsltName.length());
+					xslt = publication.loadDOM(xsltDirName + xsltFileName);
+					publication.majLang(xslt, lang);
+				} else {
+					xslt = publication.loadDOM(xsltDirName + xsltFileName);
+				}
+				// application.setAttribute(xsltName,publication.createTransformer(xslt,
+				// xsltDirName));
+				attributeMap.put(xsltName, publication.createTransformer(xslt,
+						xsltDirName));
+
+				log.info("création transformer " + xsltName + " ");
+				log.info("Recompilation des fichiers" + " ");
+			}
+			publication.transformersTable.put(xsltName, attributeMap
+					.get(xsltName));
 		}
 
-		request.close();
-		br.close();
+		java.util.Date dateDeb;
+		java.util.Date dateFin;
+		dateDeb = new java.util.Date(System.currentTimeMillis());
 
-	    } catch (MalformedURLException e) {
-		log.error(e.getMessage());
-	    } catch (IOException e) {
-		log.error(e.getMessage());
-	    }
+		if (trace)
+			outTrace.append("<br>début: " + dateDeb.toString());
+		if (trace)
+			outTrace.append("<br>appDirName : " + publication.appDirName);
+		outPrint.append("<div class='titre'>Rapport de publication</div>");
 
-	}
-    }
+		Connection connexionPublication = null;
 
+		Connection connexionPeopleSoft = null;
 
-    public void depublier(String koId, String langue){
-	if (koId != null && koId.length() > 0 && langue != null
-		&& langue.length() > 0)
-	    parameter = "?file=" + koId + "&lang=" + langue;
+		try {
+			String driverName = ServerConfigurationService
+					.getString("hec.zonecours.conn.portail.driver.name");
+			String url = ServerConfigurationService
+					.getString("hec.zonecours.conn.portail.url");
+			String user = ServerConfigurationService
+					.getString("hec.zonecours.conn.portail.user");
+			String password = ServerConfigurationService
+					.getString("hec.zonecours.conn.portail.password");
 
-	if (parameter != null)
-	    urlConn =
-		    ServerConfigurationService.getServerUrl() + URL_CONN_DEPUBLIER
-			    + parameter;
+			try {
+				Class.forName(driverName);
+				connexionPublication = DriverManager.getConnection(url, user,
+						password);
+				connexionPublication.setAutoCommit(false);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 
-	if (urlConn != null) {
+			driverName = ServerConfigurationService
+					.getString("hec.peoplesoft.conn.portail.driver.name");
+			url = ServerConfigurationService
+					.getString("hec.peoplesoft.conn.portail.url");
+			user = ServerConfigurationService
+					.getString("hec.peoplesoft.conn.portail.user");
+			password = ServerConfigurationService
+					.getString("hec.peoplesoft.conn.portail.password");
 
-	    try {
-		URL url = new URL(urlConn);
-		URLConnection conn = url.openConnection();
-		conn.setDoOutput(true);
-		OutputStreamWriter request =
-			new OutputStreamWriter(conn.getOutputStream());
+			try {
+				Class.forName(driverName);
+				connexionPeopleSoft = DriverManager.getConnection(url, user,
+						password);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			// ==================================================================
+			if (trace)
+				outTrace.append("<br>connexions établies :"
+						+ new java.util.Date(System.currentTimeMillis()));
 
-		request.write(parameter);
-		request.flush();
+			ok = publication.chargerTraiter(connexionPublication,
+					connexionPeopleSoft, koId, langue, force, outPrint,
+					outTrace, trace, nivSec);
 
-		BufferedReader br =
-			new BufferedReader(new InputStreamReader(conn
-				.getInputStream()));
+			dateFin = new java.util.Date(System.currentTimeMillis());
+			outPrint
+					.append("<div class='duree'>Durée: "
+							+ (((double) dateFin.getTime() - (double) dateDeb
+									.getTime()) / 1000) + " secondes</div>");
 
-		String line;
-
-		while ((line = br.readLine()) != null) {
-		    log.trace(line);
+		} catch (Exception e) {
+			outPrint.append("Erreur : " + e);
 		}
 
-		request.close();
-		br.close();
-
-	    } catch (MalformedURLException e) {
-		log.error(e.getMessage());
-	    } catch (IOException e) {
-		log.error(e.getMessage());
-	    }
-
+		finally {
+			if (connexionPublication != null)
+				connexionPublication.close();
+			if (connexionPeopleSoft != null)
+				connexionPeopleSoft.close();
+			if (!ok)
+				log
+						.info("<br><font color='red'><i>Une erreur s'est produite. Voir ci-dessous</i></font><br><br>");
+			log.info(outPrint.toString());
+			if (trace) {
+				log.info("<br><br><div id='trace'>");
+				log.info(outTrace.toString());
+				log.info("</div>");
+			}
+		}
 	}
-    }
 
+	public void depublier(String xfile, String xlang) {
+		StringBuffer outTrace = new StringBuffer();
+		StringBuffer outPrint = new StringBuffer();
+		// There are dummy parameters because they were used in zcDepublier3.jsp
+		// ------------ TRACE -----------
+		boolean trace = false;
+		String tr = null;
+		if (tr != null && tr.equals("1"))
+			trace = true;
+		else
+			trace = false;
+		// -------------------------------
+
+		String file = xfile;
+		String lang = xlang;
+
+		Publication publication = new Publication();
+
+		Connection connexionPublication = null;
+
+		try {
+			String driverName = ServerConfigurationService
+					.getString("hec.zonecours.conn.portail.driver.name");
+			String url = ServerConfigurationService
+					.getString("hec.zonecours.conn.portail.url");
+			String user = ServerConfigurationService
+					.getString("hec.zonecours.conn.portail.user");
+			String password = ServerConfigurationService
+					.getString("hec.zonecours.conn.portail.password");
+
+			Class.forName(driverName);
+
+			connexionPublication = DriverManager.getConnection(url, user,
+					password);
+
+			publication.depublier(connexionPublication, file, lang, outPrint,
+					outTrace, trace);
+		}
+
+		catch (Exception e) {
+			outPrint.append("Erreur : " + e);
+		}
+
+		finally {
+			if (connexionPublication != null)
+				try {
+					connexionPublication.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			log.info(outPrint.toString());
+			if (trace) {
+				log.info("<br><br><div id='trace'>");
+				log.info(outTrace.toString());
+				log.info("</div>");
+			}
+		}
+	}
 }
