@@ -371,8 +371,6 @@ public class Publication {
 			transformer = factory.newTransformer(new DOMSource(xslt));
 		} catch (TransformerConfigurationException tce) {
 			throw new TransformerException(tce.getMessageAndLocation());
-		} catch (TransformerException te) {
-			throw new TransformerException(te.getMessageAndLocation());
 		}
 		return transformer;
 	}
@@ -577,7 +575,13 @@ public class Publication {
 		String requeteSQL = null;
 		Statement stmt = connexion.createStatement();
 
-		requeteSQL = "DELETE FROM PlanZone WHERE koId = '" + koId + "' and NivSecu='" + nivSecu + "'";
+		if (!nivSecu.equals("")) {
+			//From publish
+			requeteSQL = "DELETE FROM PlanZone WHERE koId = '" + koId + "' and NivSecu='" + nivSecu + "'";
+		} else {
+			//From unpublish
+			requeteSQL = "DELETE FROM PlanZone WHERE koId = '" + koId + "'";
+		}
 		if (trace)
 			outTrace.append("<br>" + requeteSQL + "...");
 		stmt.execute(requeteSQL);
@@ -2720,20 +2724,22 @@ public class Publication {
 		if (koId.startsWith("2004", 1))
 			deleteFromPlanCours(connexionPublication, koId.substring(koId
 					.lastIndexOf("-") + 1), lang, outPrint, outTrace, trace);
-		deleteFromPlanCours(connexionPublication, koId, lang, outPrint,
-				outTrace, trace);
-		if (enseignant != null)
-			insertIntoPlanCours(connexionPublication, koId, lang, codeCours,
-					sessionCours, sectionCours, periode, service, programme,
-					libelleCours, enseignant, planType, outPrint, outTrace,
-					trace);
-		else
-			insertIntoPlanCours(connexionPublication, koId, lang, codeCours,
-					sessionCours, sectionCours, periode, service, programme,
-					libelleCours, professeur, planType, outPrint, outTrace,
-					trace);
+		if (nivSec.equals(PUBLIC_SECURITY_LABEL)) {
+			//There is a PlanCours for all "nivsec"
+			deleteFromPlanCours(connexionPublication, koId, lang, outPrint,	outTrace, trace);
+			if (enseignant != null)
+				insertIntoPlanCours(connexionPublication, koId, lang, codeCours,
+						sessionCours, sectionCours, periode, service, programme,
+						libelleCours, enseignant, planType, outPrint, outTrace,
+						trace);
+			else
+				insertIntoPlanCours(connexionPublication, koId, lang, codeCours,
+						sessionCours, sectionCours, periode, service, programme,
+						libelleCours, professeur, planType, outPrint, outTrace,
+						trace);
+		}
 
-		String nivSecu = PUBLIC_SECURITY_LABEL;
+		//String nivSecu = PUBLIC_SECURITY_LABEL;
 
 		// ============== remplacement des images dans les textes
 		// ======================================
@@ -2751,26 +2757,26 @@ public class Publication {
 		if (trace)
 			outTrace.append(" ok<hr>");
 		if (planType.equals("specifique")) {
-
+			//This part was changed to publish niveau by niveau (not more)
 			// --------- securite : niveau 0--------------------------
-			outPrint.append("<div class='securite'>Securite : niveau 0 </div>");
-			nivSecu = PUBLIC_SECURITY_LABEL;
+			outPrint.append("<div class='securite'>Securite : niveau " + nivSec + "</div>");
+			//nivSecu = PUBLIC_SECURITY_LABEL;
 			traiterPlanCours(connexionPublication, koId, lang, ressId,
-					ressType, nivSecu, xmlSourceDoc, outPrint, outTrace, trace);
+					ressType, nivSec, xmlSourceDoc, outPrint, outTrace, trace);
 			// --------- securite : niveau 1--------------------------
-			outPrint.append("<div class='securite'>Securite : niveau 1 </div>");
-			nivSecu = COMMUNITY_SECURITY_LABEL;
-			if (testerNiveauSecurite(nivSecu, xmlSourceDoc, outTrace, trace))
-				traiterPlanCours(connexionPublication, koId, lang, ressId,
-						ressType, nivSecu, xmlSourceDoc, outPrint, outTrace,
-						trace);
+			//outPrint.append("<div class='securite'>Securite : niveau 1 </div>");
+			//nivSecu = COMMUNITY_SECURITY_LABEL;
+			//if (testerNiveauSecurite(nivSecu, xmlSourceDoc, outTrace, trace))
+			//	traiterPlanCours(connexionPublication, koId, lang, ressId,
+			//			ressType, nivSecu, xmlSourceDoc, outPrint, outTrace,
+			//			trace);
 			// --------- securite : niveau 2--------------------------
-			outPrint.append("<div class='securite'>Securite : niveau 2 </div>");
-			nivSecu = ATTENDEE_SECURITY_LABEL;
-			if (testerNiveauSecurite(nivSecu, xmlSourceDoc, outTrace, trace))
-				traiterPlanCours(connexionPublication, koId, lang, ressId,
-						ressType, nivSecu, xmlSourceDoc, outPrint, outTrace,
-						trace);
+			//outPrint.append("<div class='securite'>Securite : niveau 2 </div>");
+			//nivSecu = ATTENDEE_SECURITY_LABEL;
+			//if (testerNiveauSecurite(nivSecu, xmlSourceDoc, outTrace, trace))
+			//	traiterPlanCours(connexionPublication, koId, lang, ressId,
+			//			ressType, nivSecu, xmlSourceDoc, outPrint, outTrace,
+			//			trace);
 			// --------- documents --------------------------
 			outPrint.append("<div class='securite'>Documents </div>");
 			if (trace)
@@ -2782,9 +2788,10 @@ public class Publication {
 			;
 			// -------------------------------------------------------
 		}
+		//It had nivSecu
 		if (planType.equals("annuaire")) {
 			traiterPlanCoursAnnuaire(connexionPublication, koId, lang, ressId,
-					ressType, nivSecu, xmlSourceDoc, outPrint, outTrace, trace);
+					ressType, nivSec, xmlSourceDoc, outPrint, outTrace, trace);
 		}
 
 		if (trace)
@@ -3090,7 +3097,7 @@ public class Publication {
 				outPrint.append("<div class='ressource'>Plan de cours : "
 						+ ressId + "</div>");
 
-				String nivSecu = ATTENDEE_SECURITY_LABEL; // pour tout voir
+				String nivSecu = ""; // ATTENDEE_SECURITY_LABEL; // pour tout voir
 
 				deleteFromPlanCours(connexionPublication, koId, lang, outPrint,
 						outTrace, trace);
