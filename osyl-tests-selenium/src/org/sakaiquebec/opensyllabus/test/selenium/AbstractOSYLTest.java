@@ -256,11 +256,12 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		log("**** Creating site " + siteName);
 		//Search Osyl Manager location
 		goToOsylManagerTool();
+		
+		//Open create site
+		String createSite = "//tr[7]/td/table/tbody/tr/td[1]/div/div";
 		pause3();
-		if (!session().isElementPresent("//tr[7]/td/table/tbody/tr/td/div/div")) {
-			clickOpenOsyl("//tr[7]/td/table/tbody/tr/td/div/div");
-		} else {
-			clickOpenOsyl("//tr[7]/td/table/tbody/tr/td[1]/div/div");
+		if (session().isElementPresent("//*[text()='Créer un nouveau site...']")) {			
+			clickWithMouse(createSite);
 		}
 		pause3();
 		// Course Name
@@ -272,7 +273,6 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		session().select("//tr[4]/td/table/tbody/tr/td[2]/select",
 				"value=default");
 		// Click on button "Create Course"
-		//smartMouse("//div/div/div/div[2]/table/tbody/tr[5]/td/div/div");
 		smartMouse("//tr[2]/td[2]/div/div/div/div[2]/table/tbody/tr[5]/td/div/div");
 		pause(30000);
 		// Click button "Close" (confirmation)
@@ -290,11 +290,12 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * Opens windows to create a new site (if in FF) or selects it and press Enter (in IE).
      * @param element
      */
-    private void clickOpenOsyl(String element) {
+    private void clickWithMouse(String element) {
 		if (inFireFox()) {
 		    session().mouseOver(element);
 		    session().mouseDown(element);
 		    session().mouseUp(element);
+		    session().click(element);
 		} else {
 		    session().mouseOver(element);
 			session().mouseDownAt(element, "10,10");
@@ -331,45 +332,14 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     }
 
 	public void goToOsylManagerTool() {
-		// open site administration workspace
-		environment = ZC2A;
-		String osylManagerChoice = "//a[@class='icon-sakai-opensyllabus-manager-tool']";
-		session().open("/portal/site/~admin");
-		session().answerOnNextPrompt("osyl123");
-		if (!session().isElementPresent(
-				"//span[@class='icon-sakai-opensyllabus-manager-tool']")) {
-			// open course outline manager tool
-			if (userString.equalsIgnoreCase("prof_selenium")) {
-				//Osyl Manager Folder
-				if (environment.equals(ZC2A)) {
-					//Osyl Manager Menu
-					osylManagerChoice = "//a[@class='icon-sakai-opensyllabus-manager-tool']";					
-				} else {
-					//Because there is a folder
-					osylManagerChoice = "//ul[@id='siteLinkList']/li[2]/a/span";
-				}
-			} else if (userString.equalsIgnoreCase("admin")) {
-				//Osyl Manager Menu
-				osylManagerChoice = "//a[@class='icon-sakai-opensyllabus-manager-tool']"; 
-			}
-			if (inFireFox()) {
-				if (environment.equals(ZC2A)) {
-					String folderElmnt = "//ul[@id='siteLinkList']/li[1]/a/span";
-					session().mouseOver(folderElmnt);
-					session().mouseDown(folderElmnt);
-					session().mouseUp(folderElmnt);
-					session().click(folderElmnt);
-					pause3();
-				}
-				session().mouseOver(osylManagerChoice);
-				session().mouseDown(osylManagerChoice);
-				session().mouseUp(osylManagerChoice);
-				session().click(osylManagerChoice);
-			} else {
-				session().click(osylManagerChoice);
-			}
-			pause3();
-		}
+		//Go to Workspace
+		session().click("css=span");
+		//Go to Osyl Manager
+		String osylManagerChoice = "//div[@id='toolMenu']/ul/li[5]/a/span";
+		ensureElementPresent(osylManagerChoice);
+		//if (session().isElementPresent("//*[@class='icon-sakai-opensyllabus-manager-tool']")) {			
+			clickWithMouse(osylManagerChoice);
+		//}
 	}
 
     public String getCurrentTestSiteName() {
@@ -415,14 +385,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	String elementOsylMenu = "//*[@class='icon-sakai-opensyllabus-tool']";
 	if (session().isElementPresent(elementOsylMenu)) {
 		// open Osyl tool
-		if (inFireFox()) {session().mouseOver(elementOsylMenu);
-			session().mouseDown(elementOsylMenu);
-			session().mouseUp(elementOsylMenu);
-			session().click(elementOsylMenu);
-			pause();
-		} else {
-			session().click(elementOsylMenu);
-		}
+		clickWithMouse(elementOsylMenu);
 	}
 	pause3();
 	}
@@ -431,7 +394,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	String elementAssessmentMenu = "//*[@class='icon-sakai-assignment-grades']";
 	if (session().isElementPresent(elementAssessmentMenu)) {
 		// open Assessment tool
-		if (inFireFox()) {session().mouseOver(elementAssessmentMenu);
+		if (inFireFox()) {
+			session().mouseOver(elementAssessmentMenu);
 			session().mouseDown(elementAssessmentMenu);
 			session().mouseUp(elementAssessmentMenu);
 			session().click(elementAssessmentMenu);

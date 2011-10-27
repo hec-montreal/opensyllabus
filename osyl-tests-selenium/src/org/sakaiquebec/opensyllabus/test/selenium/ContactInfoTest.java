@@ -117,7 +117,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	//Check if Opensyllabus displays a message error when the user click OK 
 	//without fill in the field Last Name.
 	
-	String newText1 = timeStamp();
+	String newText1 = "ASDFG" + timeStamp();
 	session().type("//input[@class=\"Osyl-ContactInfo-TextBox\"]", newText1);
 	
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -145,11 +145,11 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	//Fill in the required informations (FirstName, Last Name and Title) 	
 	session().type("//input[@class=\"Osyl-ContactInfo-TextBox\"]", newText1);
 	
-	String newText2 = "YYYYYYYY";
+	String newText2 = "QWERTYUI";
 	session().type("//input[@title=\"Nom:\"]", newText2);
 	pause();
 	
-	String newText3 = "Lundi AM et Mardi PM" + timeStamp();
+	String newText3 = "Lundi AM et Mardi PM " + timeStamp();
 	if (inFireFox()) {
         	session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
         	session().type("//html/body", newText3);
