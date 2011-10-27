@@ -241,7 +241,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		rSet.close();
 		ps.close();
 
-		log.debug("The XML " + koId + " has been transferred.");
+		log.debug("The XML " + koId + " has been transferred from Update.");
 	    } catch (SQLException e) {
 		log.error("writeXmlInZC(): " + e);
 	    }
@@ -256,8 +256,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		rSet = ps.executeQuery();
 		written = true;
 		rSet.close();
-
-		log.debug("The XML " + koId + " has been transferred.");
+		log.debug("The XML " + koId + " has been transferred from Insert.");
 
 	    } catch (SQLException e) {
 		log.error("writeXmlInZC(): " + e);
