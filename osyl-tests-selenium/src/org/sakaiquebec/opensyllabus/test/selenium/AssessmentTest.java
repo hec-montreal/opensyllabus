@@ -340,42 +340,46 @@ public class AssessmentTest extends AbstractOSYLTest {
 		    "//div[@class=\"Osyl-FileBrowserTopButton"
 			    + " Osyl-FileBrowserTopButton-down-hovering\"]");
 
-	    // Choose file and close window
-	    session().type(
-			    "uploadFormElement",
-			    "C:\\Documents and Setti"
-				    + "ngs\\clihec3\\Local Settings\\"
-				    + "fichier-excel[1].xlsx");
-	    
-	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
+	    // Open form to upload a first document
+		session().type("uploadFormElement", FILE_DIR + XLS_FILE);
+
+	    // We select randomly the rights field
+	    String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
 	    String newText8 = getRandomOption(xpathRole4);
 	    session().select(xpathRole4, newText8);
 	    pause();
+		
+	    //We select randonly the resource type field
+	    String xpathRole5 = "//div[2]/form/table/tbody/tr[7]/td/select";	    
+	    session().select(xpathRole5, getRandomOption(xpathRole5));
+	    pause();
+
 	    // Close window
-	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+	    session().click("//tr[8]/td/table/tbody/tr/td[1]/button");
 	    pause();
 	    // session().click("document.forms[0].elements[2]");
-	  
-	// Open form to upload a second document
+
+	    // Open form to upload a second document
 	    session().mouseOver("//td[3]/div/img");
 	    session().mouseDown("//td[3]/div/img");
 	    session().mouseUp("//td[3]/div/img");
 
 	    // Choose file
-	    session()
-		    .type(
-			    "//input[@class=\"gwt-FileUpload\"]",
-			    "C:\\"
-				    + "Documents and Settings\\"
-				    + "clihec3\\Local Settings\\Temporary Internet Files\\"
-				    + "Content.IE5\\K0F6YKYM\\powerpoint[1].ppt");
+		session().type("//input[@class=\"gwt-FileUpload\"]",FILE_DIR + PPT_FILE);	    
+
 	    // We select randomly the rights field
-	    xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
+	    xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
 	    newText8 = getRandomOption(xpathRole4);
 	    session().select(xpathRole4, newText8);
 	    pause();
+
+	    //We select randonly the resource type field
+	    xpathRole5 = "//div[2]/form/table/tbody/tr[7]/td/select";	    
+	    session().select(xpathRole5, getRandomOption(xpathRole5));
+	    pause();
+
 	    // Close window
-	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+	    session().click("//tr[8]/td/table/tbody/tr/td[1]/button");
 	    pause();
 
 	//else
@@ -394,10 +398,10 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// Select the excel file in browser window	
 	
 		session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
-			"value= (F" + ")   fichier-excel_1_.xlsx");
-		session().mouseOver("//option[@value=' (F)   fichier-excel_1_.xlsx']");
-		session().focus("//option[@value=' (F)   fichier-excel_1_.xlsx']");
-		session().click("//option[@value=' (F)   fichier-excel_1_.xlsx']");
+			"value= (F" + ")   excel_file_1_.xls"); //fichier-excel_1_.xls
+		session().mouseOver("//option[@value=' (F)   excel_file_1_.xls']"); //fichier-excel_1_.xls
+		session().focus("//option[@value=' (F)   excel_file_1_.xls']");
+		session().click("//option[@value=' (F)   excel_file_1_.xls']"); // fichier-excel_1_.xlsx
 		pause();
 
 		// Close Editor

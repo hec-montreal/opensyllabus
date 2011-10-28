@@ -197,12 +197,7 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 			    + " Osyl-FileBrowserTopButton-down-hovering\"]");
 
 	    // Choose file and close window
-	    session().type(
-		    "uploadFormElement",
-		    "C:\\Documents and Setti"
-			    + "ngs\\clihec3\\Local Settings\\Temporary Int"
-			    + "ernet Files\\"
-			    + "Content.IE5\\K0F6YKYM\\osyl-src[1].zip");
+	    session().type("uploadFormElement",FILE_DIR + ZIP_FILE);
 	    // We select randomly the rights field
 	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
 	    String newText8 = getRandomOption(xpathRole4);
@@ -228,12 +223,7 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 
 	    // Choose file and close window
 	    session()
-		    .type(
-			    "//input[@class=\"gwt-FileUpload\"]",
-			    "C:\\"
-				    + "Documents and Settings\\"
-				    + "clihec3\\Local Settings\\Temporary Internet Files\\"
-				    + "Content.IE5\\K0F6YKYM\\powerpoint[1].ppt");
+		    .type("//input[@class=\"gwt-FileUpload\"]", FILE_DIR + PPT_FILE);
 	    // We select randomly the rights field
 	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
 	    String newText8 = getRandomOption(xpathRole4);

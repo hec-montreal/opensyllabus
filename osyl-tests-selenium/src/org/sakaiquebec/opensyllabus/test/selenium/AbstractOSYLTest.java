@@ -45,23 +45,24 @@ import com.thoughtworks.selenium.SeleneseTestCase;
  * been invoked before.
  *
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
+ * @author <a href="mailto:alejandro.hernandez-pena@hec.ca">Alejandro Hernandez</a>
  */
 public class AbstractOSYLTest extends SeleneseTestCase {
 
     // Current test site
     private String siteName;
     // Base name for test sites
-    public static final String TEST_SITE_BASE_NAME = "Sei-";
+    public static final String TEST_SITE_BASE_NAME = "Se-";
 
-    //Button's click event names
-    public static final String BUTTON_HOME = "gwt-uid-2";
-    public static final String BUTTON_ALL_VIEW = "gwt-uid-8";
-    public static final String BUTTON_ADD = "gwt-uid-10";
-    public static final String BUTTON_SAVE = "gwt-uid-3";
-    public static final String BUTTON_PUBLISH = "gwt-uid-4";
-    public static final String BUTTON_PRINT = "gwt-uid-17";
-    public static final String BUTTON_UPDATE = "gwt-uid-8";
-    public static final String BUTTON_PREVIEW = "gwt-uid-11";
+    //Button's click event names in Osyl
+    public static final String BUTTON_HOME = "//td[@id='gwt-uid-2']";  //gwt-uid-2
+    public static final String BUTTON_ALL_VIEW = "//td[@id='gwt-uid-8']"; //gwt-uid-8
+    public static final String BUTTON_ADD = "//td[@id='gwt-uid-10']"; //gwt-uid-10
+    public static final String BUTTON_SAVE = "//td[@id='gwt-uid-3']"; //gwt-uid-3
+    public static final String BUTTON_PUBLISH = "//td[@id='gwt-uid-4']"; //gwt-uid-4
+    public static final String BUTTON_PRINT = "//td[@id='gwt-uid-17']"; //gwt-uid-17
+    public static final String BUTTON_UPDATE = "//td[@id='gwt-uid-8']"; //gwt-uid-8
+    public static final String BUTTON_PREVIEW = "//td[@id='gwt-uid-11']"; //gwt-uid-11
 
     // The screenshot capture is always done on the windows machine (running
     // the test) and not on the grid. This explains the following!
@@ -152,6 +153,14 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     protected static final String CT_0112 = "CT-???-Ajouter un document dans séances";
     protected static final String CT_0113 = "CT-???-Ajouter une réf. biblio. dans séances";
     protected static final String PT_19_2 = "PT 19.2 Création du devoir évalué à partir de l'Outil de remise";
+
+    //File and directory for upload test
+    protected static final String FILE_DIR = "C:\\Documents and Settings\\utilisateur\\Documents\\";
+    protected static final String DESKTOP_DIR = "d:\\utilisateur\\Bureau\\";
+    protected static final String PPT_FILE = "powerpoint_file[1].ppt";
+    protected static final String XLS_FILE = "excel_file[1].xls";
+    protected static final String XLS5_FILE = "excel_file[5].xls";
+    protected static final String ZIP_FILE = "osyl-src[1].zip";
 
     // Maximum time we wait (in ms) for an element to appear as expected
     private static final int MAX_TIME = 30000;
@@ -1082,12 +1091,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 			    + " Osyl-FileBrowserTopButton-down-hovering\"]");
 
 	    // Choose file and close window
-	    session().type(
-		    "uploadFormElement",
-		    "C:\\Documents and Setti"
-			    + "ngs\\clihec3\\Local Settings\\Temporary Int"
-			    + "ernet Files\\" + "Content.IE5\\K0F6YKYM\\"
-			    + docName);
+	    session().type("uploadFormElement", FILE_DIR + docName);
 	    // We select randomly the rights field
 	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
 	    String newText8 = getRandomOption(xpathRole4);
@@ -1102,14 +1106,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		session().mouseDownAt(locator, "10,10");
 		session().mouseUpAt(locator, "10,10");
 	    // Choose file and close window
-		session().type("//input[@name='uploadFormElement']", "d:\\clihec3\\Bureau\\"+docName);
+		session().type("//input[@name='uploadFormElement']", DESKTOP_DIR +docName);
 		/*
-	    session().type(
-		    "uploadFormElement",
-		    "C:\\Documents and Setti"
-			    + "ngs\\clihec3\\Local Settings\\Temporary Int"
-			    + "ernet Files\\" + "Content.IE5\\K0F6YKYM\\"
-			    + docName);
+	    session().type("uploadFormElement", FILE_DIR + docName);
 		 **/
 	    // We select randomly the rights field
 	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";

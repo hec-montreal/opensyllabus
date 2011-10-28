@@ -155,12 +155,10 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
     	//Upload file
     	session().click("attach");
     	pause();
-    	session().type("upload", "C:\\Documents and Settings\\clihec3\\Local" +
-    			" Settings\\Temporary Internet Files\\Content.IE5\\" +
-    			"VOXJFB1N\\fichier-excel[5].xlsx");
+    	session().type("upload", FILE_DIR + XLS5_FILE);
     	pause();
     	pause();
- 	if(!session().isElementPresent("link=fichier-excel[5].xlsx")){
+ 	if(!session().isElementPresent("link=" + XLS5_FILE)){
  	   logAndFail("File not found!");
  	}
  	log("File found");
@@ -193,11 +191,10 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
     	//Upload file
     	session().click("attach");
     	pause();
-    	session().type("upload", "C:\\Documents and Settings\\clihec3\\Local" +
-    			" Settings\\Temporary Internet Files\\Content.IE5\\" +
-    			"VOXJFB1N\\fichier-excel[5].xlsx");
+    	session().type("upload", FILE_DIR + XLS5_FILE);
  	pause();
- 	if(!session().isElementPresent("link=fichier-excel[5].xlsx"))
+ 	//if(!session().isElementPresent("link=fichier-excel[5].xlsx"))
+	if(!session().isElementPresent("link="+XLS5_FILE))
  		{
   	   logAndFail("File not found!");
   	}
