@@ -41,7 +41,6 @@ public interface ResourceDao {
 
     /**
      * @param siteId
-     * @param groupName the name of the group you want access CO.
      * @return The site id of the courseOutline
      * @throws Exception if null parameter or non existing course outline
      */
@@ -58,7 +57,7 @@ public interface ResourceDao {
 
     /**
      * @param siteId
-     * @param groupName the name of the group you want access CO.
+     * @param access the level to access (e.g.: public, attendee, etc.)
      * @return The site id of the courseOutline
      * @throws Exception if null parameter or non existing course outline
      */
