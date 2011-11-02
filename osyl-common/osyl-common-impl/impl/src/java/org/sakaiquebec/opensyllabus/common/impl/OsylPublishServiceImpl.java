@@ -223,10 +223,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     }
 
     /**
-     * Creates or updates the corresponding entries in the database and copies
-     * the ressources
-     * 
-     * @param String webapp dir (absolute pathname !?)
+     * Creates or updates the corresponding XMLs in the database and copies
+     * the resources from the edition area to the published area.
+     *
+     * @param webappDir webapp path (required to get access to config)
+     * @param siteId
      */
     public Vector<Map<String, String>> publish(String webappDir, String siteId)
 	    throws Exception, FusionException, OsylPermissionException {
@@ -264,7 +265,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		COModeledServer coModeled = new COModeledServer(co);
 
 		// PRE-PUBLICATION
-		// change work directory to publish directory
+		// change document path from edition directory to published
+		// directory (attachments)
 		coModeled.XML2Model(true);
 		coModeled.model2XML();
 		co.setContent(coModeled.getSerializedContent());
@@ -289,11 +291,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    List<CORelation> childrens =
 			    coRelationDao.getCourseOutlineChildren(siteId);
 		    if (childrens != null && !childrens.isEmpty()) {
-			// site have childrens associated (only in corelation
-			// table,
-			// not
-			// in xml cause there was no published xml before).
-			// We must associate to parent now
+			// site have children associated (only in CORelation
+			// table, not in xml because there was no published xml
+			// before). We must associate to parent now
 			for (CORelation coRelation : childrens) {
 			    try {
 				COSerialized coChild =
@@ -310,9 +310,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 					.createOrUpdateCourseOutline(coChild);
 			    } catch (CompatibilityException e) {
 				// we do nothing, editor of children will be
-				// alert
-				// when
-				// editing
+				// notified during edition
 			    } catch (FusionException fe) {
 
 			    }
@@ -325,17 +323,19 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    resourceDao.createOrUpdateCourseOutline(publishedCO);
 		}
 		log.info("Creation of prepublish version for site ["
-			    +  siteId 
+			    +  siteId
 			    + "] took " + (System.currentTimeMillis() - start) + " ms");
 
-		copyWorkToPublish(siteId, coModeled.getDocumentSecurityMap(),
+		// Now we copy documents from the edition area to the published one
+		copyResourcesIntoAttachments(siteId, coModeled.getDocumentSecurityMap(),
 			coModeled.getDocumentVisibilityMap());
 
-		publishedSiteIds = publication(co.getSiteId(), webappDir);
+		// And we create different XMLs for various audiences
+		publishedSiteIds = publishXMLs(co.getSiteId(), webappDir);
 
-		// change publication date
-		TreeMap<String, String> publicationProperties =
-			new TreeMap<String, String>();
+		// We update the edition XML for this site to keep track
+		// of current publication date.
+		long xmlUpdateStart = System.currentTimeMillis();
 		COSerialized coSerialized =
 			osylSiteService
 				.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
@@ -356,6 +356,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		coSerialized.setContent(coModeledServer.getSerializedContent());
 		resourceDao.createOrUpdateCourseOutline(coSerialized);
 
+		log.info("Update of edition XML for site ["
+			    +  siteId
+			    + "] took " + (System.currentTimeMillis() - xmlUpdateStart) + " ms");
+
+		// change publication date
+		TreeMap<String, String> publicationProperties =
+			new TreeMap<String, String>();
 		publicationProperties
 			.put(COPropertiesType.PREVIOUS_PUBLISHED,
 				coContent
@@ -364,6 +371,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			coContent.getProperty(COPropertiesType.PUBLISHED));
 		publicationResults.add(publicationProperties);
 
+		// Generate PDF versions
 		publicationResults.add(generatePublishedSitesPdf(publishedSiteIds,webappDir));
 
 	    } finally {
@@ -461,8 +469,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		co.setContent(coModeledServer.getSerializedContent());
 
 	    } catch (Exception e) {
-		log.error("Unable to put courseId in XML"
-			+ co.getOsylConfig().getConfigRef());
+		log.error("Unable to put properties in XML for site ["
+			+ siteId + "]");
 		log.error(e);
 	    }
 
@@ -480,9 +488,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    File fAttendee =
 		    createPrintVersion(coSerializedAttendee, webappdir);
 	    log.info("Attendee PDF version for site ["
-		    +  siteId 
+		    +  siteId
 		    + "] took " + (System.currentTimeMillis() - start) + " ms");
-	    
+
 	    start = System.currentTimeMillis();
 	    COSerialized coSerializedCommunity =
 		    getSerializedPublishedCourseOutlineForAccessType(siteId,
@@ -490,7 +498,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    File fCommunity =
 		    createPrintVersion(coSerializedCommunity, webappdir);
 	    log.info("Community PDF version for site ["
-		    +  siteId 
+		    +  siteId
 		    + "] took " + (System.currentTimeMillis() - start) + " ms");
 
 	    start = System.currentTimeMillis();
@@ -499,7 +507,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    SecurityInterface.ACCESS_PUBLIC, webappdir);
 	    File fPublic = createPrintVersion(coSerializedPublic, webappdir);
 	    log.info("Public PDF version for site ["
-		    +  siteId 
+		    +  siteId
 		    + "] took " + (System.currentTimeMillis() - start) + " ms");
 
 	    start = System.currentTimeMillis();
@@ -520,7 +528,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			SecurityInterface.ACCESS_PUBLIC);
 	    }
 	    log.info("Recording PDF versions for site ["
-		    +  siteId 
+		    +  siteId
 		    + "] took " + (System.currentTimeMillis() - start) + " ms");
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -655,7 +663,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		access = coSerialized.getMessages()
 		    .get("Print.version.edition");
 	    }
-	    
+
 	    f =
 		    FOPHelper.convertXml2Pdf(
 			    d,
@@ -768,16 +776,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return d;
     }
 
-    private Vector<String> publication(String siteId, String webappDir) throws Exception,
+    private Vector<String> publishXMLs(String siteId, String webappDir) throws Exception,
 	    FusionException {
 	long start = System.currentTimeMillis();
 	Vector<String> publishedSiteIds=new Vector<String>();
-	COSerialized hierarchyFussionedCO =
+	COSerialized hierarchyMergedCO =
 		osylSiteService.getSerializedCourseOutline(siteId, webappDir);
-	if (hierarchyFussionedCO.isIncompatibleWithHisParent()) {
+	if (hierarchyMergedCO.isIncompatibleWithHisParent()) {
 	    throw new FusionException();
 	}
-	if (hierarchyFussionedCO.isIncompatibleHierarchy()) {
+	if (hierarchyMergedCO.isIncompatibleHierarchy()) {
 	    FusionException e = new FusionException();
 	    e.setHierarchyFusionException(true);
 	    throw e;
@@ -796,30 +804,44 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	} catch (Exception e) {
 	    // there is no published version of co for siteid
 	}
-	if (hierarchyFussionedCO != null && coModeled != null) {
+        long xmlStart = System.currentTimeMillis();
+	if (hierarchyMergedCO != null && coModeled != null) {
 	    coModeled.model2XML();
-	    hierarchyFussionedCO.setContent(coModeled.getSerializedContent());
+            log.debug("model2XML for [" +  siteId + "] took "
+                    + (System.currentTimeMillis() - xmlStart) + " ms");
+            xmlStart = System.currentTimeMillis();
 
-	    updateCourseInformations(hierarchyFussionedCO, webappDir);
+	    hierarchyMergedCO.setContent(coModeled.getSerializedContent());
+	    updateCourseInformations(hierarchyMergedCO, webappDir);
+            log.debug("updateCourseInformations for [" +  siteId + "] took "
+                    + (System.currentTimeMillis() - xmlStart) + " ms");
+            xmlStart = System.currentTimeMillis();
 
 	    // Create a course outline with security attendee
-	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_ATTENDEE,
+	    filterAndPublishXML(hierarchyMergedCO, SecurityInterface.ACCESS_ATTENDEE,
 		    webappDir);
+            log.debug("filterAndPublishXML (attendee) for [" +  siteId + "] took "
+                    + (System.currentTimeMillis() - xmlStart) + " ms");
+            xmlStart = System.currentTimeMillis();
 
 	    // Create a course outline with security public
-	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
+	    filterAndPublishXML(hierarchyMergedCO, SecurityInterface.ACCESS_PUBLIC,
 		    webappDir);
+            log.debug("filterAndPublishXML (public) for [" +  siteId + "] took "
+                    + (System.currentTimeMillis() - xmlStart) + " ms");
+            xmlStart = System.currentTimeMillis();
 
 	    // Create a course outline with security community
-	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_COMMUNITY,
+	    filterAndPublishXML(hierarchyMergedCO, SecurityInterface.ACCESS_COMMUNITY,
 		    webappDir);
+            log.debug("filterAndPublishXML (community) for [" +  siteId + "] took "
+                    + (System.currentTimeMillis() - xmlStart) + " ms");
 
-	    // If the publication worked, the site id is logged to generate the
+	    // If the publication worked, the site id is saved to generate the
 	    // pdf later.
-
 	    publishedSiteIds.add(siteId);
 	    log.info("Creation of version public, community and attendee for site ["
-		    +  siteId 
+		    +  siteId
 		    + "] took " + (System.currentTimeMillis() - start) + " ms");
 	    publishedSiteIds.addAll(publishChildren(siteId, webappDir));
 	}
@@ -827,6 +849,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     }
 
     private Vector<String> publishChildren(String siteId, String webappDir) {
+        long start = System.currentTimeMillis();
 	List<CORelation> coRelationList=new ArrayList<CORelation>();
 	Vector<String> publishedSiteids= new Vector<String>();
 	try {
@@ -841,8 +864,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		log.info("user ["
 			+ sessionManager.getCurrentSession().getUserEid()
 			+ "] publish child site [" + childId + "]");
-		publishedSiteids.addAll(publication(childId, webappDir));
+		publishedSiteids.addAll(publishXMLs(childId, webappDir));
+                log.info("Finished publishing course outline for child site ["
+                        + siteId + "] in " + (System.currentTimeMillis() - start) + " ms");
 	    } catch (Exception e) {
+                log.error("Exception while publishing child site [" + childId + "] :", e);
 		e.printStackTrace();
 	    }
 	}
@@ -858,7 +884,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     /**
      * Copies work's folder content to publish folder.
      */
-    private void copyWorkToPublish(String siteId,
+    private void copyResourcesIntoAttachments(String siteId,
 	    Map<String, String> documentSecurityMap,
 	    Map<String, String> documentVisibilityMap) throws Exception {
 	long start= System.currentTimeMillis();
@@ -883,8 +909,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    e);
 	    throw e;
 	}
-	log.info("Documents copy from resource to attachments for site ["
-		    +  siteId 
+	log.info("Copy of documents from resources to attachments for site ["
+		    +  siteId
 		    + "] took " + (System.currentTimeMillis() - start) + " ms");
     }
 
@@ -1017,7 +1043,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     }
 
-    private void publish(COSerialized co, String access, String webappDir)
+    private void filterAndPublishXML(COSerialized co, String access, String webappDir)
 	    throws Exception {
 	COSerialized publishedCO = null;
 
@@ -1039,16 +1065,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    publishedCO.setPublished(true);
 	}
 	publishedCO.setContent(content);
-	// COModeledServer coModeledServer = new COModeledServer(publishedCO);
-	// coModeledServer.XML2Model();
-	// coModeledServer.getModeledContent().addProperty(
-	// COPropertiesType.PREVIOUS_PUBLISHED,
-	// coModeledServer.getModeledContent().getProperty(
-	// COPropertiesType.PUBLISHED));
-	// coModeledServer.getModeledContent().addProperty(
-	// COPropertiesType.PUBLISHED,
-	// OsylDateUtils.getCurrentDateAsXmlString());
-	// coModeledServer.model2XML();
 	resourceDao.createOrUpdateCourseOutline(publishedCO);
 
 	// We save the published date in the course outline in edition

@@ -119,9 +119,9 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 				, "parseDocInt.xsl" // 5
 				, "parseDocExt.xsl" // 6
 				, "fr-10.xsl" // 7
-				, "fr-11.xsl" // 8 Présentation
-				, "fr-11a.xsl" // 9 Présentation Annuaire
-				, "fr-12.xsl" // 10 Coordonnées
+				, "fr-11.xsl" // 8 PrÃ©sentation
+				, "fr-11a.xsl" // 9 PrÃ©sentation Annuaire
+				, "fr-12.xsl" // 10 CoordonnÃ©es
 				, "fr-13.xsl" // 11
 				, "fr-14.xsl" // 12
 				, "fr-15.xsl" // 13
@@ -182,8 +182,8 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 				attributeMap.put(xsltName, publication.createTransformer(xslt,
 						xsltDirName));
 
-				log.info("création transformer " + xsltName + " ");
-				log.info("Recompilation des fichiers" + " ");
+				log.info("creation transformer " + xsltName);
+				log.info("Recompilation des fichiers");
 			}
 			publication.transformersTable.put(xsltName, attributeMap
 					.get(xsltName));
@@ -194,7 +194,7 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 		dateDeb = new java.util.Date(System.currentTimeMillis());
 
 		if (trace)
-			outTrace.append("<br>début: " + dateDeb.toString());
+			outTrace.append("<br>debut: " + dateDeb.toString());
 		if (trace)
 			outTrace.append("<br>appDirName : " + publication.appDirName);
 		outPrint.append("<div class='titre'>Rapport de publication</div>");
@@ -244,7 +244,7 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 			}
 			// ==================================================================
 			if (trace)
-				outTrace.append("<br>connexions établies :"
+				outTrace.append("<br>connexions etablies :"
 						+ new java.util.Date(System.currentTimeMillis()));
 
 			ok = publication.chargerTraiter(connexionPublication,
@@ -253,7 +253,7 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 
 			dateFin = new java.util.Date(System.currentTimeMillis());
 			outPrint
-					.append("<div class='duree'>Durée: "
+					.append("<div class='duree'>Duree: "
 							+ (((double) dateFin.getTime() - (double) dateDeb
 									.getTime()) / 1000) + " secondes</div>");
 
