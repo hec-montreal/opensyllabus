@@ -34,6 +34,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1301,16 +1302,16 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	if (courseSets == null)
 	    return null;
 	List<AcademicSession> acadSessions = courseManagementService.getCurrentAcademicSessions();
-
+	Date endDate = null;
+	Date startDate= null;
+	
 	for (AcademicSession acadSession: acadSessions){
-	    log.info("Le titre est " + acadSession.getTitle());
-	}
 	
 	for (Iterator<CourseSet> cSets = courseSets.iterator(); cSets.hasNext();) {
 	    courseSet = cSets.next();
 	    courseOffs =
 		    courseManagementService
-			    .getCourseOfferingsInCourseSet(courseSet.getEid());
+			    .findCourseOfferings(courseSet.getEid(), acadSession.getEid());
 	    for (Iterator<CourseOffering> cOffs = courseOffs.iterator(); cOffs
 		    .hasNext();) {
 		courseOff = cOffs.next();
@@ -1382,6 +1383,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    }
 		}
 	    }
+	}
 	}
 	log.debug("getCMCourses ###### END ######" + elapsed(start) + " for "
 		+ cmCourses.size() + " courses");
