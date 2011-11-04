@@ -323,7 +323,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
     }
 
     public void publishCourseOutline(
-	    AsyncCallback<Vector<Map<String, String>>> callback) {
+            String nonce, AsyncCallback<Vector<Map<String, String>>> callback) {
 	callback.onSuccess(null);
     }
 

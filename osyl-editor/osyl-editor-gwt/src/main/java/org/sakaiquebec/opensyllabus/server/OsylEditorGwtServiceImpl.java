@@ -57,7 +57,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public void ping() {
     }
 
-    public Vector<Map<String, String>> publishCourseOutline() throws Exception,FusionException {
+    public Vector<Map<String, String>> publishCourseOutline(String nonce) throws Exception,FusionException {
 	return null;
     }
 

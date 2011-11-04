@@ -62,7 +62,7 @@ public interface OsylEditorGwtService extends RemoteService {
      * case, it is the responsibility of the client application to keep track of
      * this new ID, notably to save it again at a later time.
      * 
-     * @param COSerialized POJO
+     * @param co the serialized course outline
      * @return the CourseOutline ID
      * @throws Exception
      */
@@ -74,16 +74,16 @@ public interface OsylEditorGwtService extends RemoteService {
      * saved previously. Throws an exception if any error occurs, returns
      * otherwise.
      * 
-     * @param String id
+     * @param nonce single use identifier to avoid cloned publish request
      */
-    public Vector<Map<String, String>> publishCourseOutline() throws Exception,
+    public Vector<Map<String, String>> publishCourseOutline(String nonce) throws Exception,
 	    FusionException;
 
     /**
      * Returns the Published CourseOutline for the access type specified in
      * parameter. It must have been published previously.
      * 
-     * @param String groupName
+     * @param accessType
      */
     public COSerialized getSerializedPublishedCourseOutlineForAccessType(
 	    String accessType) throws Exception;
@@ -106,7 +106,8 @@ public interface OsylEditorGwtService extends RemoteService {
      * Applies permission for the specified resource. If something prevents the
      * call to complete successfully an exception is thrown.
      * 
-     * @param String resourceId
+     * @param resourceId
+     * @param permission
      */
     public void applyPermissions(String resourceId, String permission);
 
@@ -130,7 +131,6 @@ public interface OsylEditorGwtService extends RemoteService {
      * Get the xsl associated with the particular group
      * 
      * @param group
-     * @param callback
      */
     public String getXslForGroup(String group);
 
@@ -168,9 +168,7 @@ public interface OsylEditorGwtService extends RemoteService {
 
     /**
      * Method used to create a pdf for the edition version of the CO
-     * 
-     * @param xml
-     * @param printEditionVersionCallback
+     *
      */
     public void createPrintableEditionVersion() throws Exception;
 
@@ -189,7 +187,6 @@ public interface OsylEditorGwtService extends RemoteService {
      * 
      * @param eventType
      * @param resource
-     * @param callback
      */
     public void sendEvent(String eventType, String resource);
 

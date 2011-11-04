@@ -61,7 +61,7 @@ public interface OsylEditorGwtServiceAsync {
      * case, it is the responsibility of the client application to keep track of
      * this new ID, notably to save it again at a later time.
      * 
-     * @param COSerialized POJO
+     * @param co the serialized course outline
      * @param callback the callback to return the CourseOutline ID
      */
     public void updateSerializedCourseOutline(COSerialized co,
@@ -71,17 +71,18 @@ public interface OsylEditorGwtServiceAsync {
      * Publishes the CourseOutline whose ID is specified. It must have been
      * saved previously. Throws an exception if any error occurs, returns
      * otherwise.
-     * 
-     * @param String id
+     *
+     * @param nonce
      */
     public void publishCourseOutline(
-	    AsyncCallback<Vector<Map<String, String>>> callback);
+            String nonce, AsyncCallback<Vector<Map<String, String>>> callback);
 
     /**
      * Returns the Published CourseOutline for the group specified in parameter.
      * It must have been published previously.
      * 
-     * @param String groupName
+     * @param accessType
+     * @param callback
      */
     public void getSerializedPublishedCourseOutlineForAccessType(
 	    String accessType, AsyncCallback<COSerialized> callback);
@@ -106,8 +107,8 @@ public interface OsylEditorGwtServiceAsync {
      * prevents the call to complete successfully an exception is thrown. TODO:
      * check if the description is OK, I'm not sure I understand this one well.
      * 
-     * @param String resourceId
-     * @param String permission
+     * @param resourceId
+     * @param permission
      */
     public void applyPermissions(String resourceId, String permission,
 	    AsyncCallback<Void> callback);
@@ -174,7 +175,6 @@ public interface OsylEditorGwtServiceAsync {
     /**
      * Method used to create a pdf for the edition version of the CO
      * 
-     * @param xml
      * @param printEditionVersionCallback
      */
     public void createPrintableEditionVersion(
@@ -196,7 +196,7 @@ public interface OsylEditorGwtServiceAsync {
      * 
      * @param eventType
      * @param resource
-     * @param callback
+     * @param voidCallback
      */
     public void sendEvent(String eventType, String resource,
 	    AsyncCallback<Void> voidCallback);

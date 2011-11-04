@@ -649,8 +649,13 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     public void publishCourseOutline(
 	    AsyncCallback<Vector<Map<String, String>>> callback) {
+        String nonce = generateNonce();
 	OsylRemoteServiceLocator.getEditorRemoteService().publishCourseOutline(
-		callback);
+		nonce, callback);
+    }
+
+    private String generateNonce() {
+        return System.currentTimeMillis() + siteId;
     }
 
     /**

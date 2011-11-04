@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.server;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -89,6 +90,10 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     // Whether the cache is used (value set from sakai.properties)
     private static boolean cacheEnabled = true;
 
+    // List of previously published nonces
+    private List<String> previouslyPublishedNonces;
+    
+
     /**
      * Constructor.
      */
@@ -114,6 +119,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
 	initCache();
 
+        previouslyPublishedNonces = new Vector<String>();
     }
 
     private void initCache() {
@@ -169,14 +175,21 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * saved previously. Throws an exception if any error occurs, returns
      * otherwise.
      * 
-     * @param String id
+     * @param nonce single use identifier to avoid cloned publish request
      */
-    public Vector<Map<String, String>> publishCourseOutline() throws Exception,
+    public Vector<Map<String, String>> publishCourseOutline(String nonce) throws Exception,
 	    FusionException, PdfGenerationException {
+        String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
+        if (isAlreadyPublished(nonce)) {
+            log.error("Site [" + siteId
+                    + "] was already published using the same request id!");
+            return null;
+        } else {
+            setAlreadyPublished(nonce);
+        }
+
 	String webappDir = getServletContext().getRealPath("/");
-	Vector<Map<String, String>> publicationResults =
-		new Vector<Map<String, String>>();
-	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
+	Vector<Map<String, String>> publicationResults = new Vector<Map<String, String>>();
 	try {
 	    if (OsylDirectoryService.SITE_TYPE.equals(osylServices
 		    .getOsylSiteService().getSiteType(siteId)))
@@ -202,11 +215,19 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	return publicationResults;
     }
 
+    private void setAlreadyPublished(String nonce) {
+        previouslyPublishedNonces.add(nonce);
+    }
+
+    private boolean isAlreadyPublished(String nonce) {
+        return previouslyPublishedNonces.contains(nonce);
+    }
+
     /**
      * Returns the URL where we can access the CourseOutline whose ID is
      * specified. It must have been published previously.
      * 
-     * @param String id
+     * @param accessType id
      * @return String URL
      */
     public COSerialized getSerializedPublishedCourseOutlineForAccessType(
@@ -272,7 +293,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * track of this new ID, notably to save it again at a later time. If
      * something goes wrong, an exception is thrown.
      * 
-     * @param COSerialized POJO
+     * @param co The serialized course outline
      * @return the CourseOutlineXML ID
      */
     public boolean updateSerializedCourseOutline(COSerialized co)
@@ -300,7 +321,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * call to complete successfully an exception is thrown. TODO: check if the
      * description is OK, I'm not sure I understand this one well.
      * 
-     * @param String resourceId
+     * @param resourceId
+     * @param permission
      */
     public void applyPermissions(String resourceId, String permission) {
 	try {
@@ -358,7 +380,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * Get the xsl associated with the particular group
      * 
      * @param group
-     * @param callback
      */
     public String getXslForGroup(String group) {
 	String webappDir = getServletContext().getRealPath("/");
@@ -399,8 +420,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     /**
      * Method used to create a pdf for the edition version of the CO
      * 
-     * @param xml
-     * @param printEditionVersionCallback
      */
     public void createPrintableEditionVersion() throws Exception {
 	String webappDir = getServletContext().getRealPath("/");
