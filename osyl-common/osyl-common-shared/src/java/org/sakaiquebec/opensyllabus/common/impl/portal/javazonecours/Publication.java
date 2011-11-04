@@ -52,6 +52,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Publication holds all methods to transform XML to a readable HTML. This code
@@ -63,6 +65,8 @@ import org.xml.sax.InputSource;
  * @version $Id: $
  */
 public class Publication {
+
+    private static Log log = LogFactory.getLog(Publication.class);
 
 	public int nbSpaces = 0;
 	public int nbImgs = 0;
@@ -642,7 +646,7 @@ public class Publication {
 			}
 
 		} catch (Exception e) {
-			System.err.println("========= Erreur dans processAndInsertInDB: "
+			log.error("========= Erreur dans processAndInsertInDB: "
 					+ e);
 		} finally {
 
@@ -678,17 +682,17 @@ public class Publication {
 			ps_Insert.setString(4, nivSecu);
 			ps_Insert.setString(5, type);
 			ps_Insert.execute();
-			System.err.println("The file " + ressId + ".hml has been processed");
+			log.info("The file " + ressId + ".hml has been processed");
 
 		} catch (Exception e) {
-			System.err.println("========= Erreur dans InsertInDB() : " + e);
+			log.error("========= Erreur dans InsertInDB() : " + e);
 		} finally {
 			Statement stmt_Insert = connexion.createStatement();
 			stmt_Insert.execute("commit");
 			ps_Insert.close();
 			stmt_Insert.close();
 		}
-		// System.err.println("Insertion avec succes!");
+		// log.debug("Insertion avec succes!");
 	}
 
 	// ==================================================================================
@@ -986,8 +990,7 @@ public class Publication {
 				a.add(code);
 			}
 
-			System.err
-					.println("Nombre de Cours a inserer dans Plancours Peoplesoft: "
+			log.debug("Nombre de Cours a inserer dans Plancours Peoplesoft: "
 							+ a.size());
 
 			String requeteSQL2 = "INSERT INTO PlanCoursPeopleSoft(CODECOURS) VALUES(?)";
@@ -998,8 +1001,8 @@ public class Publication {
 				ps2.setString(1, c);
 				ps2.execute();
 			}
-			System.err.println(": Succes tous les " + a.size()
-					+ "cours ont ete inseres!");
+			log.debug("Succes tous les " + a.size()
+					+ " cours ont ete inseres!");
 		} catch (Exception e) {
 			outPrint.append("<br>========= Erreur dans copierListeCours() : "
 					+ e);
@@ -1007,7 +1010,7 @@ public class Publication {
 
 		finally {
 
-			System.err.println("In the finally");
+			log.debug("In block finally");
 
 			Statement st = connexionPeopleSoft.createStatement();
 			st.execute("commit");
@@ -1589,14 +1592,14 @@ public class Publication {
 			outTrace.append("<br>&nbsp;&nbsp;document :" + docId);
 		}
 
-		System.out.println("<br><br>readFileAndStoreInDB - entree :"
+		log.info("<br><br>readFileAndStoreInDB - entree :"
 				+ new java.util.Date(System.currentTimeMillis()));
-		System.out.println("<br>&nbsp;&nbsp;koId     :" + koId);
-		System.out.println("<br>&nbsp;&nbsp;lang :" + lang);
-		System.out.println("<br>&nbsp;&nbsp;ressType :" + extension);
-		System.out.println("<br>&nbsp;&nbsp;nivSecu :" + nivSecu);
-		System.out.println("<br>&nbsp;&nbsp;appDirName :" + appDirName);
-		System.out.println("<br>&nbsp;&nbsp;document :" + docId);
+		log.info("<br>&nbsp;&nbsp;koId     :" + koId);
+		log.info("<br>&nbsp;&nbsp;lang :" + lang);
+		log.info("<br>&nbsp;&nbsp;ressType :" + extension);
+		log.info("<br>&nbsp;&nbsp;nivSecu :" + nivSecu);
+		log.info("<br>&nbsp;&nbsp;appDirName :" + appDirName);
+		log.info("<br>&nbsp;&nbsp;document :" + docId);
 
 		String reqDoc = null;
 		PreparedStatement psDoc = null;
@@ -2258,7 +2261,7 @@ public class Publication {
 
 		if (trace)
 			outTrace.append("<hr>==== TraiterPlanCoursAnnuaire - entree ====");
-		if (nivSecu.equals(PUBLIC_SECURITY_LABEL) || nivSecu.equals(COMMUNITY_SECURITY_LABEL))		
+		if (nivSecu.equals(PUBLIC_SECURITY_LABEL) || nivSecu.equals(COMMUNITY_SECURITY_LABEL))
 			deleteFromPlanZone(connexion, koId, outPrint, outTrace, trace, nivSecu);
 
 		// --- generation presentation ---
@@ -2273,7 +2276,7 @@ public class Publication {
 	 * This method makes sure documents are rendered when the course outline is
 	 * published. A couple of things have been commented because they are
 	 * rewritten in OsylTransformToZCCOImpl
-	 * 
+	 *
 	 * @param connexion
 	 * @param lang
 	 * @param xml
@@ -2332,7 +2335,7 @@ public class Publication {
 			outPrint
 					.append("<div class='nbDocInts'>Nombre de documents externes : "
 							+ nbDocExts + "</div>");
-			System.out.println("Nombre de documents externes : " + nbDocExts
+			log.info("Nombre de documents externes : " + nbDocExts
 					+ "</div>");
 
 			for (int i = 1; i < nbDocExts + 1; i++) {
@@ -2412,7 +2415,7 @@ public class Publication {
 								// outTrace, trace);
 
 							} /*
-							 * 
+							 *
 							 * else if (fileName.length()>9 &&
 							 * fileName.substring(0,9).equals("documents")) { if
 							 * (trace) outTrace.append(".5"); nouveau =
@@ -2483,18 +2486,18 @@ public class Publication {
 			while (rsetS.next()) {
 				ko = rsetS.getString("KOID");
 				if (ressAl.contains(ko)) {
-					System.err.println("Contient" + ko);
+					log.debug("Contient" + ko);
 				} else {
-					System.err.println("Contient pas" + ko);
+					log.debug("Contient pas" + ko);
 					toDelete += ",'" + ko + "'";
-					System.err.println(toDelete);
+					log.debug(toDelete);
 				}
-				System.err.println(requeteSQLs + toDelete);
+				log.debug(requeteSQLs + toDelete);
 			}
-			System.err.println(requeteSQLs + toDelete);
+			log.debug(requeteSQLs + toDelete);
 
 		} catch (Exception e) {
-			System.err.println("========= Erreur dans deleteOldDocfromDB : "
+			log.debug("========= Erreur dans deleteOldDocfromDB : "
 					+ e);
 		} finally {
 			psS.close();
@@ -2504,13 +2507,13 @@ public class Publication {
 			toDelete = toDelete.substring(1);
 			requeteSQLd1 = " DELETE FROM DocZone WHERE koId in (" + toDelete
 					+ ")";
-			System.err.println(requeteSQLd1);
+			log.debug(requeteSQLd1);
 			if (trace)
 				outTrace.append("<br>" + requeteSQLd1 + " ...");
 
 			requeteSQLd2 = " DELETE FROM DocSecu WHERE koId in (" + toDelete
 					+ ")";
-			System.err.println(requeteSQLd2);
+			log.debug(requeteSQLd2);
 			if (trace)
 				outTrace.append("<br>" + requeteSQLd2 + " ...");
 
@@ -2518,8 +2521,7 @@ public class Publication {
 				stmtD1.execute(requeteSQLd1);
 
 			} catch (Exception e) {
-				System.err
-						.println("========= Erreur dans deleteOldDocfromDB : "
+				log.debug("========= Erreur dans deleteOldDocfromDB : "
 								+ e);
 			} finally {
 				stmtD1.execute("commit");
@@ -2530,8 +2532,7 @@ public class Publication {
 
 				stmtD2.execute(requeteSQLd2);
 			} catch (Exception e) {
-				System.err
-						.println("========= Erreur dans deleteOldDocfromDB : "
+				log.debug("========= Erreur dans deleteOldDocfromDB : "
 								+ e);
 			} finally {
 				stmtD2.execute("commit");
@@ -2617,13 +2618,13 @@ public class Publication {
 			 * sessionCoursCode + "3";
 			 */
 		}
-		// System.out.println("Code session2: "+sessionCoursCode);
+		// log.info("Code session2: "+sessionCoursCode);
 		// ---- section
 		debut = fin + 1;
 		fin = ressId.indexOf(".", debut);
 		if (fin > 0 && !ressId.startsWith(".pce", debut))
 			sectionCours = ressId.substring(debut, fin);
-		
+
 		//Pour les cours de MBA, il se pourrait qu'à ce niveau ce soit la période qu'on a récupéré
 		//on recommence pour avoir la section qui est à la fin de la String
 		if(sectionCours.length()==2){
@@ -2632,7 +2633,7 @@ public class Publication {
 			if (fin > 0 && !ressId.startsWith(".pce", debut))
 				sectionCours = ressId.substring(debut, fin);
 		}
-		
+
 		// ---- programme, service, credit et exigences
 		if (trace)
 			outTrace
@@ -2841,7 +2842,7 @@ public class Publication {
 			boolean force, StringBuffer outPrint, StringBuffer outTrace,
 			boolean trace, String nivSec) throws Exception {
 		// ---------------------------------------------------
-		System.err.println("dans chargertraiter");
+		log.debug("dans chargertraiter");
 		boolean ok = true;
 
 		outPrint.append("<div class='ressource'>Ressource : " + koId + " ("
@@ -2851,55 +2852,55 @@ public class Publication {
 			outTrace.append("<br>chargerTraiter -- entree");
 		// ===============chargement du document source
 		// ========================================
-		System.err.println("<br>chargerTraiter -- entree");
+		log.debug("<br>chargerTraiter -- entree");
 		if (trace)
 			outTrace.append("<br>lecture du document xml :" + koId + " ("
 					+ langue + ")...");
-		System.err.println("<br>lecture du document xml :" + koId + " ("
+		log.debug("<br>lecture du document xml :" + koId + " ("
 				+ langue + ")...");
 		String xmlString = readXmlString(connexionPublication, koId, langue,
 				outTrace, trace);
 		if (trace)
 			outTrace.append(" ok");
-		System.err.println(" ok");
+		log.debug(" ok");
 
 		if (trace)
 			outTrace.append("<br>construction du DOM...");
-		System.err.println("<br>construction du DOM...+" + xmlString);
+		log.debug("<br>construction du DOM...+" + xmlString);
 		if (null != xmlString && !("".equals(xmlString))) {
 			Document xmlSourceDoc = buildDOM(xmlString);
 
 			if (trace)
 				outTrace.append(" ok");
-			System.err.println("ok");
+			log.debug("ok");
 
 			if (trace)
 				outTrace.append("<br>recherche dateMaj...");
-			System.err.println("<br>recherche dateMaj...");
+			log.debug("<br>recherche dateMaj...");
 			String xmlDateMaj = readXmlDateMaj(connexionPublication, koId,
 					langue, outTrace, trace);
 			if (trace)
 				outTrace.append(" ok");
-			System.err.println(" ok");
+			log.debug(" ok");
 
 			if (trace)
 				outTrace.append("<br>insertion dateMaj dans le xml...");
-			System.err.println("<br>insertion dateMaj dans le xml...");
+			log.debug("<br>insertion dateMaj dans le xml...");
 			createAndSetAttribute(xmlSourceDoc, "dateMaj", xmlDateMaj);
 
 			if (trace)
 				outTrace.append(" ok");
-			System.err.println(" ok");
+			log.debug(" ok");
 
 			// ===============recherche du type du document source
 			// ========================================
 			if (trace)
 				outTrace.append("<br>recherche du type du document source...");
-			System.err.println("<br>recherche du type du document source...");
+			log.debug("<br>recherche du type du document source...");
 			String ressType = getRootName(xmlSourceDoc);
 			if (trace)
 				outTrace.append(" ok");
-			System.err.println(" ok");
+			log.debug(" ok");
 
 			if (ressType.equals("planCours")) {
 
@@ -2965,7 +2966,7 @@ public class Publication {
 				}
 
 				if (planType.equals("annuaire")) {
-					System.err.println(" on publie");
+					log.debug(" on publie");
 					if (!publierPlanDeCours(connexionPublication,
 							connexionPeopleSoft, koId, xmlSourceDoc, ressType,
 							planType, force, outPrint, outTrace, trace, nivSec))
@@ -2980,7 +2981,7 @@ public class Publication {
 				outTrace.append("</xmp><hr>");
 			}
 		} else {
-			System.err.println("String XML NON TROUVeE" + koId);
+			log.error("String XML NON TROUVeE" + koId);
 		}
 		return ok;
 	}

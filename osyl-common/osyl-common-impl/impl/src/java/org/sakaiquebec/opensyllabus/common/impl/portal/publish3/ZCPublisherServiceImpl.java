@@ -259,6 +259,7 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 
 		} catch (Exception e) {
 			outPrint.append("Erreur : " + e);
+                    e.printStackTrace();
 		}
 
 		finally {
@@ -269,7 +270,7 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 			if (!ok)
 				log
 						.info("<br><font color='red'><i>Une erreur s'est produite. Voir ci-dessous</i></font><br><br>");
-			log.info(outPrint.toString());
+//			log.info(outPrint.toString());
 			if (trace) {
 				log.info("<br><br><div id='trace'>");
 				log.info(outTrace.toString());

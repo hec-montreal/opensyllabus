@@ -866,7 +866,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			+ "] publish child site [" + childId + "]");
 		publishedSiteids.addAll(publishXMLs(childId, webappDir));
                 log.info("Finished publishing course outline for child site ["
-                        + siteId + "] in " + (System.currentTimeMillis() - start) + " ms");
+                        + childId + "] in " + (System.currentTimeMillis() - start) + " ms");
 	    } catch (Exception e) {
                 log.error("Exception while publishing child site [" + childId + "] :", e);
 		e.printStackTrace();
@@ -1087,6 +1087,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			SecurityInterface.ACCESS_COMMUNITY);
 	    }
 	}
+        
 	// END HEC ONLY SAKAI-2723
 
     }
