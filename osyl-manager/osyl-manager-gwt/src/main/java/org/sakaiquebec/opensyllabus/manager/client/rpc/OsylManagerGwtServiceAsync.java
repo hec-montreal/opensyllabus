@@ -52,7 +52,7 @@ public interface OsylManagerGwtServiceAsync {
     /**
      * Reads a archive file.
      *
-     * @param xmlReference
+     * @param fileReference
      * @param siteId
      * @param callback
      */
@@ -89,7 +89,7 @@ public interface OsylManagerGwtServiceAsync {
     public void getAllCoAndSiteInfo(String searchTerm, String academicSession, boolean withFrozenSites,
     	    AsyncCallback<List<COSite>> callback);
 
-    public void publish(String siteId,
+    public void publish(String siteId, String nonce,
 	    AsyncCallback<Vector<Map<String, String>>> callback);
 
     public void deleteSite(String siteId, AsyncCallback<Void> deleteAsynCallBack);

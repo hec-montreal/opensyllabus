@@ -199,11 +199,11 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		searchTerm, academicSession, withFrozenSites);
     }
 
-    public Vector<Map<String, String>> publish(String siteId) throws Exception,
+    public Vector<Map<String, String>> publish(String siteId, String nonce) throws Exception,
 	    FusionException, PermissionException {
 	String webappDir = getServletContext().getRealPath("/");
 	return osylManagerServices.getOsylPublishService().publish(webappDir,
-		siteId);
+		siteId, nonce);
     }
 
     public void deleteSite(String siteId) throws Exception, PermissionException {

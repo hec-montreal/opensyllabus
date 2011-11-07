@@ -67,11 +67,12 @@ public class OsylManagerRPCController {
     }
 
     /**
-     * Create site given name and siteID
+     * Create site with given siteID, config and language.
      * 
      * @param osylManagerController
      * @param title
-     * @param siteId
+     * @param configRef
+     * @param lang
      */
     public void createSite(final OsylManagerController osylManagerController,
 	    String title, String configRef, String lang) {
@@ -169,8 +170,14 @@ public class OsylManagerRPCController {
     
     public void publish(String siteId,
 	    AsyncCallback<Vector<Map<String, String>>> callback) {
-	serviceProxy.publish(siteId, callback);
+        String nonce = generateNonce(siteId);
+	serviceProxy.publish(siteId, nonce, callback);
     }
+
+    private String generateNonce(String siteId) {
+        return System.currentTimeMillis() + siteId;
+    }
+
 
     public void getAcademicSessions(
 	    AsyncCallback<List<CMAcademicSession>> callback) {

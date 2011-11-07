@@ -90,10 +90,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     // Whether the cache is used (value set from sakai.properties)
     private static boolean cacheEnabled = true;
 
-    // List of previously published nonces
-    private List<String> previouslyPublishedNonces;
-    
-
     /**
      * Constructor.
      */
@@ -118,8 +114,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	}
 
 	initCache();
-
-        previouslyPublishedNonces = new Vector<String>();
     }
 
     private void initCache() {
@@ -180,13 +174,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public Vector<Map<String, String>> publishCourseOutline(String nonce) throws Exception,
 	    FusionException, PdfGenerationException {
         String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
-        if (isAlreadyPublished(nonce)) {
-            log.error("Site [" + siteId
-                    + "] was already published using the same request id!");
-            return null;
-        } else {
-            setAlreadyPublished(nonce);
-        }
 
 	String webappDir = getServletContext().getRealPath("/");
 	Vector<Map<String, String>> publicationResults = new Vector<Map<String, String>>();
@@ -195,13 +182,13 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 		    .getOsylSiteService().getSiteType(siteId)))
 		publicationResults =
 			osylServices.getOsylDirectoryPublishService().publish(
-				webappDir, siteId);
+				webappDir, siteId, nonce);
 	    else
 		publicationResults =
 			osylServices.getOsylPublishService().publish(webappDir,
-				siteId);
+				siteId, nonce);
 	    // We invalidate the cached published CO for this siteId
-	    if (cacheEnabled) {
+	    if (cacheEnabled && null != publicationResults) {
 		publishedCoCache.remove(siteId
 			+ SecurityInterface.ACCESS_ATTENDEE);
 		publishedCoCache.remove(siteId
@@ -213,14 +200,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	    throw e;
 	}
 	return publicationResults;
-    }
-
-    private void setAlreadyPublished(String nonce) {
-        previouslyPublishedNonces.add(nonce);
-    }
-
-    private boolean isAlreadyPublished(String nonce) {
-        return previouslyPublishedNonces.contains(nonce);
     }
 
     /**

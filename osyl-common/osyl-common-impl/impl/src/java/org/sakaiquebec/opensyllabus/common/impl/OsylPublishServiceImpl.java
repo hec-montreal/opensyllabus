@@ -96,6 +96,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     // SPRING INJECTIONS
     protected OsylSecurityService osylSecurityService;
 
+    // List of previously published nonces
+    private List<String> previouslyPublishedNonces;
+
     public void setOsylSecurityService(OsylSecurityService securityService) {
 	this.osylSecurityService = securityService;
     }
@@ -188,7 +191,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * Init method called at initialization of the bean.
      */
     public void init() {
-	log.info("INIT from OsylPublish service");
+	log.info("INIT OsylPublishService");
+        previouslyPublishedNonces = new Vector<String>();
     }
 
     /**
@@ -222,14 +226,23 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return thisCo;
     }
 
+    protected void setAlreadyPublished(String nonce) {
+        previouslyPublishedNonces.add(nonce);
+    }
+
+    protected boolean isAlreadyPublished(String nonce) {
+        return previouslyPublishedNonces.contains(nonce);
+    }
+
     /**
      * Creates or updates the corresponding XMLs in the database and copies
      * the resources from the edition area to the published area.
      *
      * @param webappDir webapp path (required to get access to config)
      * @param siteId
+     * @param nonce single use identifier to avoid cloned publish request
      */
-    public Vector<Map<String, String>> publish(String webappDir, String siteId)
+    public Vector<Map<String, String>> publish(String webappDir, String siteId, String nonce)
 	    throws Exception, FusionException, OsylPermissionException {
 	if (!osylSecurityService.isActionAllowedInSite(
 		osylSiteService.getSiteReference(siteId),
@@ -238,6 +251,15 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_FUNCTION_PUBLISH);
 	} else {
+            if (isAlreadyPublished(nonce)) {
+                log.error("Publish request for site [" + siteId
+                        + "] was already made using the same id!");
+                return null;
+            } else {
+                setAlreadyPublished(nonce);
+            }
+
+
 	    long start = System.currentTimeMillis();
 	    log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		    + "] publish site [" + siteId + "]");
@@ -807,7 +829,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
         long xmlStart = System.currentTimeMillis();
 	if (hierarchyMergedCO != null && coModeled != null) {
 	    coModeled.model2XML();
-            log.debug("model2XML for [" +  siteId + "] took "
+            log.debug("model2XML for [" + siteId + "] took "
                     + (System.currentTimeMillis() - xmlStart) + " ms");
             xmlStart = System.currentTimeMillis();
 
@@ -833,7 +855,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    // Create a course outline with security community
 	    filterAndPublishXML(hierarchyMergedCO, SecurityInterface.ACCESS_COMMUNITY,
-		    webappDir);
+                    webappDir);
             log.debug("filterAndPublishXML (community) for [" +  siteId + "] took "
                     + (System.currentTimeMillis() - xmlStart) + " ms");
 

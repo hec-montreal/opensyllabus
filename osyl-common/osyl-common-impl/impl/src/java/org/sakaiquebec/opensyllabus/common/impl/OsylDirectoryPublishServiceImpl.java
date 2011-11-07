@@ -59,7 +59,7 @@ public class OsylDirectoryPublishServiceImpl extends OsylPublishServiceImpl {
     // }
 
     @Override
-    public Vector<Map<String, String>> publish(String webappDir, String siteId)
+    public Vector<Map<String, String>> publish(String webappDir, String siteId, String nonce)
 	    throws Exception, FusionException {
 	if (!osylSecurityService.isActionAllowedInSite(
 		osylSiteService.getSiteReference(siteId),
@@ -68,6 +68,14 @@ public class OsylDirectoryPublishServiceImpl extends OsylPublishServiceImpl {
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_FUNCTION_PUBLISH);
 	} else {
+            if (isAlreadyPublished(nonce)) {
+                log.error("Publish request for site [" + siteId
+                        + "] was already made using the same id!");
+                return null;
+            } else {
+                setAlreadyPublished(nonce);
+            }
+
 	    long start = System.currentTimeMillis();
 	    log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		    + "] publish site [" + siteId + "]");

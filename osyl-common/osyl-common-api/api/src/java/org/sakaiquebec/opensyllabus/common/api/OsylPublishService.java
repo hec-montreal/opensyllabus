@@ -74,7 +74,8 @@ public interface OsylPublishService {
     /**
      * Publish the actual course plan in the web application directory
      */
-    public Vector<Map<String, String>> publish(String webappDir, String siteId)
+    public Vector<Map<String, String>> publish(String webappDir, String siteId,
+                                               String nonce)
 	    throws Exception, FusionException;
 
     /**
