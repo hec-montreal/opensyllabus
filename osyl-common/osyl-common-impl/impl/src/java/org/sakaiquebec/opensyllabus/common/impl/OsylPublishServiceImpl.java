@@ -871,7 +871,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     }
 
     private Vector<String> publishChildren(String siteId, String webappDir) {
-        long start = System.currentTimeMillis();
 	List<CORelation> coRelationList=new ArrayList<CORelation>();
 	Vector<String> publishedSiteids= new Vector<String>();
 	try {
@@ -883,6 +882,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		.hasNext();) {
 	    String childId = coRelationIter.next().getChild();
 	    try {
+                long start = System.currentTimeMillis();
 		log.info("user ["
 			+ sessionManager.getCurrentSession().getUserEid()
 			+ "] publish child site [" + childId + "]");
