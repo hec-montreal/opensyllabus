@@ -682,7 +682,7 @@ public class Publication {
 			ps_Insert.setString(4, nivSecu);
 			ps_Insert.setString(5, type);
 			ps_Insert.execute();
-			log.info("The file " + ressId + ".hml has been processed");
+			log.trace("The file " + ressId + ".hml has been processed");
 
 		} catch (Exception e) {
 			log.error("========= Erreur dans InsertInDB() : " + e);
@@ -2866,7 +2866,7 @@ public class Publication {
 
 		if (trace)
 			outTrace.append("<br>construction du DOM...");
-		log.debug("<br>construction du DOM...+" + xmlString);
+		log.trace("<br>construction du DOM...+" + xmlString);
 		if (null != xmlString && !("".equals(xmlString))) {
 			Document xmlSourceDoc = buildDOM(xmlString);
 

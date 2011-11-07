@@ -182,8 +182,8 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 				attributeMap.put(xsltName, publication.createTransformer(xslt,
 						xsltDirName));
 
-				log.info("creation transformer " + xsltName);
-				log.info("Recompilation des fichiers");
+				log.trace("creation transformer " + xsltName);
+				log.trace("Recompilation des fichiers");
 			}
 			publication.transformersTable.put(xsltName, attributeMap
 					.get(xsltName));
