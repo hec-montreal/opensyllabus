@@ -1,11 +1,15 @@
 package org.sakaiquebec.opensyllabus.common.impl;
 
 import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1093,26 +1097,104 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	co.setPublicationDate(new java.util.Date(System.currentTimeMillis()));
 	resourceDao.setPublicationDate(co.getCoId(), co.getPublicationDate());
 
-	String portalActivated =
-		ServerConfigurationService.getString("hec.portail.activated");
 
 	// BEGIN HEC ONLY SAKAI-2723
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
-	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
-	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)) {
-		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
-			SecurityInterface.ACCESS_PUBLIC);
+	
+	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
+		|| access.equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)) {
+
+	    String portalActivated =
+		    ServerConfigurationService
+			    .getString("hec.portail.activated");
+
+	    if (portalActivated != null
+		    && portalActivated.equalsIgnoreCase("true")) {
+		osylTransformToZCCO.sendXmlAndDoc(publishedCO, access);
 	    }
-	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)) {
-		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
-			SecurityInterface.ACCESS_COMMUNITY);
+
+	}	 
+	 
+	 
+	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_ATTENDEE)) {
+
+	    String mobileAppFeedURL =
+		    ServerConfigurationService.getString("hec.mobile.feed.url");
+	    
+	    // if an URL for the mobile app backend is configured
+	    if (mobileAppFeedURL != null 
+		    && !mobileAppFeedURL.trim().equals("")) {
+		
+		sendAttendeeXMLToMobileAppBackendWithinThread(mobileAppFeedURL, publishedCO);
 	    }
 	}
-        
+	
 	// END HEC ONLY SAKAI-2723
-
     }
+    
+    private void sendAttendeeXMLToMobileAppBackendWithinThread(String mobileAppFeedURL, COSerialized publishedCO){
+	
+	final COSerialized attendeePublishedCO = publishedCO;
+	final String mobileAppBackendUrl = mobileAppFeedURL;
+	
+	new Thread(new Runnable() {
+	    
+	    public void run() {
+		sendAttendeeXMLToMobileAppBackend(mobileAppBackendUrl, attendeePublishedCO);
+	    }
+	}).start();
+	
+    }
+    
+    private void sendAttendeeXMLToMobileAppBackend(String mobileAppFeedURL, COSerialized publishedCO){
+	
+	String postData = publishedCO.getContent();
+	String charset = "UTF-8";
+
+	
+	HttpURLConnection connection = null;
+	try {
+	    // Create connection
+	    URL url = new URL(mobileAppFeedURL);
+	    connection = (HttpURLConnection) url.openConnection();
+	    connection.setRequestMethod("POST");
+	    connection.setRequestProperty("Content-Type",
+		    "text/xml; charset=\"utf-8\"");
+
+	    connection.setRequestProperty("Content-Length",
+		     String.valueOf(postData.getBytes(charset).length));
+
+	    connection.setUseCaches(false);
+	    connection.setDoOutput(true);
+	    connection.setDoInput(true);
+
+	    // Send request
+	    OutputStreamWriter wr =
+		    new OutputStreamWriter(connection.getOutputStream(), charset);
+	    
+	    wr.write(postData);
+	    wr.flush();
+	    wr.close();
+	    
+	    int httpStatus = connection.getResponseCode();
+	    
+	    log.info("POST request to Mobile App backend for course:"+publishedCO.getTitle()+" http status code:"+httpStatus);
+
+	} catch (Exception e) {
+	    log.error("Error sending POST request to Mobile App backend ", e);
+
+	} finally {
+
+	    if (connection != null) {
+		connection.disconnect();
+	    }
+	}
+	
+    }
+    
+    
+    
 
     public String transformXmlForGroup(String content, String group,
 	    String webappDir) throws Exception {
