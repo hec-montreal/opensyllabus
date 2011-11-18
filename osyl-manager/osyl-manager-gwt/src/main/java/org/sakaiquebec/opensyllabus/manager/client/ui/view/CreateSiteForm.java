@@ -138,15 +138,20 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 				&& name
 					.matches("^[a-zA-Z0-9áàâÁÀÂçÇéèêëÉÈÊËíîïÍÎÏñÑóôÓÔúùüÚÙÜ][ a-zA-Z0-9a-zA-Z0-9áàâÁÀÂçÇéèêëÉÈÊËíîïÍÎÏñÑóôÓÔúùüÚÙÜ\\._-]*") && name
 				.matches(".*[\\S]$"));
+
 		if (nameValid) {
-		    if (configListBox.getSelectedIndex() != -1) {
-			spinner.setVisible(true);
-			String configRef =
-				configListBox.getValue(configListBox
-					.getSelectedIndex());
-			controller.createSite(name, configRef, lang);
-		    } else {
-			Window.alert(messages.noConfig());
+		    if (name.contains("-") || name.contains(" "))
+			Window.alert(messages.siteNameOfficialRestriction());
+		    else {
+			if (configListBox.getSelectedIndex() != -1) {
+			    spinner.setVisible(true);
+			    String configRef =
+				    configListBox.getValue(configListBox
+					    .getSelectedIndex());
+			    controller.createSite(name, configRef, lang);
+			} else {
+			    Window.alert(messages.noConfig());
+			}
 		    }
 		} else {
 		    Window.alert(messages.siteNameNotValid());

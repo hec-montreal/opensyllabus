@@ -92,6 +92,8 @@ public interface Messages extends ConstantsWithLookup {
     String chooseLang();
 
     String siteNameNotValid();
+    
+    String siteNameOfficialRestriction();
 
     String noConfig();
 
