@@ -379,6 +379,25 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	return editorPanel;
     }
 
+    
+    private boolean isBookstoreLinkEmpty(){
+	
+	boolean isEmpty = true;
+
+	String bookLink = bookStoreLink.getText();
+	
+	if(bookLink!=null){
+	    isEmpty = bookLink.trim().equals("");
+	}
+		
+	return isEmpty;
+    }
+    
+    private boolean shouldFillBookstoreURL(){
+	
+	return (isBookstoreLinkEmpty() && !disableBookstoreLinkCheckBox.getValue());
+    }
+    
     public boolean prepareForSave() {
 	boolean ok = true;
 	boolean resourceIncompatibility = false;
@@ -388,7 +407,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    ok = false;
 	    message +=
 		    getUiMessage("CitationEditor.save.error.citationUndefined");
-	} else if (saveButton.isEnabled()) {
+	} else if (saveButton.isEnabled() || shouldFillBookstoreURL()) {
 	    message += getUiMessage("CitationEditor.ChangeUrl.Save");
 	    ok = false;
 	} else {
