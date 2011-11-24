@@ -902,9 +902,16 @@ public class COModeled extends COSerialized {
 	    COProperties properties) {
 	Set<String> propertiesSet = properties.keySet();
 	Iterator<String> iter = propertiesSet.iterator();
+	
+	String propElemName = null;
+	String type = null;
+	String value = null;
+	
 	try {
 	    while (iter.hasNext()) {
-		String propElemName = (String) iter.next();
+		propElemName = (String) iter.next();
+		
+		
 		if (!propElemName.equals("#text")) { // TODO find why there is
 		    // properties named #text
 
@@ -913,15 +920,24 @@ public class COModeled extends COSerialized {
 		    for (Iterator<String> iterMap = map.keySet().iterator(); iterMap
 			    .hasNext();) {
 			Element propElem = document.createElement(propElemName);
-			String type = iterMap.next();
-			String value = "";
+			type = iterMap.next();
+			value = "";
 			Text propElemValue = null;
+			
 			if (!type.equals(COProperties.DEFAULT_PROPERTY_TYPE)) {
 			    propElem.setAttribute(TYPE_ATTRIBUTE_NAME, type);
 			    value = properties.getProperty(propElemName, type);
 			} else {
 			    value = properties.getProperty(propElemName);
 			}
+			
+			//PATCH SAKAI-3035
+			if(value==null){
+			    if(type.equals("other_link") || type.equals("bookstore")){
+				   value = "http://";
+			    }
+			}
+			
 			createPropElemAttributes(map.get(type), propElem);
 
 			if (COPropertiesType.CDATA_NODE_NAMES
@@ -937,6 +953,11 @@ public class COModeled extends COSerialized {
 		}
 	    }
 	} catch (Exception e) {
+		
+	    /*Window.alert("propElemName:"+propElemName+"_PP");
+	    Window.alert("type:"+type+"_PP");
+	    Window.alert("value:"+value+"_PP");*/
+	   	    
 	    Window.alert("An error has been detected in createPropertiesElem "
 		    + e);
 	}
