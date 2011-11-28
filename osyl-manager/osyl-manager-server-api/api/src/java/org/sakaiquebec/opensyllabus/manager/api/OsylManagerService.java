@@ -183,5 +183,7 @@ public interface OsylManagerService {
 	    throws Exception, OsylPermissionException;
 
     public Map<String, Boolean> getPermissions();
+    
+    public Boolean isSuperUser();
 
 }

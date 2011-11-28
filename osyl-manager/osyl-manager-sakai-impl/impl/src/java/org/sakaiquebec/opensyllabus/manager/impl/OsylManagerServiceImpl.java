@@ -2232,5 +2232,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 	return permissions;
     }
+    
+    public Boolean isSuperUser(){
+	return securityService.isSuperUser();
+    }
 
 }

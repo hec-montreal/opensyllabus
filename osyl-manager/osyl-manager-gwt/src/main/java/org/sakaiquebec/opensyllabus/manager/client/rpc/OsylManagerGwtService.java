@@ -122,5 +122,7 @@ public interface OsylManagerGwtService extends RemoteService {
 	    OsylPermissionException;
 
     public Map<String, Boolean> getPermissions();
+    
+    public Boolean isSuperUser();
 
 }

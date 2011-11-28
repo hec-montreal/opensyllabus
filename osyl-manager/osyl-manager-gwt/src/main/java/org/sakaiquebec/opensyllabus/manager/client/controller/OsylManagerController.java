@@ -71,6 +71,8 @@ public class OsylManagerController implements FireOsylManagerEvents {
     private List<COSite> selectSites = new ArrayList<COSite>();
     
     private Map<String,Boolean> permissions;
+    
+    private boolean superUser;
 
     /**
      * Private constructor use to implements singleton
@@ -421,6 +423,18 @@ public class OsylManagerController implements FireOsylManagerEvents {
     
     public void getPermissions(AsyncCallback<Map<String,Boolean>> permissionCallBack){
 	OsylManagerRPCController.getInstance().getPermissions(permissionCallBack);
+    }
+    
+    public void isSuperUser(AsyncCallback<Boolean> superUserCallback){
+	OsylManagerRPCController.getInstance().isSuperUser(superUserCallback);
+    }
+
+    public boolean isSuperUser() {
+        return superUser;
+    }
+
+    public void setSuperUser(boolean superUser) {
+        this.superUser = superUser;
     }
 
     public void setPermissions(Map<String,Boolean> permissions) {

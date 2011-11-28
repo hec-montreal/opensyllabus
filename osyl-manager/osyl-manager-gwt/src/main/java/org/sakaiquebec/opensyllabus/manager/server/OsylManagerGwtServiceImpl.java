@@ -234,4 +234,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     public Map<String, Boolean> getPermissions() {
 	return osylManagerServices.getOsylManagerService().getPermissions();
     }
+    
+    public Boolean isSuperUser(){
+	return osylManagerServices.getOsylManagerService().isSuperUser();
+    }
 }

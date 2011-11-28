@@ -201,4 +201,8 @@ public class OsylManagerRPCController {
     public void getPermissions(AsyncCallback<Map<String,Boolean>> permissionCallback) {
 	serviceProxy.getPermissions(permissionCallback);
     }
+    
+    public void isSuperUser(AsyncCallback<Boolean> superUserCallback){
+	serviceProxy.isSuperUser(superUserCallback);
+    }
 }

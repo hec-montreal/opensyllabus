@@ -106,4 +106,5 @@ public interface OsylManagerGwtServiceAsync {
     public void getPermissions(
 	    AsyncCallback<Map<String, Boolean>> permissionCallback);
 
+    public void isSuperUser(AsyncCallback <Boolean> superUserCallback);
 }

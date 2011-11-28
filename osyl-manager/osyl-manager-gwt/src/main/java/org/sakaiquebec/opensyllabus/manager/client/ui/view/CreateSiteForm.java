@@ -141,7 +141,8 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 
 		if (nameValid) {
 		    if (name.contains("-") || name.contains(" "))
-			Window.alert(messages.siteNameOfficialRestriction());
+			if (!controller.isSuperUser())
+			    Window.alert(messages.siteNameOfficialRestriction());
 		    else {
 			if (configListBox.getSelectedIndex() != -1) {
 			    spinner.setVisible(true);

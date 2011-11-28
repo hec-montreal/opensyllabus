@@ -60,6 +60,17 @@ public class OsylManagerEntryPoint implements EntryPoint {
      * {@inheritDoc}
      */
     public void onModuleLoad() {
+	AsyncCallback<Boolean> superUserCallBack = new AsyncCallback<Boolean>() {
+	    public void onFailure(Throwable caught) {
+	    }
+
+	    public void onSuccess(Boolean result) {
+		controller.setSuperUser(result);
+		initView();
+	    }
+	};
+	controller.isSuperUser(superUserCallBack);
+	
 	AsyncCallback<Map<String,Boolean>> permissionsCallBack = new AsyncCallback<Map<String,Boolean>>() {
 	    public void onFailure(Throwable caught) {
 		OsylOkCancelDialog warning =
