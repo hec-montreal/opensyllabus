@@ -140,8 +140,12 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 				.matches(".*[\\S]$"));
 
 		if (nameValid) {
+		    boolean create = true;
 		    if (name.contains("-") || name.contains(" ")) {
 			if (!controller.isSuperUser())
+			    create = false;
+		    }
+		    if (!create){
 			    Window.alert(messages.siteNameOfficialRestriction());
 		    } else {
 			if (configListBox.getSelectedIndex() != -1) {
