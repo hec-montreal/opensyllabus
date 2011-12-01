@@ -140,10 +140,10 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 				.matches(".*[\\S]$"));
 
 		if (nameValid) {
-		    if (name.contains("-") || name.contains(" "))
+		    if (name.contains("-") || name.contains(" ")) {
 			if (!controller.isSuperUser())
 			    Window.alert(messages.siteNameOfficialRestriction());
-		    else {
+		    } else {
 			if (configListBox.getSelectedIndex() != -1) {
 			    spinner.setVisible(true);
 			    String configRef =
