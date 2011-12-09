@@ -100,7 +100,9 @@ public class OsylManagerEntryPoint implements EntryPoint {
 
         Timer t = new Timer() {
             public void run() {
-                rootPanel.setHeight("600px");
+                if (rootPanel.getOffsetHeight() < 300) {
+                    rootPanel.setHeight("600px");
+                }
             }
         };
         t.schedule(500);
