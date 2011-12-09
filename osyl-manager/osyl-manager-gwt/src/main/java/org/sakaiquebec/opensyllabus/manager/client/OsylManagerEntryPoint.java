@@ -96,8 +96,14 @@ public class OsylManagerEntryPoint implements EntryPoint {
     private void initView() {
 	view = new OsylManagerMainAdvancedView(controller);
 	rootPanel.add(view);
-	rootPanel.setHeight("600px");
 	rootPanel.addStyleName("OsylManager-rootPanel");
+
+        Timer t = new Timer() {
+            public void run() {
+                rootPanel.setHeight("600px");
+            }
+        };
+        t.schedule(500);
     }
 
     /**
