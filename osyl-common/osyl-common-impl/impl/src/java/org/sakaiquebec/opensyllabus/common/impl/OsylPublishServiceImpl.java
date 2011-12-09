@@ -230,10 +230,21 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return thisCo;
     }
 
+    /**
+     * Saves the specified nonce as corresponding to a launched publish request.
+     *
+     * @param nonce
+     */
     protected void setAlreadyPublished(String nonce) {
         previouslyPublishedNonces.add(nonce);
     }
 
+    /**
+     * Returns true if the publish request corresponding to this nonce has been
+     * launched (even if it is not yet completed or if it failed).
+     *
+     * @param nonce
+     */
     protected boolean isAlreadyPublished(String nonce) {
         return previouslyPublishedNonces.contains(nonce);
     }

@@ -553,7 +553,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * Add a collection (similar to a sub-directory) under the resource tool.
      * 
      * @param dir name of collection
-     * @param parent where to create it (null means top-level)
+     * @param site where to create it (null means top-level)
      * @return boolean whether the collection was added or not
      * @throws Exception
      */
@@ -576,7 +576,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * Tells if a collection is already created in sakai.
      * 
-     * @param a String of the collection id.
+     * @param id String of the collection id.
      * @return boolean whether the collection exists
      */
     private boolean collectionExist(String id) {
@@ -1289,8 +1289,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     public List<CMCourse> getCMCourses(String startsWith) {
 	long start = System.currentTimeMillis();
-	log.debug("getCMCourses that starts with " + startsWith
-		+ " ##### START #####");
+	log.debug("getCMCourses that starts with " + startsWith);
 	List<CMCourse> cmCourses = new ArrayList<CMCourse>();
 	Set<CourseSet> courseSets = courseManagementService.getCourseSets();
 	Set<CourseOffering> courseOffs = null;
@@ -1385,7 +1384,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	}
 	}
-	log.debug("getCMCourses ###### END ######" + elapsed(start) + " for "
+	log.debug("getCMCourses " + elapsed(start) + " for "
 		+ cmCourses.size() + " courses");
 	return cmCourses;
     } // getCMCourses
@@ -1400,7 +1399,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    String siteId) {
 	Map<File, String> fileMap = (Map<File, String>) getImportedFiles();
 	Map<String, String> fileNameChangesMap = new HashMap<String, String>();
-	// Vars used to retreive metadata
+	// Vars used to retrieve metadata
 	ContentHandler handler = null;
 	Metadata metadata = null;
 	Parser parser = null;
@@ -1579,7 +1578,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	} else {
 	    info = null;
 	}
-	log.trace("getCoAndSiteInfo  " + elapsed(start) + "DONE " + siteId);
+	log.debug("getCoAndSiteInfo  " + elapsed(start) + "DONE " + siteId);
 	return info;
     } // getCoAndSiteInfo
 
@@ -1759,9 +1758,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
 
-    @SuppressWarnings("unchecked")
     protected List<COSite> getSitesForUser(String userId, String permission,
 	    String searchTerm, String academicSession, boolean withFrozenSites) {
+        long start = System.currentTimeMillis();
 	log.debug("getSitesForUser ["
 		+ sessionManager.getCurrentSession().getUserEid() + "/"
 		+ permission + "]");
@@ -1810,7 +1809,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    log.info("Empty list of siteIds for user:" + userId
 		    + ", permission: " + permission);
 	}
-
+        log.debug("getSitesForUser" + elapsed(start) + " for "
+                + allSitesInfo.size() + " sites");
 	return allSitesInfo;
     }
 
@@ -2117,7 +2117,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     /**
-     * @param state
+     * @param oldSite
+     * @param toolIdList
      * @return Get a list of all tools that should be included as options for
      *         import
      */
