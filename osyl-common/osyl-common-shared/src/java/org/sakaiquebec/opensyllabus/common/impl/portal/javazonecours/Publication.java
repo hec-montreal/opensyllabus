@@ -636,7 +636,7 @@ public class Publication {
 				Writer outstream = null;
 				
 				try{
-				    outstream = clob.setCharacterStream(0L);
+				    outstream = clob.setCharacterStream(1L);
 				}catch(SQLException sqlex){
 				    log.error("setCharacterStream:"+sqlex.getErrorCode());
 				    log.error("setCharacterStream:"+sqlex.getMessage());
@@ -886,7 +886,7 @@ public class Publication {
 				if (trace)
 					outTrace.append("=== ecriture ");
 				clob = rset.getClob(2);
-				Writer outstream = clob.setCharacterStream(0L);
+				Writer outstream = clob.setCharacterStream(1L);
 				// ------- ecriture ------------------------------
 
 				outstream.write(xmlString.toString());
@@ -1451,7 +1451,7 @@ public class Publication {
 
 			if (rset.next()) {
 				blob = rset.getBlob(1);
-				OutputStream blobOutput = blob.setBinaryStream(0L);
+				OutputStream blobOutput = blob.setBinaryStream(1L);
 
 				File docFile = new File(appDirName + File.separator + docFileName);
 				InputStream fileInput = new FileInputStream(docFile);
@@ -1537,7 +1537,7 @@ public class Publication {
 
 			if (rset.next()) {
 				blob = rset.getBlob(1);
-				OutputStream blobOutput = blob.setBinaryStream(0L);
+				OutputStream blobOutput = blob.setBinaryStream(1L);
 
 				File docFile = new File(appDirName + File.separator + docFileName);
 				InputStream fileInput = new FileInputStream(docFile);
