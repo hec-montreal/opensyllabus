@@ -633,7 +633,15 @@ public class Publication {
 
 				clob = rset_Select.getClob(2);
 
-				Writer outstream = clob.setCharacterStream(0L);
+				Writer outstream = null;
+				
+				try{
+				    outstream = clob.setCharacterStream(0L);
+				}catch(SQLException sqlex){
+				    log.error("setCharacterStream:"+sqlex.getErrorCode());
+				    log.error("setCharacterStream:"+sqlex.getMessage());
+				    throw sqlex;
+				}
 
 				processXSLT(xml, lang + "-" + ressType + ".xsl", outstream,
 						outTrace, trace);
@@ -642,6 +650,9 @@ public class Publication {
 			}
 
 		} catch (Exception e) {
+			log.error("driver info name:"+connexion.getMetaData().getDriverName());
+			log.error("driver info version:"+connexion.getMetaData().getDriverVersion());
+
 			log.error("========= Erreur dans processAndInsertInDB: "
 					+ e);
 		} finally {
@@ -1277,7 +1288,7 @@ public class Publication {
 				.lookup("java:comp/env/jdbc/TXDatasource");
 		if (dsTeximus == null)
 			throw new ServletException("data source Teximus Edition non trouve");
-
+		
 		return dsTeximus.getConnection();
 	}
 
