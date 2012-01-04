@@ -1,6 +1,8 @@
 package org.sakaiquebec.opensyllabus.common.impl.portal.javazonecours;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,7 +13,6 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.Writer;
 import java.sql.Clob;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,6 +40,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import oracle.jdbc.driver.OracleResultSet;
+import oracle.sql.BLOB;
+import oracle.sql.CLOB;
 
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -607,7 +611,7 @@ public class Publication {
 			outTrace.append("<br>" + "&nbsp;&nbsp;nivSecu :" + nivSecu);
 		}
 
-		Clob clob;
+		CLOB clob;
 		String requeteSQL_Select = null;
 		PreparedStatement ps_Select = null;
 		ResultSet rset_Select = null;
@@ -629,19 +633,11 @@ public class Publication {
 			rset_Select = ps_Select.executeQuery();
 
 			if (rset_Select != null && rset_Select.next()) {
-				String index = rset_Select.getString(1);
+				String index = ((OracleResultSet) rset_Select).getString(1);
 
-				clob = rset_Select.getClob(2);
+				clob = ((OracleResultSet) rset_Select).getCLOB(2);
 
-				Writer outstream = null;
-				
-				try{
-				    outstream = clob.setCharacterStream(1L);
-				}catch(SQLException sqlex){
-				    log.error("setCharacterStream:"+sqlex.getErrorCode());
-				    log.error("setCharacterStream:"+sqlex.getMessage());
-				    throw sqlex;
-				}
+				Writer outstream = clob.getCharacterOutputStream();
 
 				processXSLT(xml, lang + "-" + ressType + ".xsl", outstream,
 						outTrace, trace);
@@ -650,9 +646,6 @@ public class Publication {
 			}
 
 		} catch (Exception e) {
-			log.error("driver info name:"+connexion.getMetaData().getDriverName());
-			log.error("driver info version:"+connexion.getMetaData().getDriverVersion());
-
 			log.error("========= Erreur dans processAndInsertInDB: "
 					+ e);
 		} finally {
@@ -802,7 +795,7 @@ public class Publication {
 			StringBuffer outTrace, boolean trace) throws Exception {
 		// ---------------------------------------------------
 
-		Clob clob = null;
+		CLOB clob = null;
 		String requeteSQL = null;
 		PreparedStatement ps = null;
 		ResultSet rset = null;
@@ -817,7 +810,7 @@ public class Publication {
 
 		StringBuffer buf = new StringBuffer();
 		while (rset.next()) {
-			clob = rset.getClob(2);
+			clob = ((OracleResultSet) rset).getCLOB(2);
 			long length = clob.length();
 			buf.append(clob.getSubString(1, (int) length));
 		}
@@ -837,7 +830,7 @@ public class Publication {
 
 		try {
 			// ==================CONNEXION===================================
-			Clob clob;
+			oracle.sql.CLOB clob;
 			String requeteSQL = null;
 			PreparedStatement ps = null;
 			ResultSet rset = null;
@@ -885,8 +878,8 @@ public class Publication {
 			if (rset.next()) {
 				if (trace)
 					outTrace.append("=== ecriture ");
-				clob = rset.getClob(2);
-				Writer outstream = clob.setCharacterStream(1L);
+				clob = ((OracleResultSet) rset).getCLOB(2);
+				Writer outstream = clob.getCharacterOutputStream();
 				// ------- ecriture ------------------------------
 
 				outstream.write(xmlString.toString());
@@ -1069,8 +1062,8 @@ public class Publication {
 			rset = ps.executeQuery();
 
 			if (rset.next()) {
-				imgId.append(rset.getString(1));
-				dateMajBdD = rset.getDate(2);
+				imgId.append(((OracleResultSet) rset).getString(1));
+				dateMajBdD = ((OracleResultSet) rset).getDate(2);
 				long dateMajBdL = dateMajBdD.getTime();
 
 				File docFile = new File(appDirName + File.separator + docFileName);
@@ -1136,7 +1129,7 @@ public class Publication {
 			rset = ps.executeQuery();
 
 			if (rset.next()) {
-				dateMajBdD = rset.getDate(1);
+				dateMajBdD = ((OracleResultSet) rset).getDate(1);
 				long dateMajBdL = dateMajBdD.getTime();
 
 				File docFile = new File(appDirName + File.separator + docFileName);
@@ -1238,7 +1231,7 @@ public class Publication {
 			rset = ps.executeQuery();
 
 			if (rset.next()) {
-				dateMajBdD = rset.getDate(1);
+				dateMajBdD = ((OracleResultSet) rset).getDate(1);
 				long dateMajBdL = dateMajBdD.getTime();
 				long dateMajFichierL = dateDMODIF.getTime();
 				long difference = dateMajFichierL - dateMajBdL;
@@ -1288,7 +1281,7 @@ public class Publication {
 				.lookup("java:comp/env/jdbc/TXDatasource");
 		if (dsTeximus == null)
 			throw new ServletException("data source Teximus Edition non trouve");
-		
+
 		return dsTeximus.getConnection();
 	}
 
@@ -1401,7 +1394,7 @@ public class Publication {
 			outTrace.append("<br>&nbsp;&nbsp;image :" + docFileName);
 		}
 
-		Blob blob;
+		BLOB blob;
 		String requeteSQL = null;
 		PreparedStatement ps = null;
 		ResultSet rset = null;
@@ -1450,8 +1443,9 @@ public class Publication {
 			rset = ps.executeQuery();
 
 			if (rset.next()) {
-				blob = rset.getBlob(1);
-				OutputStream blobOutput = blob.setBinaryStream(1L);
+				blob = ((OracleResultSet) rset).getBLOB(1);
+				OutputStream blobOutput = ((oracle.sql.BLOB) blob)
+						.getBinaryOutputStream();
 
 				File docFile = new File(appDirName + File.separator + docFileName);
 				InputStream fileInput = new FileInputStream(docFile);
@@ -1512,7 +1506,7 @@ public class Publication {
 			outTrace.append("<br>&nbsp;&nbsp;document :" + docFileName);
 		}
 
-		Blob blob;
+		BLOB blob;
 		String requeteSQL = null;
 		PreparedStatement ps = null;
 		ResultSet rset = null;
@@ -1536,8 +1530,9 @@ public class Publication {
 			rset = ps.executeQuery();
 
 			if (rset.next()) {
-				blob = rset.getBlob(1);
-				OutputStream blobOutput = blob.setBinaryStream(1L);
+				blob = ((OracleResultSet) rset).getBLOB(1);
+				OutputStream blobOutput = ((oracle.sql.BLOB) blob)
+						.getBinaryOutputStream();
 
 				File docFile = new File(appDirName + File.separator + docFileName);
 				InputStream fileInput = new FileInputStream(docFile);
@@ -1613,7 +1608,7 @@ public class Publication {
 		PreparedStatement ps = null;
 		Connection conn = null;
 
-		Blob blobTXDOC = null;
+		BLOB blobTXDOC = null;
 		String requeteSQL = null;
 
 		try {
@@ -1629,7 +1624,7 @@ public class Publication {
 			rsetDoc = psDoc.executeQuery();
 
 			if (rsetDoc.next()) {
-				blobTXDOC = rsetDoc.getBlob(1);
+				blobTXDOC = ((OracleResultSet) rsetDoc).getBLOB(1);
 			}
 			if (trace)
 				outTrace.append("<br>------mon  blob objet------" + blobTXDOC);
@@ -1681,7 +1676,7 @@ public class Publication {
 			boolean trace) throws Exception {
 		// ---------------------------------------------------
 
-		Blob blob;
+		BLOB blob;
 		String requeteSQL = null;
 		PreparedStatement ps = null;
 		ResultSet rset = null;
@@ -1695,7 +1690,7 @@ public class Publication {
 			rset = ps.executeQuery();
 
 			if (rset.next()) {
-				blob = rset.getBlob(1);
+				blob = ((OracleResultSet) rset).getBLOB(1);
 
 				InputStream blobStream = blob.getBinaryStream();
 				FileOutputStream fileStream = new FileOutputStream(fileName);
@@ -1727,7 +1722,7 @@ public class Publication {
 		// ---------------------------------------------------
 
 		int fileSize = 0;
-		Blob blob;
+		BLOB blob;
 		String ressType = null;
 		String requeteSQL = null;
 		PreparedStatement ps = null;
@@ -1745,7 +1740,7 @@ public class Publication {
 
 			if (rset.next()) {
 				ressType = rset.getString(1);
-				blob =  rset.getBlob(2);
+				blob = ((OracleResultSet) rset).getBLOB(2);
 
 				if (ressType.equals("gif"))
 					response.setContentType("image/gif");
@@ -1888,7 +1883,7 @@ public class Publication {
 				result[0] = rset.getString(1);
 				result[1] = rset.getString(2);
 				result[2] = rset.getString(3);
-				Clob clob =  rset.getClob(4);
+				CLOB clob = ((OracleResultSet) rset).getCLOB(4);
 				result[3] = ClobToString(clob);
 				result[4] = rset.getString(5);
 
@@ -1930,7 +1925,7 @@ public class Publication {
 				result[0] = rset.getString(1);
 				result[1] = rset.getString(2);
 				result[2] = rset.getString(3);
-				Clob clob =  rset.getClob(4);
+				CLOB clob = ((OracleResultSet) rset).getCLOB(4);
 				result[3] = ClobToString(clob);
 				result[4] = rset.getString(5);
 			}
@@ -3134,7 +3129,7 @@ public class Publication {
 
 	}
 
-	public String ClobToString(Clob cl) throws IOException, SQLException {
+	public String ClobToString(CLOB cl) throws IOException, SQLException {
 		if (cl == null)
 			return "";
 
