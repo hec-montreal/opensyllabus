@@ -119,11 +119,15 @@
 			<artifactId>fop</artifactId>
 			<version>1.0</version>
 		</dependency>
+		
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc14</artifactId>
-			<version>10.2.0.4.0</version>
-		</dependency>
+		  <groupId>com.oracle</groupId>
+		  <artifactId>ojdbc6</artifactId>
+		  <version>11.2.0.3</version>
+		  <scope>system</scope>
+		  <systemPath>${basedir}/src/bundle/lib/ojdbc6.jar</systemPath>
+		</dependency>   
+		   
 		<dependency>
 			<groupId>net.sf.jtidy</groupId>
 			<artifactId>jtidy</artifactId>
@@ -138,12 +142,6 @@
 		</dependency>
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>mesir-repo</id>
-			<url>http://mesir.googlecode.com/svn/trunk/mavenrepo</url>
-		</repository>
-	</repositories>
 	<build>
 		<defaultGoal>validate</defaultGoal>
 		<resources>
