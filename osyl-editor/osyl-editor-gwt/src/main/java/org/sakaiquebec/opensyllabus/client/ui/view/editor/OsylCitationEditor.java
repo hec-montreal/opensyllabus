@@ -55,8 +55,8 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
@@ -78,7 +78,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Document editor to be used within {@link OsylAbstractView}. The edition mode
  * uses a Rich-text editor and the view mode displays a clickable link.
- * 
+ *
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  * @author <a href="mailto:Laurent.Danet@hec.ca">Laurent Danet</a>
  */
@@ -132,9 +132,9 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     // Type of resource for hyperlink
     private String typeResource;
 
-    private KeyPressHandler kph = new KeyPressHandler() {
-
-	public void onKeyPress(KeyPressEvent event) {
+    // KeyDownHandler is called when any key is depressed (a-z, backspace, etc)
+    private KeyDownHandler kdh = new KeyDownHandler() {
+	public void onKeyDown(KeyDownEvent event) {
 	    saveButton.setEnabled(true);
 	}
     };
@@ -142,7 +142,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
      * working for.
-     * 
+     *
      * @param parent
      */
     public OsylCitationEditor(OsylAbstractView parent) {
@@ -379,25 +379,25 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	return editorPanel;
     }
 
-    
+
     private boolean isBookstoreLinkEmpty(){
-	
+
 	boolean isEmpty = true;
 
 	String bookLink = bookStoreLink.getText();
-	
+
 	if(bookLink!=null){
 	    isEmpty = bookLink.trim().equals("");
 	}
-		
+
 	return isEmpty;
     }
-    
+
     private boolean shouldFillBookstoreURL(){
-	
+
 	return (isBookstoreLinkEmpty() && !disableBookstoreLinkCheckBox.getValue());
     }
-    
+
     public boolean prepareForSave() {
 	boolean ok = true;
 	boolean resourceIncompatibility = false;
@@ -598,6 +598,9 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	return true;
     }
 
+    /**
+     * Create the Citation Editor.
+     */
     protected void initBrowser() {
 	browserPanel = new VerticalPanel();
 	browserPanel.setStylePrimaryName("Osyl-ResourceBrowserPanel");
@@ -816,9 +819,11 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	savePanel.add(saveButton);
 
-	bookStoreLink.addKeyPressHandler(kph);
-	editorOtherLink.addKeyPressHandler(kph);
-	editorOtherLinkLabel.addKeyPressHandler(kph);
+	// hook up the key-down handler
+	bookStoreLink.addKeyDownHandler(kdh);
+	editorOtherLink.addKeyDownHandler(kdh);
+	editorOtherLinkLabel.addKeyDownHandler(kdh);
+
 
 	VerticalPanel rightsAndSavePanel = new VerticalPanel();
 	rightsAndSavePanel.setWidth("98%");
@@ -1135,7 +1140,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     @Override
     public String getText() {
 	throw new IllegalStateException("Should not be used with citation");
-	
+
     }
 
     @Override
