@@ -619,4 +619,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	enableSavePushButton();
     }
 
+    public void onModelSaved(OsylModelUpdatedEvent event) {
+	disableSavePushButton();
+    }
+
 }

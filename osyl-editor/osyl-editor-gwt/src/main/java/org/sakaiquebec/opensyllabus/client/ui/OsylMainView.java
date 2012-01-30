@@ -29,7 +29,6 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
-import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler.SavePushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.listener.SplitterEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.toolbar.OsylToolbarView;
@@ -40,7 +39,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
@@ -129,38 +127,14 @@ public class OsylMainView extends OsylViewableComposite implements
 	setOsylToolbarView(new OsylToolbarView(getController()
 		.getViewContextModel(), getController()));
 			    
-	SavePushButtonEventHandler saveHandler =
-		new SavePushButtonEventHandler() {
-
-		    public void onSavePushButton(SavePushButtonEvent event) {
-
-			if (!getController().isReadOnly()) {
-
-			    final AsyncCallback<Void> callBack =
-				    new AsyncCallback<Void>() {
-
-            				public void onSuccess(Void result) {
-            				    //disable the save button
-            				    getOsylToolbarView().disableSavePushButton();
-            				}
-            				
-					public void onFailure(Throwable caught) {
-					    //do nothing, let the save button enabled
-					}
-				    };
-
-			    getController().saveCourseOutline(callBack);
-			}
-		    }
-		};
-	
 		
-	getOsylToolbarView().addEventHandler(saveHandler);
-		
-	
+	getOsylToolbarView().addEventHandler(
+		(SavePushButtonEventHandler) getController());
+			
 	
 	getOsylToolbarView().addEventHandler(
 		(PublishPushButtonEventHandler) getController());
+	
 	getOsylToolbarView().refreshView();
 	getOsylToolbarView().setTitle(getUiMessage("OsylToolbar"));
 	getMainPanel().setWidget(row, 0, getOsylToolbarView());

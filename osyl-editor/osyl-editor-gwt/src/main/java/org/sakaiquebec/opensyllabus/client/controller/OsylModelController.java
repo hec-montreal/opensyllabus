@@ -100,13 +100,19 @@ public class OsylModelController implements
      * @param b
      */
     public void setModelDirty(boolean b) {
-	System.out.println("= =================== == = = = DIRTY");
-	modelDirty = b;
+	//System.out.println("= =================== == = = = DIRTY");
+	boolean modelSaved = (modelDirty && !b);
 	
-	if(modelDirty){
+	modelDirty = b;
+
+	if (modelDirty) {
 	    fireModelUpdated();
 	}
-    }
+	
+	if (modelSaved) {
+	    fireModelSaved();
+	}
+    }	
 
     /** {@inheritDoc} */
     public void onUpdateModel(UpdateCOContentResourceEvent event) {
@@ -210,8 +216,21 @@ public class OsylModelController implements
 
 	}
 
-    }	    
-	    
+    }	
+    
+    
+    private void fireModelSaved() {
+
+	if (modelUpdateEventHandlerList != null) {
+	    for (OsylModelUpdatedEventHandler handler : modelUpdateEventHandlerList) {
+		handler.onModelSaved(new OsylModelUpdatedEvent(this));
+	    }
+
+	}
+
+    }	
+    
+    
     /**
      * Registers the specified model item to be tracked by this Model Controller
      * for changes. This is done by adding itself as an event handler to the

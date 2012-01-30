@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
+import org.sakaiquebec.opensyllabus.client.controller.event.OsylModelUpdatedEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
@@ -87,9 +88,6 @@ public class OsylController implements SavePushButtonEventHandler,
 
     private COSerialized serializedCourseOutline;
 
-    // Instance of pinger to keep the session alive.
-    private Pinger pinger;
-
     // Instance of AutoSaver to save current course outline automatically
     private AutoSaver autoSaver;
 
@@ -120,12 +118,11 @@ public class OsylController implements SavePushButtonEventHandler,
     private OsylController() {
 	osylViewContext = new OsylViewContext();
 	setModelController(new OsylModelController());
+		
 	setSiteId(getSiteIdParameter());
 	setReadOnly(getReadOnlyParameter());
 	osylModelController.setReadOnly(isReadOnly());
 	if (!isReadOnly()) {
-	    pinger = new Pinger();
-	    pinger.start();
 	    autoSaver = new AutoSaver();
 	    autoSaver.start();
 	}
@@ -451,7 +448,6 @@ public class OsylController implements SavePushButtonEventHandler,
     public void getSerializedCourseOutlineCB(COSerialized co){ 
 	if (!co.isEditable()) {
 	    readOnly = true;
-	    pinger.stop();
 	    autoSaver.stop();
 	    OsylAlertDialog alertBox =
 		    new OsylAlertDialog(false, true, uiMessages
@@ -1014,8 +1010,10 @@ public class OsylController implements SavePushButtonEventHandler,
 		public void onSuccess(Boolean reload) {
 		    try {
 			caller.updateSerializedCourseOutlineCB(reload);
-			if (callBack != null)
+			if (callBack != null){
 			    callBack.onSuccess(null);
+			}
+			
 		    } catch (Exception error) {
 			caller
 				.handleRPCError("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
@@ -1193,60 +1191,7 @@ public class OsylController implements SavePushButtonEventHandler,
 	alertBox.show();
     }
 
-    private class Pinger {
-	private int errors;
-	private long lastErrortime;
-	private Timer t;
-	private boolean isRunning;
-
-	// Run every 2 minutes
-	private int delay = 2 * 60 * 1000;
-
-	Pinger() {
-	    t = new Timer() {
-		public void run() {
-		    // Window.alert("Pinger alive");
-		    pingServer();
-		    // Window.alert("Pinger done!");
-		}
-	    };
-	}
-
-	private void start() {
-	    isRunning = true;
-	    t.scheduleRepeating(delay);
-	}
-
-	private void stop() {
-	    isRunning = false;
-	    t.cancel();
-	}
-
-	private boolean isStopped() {
-	    return isRunning;
-	}
-
-	private void incrementErrorCount() {
-	    lastErrortime = System.currentTimeMillis();
-	    errors++;
-	}
-
-	private void setServerOK() {
-	    long delta = System.currentTimeMillis() - lastErrortime;
-	    // If we were able to ping the server 5 times with no trouble, we
-	    // dismiss any errors we had...
-	    if (delta < 5 * delay) {
-		errors = 0;
-		lastErrortime = 0;
-	    }
-	}
-
-	private int getRecentErrorCount() {
-	    return errors;
-	}
-
-    } // class Pinger
-
+ 
     /**
      * Pings the server to keep the session alive.
      */
@@ -1281,8 +1226,6 @@ public class OsylController implements SavePushButtonEventHandler,
      * connection status.
      */
     public void pingServerCB() {
-	pinger.setServerOK();
-	// Window.alert("Ping callback!");
     }
 
     /**
@@ -1291,23 +1234,23 @@ public class OsylController implements SavePushButtonEventHandler,
      * @param String errorMessage
      */
     public void unableToPing(Throwable error) {
-	pinger.incrementErrorCount();
 	String msg;
-	if (pinger.getRecentErrorCount() >= 3) {
-	    msg = uiMessages.getMessage("unableToPingServerSorry");
-	    pinger.stop();
-	} else {
-	    int MAX_MSG = 120;
-	    String errMsg = error.toString();
-	    if (errMsg.length() > MAX_MSG) {
-		errMsg = errMsg.substring(0, MAX_MSG) + "...";
-	    }
-	    msg = uiMessages.getMessage("unableToPingServer", errMsg);
+
+	int MAX_MSG = 120;
+
+	String errMsg = error.toString();
+	if (errMsg.length() > MAX_MSG) {
+	    errMsg = errMsg.substring(0, MAX_MSG) + "...";
 	}
+	msg = uiMessages.getMessage("unableToPingServer", errMsg);
+
 	final OsylAlertDialog alertBox =
 		new OsylAlertDialog(false, true, "Error", msg);
+
 	alertBox.show();
     }
+    
+    
 
     private class AutoSaver {
 	private Timer t;
@@ -1365,20 +1308,13 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     public void unableToAutoSave(Throwable error) {
 	String msg;
-	// If we auto-save failed, we check if the pinger has stopped because
-	// of too many errors. If yes we also stop the Auto Saver and warn the
-	// user.
-	if (pinger.isStopped()) {
-	    msg = uiMessages.getMessage("save.AutoSaveDisabled");
-	    autoSaver.stop();
-	} else {
-	    int MAX_MSG = 120;
-	    String errMsg = error.toString();
-	    if (errMsg.length() > MAX_MSG) {
-		errMsg = errMsg.substring(0, MAX_MSG) + "...";
-	    }
-	    msg = uiMessages.getMessage("save.AutoSaveDidNotWork", errMsg);
+	int MAX_MSG = 120;
+	String errMsg = error.toString();
+	if (errMsg.length() > MAX_MSG) {
+	    errMsg = errMsg.substring(0, MAX_MSG) + "...";
 	}
+	msg = uiMessages.getMessage("save.AutoSaveDidNotWork", errMsg);
+
 	final OsylAlertDialog alertBox =
 		new OsylAlertDialog(false, true, "Error", msg);
 	alertBox.show();
@@ -1453,5 +1389,6 @@ public class OsylController implements SavePushButtonEventHandler,
 	};
 	OsylRemoteServiceLocator.getEditorRemoteService().sendEvent(citationLinkClickEvent,resource, voidCallback);
     }
+
 
 }

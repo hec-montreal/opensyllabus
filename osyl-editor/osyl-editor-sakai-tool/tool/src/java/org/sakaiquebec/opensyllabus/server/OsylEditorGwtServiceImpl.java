@@ -278,6 +278,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public boolean updateSerializedCourseOutline(COSerialized co)
 	    throws Exception {
 	try {
+	    ping();
+	    
 	    return osylServices.getOsylSiteService()
 		    .updateSerializedCourseOutline(co);
 	} catch (Exception e) {

@@ -58,5 +58,13 @@ public interface OsylModelUpdatedEventHandler {
      */
     void onModelUpdated(OsylModelUpdatedEvent event);
 
+    /**
+     * This method is called when the handler is notified that the model
+     * has been successfully saved
+     * 
+     * @param event
+     */
+    void onModelSaved(OsylModelUpdatedEvent event);
+
 }
 
