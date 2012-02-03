@@ -26,7 +26,7 @@
          <list>
             <bean id="opensyllabusManagerCategory" class="org.sakaiproject.component.app.help.model.CategoryBean">
                <property name="name">
-               	<value>OpenSyllabus Manager</value>
+               	<value>Gestionnaire de sites de cours</value>
                </property>
                <property name="resources">
                   <list>
