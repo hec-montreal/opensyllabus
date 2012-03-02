@@ -40,6 +40,7 @@ public abstract class PopupUtils {
      */
     public static final Level1Popup DocumentEditPopup = new Level1Popup();
     public static final Level2Popup DocumentAttributesPopup = new Level2Popup();
+    public static final Level2Popup CitationAttributesPopup = new Level2Popup();
 
     
     protected abstract int getButtonIndex(int button);

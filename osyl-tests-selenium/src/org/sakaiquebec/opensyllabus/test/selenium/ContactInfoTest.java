@@ -44,9 +44,13 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	"OSYLEditor test. Add a contact resource, edit it and save the changes")
     @Parameters( { "webSite" })
     public void testAddContactInfo(String webSite) throws Exception {
+	
+	logStartTest();
+	
 	// We log in
 	logInAsAdmin(webSite);
 	try {
+	    deleteTestSite(false);
 	    goToCurrentSite();	    	    
 	} catch (IllegalStateException e) {
 	    createTestSite();
@@ -61,6 +65,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 //---------------------------------------------------------------------------//
         
 	openContactInfoSection();
+	prettyLog("Add contact");
 	
 	//Add Contact Information
 	clickAddItem("addPerson");
@@ -252,6 +257,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 //---------------------------------------------------------------------------//
 //				Delete Contact		                     //
 //---------------------------------------------------------------------------//	
+	prettyLog("Add and Delete contact");
 	
 	//Click Contact Information
 	openContactInfoSection();
@@ -300,9 +306,9 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	//Log out
 	session().selectFrame("relative=parent");
 	logOut();
-	log("=================================");	
-	log("testAddContactInfo: test complete");
-	log("=================================");	
+	
+	logEndTest();
+	
     } // testAddContactInfo
     
     private void openContactInfoSection(){

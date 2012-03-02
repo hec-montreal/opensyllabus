@@ -26,6 +26,8 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.sakaiquebec.opensyllabus.test.selenium.utils.AddFileResourcePopup;
+import org.sakaiquebec.opensyllabus.test.selenium.utils.PopupUtils;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -47,9 +49,13 @@ public class TeachingMaterial extends AbstractOSYLTest {
     @Test(groups = "OSYL-Suite", description = "OSYLEditor test. Add a contact resource, edit it and save the changes")
     @Parameters( { "webSite" })
     public void TeachingMaterialTest(String webSite) throws Exception {
+	
+	logStartTest();
+	
 	// We log in
 	logInAsAdmin(webSite);
 	try {
+	    deleteTestSite(false);
 	    goToCurrentSite();	    
 	} catch (IllegalStateException e) {
 	    createTestSite();
@@ -84,6 +90,8 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	// Add Hyperlink //
 	// ---------------------------------------------------------------------------//
 
+	String urlToAdd = "http://webmail.hec.ca/";
+	prettyLog("addURL: " + urlToAdd);
 	// Add Hyperlink
 	clickAddItem("addURL");
 
@@ -104,8 +112,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	session().type("//td[2]/input", newText11);
 
 	// We type the URL link
-	String newText10 = "http://webmail.hec.ca/";
-	session().type("//tr[2]/td[2]/input", newText10);
+	session().type("//tr[2]/td[2]/input", urlToAdd);
 
 	// We click OK to close editor
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -125,6 +132,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 
 	// Add Hyperlink
+	prettyLog("addURL and delete it");
 	clickAddItem("addURL");
 
 	// We edit the new Hyperlink rubric
@@ -135,7 +143,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	pause();
 
 	// We type the URL link
-	session().type("//tr[2]/td[2]/input", newText10);
+	session().type("//tr[2]/td[2]/input", urlToAdd);
 	pause();
 
 	// We click OK to close editor
@@ -167,6 +175,8 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 	if (inFireFox()) {	
 		// Add new document
+	    	String doccum = FILE_DIR + ZIP_FILE;
+	    	prettyLog("addDocument: " + doccum);
 		clickAddItem("addDocument");
 	
 		// We open Document resource editor
@@ -212,14 +222,16 @@ public class TeachingMaterial extends AbstractOSYLTest {
 				    + " Osyl-FileBrowserTopButton-down-hovering\"]");
 	
 		    // Choose file and close window
-		    session().type("uploadFormElement", FILE_DIR + ZIP_FILE);
-		    // We select randomly the rights field
-		    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
-		    String newText8 = getRandomOption(xpathRole4);
-		    session().select(xpathRole4, newText8);
+		    session().type("uploadFormElement", doccum);
+		    
+		    // Select randomly the Rights field
+		    selectAtRandom(AddFileResourcePopup.getRightsSelect());
+		    // Select randomly the type of resources field (eg. 'Recueil de textes')
+		    selectAtRandom(AddFileResourcePopup.getTypeOfResourceSelect());
 		    pause();
+		    
 		    // Close window
-		    session().click("//tr[5]/td/table/tbody/tr/td/button");
+		    session().click(AddFileResourcePopup.getInstance().getButtonOk());
 		    pause();
 	
 		}/*
@@ -232,19 +244,24 @@ public class TeachingMaterial extends AbstractOSYLTest {
 		// Open form to upload a second document
 		if (inFireFox()) {
 	
+		    // Add new document
+		    doccum = FILE_DIR + PPT_FILE;
+		    prettyLog("addDocument 2: " + doccum);
 		    session().mouseOver("//td[3]/div/img");
 		    session().mouseDown("//td[3]/div/img");
 		    session().mouseUp("//td[3]/div/img");
 	
 		    // Choose file and close window
-		    session().type("//input[@class=\"gwt-FileUpload\"]", FILE_DIR + PPT_FILE);
-		    // We select randomly the rights field
-		    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
-		    String newText8 = getRandomOption(xpathRole4);
-		    session().select(xpathRole4, newText8);
+		    session().type("//input[@class=\"gwt-FileUpload\"]", doccum);
+		    
+		    // Select randomly the Rights field
+		    selectAtRandom(AddFileResourcePopup.getRightsSelect());
+		    // Select randomly the type of resources field (eg. 'Recueil de textes')
+		    selectAtRandom(AddFileResourcePopup.getTypeOfResourceSelect());
 		    pause();
+		    
 		    // Close window
-		    session().click("//tr[5]/td/table/tbody/tr/td/button");
+		    session().click(AddFileResourcePopup.getInstance().getButtonOk());
 		    pause();
 	
 		}/*
@@ -275,6 +292,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 
 	// Add new Citation
+	prettyLog("addBiblioResource: ");
 	clickAddItem("addBiblioResource");
 
 	// open Citation resource editor
@@ -338,8 +356,11 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	} else {
 	    session().keyPress("//td[3]/table/tbody/tr/td[3]/div", "\r");
 	}*/
-	log("Validation de données vides...");	
-	session().click("//tr[22]/td/table/tbody/tr/td[1]/button");
+	log("Validation de donnÃ©es vides...");	
+	//session().click("//tr[22]/td/table/tbody/tr/td[1]/button");
+	session().click(PopupUtils.CitationAttributesPopup.getButtonOk());
+	
+	
 	if (!session().isTextPresent(newText1)) {
 		logAndFail("Expected to see text [" + newText1
 				+ "] after text edition");
@@ -361,7 +382,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	session().type("//tr[19]/td/table/tbody/tr/td[3]/input", ISBN);
 
 	// Close Window
-	session().click("//tr[22]/td/table/tbody/tr/td/button");
+	session().click(PopupUtils.CitationAttributesPopup.getButtonOk());
 	pause();
 	pause();
 
@@ -385,7 +406,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 	// Add, Modify and delete Citation //
 	// ---------------------------------------------------------------------------//
-
+	prettyLog("addBiblioResource: " + "NewListe" + newText1);
 	// Add new Citation
 	clickAddItem("addBiblioResource");
 
@@ -475,6 +496,8 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	session().click("//td/table/tbody/tr/td[1]/button");
 	pause();
 
+	// ------------------------------------------
+	prettyLog("Delete citation");
 	// We delete new citation
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");
 	pause();
@@ -496,9 +519,8 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	session().selectFrame("relative=parent");
 	logOut();
 
-	log("===================================");	
-	log("TeachingMaterialTest: test complete");
-	log("===================================");	
+	logEndTest();
+	
     } // TeachingMaterialTest
 
 }
