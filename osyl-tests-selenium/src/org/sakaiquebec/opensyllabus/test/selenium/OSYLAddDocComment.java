@@ -38,6 +38,14 @@ public class OSYLAddDocComment  extends AbstractOSYLTest {
 	@Parameters({"webSite"})
 
 	public void testOSYLAddDocComment(String webSite) throws Exception {
+	    
+	    
+
+		if (true) {
+		    prettyLog("OSYLAddDocComment is now obsolete!");
+		    return;
+		}
+
 		logInAsAdmin(webSite);
 		// We delete the test site if it exists. If it does not, we don't fail!
 		deleteTestSite(false);
