@@ -1,1 +1,1 @@
-javac -classpath classes;lib\testng-5.9-jdk15.jar;lib\selenium-java-client-driver.jar;lib\selenium-grid-tools-1.0.3.jar;lib\junit-4.6.jar -d classes src\org\sakaiquebec\opensyllabus\test\selenium\*.java
+javac -classpath classes;lib\testng-5.9-jdk15.jar;lib\selenium-java-client-driver.jar;lib\selenium-grid-tools-1.0.3.jar;lib\junit-4.6.jar -d classes src\org\sakaiquebec\opensyllabus\test\selenium\utils\*.java  src\org\sakaiquebec\opensyllabus\test\selenium\*.java  
