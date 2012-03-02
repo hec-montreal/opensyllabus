@@ -40,6 +40,10 @@ public class TextTest extends AbstractOSYLTest {
     @Test(groups = "OSYL-Suite", description = "OSYLEditor test. Add a text resource, edit it and save the changes")
     @Parameters( { "webSite" })
     public void testAddText(String webSite) throws Exception {
+	
+	// Log our start
+	logStartTest();
+	
 	// We log in
 	logInAsAdmin(webSite);
 	try {
@@ -140,13 +144,15 @@ public class TextTest extends AbstractOSYLTest {
 	} else {
 		log("OK: Selected rubric is visible");
 	}
+	
 	//Add message to log file
 	logFile(TEXT_TEST, CT_006, PASSED);
 	session().selectFrame("relative=parent");
 	logOut();
-	log("==============================");	
-	log("testAddText: test complete");
-	log("==============================");	
+	
+	// log our completion
+	logEndTest();
+	
     } // testAddText
     
     private void openSeanceSection() {

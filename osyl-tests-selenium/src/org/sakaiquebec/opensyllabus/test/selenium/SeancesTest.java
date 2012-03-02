@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.test.selenium;
 
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
 import java.io.File;
+
 import org.sakaiquebec.opensyllabus.test.selenium.utils.PopupUtils;
 import org.sakaiquebec.opensyllabus.test.selenium.utils.ResourceXpathHelper;
 import org.testng.annotations.Parameters;
@@ -47,10 +48,9 @@ public class SeancesTest extends AbstractOSYLTest {
     public void TestAddSeance(String webSite) throws Exception {
 	
 	/**
-	 * Log test started
+	 * Test started
 	 */
-	prettyLog("SeancesTest started at " + timeStamp());
-	long startTime = System.currentTimeMillis();
+	logStartTest();
 	
 	// We log in
 	logInAsAdmin(webSite);
@@ -99,7 +99,7 @@ public class SeancesTest extends AbstractOSYLTest {
     											  // Overview
     	    }
     	
-    	    //	String seanceName = "Séance de cours";
+    	    //	String seanceName = "SÃ©ance de cours";
     	    //	int seancePos = 2;
     
     	    addCitation(seanceName);
@@ -112,7 +112,7 @@ public class SeancesTest extends AbstractOSYLTest {
     	    //session().click("//tr[" + seanceResourcePos + "]/td/table/tbody/tr/td[2]/div/table[2]/tbody/tr/td[2]/button");
     	    //session().click("//tr[2]/td/table/tbody/tr/td/button");
     	    
-    	    session().click(ResourceXpathHelper.getButton(seanceResourcePos, ResourceXpathHelper.DELETE_BUTTON));
+    	    session().click(ResourceXpathHelper.getButtonDelete(seanceResourcePos));
     	    session().click("//tr[2]/td/table/tbody/tr/td/button");
     	    log("Lecture deleted...");
 
@@ -125,8 +125,7 @@ public class SeancesTest extends AbstractOSYLTest {
     	
     	
     	    // Print duration of test.
-    	   long testDuration = System.currentTimeMillis() - startTime;
-    	   prettyLog("SeanceTest completed at " + timeStamp() + ". Duration: " + getElapsedTimeHoursMinutesSecondsString(testDuration));
+    	    logEndTest();
     	   
 	} catch (Exception e) {
 	    prettyLog("EXCEPTION: " + e.toString());
@@ -164,7 +163,7 @@ public class SeancesTest extends AbstractOSYLTest {
 	clickAddItem("addBiblioResource");	
 
 	// modify the Citation, (first resource on the list)
-	String modifierButtonLocator = ResourceXpathHelper.getButton(0, ResourceXpathHelper.MODIFY_BUTTON); 
+	String modifierButtonLocator = ResourceXpathHelper.getButtonModify(0); 
 	session().click(modifierButtonLocator);
 
 	// We select attendee on dissemination level
@@ -251,8 +250,8 @@ public class SeancesTest extends AbstractOSYLTest {
 	session().mouseOver("//option[@value=' (REF)   " + Titre + "']");
 	session().click("//option[@value=' (REF)   " + Titre + "']");
 
-	// Close Editor HHHHERHEHHE
-	session().click(PopupUtils.getButtonLocator(PopupUtils.BUTTON_MODIFY));
+	// Close Editor
+	session().click(PopupUtils.DocumentEditPopup.getButtonOk());
 	//session().click("//td/table/tbody/tr/td[1]/button");
 
 	//Add message to log file
@@ -288,7 +287,7 @@ public class SeancesTest extends AbstractOSYLTest {
 
 	// We open Document editor (which is the first resource)
 	//session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
-	session().click(ResourceXpathHelper.getButton(0, ResourceXpathHelper.MODIFY_BUTTON));
+	session().click(ResourceXpathHelper.getButtonModify(0));
 	pause(2000);
 
 	// We type the clickable text
@@ -348,9 +347,9 @@ public class SeancesTest extends AbstractOSYLTest {
 	session().click(
 	    "//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
 		    + "tbody/tr/td[1]/button");
-	// //ERROR: Cette ressource est déjà utilisée dans le plan de cours
-	// avec un type de ressource différent (Document de nature
-	// pédagogique). Êtes-vous sûr de vouloir changer le type de cette
+	// //ERROR: Cette ressource est dÃ©jÃ  utilisÃ©e dans le plan de cours
+	// avec un type de ressource diffÃ©rent (Document de nature
+	// pÃ©dagogique). ÃŠtes-vous sÃ»r de vouloir changer le type de cette
 	// ressource ?
 	// Add message to log file
 	logFile(PEDAGOGICAL_TEST, CT_013, PASSED);
@@ -400,7 +399,7 @@ public class SeancesTest extends AbstractOSYLTest {
 
 	// We open Document resource editor
 	// modify the Document, which is the first on the list
-	String modifierButtonLocator = ResourceXpathHelper.getButton(0, ResourceXpathHelper.MODIFY_BUTTON); 
+	String modifierButtonLocator = ResourceXpathHelper.getButtonModify(0); 
 	//session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 	session().click(modifierButtonLocator);
 
@@ -526,7 +525,7 @@ public class SeancesTest extends AbstractOSYLTest {
 	    pause();
 	    
 	    // Open the Lecture unit
-	    String hrefLocator = ResourceXpathHelper.getOverviewHref(seancePos);
+	    String hrefLocator = ResourceXpathHelper.getItemHref(seancePos);
 	    session().mouseOver(hrefLocator);
 	    session().mouseDown(hrefLocator);
 	    session().mouseUp(hrefLocator);
@@ -604,7 +603,7 @@ public class SeancesTest extends AbstractOSYLTest {
 	    openOrganisationSection();
 
 	    pause();
-	    String hrefLocator = ResourceXpathHelper.getOverviewHref(seancePos);
+	    String hrefLocator = ResourceXpathHelper.getItemHref(seancePos);
 	    session().mouseOver(hrefLocator);
 	    session().mouseDown(hrefLocator);
 	    session().mouseUp(hrefLocator);
@@ -664,7 +663,7 @@ public class SeancesTest extends AbstractOSYLTest {
 
 	// We edit the just-added Hyperlink rubric (the first)
 	//session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
-	session().click(ResourceXpathHelper.getButton(0, ResourceXpathHelper.MODIFY_BUTTON));
+	session().click(ResourceXpathHelper.getButtonModify(0));
 
 	// We select attendee on dissemination level
 	session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
@@ -706,7 +705,7 @@ public class SeancesTest extends AbstractOSYLTest {
 	    openOrganisationSection();
 
 	    pause();
-	    String hrefLocator = ResourceXpathHelper.getOverviewHref(seancePos);
+	    String hrefLocator = ResourceXpathHelper.getItemHref(seancePos);
 	    session().mouseOver(hrefLocator);
 	    session().mouseDown(hrefLocator);
 	    session().mouseUp(hrefLocator);
@@ -746,15 +745,6 @@ public class SeancesTest extends AbstractOSYLTest {
 	assertTrue("File existence: " + filePath, file.exists());// verify file existence
     }
 
-    /**
-     * Does a random selection for this selection box.
-     * @param selectBoxXpath
-     */
-    private void selectAtRandom(String selectBoxXpath) {
-	//String xpathTypeResource = "//form/table/tbody/tr[7]/td/select";		 
-	String randomTypeRes = getRandomOption(selectBoxXpath);
-	session().select(selectBoxXpath, randomTypeRes);
-    }
     
     private void openSeanceSection(String nameSeance) {
     	// click on Seances Section
@@ -811,7 +801,7 @@ public class SeancesTest extends AbstractOSYLTest {
 	// We edit the last Lecture
 	// (contrary to other resources, newly added Lectures are the last item in list)
 	int seanceResourcePos = nbResources - 1;
-	session().click(ResourceXpathHelper.getButton(seanceResourcePos, ResourceXpathHelper.MODIFY_BUTTON));
+	session().click(ResourceXpathHelper.getButtonModify(seanceResourcePos));
 	pause();
 
 	session().type("//tr[2]/td/table/tbody/tr/td/table/tbody/tr/td/input", seanceName);
@@ -831,7 +821,7 @@ public class SeancesTest extends AbstractOSYLTest {
 	/**
 	 * Now we rename the lecture
 	 */
-	session().click(ResourceXpathHelper.getButton(seanceResourcePos, ResourceXpathHelper.MODIFY_BUTTON));
+	session().click(ResourceXpathHelper.getButtonModify(seanceResourcePos));
 	pause();
 			
 	String newSeanceName = "Last seance renamed " + timeStamp();

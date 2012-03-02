@@ -21,6 +21,7 @@
 
 package org.sakaiquebec.opensyllabus.test.selenium;
 
+import org.sakaiquebec.opensyllabus.test.selenium.utils.ResourceXpathHelper;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
@@ -44,6 +45,15 @@ public class NewsTest extends AbstractOSYLTest {
 	"OSYLEditor test. Add a contact resource, edit it and save the changes")
     @Parameters( { "webSite" })
     public void TestAddNews(String webSite) throws Exception {
+	
+
+	if (true) {
+	    prettyLog("NewsTest is now obsolete!");
+	    return;
+	}
+	
+	logStartTest();
+	
 	// We log in
 	logInAsAdmin(webSite);
 	try {
@@ -59,17 +69,19 @@ public class NewsTest extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 	// Add News in News Unit //
 	// ---------------------------------------------------------------------------//	
-    // We keep track of how many resources are showing to check that it
+	// We keep track of how many resources are showing to check that it
 	// is incremented as expected when we add one
-	int resNb = getResourceCount();
+	int resNb = ResourceXpathHelper.getNbResource();
 	log("We start with " + resNb + " resources");
         
 	//Add News
+	prettyLog("Add a News");
 	clickAddItem("addNews");
 	
 	// We check that our news was added
-	int resNb2 = getResourceCount() ;
+	int resNb2 = ResourceXpathHelper.getNbResource();
 	log("We now have " + resNb2 + " resources");
+	
 	//It is not necessary.		
 	/**
 	if ( 1+ resNb != resNb2) {
@@ -81,7 +93,8 @@ public class NewsTest extends AbstractOSYLTest {
 	saveCourseOutline();
 	
 	// open text resource editor
-	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");	
+	//session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	session().click(ResourceXpathHelper.getButtonModify(0));
 	
 	// Type some text in the rich-text area
 	if (inFireFox()) {
@@ -108,15 +121,16 @@ public class NewsTest extends AbstractOSYLTest {
 	    // close editor
 	    session().click("//td/table/tbody/tr/td[1]/button");
 	}
+	
+	
 	saveCourseOutline();
 	//Add message to log file
 	logFile(NEWS_TEST, CT_067, PASSED);
 	
 	session().selectFrame("relative=parent");
 	logOut();
-	log("==========================");	
-	log("TestAddNews: test complete");
-	log("==========================");	
+	
+	logEndTest();
     } // TestAddNews
     
 }

@@ -46,6 +46,10 @@ public class LectureTest extends AbstractOSYLTest {
     @Test(groups = "OSYL-Suite", description = "OSYLEditor test. Remove, add, edit lectures and save the changes")
     @Parameters( { "webSite" })
     public void testDeleteAddLecture(String webSite) throws Exception {
+	
+	// Log our start
+	logStartTest();
+		
 	// We log in
 	logInAsAdmin(webSite);
 	try {
@@ -231,9 +235,9 @@ public class LectureTest extends AbstractOSYLTest {
 	session().selectFrame("relative=parent");
 	logOut();
 	
-	log("==============================");	
-	log("testAddLecture: test complete");
-	log("==============================");	
+	// Print our completion
+	logEndTest();
+	
     } // testAddLecture
 
     private int countLecture() {

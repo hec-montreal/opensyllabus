@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.test.selenium;
 
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
 
+import org.sakaiquebec.opensyllabus.test.selenium.utils.AddFileResourcePopup;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -44,8 +45,12 @@ public class PresentationOfCourse extends AbstractOSYLTest {
     @Test(groups = "OSYL-Suite", description = "OSYLEditor test. Add a contact resource, edit it and save the changes")
     @Parameters( { "webSite" })
     public void PresentationOfCourseTest(String webSite) throws Exception {
+	
+	logStartTest();
+	
 	// We log in
 	logInAsAdmin(webSite);
+	
 	try {
 	    goToCurrentSite();	    
 	} catch (IllegalStateException e) {
@@ -61,7 +66,7 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 
 	// Open Lectures Section
-	//It's not necessary because now overview is first element on course outline.
+	//It's not necessary because now overview is first element on course outline.	
 	//openPresentationSection();
 	pause();
 
@@ -69,6 +74,8 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	    "this is a text resource typed by "
 		    + "selenium, hope it works and you see it. Added on "
 		    + timeStamp() + " in Firefox";
+	
+	prettyLog("Add Text: " + LEVEL_ATTENDEE);
 	addText(newText9,LEVEL_ATTENDEE);
 
 	//Add message to log file
@@ -81,12 +88,12 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 	// Add, Modify and delete Text //
 	// ---------------------------------------------------------------------------//
-
+	prettyLog("Add then delete text");
 	 String newText9Bis =
 		    "this is a text resource typed by "
 			    + "selenium, hope it works and you see it. Added on "
 			    + timeStamp() + " in Firefox";
-	 addText(newText9Bis,LEVEL_ATTENDEE);
+	addText(newText9Bis,LEVEL_ATTENDEE);
 	//Add message to log file
 	logFile(OVERVIEW_TEST, CT_006, PASSED);
 	 
@@ -111,7 +118,8 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 	// Add Hyperlink //
 	// ---------------------------------------------------------------------------//
-
+	String hyperlink = "http://webmail.hec.ca/";
+	prettyLog("Add Hylerlink: " + hyperlink);
 	// Add Hyperlink
 	clickAddItem("addURL");
 
@@ -132,14 +140,13 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	session().type("//td[2]/input", newText11);
 
 	// We type the URL link
-	String newText10 = "http://webmail.hec.ca/";
-	session().type("//tr[2]/td[2]/input", newText10);
+	session().type("//tr[2]/td[2]/input", hyperlink);
 
 	// We click OK to close editor
 	session().click("//td/table/tbody/tr/td[1]/button");
 
 	// We click URL to test
-	session().click("link=" + newText11);
+	session().click("link=" + newText11);// open a new window (you may manualy close)
 
 	// Save modifications
 	saveCourseOutline();
@@ -150,6 +157,8 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 	// Add Document //
 	// ---------------------------------------------------------------------------//
+	String documentText = "Document text is " + timeStamp();
+	prettyLog("addDocument: " + documentText);
 
 	// Add new document
 	clickAddItem("addDocument");
@@ -167,9 +176,8 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 		"index=0");
 
 	// We type the clickable text
-	String newText12 = timeStamp();
 	session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]",
-		newText12);
+		documentText);
 
 	// Open form to upload a first document
 	if (inFireFox()) {
@@ -197,14 +205,16 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 			    + " Osyl-FileBrowserTopButton-down-hovering\"]");
 
 	    // Choose file and close window
-	    session().type("uploadFormElement",FILE_DIR + ZIP_FILE);
-	    // We select randomly the rights field
-	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
-	    String newText8 = getRandomOption(xpathRole4);
-	    session().select(xpathRole4, newText8);
+	    session().type("uploadFormElement", FILE_DIR + ZIP_FILE);
+	    
+	    // Select randomly the Rights field
+	    selectAtRandom(AddFileResourcePopup.getRightsSelect());
+	    // Select randomly the type of resources field (eg. 'Recueil de textes')
+	    selectAtRandom(AddFileResourcePopup.getTypeOfResourceSelect());
 	    pause();
+	    
 	    // Close window
-	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+	    session().click(AddFileResourcePopup.getInstance().getButtonOk());
 	    pause();
 
 	}/*
@@ -222,15 +232,16 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	    session().mouseUp("//td[3]/div/img");
 
 	    // Choose file and close window
-	    session()
-		    .type("//input[@class=\"gwt-FileUpload\"]", FILE_DIR + PPT_FILE);
-	    // We select randomly the rights field
-	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
-	    String newText8 = getRandomOption(xpathRole4);
-	    session().select(xpathRole4, newText8);
+	    session().type("//input[@class=\"gwt-FileUpload\"]", FILE_DIR + PPT_FILE);
+	    
+	    // Select randomly the Rights field
+	    selectAtRandom(AddFileResourcePopup.getRightsSelect());
+	    // Select randomly the type of resources field (eg. 'Recueil de textes')
+	    selectAtRandom(AddFileResourcePopup.getTypeOfResourceSelect());
 	    pause();
+	    
 	    // Close window
-	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+	    session().click(AddFileResourcePopup.getInstance().getButtonOk());
 	    pause();
 
 	}/*
@@ -267,23 +278,8 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 
 	session().selectFrame("relative=parent");
 	logOut();
-	log("=======================================");	
-	log("PresentationOfCourseTest: test complete");
-	log("=======================================");	
+	
+	logEndTest();
+	
     } // PresentationOfCourseTest
-
-    private void openPresentationSection() {
-	// Click on Overview section
-    pause();
-	if (inFireFox()) {
-	    session().mouseDown(
-		    "//div[@class=\"gwt-TreeItem\"]/div/"
-			    + "div[contains(text(),'sentation')]");
-	} else {
-		String imageLocator = "//div[contains(text(),'sentation')]";			
-		session().mouseDownAt(imageLocator, "10,10");
-		session().mouseUpAt(imageLocator, "10,10");	    
-	}
-    pause();
-    }
-}
+ }

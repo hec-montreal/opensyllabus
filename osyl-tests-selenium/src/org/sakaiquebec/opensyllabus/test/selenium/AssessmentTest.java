@@ -112,7 +112,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	
 	// We edit the last assessment
 	int Position = nbResources - 1;
-	session().click(ResourceXpathHelper.getButton(Position, ResourceXpathHelper.MODIFY_BUTTON));
+	session().click(ResourceXpathHelper.getButtonModify(Position));
 	//session().click("//tr[" + Position + "]/td/table/tbody/tr/td[2]/div/"
 	//		+ "table[2]/tbody/tr/td/button");
 	pause();
@@ -155,7 +155,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// We open the last assessment
 	prettyLog("Provoke error by emptying Weighting");
 	
-	session().click(ResourceXpathHelper.getButton(Position, ResourceXpathHelper.MODIFY_BUTTON));
+	session().click(ResourceXpathHelper.getButtonModify(Position));
 	//session().click("//tr[" + Position + "]/td/table/tbody/tr/td[2]/div/"
 	//		+ "table[2]/tbody/tr/td/button");
 	pause();
@@ -588,7 +588,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	//-----------------------------------------------------------------------
 	// Check if Opensyllabus displays a message error when the user click OK
 	// without fill in the fields First Name, Last Name and Title.
-	log("Validation de données vides...");	
+	log("Validation de donnÃ©es vides...");	
 	
 	//session().click("//tr[22]/td/table/tbody/tr/td[1]/button");
 	session().click(PopupUtils.DocumentAttributesPopup.getButtonOk());
@@ -909,7 +909,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 
 	// We delete Assessment 1
 	prettyLog("Delete first assessment");
-	session().click(ResourceXpathHelper.getButton(0, ResourceXpathHelper.DELETE_BUTTON));
+	session().click(ResourceXpathHelper.getButtonDelete(0));
 	//session().click("//tr[" + Val2 + "]/td/table/tbody/tr/td[2]/div/table[2]" + "/tbody/tr/td[2]/button");
 	session().click("//tr[2]/td/table/tbody/tr/td/button");// confirm deletion
 	pause();
@@ -989,7 +989,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	    session().mouseUpAt(imageLocator, "10,10");
 	}
 	// pause();
-	waitForElement("//div[@class='Osyl-WorkspaceView-Header' and text()='Évaluations']", 3000);//LANG
+	waitForElement("//div[@class='Osyl-WorkspaceView-Header' and text()='Ã‰valuations']", 3000);//LANG
     }
 
     private void createAssignmentGrades() {
