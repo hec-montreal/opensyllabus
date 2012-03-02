@@ -51,10 +51,12 @@ public class SeancesTest extends AbstractOSYLTest {
 	 * Test started
 	 */
 	logStartTest();
+	pause();
 	
 	// We log in
 	logInAsAdmin(webSite);
 	try {
+	    deleteTestSite(false);
 	    goToCurrentSite();	    
 	} catch (IllegalStateException e) {
 	    createTestSite();

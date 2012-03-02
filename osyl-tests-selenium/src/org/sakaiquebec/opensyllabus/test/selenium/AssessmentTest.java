@@ -59,6 +59,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// We log in
 	logInAsAdmin(webSite);
 	try {
+	    deleteTestSite(false);
 	    goToCurrentSite();
 	} catch (IllegalStateException e) {
 	    createTestSite();

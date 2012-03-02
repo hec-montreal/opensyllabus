@@ -44,9 +44,12 @@ public class TextTest extends AbstractOSYLTest {
 	// Log our start
 	logStartTest();
 	
+	pause();
+	
 	// We log in
 	logInAsAdmin(webSite);
 	try {
+		 deleteTestSite(false);
 	    goToCurrentSite();	    
 	} catch (IllegalStateException e) {
 	    createTestSite();

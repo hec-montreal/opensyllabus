@@ -46,12 +46,14 @@ public class PresentationOfCourse extends AbstractOSYLTest {
     @Parameters( { "webSite" })
     public void PresentationOfCourseTest(String webSite) throws Exception {
 	
+	pause();
 	logStartTest();
 	
 	// We log in
 	logInAsAdmin(webSite);
 	
 	try {
+	    deleteTestSite(false);
 	    goToCurrentSite();	    
 	} catch (IllegalStateException e) {
 	    createTestSite();
