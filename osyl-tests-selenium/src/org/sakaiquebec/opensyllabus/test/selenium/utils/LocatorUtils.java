@@ -23,19 +23,13 @@ package org.sakaiquebec.opensyllabus.test.selenium.utils;
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
 
 /**
- * The 'resources' panel is the right panel in the OpenSyllabus split panel (like when you open the Plan de cours.)
- * It contains resource elements of the selected item in the left panel.
+ * * Nice youtube intro to Java with Selenium. http://www.youtube.com/watch?v=Eft3qGFoqwE.
+ * * http://wiki.openqa.org/display/SEL/Help+With+XPath.
  * 
  * @version $Id: $
  */
-public class ResourceXpathHelper {
+public class LocatorUtils {
     
-    public static final int MODIFY_BUTTON = 1;
-    public static final int DELETE_BUTTON = 2;
-    
-    /**
-     * Div that contains a resource.
-     */
     private static final String RESOURCE_DIV = "//div[contains(@class,'Osyl-UnitView-ResPanel')]";
 
     /**
@@ -46,26 +40,30 @@ public class ResourceXpathHelper {
 	return nb - 1; // -1 because the first resource is for something else!!
     }
     
-    
     /**
-     * Example: ((//div[contains(@class,'Osyl-UnitView-ResPanel')])[5]//button)[1]
+     * ((//div[contains(@class,'Osyl-UnitView-ResPanel')])[5]//button)[2]
      * @param resourceIndex The resource index, starting from 0.
      * @return The Xpath locator for the modifier button
      */
-    public static String getButton(int resourceIndex, int button) {
-	return "xpath=((" + RESOURCE_DIV + ")[" + (resourceIndex + 2) + "]" // +2 because first resource is not used, and xpath index starts at 1
-		+ "//button)[" + button + "]"; 
+    public static String getXpathForModifierButton(int resourceIndex) {
+	return "xpath=((" + RESOURCE_DIV + ")[" + (resourceIndex + 2) + "]" // go to nth resource div containing our 'Modifier' button  
+		+ "//button)[1]"; // our modifier button is the first one
     }
     
     /**
-     * Example: 
-     * (//div[contains(@class,'Osyl-UnitView-ResPanel')])[5]/../preceding-sibling::node()/div
-     * 
-     * @param resourceIndex The resource index, starting from 0.
-     * @return The Xpath locator for selecting resource while in overview mode.
+     * Explanation: ((//div[contains(@class,'Osyl-UnitView-ResPanel')])[5]//button)[2]
+     *    The table 'Osyl-WorkspaceView-MainPanel' contains n+1 rows.
+     *    The first row is an unused row.
+     *    The next row contains the 'Modifier' and 'Supprimer' button allowing to modify the seance. 
+     * @param seancePos
+     * @return
      */
-    public static String getOverviewHref(int resourceIndex) {
-	return "xpath=(" + RESOURCE_DIV + ")[" + (resourceIndex + 2) + "]" // +2 because first resource is not used, and xpath index starts at 1
-		+ "/../preceding-sibling::node()/div"; 
+    private String getModifierButtonLocator(int seancePos) {
+	return "//table[@class='Osyl-WorkspaceView-MainPanel']/tbody/tr[" + (seancePos + 1) + "]//*[contains(text(),'Modifier')]";
     }
+    
+    
+
+
+
 }
