@@ -30,8 +30,8 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
  */
 public class ResourceXpathHelper {
     
-    public static final int MODIFY_BUTTON = 1;
-    public static final int DELETE_BUTTON = 2;
+    private static final int MODIFY_BUTTON = 1;
+    private static final int DELETE_BUTTON = 2;
     
     /**
      * Div that contains a resource.
@@ -68,9 +68,27 @@ public class ResourceXpathHelper {
      * @param resourceIndex The resource index, starting from 0.
      * @return The Xpath locator for the modifier button
      */
-    public static String getButton(int resourceIndex, int button) {
+    private static String getButton(int resourceIndex, int button) {
 	return "xpath=((" + RESOURCE_DIV + ")[" + (resourceIndex + 2) + "]" // +2 because first resource is not used, and xpath index starts at 1
 		+ "//button)[" + button + "]"; 
+    }
+    
+    /**
+     * Locator to the Modifier button.
+     * @param resourceIndex
+     * @return
+     */
+    public static String getButtonModify(int resourceIndex) {
+	return getButton(resourceIndex, MODIFY_BUTTON);
+    }
+
+    /**
+     * Locator to the Delete button.
+     * @param resourceIndex
+     * @return
+     */
+    public static String getButtonDelete(int resourceIndex) {
+	return getButton(resourceIndex, DELETE_BUTTON);
     }
     
     /**
