@@ -19,6 +19,8 @@
  *
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.test.selenium.utils;
+
+
 /**
  *
  * Les popup s'ouvrent a l'interieur de notre iframepour editer des resources, comme Documents, Reference Bibliographique, etc.
@@ -38,6 +40,7 @@ public abstract class PopupUtils {
      */
     public static final Level1Popup DocumentEditPopup = new Level1Popup();
     public static final Level2Popup DocumentAttributesPopup = new Level2Popup();
+
     
     protected abstract int getButtonIndex(int button);
     protected abstract String getXpathToPopup();
@@ -64,11 +67,10 @@ public abstract class PopupUtils {
     public String getButtonCancel() {
 	return getButtonLocator(BUTTON_CANCEL);
     }
-	
+    
 
     /**
-     *
-     * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
+     * Popup level 1. Example the 'Ajouter document' popup.
      * @version $Id: $
      */
     public static class Level1Popup extends PopupUtils {
@@ -84,6 +86,10 @@ public abstract class PopupUtils {
 	}
     }
 
+    /**
+     * Popup level 2 (i.e. popup inside a popup). Example the 'Ajout d'une resource'.
+     *
+     */
     public static class Level2Popup extends PopupUtils {
 	
 	@Override
