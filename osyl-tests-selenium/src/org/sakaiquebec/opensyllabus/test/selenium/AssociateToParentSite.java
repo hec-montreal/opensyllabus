@@ -24,8 +24,8 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
+import org.openqa.selenium.internal.seleniumemulation.IsElementPresent;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -40,34 +40,60 @@ public class AssociateToParentSite extends AbstractOSYLTest {
     @Test(groups = "OSYL-Suite", description = "OSYLEditor and OSYLManager test. Associates sites and check that content is added or deleted as expected.")
     @Parameters( { "webSite" })
     public void testHierarchy(String webSite) throws Exception {
+	
+	logStartTest();
+	
+	
 	// We log in
 	// test if site exist, else create it
 	logInAsAdmin(webSite);
+	prettyLog("Creating or opening site: " + getCurrentTestSiteName() + " (IMPROVMENT: Delete all site at same time !)");
 	try {
+	    deleteTestSite(getCurrentTestSiteName(), false);
 	    goToCurrentSite();    	    
 	} catch (IllegalStateException e) {
 	    createTestSite();
-		logFile(OSYL_TEST, CT_002, PASSED);
+	    logFile(OSYL_TEST, CT_002, PASSED);
 	    goToCurrentSite();
 	}
 	waitForOSYL();
 	logFile(OSYL_TEST, CT_069, PASSED);	
 	
+	//goToEspacePersonnel();
+	//goToOsylManagerTool();
+
+	logOut();
+	logInAsAdmin(webSite);
+
+	// --------------------------------------------------------
+	// Child site
 	session().selectFrame("relative=parent");
 	String childSiteName = getCurrentTestSiteName() + "_Child";
+	prettyLog("Creating or opening site: " + childSiteName);
+
 	try {
+	    deleteTestSite(childSiteName, false);
 	    goToSite(childSiteName);
 	} catch (IllegalStateException e) {
 	    createSite(childSiteName);
-		logFile(OSYL_TEST, CT_002, PASSED);	    
+	    logFile(OSYL_TEST, CT_002, PASSED);	    
 	    goToSite(childSiteName);
 	}
 	waitForOSYL();
 	logFile(OSYL_TEST, CT_069, PASSED);	
-	
+
+	logOut();
+	logInAsAdmin(webSite);
+	//goToEspacePersonnel();
+
+	// --------------------------------------------------------
+	// Parent site
 	session().selectFrame("relative=parent");
 	String parentSiteName = getCurrentTestSiteName() + "_Parent";
+	prettyLog("Creating or opening site: " + parentSiteName);
+
 	try {
+	    deleteTestSite(parentSiteName, false);
 	    goToSite(parentSiteName);
 	} catch (IllegalStateException e) {
 	    createSite(parentSiteName);
@@ -91,7 +117,8 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 			    + "selenium, hope it works and you see it. Added on "
 			    + dateText + " in Firefox";
 **/			    
-	    addText(parentText, LEVEL_ATTENDEE);
+	    prettyLog("Add text ");
+	    addTextFIXED(parentText, LEVEL_ATTENDEE);
 
 	    // publish
 	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
@@ -100,10 +127,16 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    pause();	    
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
+	    
+	    
 	    //-------------------------------------------------------------
 	    //Attach currentSite to parentSiteName
 	    //--------------------------------------------------------------
 	    // The next block purpose is to attach currentSite to parentSiteName 
+	    String siteToAttach = getCurrentTestSiteName();
+	    String siteToAttachTo = parentSiteName;
+	    prettyLog("Attach to parent site: " + siteToAttach + " -> " + siteToAttachTo + "(WARNING: Will not work if site is already linked");
+	    
 	    session().selectFrame("relative=parent");
 	    // go to OSYLManager
 	    goToOsylManagerTool();
@@ -112,7 +145,11 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		    getCurrentTestSiteName());
 	    clickSearch();
 	    waitForListToShow(getCurrentTestSiteName());
-	    session().click("//tr[@class='OsylManager-scrollTable-row']/td/input");
+	    
+	    /**
+	     * A p
+	     */
+	    session().click("//tr[@class='OsylManager-scrollTable-row']/td/input"); // select row containing our site
 	    //ensureElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'Lier')]]");
 	    String locator = "//tr[2]/td/table/tbody/tr/td/div";	    	                      	    
 	    ensureElementPresent(locator);
@@ -181,6 +218,11 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    //-------------------------------------------------------------
 	    //Attach child to current site
 	    //--------------------------------------------------------------	    
+	    siteToAttach = childSiteName;
+	    siteToAttachTo =  getCurrentTestSiteName();
+	    prettyLog("Attach to parent site: " + siteToAttach + " -> " + siteToAttachTo);
+	    
+
 	    session().selectFrame("relative=parent");
 	    goToOsylManagerTool();
 	    session().type("//input[@class='gwt-TextBox']", childSiteName);
@@ -254,6 +296,8 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    // ---------------------------------------------------------------------------//
 	    // Add Document //
 	    // ---------------------------------------------------------------------------//
+	    prettyLog("Add document to " + parentSiteName);
+	    
 	    String parentDocumentClickabletext = timeStamp();
 	    //parentDocumentClickabletext = dateText;
 	    if (inFireFox()) {
@@ -293,21 +337,25 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    goToSite(childSiteName);
 	    openTeachingMaterialSection();
 	    //assertTrue(session().isTextPresent(parentDocumentClickabletext));
-		if (session().isTextPresent(parentDocumentClickabletext)) {
+	    if (session().isTextPresent(parentDocumentClickabletext)) {
 			log("** " + parentDocumentClickabletext + " ** is present **");
-		} else {
+	    } else {
 			log("** " + parentDocumentClickabletext + " ** is NOT present but it's OK**");
-		}			    
+	    }			    
 	    // verify if text of parent is not present in child site
 	    //assertFalse(session().isTextPresent(parentText));
-		if (session().isTextPresent(parentText)) {
-			log("** " + parentText + " ** is present **");
-		} else {
-			log("** " + parentText + " ** is NOT present but it's OK**");
-		}	
-		//--------------------------------------------------------------------
+	    if (session().isTextPresent(parentText)) {
+		log("** " + parentText + " ** is present **");
+	    } else {
+		log("** " + parentText + " ** is NOT present but it's OK**");
+	    }	
+	    
+	    //--------------------------------------------------------------------
 	    // Dissociate current site from parent
-		//-------------------------------------------------------------------
+	    //-------------------------------------------------------------------
+	    prettyLog("Dissociate A");
+	
+	    
 	    session().selectFrame("relative=parent");
 	    goToOsylManagerTool();
 	    session().type("//input[@class='gwt-TextBox']",
@@ -353,10 +401,14 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		} else {
 			log("** " + currentSiteText + " ** is NOT present **");
 		}	
-		//--------------------------------------------------------------------
-	    // Dissociate child from current site name
-		//-------------------------------------------------------------------
-	    session().selectFrame("relative=parent");
+	
+		
+	//--------------------------------------------------------------------
+	// Dissociate child from current site name
+	//-------------------------------------------------------------------
+	prettyLog("Dissociate B");
+	
+	session().selectFrame("relative=parent");
 	    goToOsylManagerTool();
 	    session().type("//input[@class='gwt-TextBox']", childSiteName);
 	    clickSearch();
@@ -402,16 +454,31 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
 
-	    logOut();	    		
-		log("==============================");	    
-	    log("testHierarchy: test complete");
-		log("==============================");	    
+	    logOut();
+	    
+	    logEndTest();
+	    
 	} catch (Exception e) {
 	    logAndFail("Hierarchy test FAILED:" + e);
 		//Add message to log file
 		logFile(ASSOCIATION_SITES_TEST, CT_001, FAILED);		
 	}
     } // testHierarchy
+
+
+
+
+    private void goToEspacePersonnel() {
+	// go to espace personel
+	String espacePersonnelHref = "//a[@title = 'Espace personnel']";
+	if (session().isElementPresent(espacePersonnelHref)) {
+	    session().click(espacePersonnelHref);
+	    waitForPageToLoad();
+	}
+    }
+    
+    
+    
 
     private void waitForLinkDropDownToShow(String siteName) {
 	int i = 0;

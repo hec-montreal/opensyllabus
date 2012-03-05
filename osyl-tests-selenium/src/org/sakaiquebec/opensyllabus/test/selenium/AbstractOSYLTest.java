@@ -31,6 +31,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.sakaiquebec.opensyllabus.test.selenium.MsgLog;
+import org.sakaiquebec.opensyllabus.test.selenium.utils.AddFileResourcePopup;
+import org.sakaiquebec.opensyllabus.test.selenium.utils.ResourceXpathHelper;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -303,11 +305,11 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 		
 		//Open create site
 		String createSite = "//tr[7]/td/table/tbody/tr/td[1]/div/div";
-		pause3();
+		pause();
 		if (session().isElementPresent("//*[text()='Créer un nouveau site...']")) {			
 			clickWithMouse(createSite);
 		}
-		pause3();
+		pause(10000);
 		// Course Name
 		ensureElementPresent("//tr[2]/td/table/tbody/tr/td[2]/input");
 		session().type("//tr[2]/td/table/tbody/tr/td[2]/input", siteName);
@@ -324,7 +326,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 		smartMouse("//div[text()='Créer']/preceding-sibling::input");
 		
 		//smartMouse("//tr[5]/td/table/tbody/tr/td[2]/select");
-		pause(30000);
+		pause(10000);
 		
 		// Click button "Close" (confirmation)
 		if (userString.equalsIgnoreCase("prof_selenium")) {
@@ -567,6 +569,95 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    pause(3000);
 	}
     } // deleteTestSite
+
+    /**
+     * Deletes the test site. Will fail if the operation is unsuccessful and if
+     * the boolean parameter is true.
+     *
+     * @param siteToDelete 
+     * @param boolean fail
+     */
+    public void deleteTestSite(String siteToDelete, boolean fail) throws Exception {
+	try {
+
+	    prettyLog("Deleting site " + siteToDelete);
+	    
+	    // Why do we go to the Admin page ?????????
+	   // session().open("/portal/site/%7Eadmin");
+	   //  waitForPageToLoad();
+	    
+	    // Warning: the next command won't work if the current active tool
+	    // is already "Sites".
+	    //session().click("//div[@id='toolMenu']/ul/li[5]/a/span");// "Clicker sur 'Gestionnaire de site de cours'
+	    session().click("//span[text() = 'Gestionnaire de sites de cours']/parent::a");
+
+	    waitForPageToLoad();
+	    
+	    //session().selectFrame("Mainxadminx310");
+	    //session().selectFrame("index=0");// aller au top frame (je crois qu'il faut selectionner un frame...)
+	    
+	    // Chercher le site
+	    //session().type("search_site", getCurrentTestSiteName());
+	    session().type("//table[@class='OsylManager-panel']//td/input[@class='gwt-TextBox']", siteToDelete);//
+	    clickWithMouse("//div[text()='Chercher']/parent::div");
+	    pause(4000);
+	    
+	    if (session().isAlertPresent()) {
+		log("Alert: " + session().getAlert());
+		return;
+	    }
+	    
+	    if (session().isTextPresent(siteToDelete)) {
+		log("Found site '" + siteToDelete + "' to delete");
+	    } else {
+		if (fail) {
+		    fail("Cannot delete site '" + siteToDelete
+			    + "' because it could not be found!");
+		} else {
+		    log("Did not delete site '" + siteToDelete
+			    + "' because it did not exist");
+		    return;
+		}
+	    }
+
+	    // Click du checkbox du site (s'il est trouvé!)
+	    String siteCheckbox = "//td[text() = '" + siteToDelete + "']/preceding-sibling::td/input";
+	    if(session().isElementPresent(siteCheckbox)) {
+        	session().click(siteCheckbox);
+        	    
+        
+        	//session().click("link=" + getCurrentTestSiteName());
+        	//waitForPageToLoad();
+        	//session().click("link=Supprimer site");
+        	    
+        	clickWithMouse("//div[text() = 'Supprimer']/parent::div");
+        	pause(1000);
+        
+        	//session().click("eventSubmit_doRemove_confirmed");
+        	session().click("//button[text()='Ok']"); // click du bouton "ok"
+        	pause(3000);
+	    }
+	    
+	    // removed by Thanh!
+	    //assertFalse("Site not deleted as expected!", session()
+		//    .isTextPresent(getCurrentTestSiteName()));
+	    
+	    
+	    
+	} catch (Exception e) {
+	    // do nothing. Just log error found.
+	    log("Exception dans deleteTestSite (cas normal): " + e.getMessage());
+	  
+	} finally {
+	    // Return to Home "tool"
+	    session().selectFrame("relative=parent");
+	    //session().click("//div[@id='toolMenu']/ul/li[1]/a/span");
+	    session().click("//span[text() = 'Accueil']/parent::a");
+	    pause(3000);
+	}
+    } // deleteTestSite
+    
+    
 
     /**
      * Terminates the current session by clicking on element loginLink1. After
@@ -1189,6 +1280,67 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	return rubric;
     }
 
+    /**
+     * There is a bug in addText(): the modifier button should be on the latest element added !!
+     * @param text
+     * @param level
+     * @return
+     */
+    protected String addTextFIXED(String text, String level) {
+	// Add Text in the last Lecture Unit
+	clickAddItem("addText");
+	
+	int nbResources = ResourceXpathHelper.getNbResource();
+	// We edit the new text Lecture
+	session().click(ResourceXpathHelper.getButtonModify(nbResources - 1));// the one was just added is the last
+	//session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+
+	// We select randomly the rubric name
+	String rubric = getRandomRubric();
+	log("Selecting rubric [" + rubric + "]");
+	changeRubric(rubric);
+
+	// We select attendee on dissemination level
+	if (LEVEL_ATTENDEE.equals(level))
+	    session().select(
+		    "//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
+		    "index=0");
+	else
+	    session().select(
+		    "//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
+		    "index=1");
+
+	// Type some text in the rich-text area
+	if (inFireFox()) {
+	    // type text
+	    session()
+		    .selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
+
+	    session().type("//html/body", text);
+	    
+	    // close editor
+	    session().selectFrame("relative=parent");
+
+	    session().click("//tr/td/button[contains(text(),'OK')]");
+	    // session().click("//td/table/tbody/tr/td[1]/button");
+	    
+	    // check if text is visible
+	    if (!session().isTextPresent(text)) {
+			logAndFail("Expected to see text [" + text
+				+ "] after text edition");
+			//Add message to log file
+			logFile(OVERVIEW_TEST, CT_006, FAILED);
+	    }
+	    log("OK: Text resource edited");
+	} else {
+	    log("RichText edition can only be tested in Firefox");
+	    // close editor
+	    session().click("//td/table/tbody/tr/td[1]/button");
+	}
+	
+	return rubric;
+    }
+
     protected String addDocument(String docName, String clickableText) {
 
 	String docNameModified = docName.replaceAll("\\[", "_");
@@ -1197,7 +1349,11 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	clickAddItem("addDocument");
 
 	// We open Document resource editor
-	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	//session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	int nbResources = ResourceXpathHelper.getNbResource();
+	// We edit the new text Lecture
+	session().click(ResourceXpathHelper.getButtonModify(nbResources - 1));// the one was just added is the last
+	//session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 
 	// We choose randomly a Rubric
 	String rubric = getRandomRubric();
@@ -1238,14 +1394,28 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 
 	    // Choose file and close window
 	    session().type("uploadFormElement", FILE_DIR + docName);
+	    
 	    // We select randomly the rights field
-	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
-	    String newText8 = getRandomOption(xpathRole4);
-	    session().select(xpathRole4, newText8);
+//	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
+//	    String newText8 = getRandomOption(xpathRole4);
+//	    session().select(xpathRole4, newText8);
+//	    pause();
+//	    // Close window
+//	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+//	    pause();
+	    
+	    // Select randomly the Rights field
+	    selectAtRandom(AddFileResourcePopup.getRightsSelect());
+	    // Select randomly the type of resources field (eg. 'Recueil de textes')
+	    selectAtRandom(AddFileResourcePopup.getTypeOfResourceSelect());
 	    pause();
-	    // Close window
-	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+	    
+	    // Press OK to Close window
+	    session().click(AddFileResourcePopup.getInstance().getButtonOk());
 	    pause();
+
+	    
+	    
 	} else {
 		String locator = "//div[contains(@title,'Ajouter')]";
 	    session().mouseOver(locator);
