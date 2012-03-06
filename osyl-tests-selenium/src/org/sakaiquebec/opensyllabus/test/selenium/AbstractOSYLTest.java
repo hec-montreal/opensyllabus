@@ -507,13 +507,12 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    session().click("//span[text() = 'Gestionnaire de sites de cours']/parent::a");
 
 	    waitForPageToLoad();
-	    
-	    //session().selectFrame("Mainxadminx310");
-	    //session().selectFrame("index=0");// aller au top frame (je crois qu'il faut selectionner un frame...)
-	    
+
 	    // Chercher le site
-	    //session().type("search_site", getCurrentTestSiteName());
-	    session().type("//table[@class='OsylManager-panel']//td/input[@class='gwt-TextBox']", getCurrentTestSiteName());//
+	    String searchTextBox = "//table[@class='OsylManager-panel']//td/input[@class='gwt-TextBox']";
+	    waitForElement(searchTextBox, 6000);
+	    session().type(searchTextBox, getCurrentTestSiteName());//
+	    
 	    clickWithMouse("//div[text()='Chercher']/parent::div");
 	    pause(4000);
 	    
@@ -539,10 +538,6 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    //session().click("link=ID du site");
 	    session().click("//td[text() = '" + getCurrentTestSiteName() + "']/preceding-sibling::td/input");
 	    
-
-	    //session().click("link=" + getCurrentTestSiteName());
-	    //waitForPageToLoad();
-	    //session().click("link=Supprimer site");
 	    
 	    clickWithMouse("//div[text() = 'Supprimer']/parent::div");
 	    pause(1000);
@@ -590,15 +585,12 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    // is already "Sites".
 	    //session().click("//div[@id='toolMenu']/ul/li[5]/a/span");// "Clicker sur 'Gestionnaire de site de cours'
 	    session().click("//span[text() = 'Gestionnaire de sites de cours']/parent::a");
+	    //waitForPageToLoad();
 
-	    waitForPageToLoad();
-	    
-	    //session().selectFrame("Mainxadminx310");
-	    //session().selectFrame("index=0");// aller au top frame (je crois qu'il faut selectionner un frame...)
-	    
 	    // Chercher le site
-	    //session().type("search_site", getCurrentTestSiteName());
-	    session().type("//table[@class='OsylManager-panel']//td/input[@class='gwt-TextBox']", siteToDelete);//
+	    String searchTextBox = "//table[@class='OsylManager-panel']//td/input[@class='gwt-TextBox']";
+	    waitForElement(searchTextBox, 10000);
+	    session().type(searchTextBox, siteToDelete);//
 	    clickWithMouse("//div[text()='Chercher']/parent::div");
 	    pause(4000);
 	    

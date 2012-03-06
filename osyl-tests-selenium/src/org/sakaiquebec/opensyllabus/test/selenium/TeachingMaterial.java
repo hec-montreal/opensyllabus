@@ -28,6 +28,7 @@ import java.util.Date;
 
 import org.sakaiquebec.opensyllabus.test.selenium.utils.AddFileResourcePopup;
 import org.sakaiquebec.opensyllabus.test.selenium.utils.PopupUtils;
+import org.sakaiquebec.opensyllabus.test.selenium.utils.ResourceXpathHelper;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -55,7 +56,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	// We log in
 	logInAsAdmin(webSite);
 	try {
-	    deleteTestSite(false);
+	    deleteTestSite(getCurrentTestSiteName(), false);
 	    goToCurrentSite();	    
 	} catch (IllegalStateException e) {
 	    createTestSite();
@@ -406,7 +407,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 	// Add, Modify and delete Citation //
 	// ---------------------------------------------------------------------------//
-	prettyLog("addBiblioResource: " + "NewListe" + newText1);
+	prettyLog("add Citation: " + "NewListe" + newText1);
 	// Add new Citation
 	clickAddItem("addBiblioResource");
 
@@ -477,7 +478,9 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	session().type("//tr[19]/td/table/tbody/tr/td[3]/input", ISBN);
 
 	// Close Window
-	session().click("//tr[22]/td/table/tbody/tr/td/button");
+	//session().click("//tr[22]/td/table/tbody/tr/td/button");
+	//kkkkkk
+	session().click(PopupUtils.DocumentAttributesPopup.getButtonOk());
 	pause();
 	pause();
 
@@ -493,21 +496,18 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	pause();
 
 	// Close Editor
-	session().click("//td/table/tbody/tr/td[1]/button");
+	//session().click("//td/table/tbody/tr/td[1]/button");
+	session().click(PopupUtils.DocumentEditPopup.getButtonOk());// ce n'est pas DocumentEditPopup. Mais nous avons besoin du OK button....
 	pause();
 
 	// ------------------------------------------
+	// We delete citation
 	prettyLog("Delete citation");
-	// We delete new citation
-	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");
-	pause();
-
-	session()
-		.click(
-			"//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+	session().click(ResourceXpathHelper.getButtonDelete(0));
+	session().click("//tr[2]/td/table/tbody/tr/td/button");// confirm deletion
 	pause();
 	log("Citation deleted");
-	pause();
+	//pause();
 	
 	//Add message to log file
 	logFile(TEACHING_MATERIAL_TEST, CT_054, PASSED);

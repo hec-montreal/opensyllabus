@@ -913,11 +913,11 @@ public class AssessmentTest extends AbstractOSYLTest {
 	session().click(ResourceXpathHelper.getButtonDelete(0));
 	//session().click("//tr[" + Val2 + "]/td/table/tbody/tr/td[2]/div/table[2]" + "/tbody/tr/td[2]/button");
 	session().click("//tr[2]/td/table/tbody/tr/td/button");// confirm deletion
-	pause();
+	pause(2000);
 	
 	// Save modifications
 	saveCourseOutline();
-	pause();	
+	pause(1000);	
 	//Add message to log file
 	logFile(ASSESSMENT_TEST, CT_070, PASSED);	
 	
