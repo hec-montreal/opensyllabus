@@ -24,8 +24,6 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import org.openqa.selenium.internal.seleniumemulation.IsElementPresent;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 

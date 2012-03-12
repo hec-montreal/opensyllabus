@@ -504,7 +504,11 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    // Warning: the next command won't work if the current active tool
 	    // is already "Sites".
 	    //session().click("//div[@id='toolMenu']/ul/li[5]/a/span");// "Clicker sur 'Gestionnaire de site de cours'
-	    session().click("//span[text() = 'Gestionnaire de sites de cours']/parent::a");
+	   
+	    //session().click("//span[text() = 'Gestionnaire de sites de cours']/parent::a");
+	    session().click("//a[@class='icon-sakai-opensyllabus-manager-tool']");
+	    // osylManagerChoice = "//*[@class='icon-sakai-opensyllabus-manager-tool']"; // "//div[@id='toolMenu']/ul/li[5]/a/span";
+
 
 	    waitForPageToLoad();
 
