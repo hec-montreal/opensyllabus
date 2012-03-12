@@ -89,8 +89,8 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
     protected static final String LEVEL_PUBLIC = "public";
 
     //Result of scenario
-    protected static final String PASSED = "PASSÃ‰";
-    protected static final String FAILED = "Ã‰CHEC";
+    protected static final String PASSED = "PASSÉ";
+    protected static final String FAILED = "ÉCHEC";
 
     //Environments
     protected static final String IC_ORACLE = "icoracle";
@@ -110,51 +110,51 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
     protected static final String TEXT_TEST = "TextTest";
 
 	//Uses Cases for testing
-    protected static final String CT_001 = "001-Associer plan de cours enfant Ã  un parent";
-    protected static final String CT_002 = "002-CrÃ©er un plan de cours non-associer Ã  un cours";
-	protected static final String CT_003 = "003-CrÃ©er un plan de cours - Plan de cours existant";
+    protected static final String CT_001 = "001-Associer plan de cours enfant à un parent";
+    protected static final String CT_002 = "002-Créer un plan de cours non-associer à un cours";
+	protected static final String CT_003 = "003-Créer un plan de cours - Plan de cours existant";
 	protected static final String CT_004 = "004-Dissocier plan de cours parent d'un plan enfant";
-	protected static final String CT_005 = "005-Ajouter Outil de remise Ã©lectronique";
-	protected static final String CT_006 = "006-Ajouter texte Ã  la section prÃ©sentation";
-    protected static final String CT_007 = "007-Ajouter une coordonnÃ©e";
-    protected static final String CT_008 = "008-Ajouter une sÃ©ance de cours";
-    protected static final String CT_009 = "009-Ajouter une Ã©valuation";
-    protected static final String CT_010 = "010-Supprimer texte de la section prÃ©sentation";
-    protected static final String CT_013 = "013-Modifier un document dans une sÃ©ance de cours";
+	protected static final String CT_005 = "005-Ajouter Outil de remise électronique";
+	protected static final String CT_006 = "006-Ajouter texte à la section présentation";
+    protected static final String CT_007 = "007-Ajouter une coordonnée";
+    protected static final String CT_008 = "008-Ajouter une séance de cours";
+    protected static final String CT_009 = "009-Ajouter une évaluation";
+    protected static final String CT_010 = "010-Supprimer texte de la section présentation";
+    protected static final String CT_013 = "013-Modifier un document dans une séance de cours";
     protected static final String CT_015 = "015-Modifier Hyperlien";
-    protected static final String CT_016 = "016-Supprimer une sÃ©ance de cours";
-    protected static final String CT_018 = "018-Modifier une coordonnÃ©es";
-    protected static final String CT_020 = "020-Supprimer Document(dans une sÃ©ance)";
-    protected static final String CT_024 = "024-Supprimer une coordonnÃ©e";
+    protected static final String CT_016 = "016-Supprimer une séance de cours";
+    protected static final String CT_018 = "018-Modifier une coordonnées";
+    protected static final String CT_020 = "020-Supprimer Document(dans une séance)";
+    protected static final String CT_024 = "024-Supprimer une coordonnée";
     protected static final String CT_028 = "028-Ajouter Hyperlien";
-    protected static final String CT_027 = "027-Ajouter Document (dans une SÃ©ance)";
-	protected static final String CT_030 = "030-Modifier une Ã‰valuation";
-	protected static final String CT_045 = "045-Ajouter une citation de type livre d'une liste Ã  un content unit";
-	protected static final String CT_050 = "050-Ajouter une Ã©valuation avec des valeurs invalides Ã  la crÃ©ation";
+    protected static final String CT_027 = "027-Ajouter Document (dans une Séance)";
+	protected static final String CT_030 = "030-Modifier une Évaluation";
+	protected static final String CT_045 = "045-Ajouter une citation de type livre d'une liste à un content unit";
+	protected static final String CT_050 = "050-Ajouter une évaluation avec des valeurs invalides à la création";
 	protected static final String CT_054 = "054-Supprimer une liste de citations";
-    protected static final String CT_061 = "061-GÃ©nÃ©rer aperÃ§u Ã©tudiants inscrits";
+    protected static final String CT_061 = "061-Générer aperçu étudiants inscrits";
     protected static final String CT_067 = "067-Ajouter une nouvelle (Section nouvelle)";
-	protected static final String CT_068 = "068-Ajouter une nouvelle (SÃ©ance)";
-    protected static final String CT_069 = "069-Consulter un plan de cours vue Ã©tudiant";
-	protected static final String CT_070 = "070-Supprimer un devoir Ã©valuÃ©";
+	protected static final String CT_068 = "068-Ajouter une nouvelle (Séance)";
+    protected static final String CT_069 = "069-Consulter un plan de cours vue étudiant";
+	protected static final String CT_070 = "070-Supprimer un devoir évalué";
 	protected static final String CT_076 = "076-Ajouter un regroupement au premier niveau (cas limite)";
 	protected static final String CT_084 = "084-Modifier un regroupement de premier niveau";
-	protected static final String CT_096 = "096-Ajouter texte, document, rÃ©f. biblio., hyperlien et nouvelle en diffusion \"Ã©tudiants inscrits\" dans un plan de cours coordonnÃ©";
+	protected static final String CT_096 = "096-Ajouter texte, document, réf. biblio., hyperlien et nouvelle en diffusion \"étudiants inscrits\" dans un plan de cours coordonné";
     protected static final String CT_087 = "087-Supprimer un regroupement de premier niveau";
-    protected static final String CT_104 = "104-Ajouter une citation de type article d'une liste Ã  un content unit";
-    protected static final String CT_105 = "105-Ajouter l'outil de remise Ã©lectronique";
-    protected static final String CT_106 = "106-Modifier le lien vers l'outil de remise Ã©lectronique";
-    protected static final String CT_119 = "119-Publier un plan de cours - scÃ©nario principal";
-    protected static final String CT_0091 = "CT-???-Ajouter un texte dans Ã©valuation";
-    protected static final String CT_0092 = "CT-???-Ajouter un document dans Ã©valuation";
-    protected static final String CT_0093 = "CT-???-Ajouter une rÃ©f. biblio. dans Ã©valuation";
-    protected static final String CT_0101 = "CT-???-Ajouter un texte dans matÃ©riel pÃ©dagogique";
-    protected static final String CT_0102 = "CT-???-Ajouter un document dans matÃ©riel pÃ©dagogique";
-    protected static final String CT_0103 = "CT-???-Ajouter une rÃ©f. biblio. dans matÃ©riel pÃ©dagogique";
-    protected static final String CT_0111 = "CT-???-Ajouter un texte dans sÃ©ances";
-    protected static final String CT_0112 = "CT-???-Ajouter un document dans sÃ©ances";
-    protected static final String CT_0113 = "CT-???-Ajouter une rÃ©f. biblio. dans sÃ©ances";
-    protected static final String PT_19_2 = "PT 19.2 CrÃ©ation du devoir Ã©valuÃ© Ã  partir de l'Outil de remise";
+    protected static final String CT_104 = "104-Ajouter une citation de type article d'une liste à un content unit";
+    protected static final String CT_105 = "105-Ajouter l'outil de remise électronique";
+    protected static final String CT_106 = "106-Modifier le lien vers l'outil de remise électronique";
+    protected static final String CT_119 = "119-Publier un plan de cours - scénario principal";
+    protected static final String CT_0091 = "CT-???-Ajouter un texte dans évaluation";
+    protected static final String CT_0092 = "CT-???-Ajouter un document dans évaluation";
+    protected static final String CT_0093 = "CT-???-Ajouter une réf. biblio. dans évaluation";
+    protected static final String CT_0101 = "CT-???-Ajouter un texte dans matériel pédagogique";
+    protected static final String CT_0102 = "CT-???-Ajouter un document dans matériel pédagogique";
+    protected static final String CT_0103 = "CT-???-Ajouter une réf. biblio. dans matériel pédagogique";
+    protected static final String CT_0111 = "CT-???-Ajouter un texte dans séances";
+    protected static final String CT_0112 = "CT-???-Ajouter un document dans séances";
+    protected static final String CT_0113 = "CT-???-Ajouter une réf. biblio. dans séances";
+    protected static final String PT_19_2 = "PT 19.2 Création du devoir évalué à partir de l'Outil de remise";
 
     //File and directory for upload test
     //protected static final String FILE_DIR = "C:\\Documents and Settings\\utilisateur\\Documents\\";
@@ -256,6 +256,9 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	session().setTimeout("180000");
 	session().open(url);
 	session().setTimeout("300000");
+	
+	waitForElement("//input[@id='eid']", 5000);	
+	
 	if (!session().isElementPresent("eid")
 		&& session().isElementPresent("loginLink1")) {
 	    // We seem to be logged in already. This happens when RC fails to
@@ -265,6 +268,46 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	}
 	session().type("eid", userString);  // admin
 	session().type("pw", passwordString); // osyl123
+	session().click("submit");
+
+
+	session().waitForPageToLoad("300000");
+	assertFalse("Login failed", session().isElementPresent(
+		"//div[@class=\"alertMessage\"]"));
+    }
+    
+    /**
+     * Log in Sakai using the username passed.
+     *
+     * @param String url of the Sakai instance to log in
+     */
+    public void logIn(String url, String username, String password) throws Exception {
+	
+	prettyLog("Log in as " + username + " at "+ url);
+	
+	if (!url.endsWith("/portal")) {
+	    if (!url.endsWith("/")) {
+		url += "/";
+	    }
+	    url += "portal";
+	}
+	// First access, we use a high timeout value as Sakai may have just
+	// started and not be ready yet
+	session().setTimeout("180000");
+	session().open(url);
+	session().setTimeout("300000");
+
+	waitForElement("//input[@id='eid']", 5000);	
+	
+	if (!session().isElementPresent("eid")
+		&& session().isElementPresent("loginLink1")) {
+	    // We seem to be logged in already. This happens when RC fails to
+	    // close MSIE after a test.
+	    log("logInAsAdmin: We are already logged in!");
+	    return;
+	}
+	session().type("eid", username);  // admin
+	session().type("pw", password); // osyl123
 	session().click("submit");
 
 
@@ -306,7 +349,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 		//Open create site
 		String createSite = "//tr[7]/td/table/tbody/tr/td[1]/div/div";
 		pause();
-		if (session().isElementPresent("//*[text()='CrÃ©er un nouveau site...']")) {			
+		if (session().isElementPresent("//*[text()='Créer un nouveau site...']")) {			
 			clickWithMouse(createSite);
 		}
 		pause(10000);
@@ -322,8 +365,8 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 				"value=default");
 		
 		// Click on button "Create Course"
-		// Xpath: SÃ©lectionne Ã©lÃ©ment 'input' dont le sibling est un div contenant le texte 'CrÃ©er'
-		smartMouse("//div[text()='CrÃ©er']/preceding-sibling::input");
+		// Xpath: Sélectionne élément 'input' dont le sibling est un div contenant le texte 'Créer'
+		smartMouse("//div[text()='Créer']/preceding-sibling::input");
 		
 		//smartMouse("//tr[5]/td/table/tbody/tr/td[2]/select");
 		pause(10000);
@@ -498,8 +541,8 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	try {
 
 	    // Why do we go to the Admin page ?????????
-	   // session().open("/portal/site/%7Eadmin");
-	   //  waitForPageToLoad();
+	    // session().open("/portal/site/%7Eadmin");
+	    //  waitForPageToLoad();
 	    
 	    // Warning: the next command won't work if the current active tool
 	    // is already "Sites".
@@ -508,7 +551,6 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    //session().click("//span[text() = 'Gestionnaire de sites de cours']/parent::a");
 	    session().click("//a[@class='icon-sakai-opensyllabus-manager-tool']");
 	    // osylManagerChoice = "//*[@class='icon-sakai-opensyllabus-manager-tool']"; // "//div[@id='toolMenu']/ul/li[5]/a/span";
-
 
 	    waitForPageToLoad();
 
@@ -525,7 +567,20 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 		return;
 	    }
 	    
-	    if (session().isTextPresent(getCurrentTestSiteName())) {
+	    /**
+	     * Verify if site to delete exists
+	     */
+	    String siteCheckboxLocator = "//td[text() = '" + getCurrentTestSiteName() + "']/preceding-sibling::td/input";
+	    boolean siteFound;
+	    
+	    try {
+		waitForElement(siteCheckboxLocator, 5000);
+		siteFound = true;
+	    } catch (Exception e) {
+		siteFound = false;
+	    }
+
+	    if (siteFound) {
 		log("Found site '" + getCurrentTestSiteName() + "' to delete");
 	    } else {
 		if (fail) {
@@ -537,10 +592,11 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 		    return;
 		}
 	    }
+	    
 
-	    // Click du checkbox du site (s'il est trouvÃ©!)
+	    // Click du checkbox du site (s'il est trouvé!)
 	    //session().click("link=ID du site");
-	    session().click("//td[text() = '" + getCurrentTestSiteName() + "']/preceding-sibling::td/input");
+	    session().click(siteCheckboxLocator); 
 	    
 	    
 	    clickWithMouse("//div[text() = 'Supprimer']/parent::div");
@@ -549,13 +605,11 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    //session().click("eventSubmit_doRemove_confirmed");
 	    session().click("//button[text()='Ok']"); // click du bouton "ok"
 	    pause(3000);
-	    
+    	    
 	    // removed by Thanh!
 	    //assertFalse("Site not deleted as expected!", session()
-		//    .isTextPresent(getCurrentTestSiteName()));
-	    
-	    
-	    
+	    //    .isTextPresent(getCurrentTestSiteName()));
+    	    
 	} catch (Exception e) {
 	    // do nothing. Just log error found.
 	    log("Exception dans deleteTestSite (cas normal): " + e.getMessage());
@@ -616,7 +670,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 		}
 	    }
 
-	    // Click du checkbox du site (s'il est trouvÃ©!)
+	    // Click du checkbox du site (s'il est trouvé!)
 	    String siteCheckbox = "//td[text() = '" + siteToDelete + "']/preceding-sibling::td/input";
 	    if(session().isElementPresent(siteCheckbox)) {
         	session().click(siteCheckbox);
@@ -714,10 +768,10 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 		msg.append("CT-");
 		msg.append(ctName);
 		msg.append(',');
-		msg.append("rÃ©sultat:");
+		msg.append("résultat:");
 		msg.append(result);
 		msg.append(',');
-		msg.append("rÃ´le:");
+		msg.append("rôle:");
 		msg.append(role);
 		msg.append(',');
 		msg.append("fureteur:");
