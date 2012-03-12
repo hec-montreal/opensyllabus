@@ -7,7 +7,7 @@
    <parameter name="seleniumPort" value="4444"/>
    <parameter name="browser" value="*firefox"/>
    <parameter name="fileServer" value="http://jive2.hec.ca/osyl/selenium/TestingData/" />
-   <parameter name="fileFolder" value="C:\Documents and Settings\utilisateur\Documents\" />
+   <parameter name="fileFolder" value="./test-files" />
 
    <test name="Sakai OSYLEditor test suite for Firefox">
       <classes>
