@@ -328,7 +328,8 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 			log("** " + parentText + " ** is present **");
 		} else {
 			log("** " + parentText + " ** is NOT present but it's OK**");
-		}		
+		}
+		pause(1000);
 
 	    // verify if text of parent is present in child site
 	    session().selectFrame("relative=parent");
