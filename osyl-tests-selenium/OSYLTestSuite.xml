@@ -3,10 +3,11 @@
 <suite name="OSYLSuite-FF" verbose="10">
    <!-- webSite is not defined here as it specified on command line to avoid
         having too many xml suite files. -->
+   <parameter name="webSite" value="http://osyldev.hec.ca:12346/portal/"/>
    <parameter name="seleniumHost" value="seleniumrc.hec.ca"/>
-   <parameter name="seleniumPort" value="5556"/>
+   <parameter name="seleniumPort" value="4444"/>
    <parameter name="browser" value="*firefox"/>
-   <parameter name="fileFolder" value="C:\Documents and Settings\utilisateur\Documents\" />
+   <parameter name="fileFolder" value=".\test-files\" />
    
    <test name="Sakai OSYLEditor test suite for Firefox">
       <classes>
