@@ -990,7 +990,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	    session().mouseUpAt(imageLocator, "10,10");
 	}
 	// pause();
-	waitForElement("//div[@class='Osyl-WorkspaceView-Header' and text()='Évaluations']", 3000);//LANG
+	waitForElement("//div[@class='Osyl-WorkspaceView-Header' and contains(text(),'valuations')]", 3000);//LANG
     }
 
     private void createAssignmentGrades() {

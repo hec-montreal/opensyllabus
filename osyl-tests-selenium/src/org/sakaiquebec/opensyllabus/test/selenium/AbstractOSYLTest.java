@@ -89,8 +89,8 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
     protected static final String LEVEL_PUBLIC = "public";
 
     //Result of scenario
-    protected static final String PASSED = "PASSÉ";
-    protected static final String FAILED = "ÉCHEC";
+    protected static final String PASSED = "PASSï¿½";
+    protected static final String FAILED = "ï¿½CHEC";
 
     //Environments
     protected static final String IC_ORACLE = "icoracle";
@@ -110,51 +110,51 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
     protected static final String TEXT_TEST = "TextTest";
 
 	//Uses Cases for testing
-    protected static final String CT_001 = "001-Associer plan de cours enfant à un parent";
-    protected static final String CT_002 = "002-Créer un plan de cours non-associer à un cours";
-	protected static final String CT_003 = "003-Créer un plan de cours - Plan de cours existant";
+    protected static final String CT_001 = "001-Associer plan de cours enfant ï¿½ un parent";
+    protected static final String CT_002 = "002-Crï¿½er un plan de cours non-associer ï¿½ un cours";
+	protected static final String CT_003 = "003-Crï¿½er un plan de cours - Plan de cours existant";
 	protected static final String CT_004 = "004-Dissocier plan de cours parent d'un plan enfant";
-	protected static final String CT_005 = "005-Ajouter Outil de remise électronique";
-	protected static final String CT_006 = "006-Ajouter texte à la section présentation";
-    protected static final String CT_007 = "007-Ajouter une coordonnée";
-    protected static final String CT_008 = "008-Ajouter une séance de cours";
-    protected static final String CT_009 = "009-Ajouter une évaluation";
-    protected static final String CT_010 = "010-Supprimer texte de la section présentation";
-    protected static final String CT_013 = "013-Modifier un document dans une séance de cours";
+	protected static final String CT_005 = "005-Ajouter Outil de remise ï¿½lectronique";
+	protected static final String CT_006 = "006-Ajouter texte ï¿½ la section prï¿½sentation";
+    protected static final String CT_007 = "007-Ajouter une coordonnï¿½e";
+    protected static final String CT_008 = "008-Ajouter une sï¿½ance de cours";
+    protected static final String CT_009 = "009-Ajouter une ï¿½valuation";
+    protected static final String CT_010 = "010-Supprimer texte de la section prï¿½sentation";
+    protected static final String CT_013 = "013-Modifier un document dans une sï¿½ance de cours";
     protected static final String CT_015 = "015-Modifier Hyperlien";
-    protected static final String CT_016 = "016-Supprimer une séance de cours";
-    protected static final String CT_018 = "018-Modifier une coordonnées";
-    protected static final String CT_020 = "020-Supprimer Document(dans une séance)";
-    protected static final String CT_024 = "024-Supprimer une coordonnée";
+    protected static final String CT_016 = "016-Supprimer une sï¿½ance de cours";
+    protected static final String CT_018 = "018-Modifier une coordonnï¿½es";
+    protected static final String CT_020 = "020-Supprimer Document(dans une sï¿½ance)";
+    protected static final String CT_024 = "024-Supprimer une coordonnï¿½e";
     protected static final String CT_028 = "028-Ajouter Hyperlien";
-    protected static final String CT_027 = "027-Ajouter Document (dans une Séance)";
-	protected static final String CT_030 = "030-Modifier une Évaluation";
-	protected static final String CT_045 = "045-Ajouter une citation de type livre d'une liste à un content unit";
-	protected static final String CT_050 = "050-Ajouter une évaluation avec des valeurs invalides à la création";
+    protected static final String CT_027 = "027-Ajouter Document (dans une Sï¿½ance)";
+	protected static final String CT_030 = "030-Modifier une ï¿½valuation";
+	protected static final String CT_045 = "045-Ajouter une citation de type livre d'une liste ï¿½ un content unit";
+	protected static final String CT_050 = "050-Ajouter une ï¿½valuation avec des valeurs invalides ï¿½ la crï¿½ation";
 	protected static final String CT_054 = "054-Supprimer une liste de citations";
-    protected static final String CT_061 = "061-Générer aperçu étudiants inscrits";
+    protected static final String CT_061 = "061-Gï¿½nï¿½rer aperï¿½u ï¿½tudiants inscrits";
     protected static final String CT_067 = "067-Ajouter une nouvelle (Section nouvelle)";
-	protected static final String CT_068 = "068-Ajouter une nouvelle (Séance)";
-    protected static final String CT_069 = "069-Consulter un plan de cours vue étudiant";
-	protected static final String CT_070 = "070-Supprimer un devoir évalué";
+	protected static final String CT_068 = "068-Ajouter une nouvelle (Sï¿½ance)";
+    protected static final String CT_069 = "069-Consulter un plan de cours vue ï¿½tudiant";
+	protected static final String CT_070 = "070-Supprimer un devoir ï¿½valuï¿½";
 	protected static final String CT_076 = "076-Ajouter un regroupement au premier niveau (cas limite)";
 	protected static final String CT_084 = "084-Modifier un regroupement de premier niveau";
-	protected static final String CT_096 = "096-Ajouter texte, document, réf. biblio., hyperlien et nouvelle en diffusion \"étudiants inscrits\" dans un plan de cours coordonné";
+	protected static final String CT_096 = "096-Ajouter texte, document, rï¿½f. biblio., hyperlien et nouvelle en diffusion \"ï¿½tudiants inscrits\" dans un plan de cours coordonnï¿½";
     protected static final String CT_087 = "087-Supprimer un regroupement de premier niveau";
-    protected static final String CT_104 = "104-Ajouter une citation de type article d'une liste à un content unit";
-    protected static final String CT_105 = "105-Ajouter l'outil de remise électronique";
-    protected static final String CT_106 = "106-Modifier le lien vers l'outil de remise électronique";
-    protected static final String CT_119 = "119-Publier un plan de cours - scénario principal";
-    protected static final String CT_0091 = "CT-???-Ajouter un texte dans évaluation";
-    protected static final String CT_0092 = "CT-???-Ajouter un document dans évaluation";
-    protected static final String CT_0093 = "CT-???-Ajouter une réf. biblio. dans évaluation";
-    protected static final String CT_0101 = "CT-???-Ajouter un texte dans matériel pédagogique";
-    protected static final String CT_0102 = "CT-???-Ajouter un document dans matériel pédagogique";
-    protected static final String CT_0103 = "CT-???-Ajouter une réf. biblio. dans matériel pédagogique";
-    protected static final String CT_0111 = "CT-???-Ajouter un texte dans séances";
-    protected static final String CT_0112 = "CT-???-Ajouter un document dans séances";
-    protected static final String CT_0113 = "CT-???-Ajouter une réf. biblio. dans séances";
-    protected static final String PT_19_2 = "PT 19.2 Création du devoir évalué à partir de l'Outil de remise";
+    protected static final String CT_104 = "104-Ajouter une citation de type article d'une liste ï¿½ un content unit";
+    protected static final String CT_105 = "105-Ajouter l'outil de remise ï¿½lectronique";
+    protected static final String CT_106 = "106-Modifier le lien vers l'outil de remise ï¿½lectronique";
+    protected static final String CT_119 = "119-Publier un plan de cours - scï¿½nario principal";
+    protected static final String CT_0091 = "CT-???-Ajouter un texte dans ï¿½valuation";
+    protected static final String CT_0092 = "CT-???-Ajouter un document dans ï¿½valuation";
+    protected static final String CT_0093 = "CT-???-Ajouter une rï¿½f. biblio. dans ï¿½valuation";
+    protected static final String CT_0101 = "CT-???-Ajouter un texte dans matï¿½riel pï¿½dagogique";
+    protected static final String CT_0102 = "CT-???-Ajouter un document dans matï¿½riel pï¿½dagogique";
+    protected static final String CT_0103 = "CT-???-Ajouter une rï¿½f. biblio. dans matï¿½riel pï¿½dagogique";
+    protected static final String CT_0111 = "CT-???-Ajouter un texte dans sï¿½ances";
+    protected static final String CT_0112 = "CT-???-Ajouter un document dans sï¿½ances";
+    protected static final String CT_0113 = "CT-???-Ajouter une rï¿½f. biblio. dans sï¿½ances";
+    protected static final String PT_19_2 = "PT 19.2 Crï¿½ation du devoir ï¿½valuï¿½ ï¿½ partir de l'Outil de remise";
 
     //File and directory for upload test
     //protected static final String FILE_DIR = "C:\\Documents and Settings\\utilisateur\\Documents\\";
@@ -347,9 +347,9 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 		goToOsylManagerTool();
 		
 		//Open create site
-		String createSite = "//tr[7]/td/table/tbody/tr/td[1]/div/div";
 		pause();
-		if (session().isElementPresent("//*[text()='Créer un nouveau site...']")) {			
+		if (session().isElementPresent("//div[contains(text(),'er un nouveau site')]")) { // @LITERAL-TEXT		
+			String createSite = "//tr[7]/td/table/tbody/tr/td[1]/div/div";
 			clickWithMouse(createSite);
 		}
 		pause(10000);
@@ -365,8 +365,9 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 				"value=default");
 		
 		// Click on button "Create Course"
-		// Xpath: Sélectionne élément 'input' dont le sibling est un div contenant le texte 'Créer'
-		smartMouse("//div[text()='Créer']/preceding-sibling::input");
+		// Xpath: Sï¿½lectionne ï¿½lï¿½ment 'input' dont le sibling est un div contenant le texte 'Crï¿½er'
+		//smartMouse("//div[text()='Crï¿½er']/preceding-sibling::input");
+		smartMouse("//tr[@class='popupMiddle']//div[@class='html-face']");// le bouton 'Creer'
 		
 		//smartMouse("//tr[5]/td/table/tbody/tr/td[2]/select");
 		pause(10000);
@@ -594,7 +595,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    }
 	    
 
-	    // Click du checkbox du site (s'il est trouvé!)
+	    // Click du checkbox du site (s'il est trouvï¿½!)
 	    //session().click("link=ID du site");
 	    session().click(siteCheckboxLocator); 
 	    
@@ -670,7 +671,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 		}
 	    }
 
-	    // Click du checkbox du site (s'il est trouvé!)
+	    // Click du checkbox du site (s'il est trouvï¿½!)
 	    String siteCheckbox = "//td[text() = '" + siteToDelete + "']/preceding-sibling::td/input";
 	    if(session().isElementPresent(siteCheckbox)) {
         	session().click(siteCheckbox);
@@ -768,10 +769,10 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 		msg.append("CT-");
 		msg.append(ctName);
 		msg.append(',');
-		msg.append("résultat:");
+		msg.append("rï¿½sultat:");
 		msg.append(result);
 		msg.append(',');
-		msg.append("rôle:");
+		msg.append("rï¿½le:");
 		msg.append(role);
 		msg.append(',');
 		msg.append("fureteur:");
