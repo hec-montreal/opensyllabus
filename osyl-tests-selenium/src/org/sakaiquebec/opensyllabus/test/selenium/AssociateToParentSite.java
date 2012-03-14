@@ -147,12 +147,21 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    /**
 	     * A p
 	     */
+	    
+	    pause();// safety pause because error here!
+	    
 	    session().click("//tr[@class='OsylManager-scrollTable-row']/td/input"); // select row containing our site
+
+	    pause();// safety pause because error here!
+	    
 	    //ensureElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'Lier')]]");
 	    String locator = "//tr[2]/td/table/tbody/tr/td/div";	    	                      	    
 	    ensureElementPresent(locator);
 	    log("Link action is available");
 	    //clickActionWithLabel("Lier");
+
+	    pause();// safety pause because error here!
+
 	    smartMouse(locator);
 	    ensureElementPresent("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/input[@class='OsylManager-form-element']");
 	    session().type("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/input[@class='OsylManager-form-element']",
@@ -226,13 +235,24 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    session().type("//input[@class='gwt-TextBox']", childSiteName);
 	    clickSearch();
 	    waitForListToShow(childSiteName);
+	    
+
+	    pause();// safety pause because error here!
+
 	    session().click(
 		    "//tr[@class='OsylManager-scrollTable-row']/td/input");
+	    
 	    //ensureElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'Lier')]]");
 	    locator = "//tr[2]/td/table/tbody/tr/td/div";	    
 	    ensureElementPresent(locator);	    
 	    //clickActionWithLabel("Lier");
+
+	    pause();// safety pause because error here!
+
 	    smartMouse(locator);
+
+	    pause();// safety pause because error here!
+
 	    ensureElementPresent("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/input[@class='OsylManager-form-element']");
 	    session().type("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/input[@class='OsylManager-form-element']",
 		    getCurrentTestSiteName());

@@ -912,12 +912,14 @@ public class AssessmentTest extends AbstractOSYLTest {
 	prettyLog("Delete first assessment");
 	session().click(ResourceXpathHelper.getButtonDelete(0));
 	//session().click("//tr[" + Val2 + "]/td/table/tbody/tr/td[2]/div/table[2]" + "/tbody/tr/td[2]/button");
-	session().click("//tr[2]/td/table/tbody/tr/td/button");// confirm deletion
-	pause(2000);
+
+	//session().click("//tr[2]/td/table/tbody/tr/td/button");// confirm deletion
+	session().click("xpath=(//div[@class='gwt-DialogBox']//button)[1]");
+	pause(1000);
 	
 	// Save modifications
 	saveCourseOutline();
-	pause(1000);	
+	pause(3000);	
 	//Add message to log file
 	logFile(ASSESSMENT_TEST, CT_070, PASSED);	
 	
