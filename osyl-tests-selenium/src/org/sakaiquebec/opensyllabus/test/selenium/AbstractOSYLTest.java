@@ -1614,5 +1614,16 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	}
     }
 
+    /**
+     * Check that file exists.
+     * @param filePath
+     * @throws Exception
+     */
+    public void assertFileExists(String filePath) throws Exception {
+	File file = new File(filePath);
+	assertTrue("File existence: " + filePath, file.exists());// verify file existence
+    }
+
+
 
 }
