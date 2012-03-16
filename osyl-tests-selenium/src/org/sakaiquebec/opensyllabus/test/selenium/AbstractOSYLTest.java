@@ -30,6 +30,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.sakaiquebec.opensyllabus.test.selenium.MsgLog;
 import org.sakaiquebec.opensyllabus.test.selenium.utils.AddFileResourcePopup;
 import org.sakaiquebec.opensyllabus.test.selenium.utils.ResourceXpathHelper;
@@ -182,6 +183,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	
 	log("Starting test with browser: " + browser);
 	initCurrentTestSiteName(); // siteName = "Se-2012-02-21"
+
     }
 
     @AfterClass(alwaysRun = true)
@@ -201,11 +203,14 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
      * Cree le nom du site de test. Exemple 'Test_Se_2012_02_21'.
      */
     private void initCurrentTestSiteName() {
+	
+	//String randomSuffix = RandomStringUtils.randomAlphanumeric(10);
 	siteName =
 		TEST_SITE_BASE_NAME
 			+ (new SimpleDateFormat("yyyy_MM_dd"))
-				.format(new Date());
-	log("Test site is " + siteName);
+				.format(new Date()) ;
+				//"_" + randomSuffix;
+	prettyLog(">>> Test site name is " + siteName);
     }
 
     /**
@@ -1575,8 +1580,22 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
     private long testStartTime;
     
     protected void logStartTest() {
-	prettyLog(this.getClass().getSimpleName() + " started at " + timeStamp());
+	int pauseSecs = 30;
+	
+	log("");log("");// a few blank lines
+	prettyLog("===> " + this.getClass().getSimpleName() + " started at " + timeStamp() + " (" + pauseSecs + " secs pause)");
+	
+	/**
+	 * Pause 30 secs to make the test suite work!!
+	 * Not pausing WILL create a problem for test suites.
+	 * I dont know why!!!
+	 * @TODO Make this a configurable testNG parameter
+	 */ 
+	pause(pauseSecs * 1000);
+
 	testStartTime = System.currentTimeMillis();
+	
+	
     }
     
     protected void logEndTest() {
