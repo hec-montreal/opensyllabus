@@ -141,8 +141,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private final static String PROP_SITE_TERM_EID = "term_eid";
 
     private final static String PROP_SITE_TITLE = "title";
-    
-    private final static String PROP_SITE_ISFROZEN = "isfrozen";    
+
+    private final static String PROP_SITE_ISFROZEN = "isfrozen";
 
     /** the web content tool id **/
     private final static String WEB_CONTENT_TOOL_ID = "sakai.iframe";
@@ -153,13 +153,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
 
     public final static String SHARABLE_SECTION = "00";
-    
+
     public final static String DIRECTORY_TYPE_SITE = "directory";
 
     public final static String COURSE_TYPE_SITE = "course";
-    
-    private static final Log log =
-	    LogFactory.getLog(OsylManagerServiceImpl.class);
+
+    private static final Log log = LogFactory
+	    .getLog(OsylManagerServiceImpl.class);
 
     // Key to define the delay (in minutes) to wait before deleting export zip
     // files in sakai.properties
@@ -497,8 +497,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    tempList.add(line);
 			else {
 			    oldId =
-				    line.substring(CITATION_TAG.length(), line
-					    .length());
+				    line.substring(CITATION_TAG.length(),
+					    line.length());
 			    oldReferences.add(oldId);
 			}
 
@@ -719,7 +719,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    newResource.getPropertiesEdit().addProperty(
 			    ResourceProperties.PROP_TYPE_RESOURCE,
 			    coResProxy.getResource().getProperty(
-				    COPropertiesType.ASM_RESOURCE_TYPE));	    
+				    COPropertiesType.ASM_RESOURCE_TYPE));
 
 		    contentHostingService.commitResource(newResource,
 			    NotificationService.NOTI_NONE);
@@ -772,17 +772,18 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    String searchTerm) {
 
 	Map<String, String> siteMap = new HashMap<String, String>();
-	@SuppressWarnings("unchecked")	
+	@SuppressWarnings("unchecked")
 	String term = "";
 	if (searchTerm.equals("")) {
 	    term = null;
 	} else {
 	    term = searchTerm;
 	}
-	String[] typesToSearch = new String[]{COURSE_TYPE_SITE};	
+	String[] typesToSearch = new String[] { COURSE_TYPE_SITE };
 	List<Site> sites =
-		siteService.getSites(SiteService.SelectionType.ACCESS, typesToSearch,
-			term, null, SiteService.SortType.TITLE_ASC, null);
+		siteService.getSites(SiteService.SelectionType.ACCESS,
+			typesToSearch, term, null,
+			SiteService.SortType.TITLE_ASC, null);
 	for (Iterator<Site> siteIterator = sites.iterator(); siteIterator
 		.hasNext();) {
 	    Site site = (Site) siteIterator.next();
@@ -801,11 +802,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    for (String siteId : siteIds) {
 				isInHierarchy =
 					isInHierarchy
-						|| isSiteinSiteHierarchy(site
-							.getId(), siteId);
+						|| isSiteinSiteHierarchy(
+							site.getId(), siteId);
 			    }
 			    if (!isInHierarchy && !getFrozenValue(site))
-			    	siteMap.put(site.getId(), site.getTitle());
+				siteMap.put(site.getId(), site.getTitle());
 			}
 			break;
 		    }
@@ -1029,8 +1030,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			siteService.getSite(((COSite) iter.next()).getSiteId());
 		String id = getSiteReference(site) + TEMP_DIRECTORY;
 		id = id.substring(8) + "/";
-		//enableSecurityAdvisor();
-	    log.info("*** deleteExpiredTemporaryExportFiles enableSecurityAdvisor() { OsylManagerServiceImpl *** ");	    
+		// enableSecurityAdvisor();
+		log.info("*** deleteExpiredTemporaryExportFiles enableSecurityAdvisor() { OsylManagerServiceImpl *** ");
 
 		if (collectionExist(id)) {
 		    ContentCollection contentCollection =
@@ -1068,7 +1069,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			contentHostingService.removeCollection(id);
 		    }
 		}
-		//securityService.popAdvisor();
+		// securityService.popAdvisor();
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
@@ -1188,7 +1189,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    rp.addProperty(PROP_SITE_TERM, term.getTitle());
 	    rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
 	    rp.addProperty(PROP_SITE_TITLE, courseOff.getTitle());
-	    rp.addProperty(PROP_SITE_ISFROZEN, "false");	    
+	    rp.addProperty(PROP_SITE_ISFROZEN, "false");
 
 	    site.setProviderGroupId(courseSectionId);
 	    siteService.save(site);
@@ -1231,7 +1232,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    rp.addProperty(PROP_SITE_TERM, term.getTitle());
 	    rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
 	    rp.addProperty(PROP_SITE_TITLE, courseOff.getTitle());
-	    rp.addProperty(PROP_SITE_ISFROZEN, "false");	    
+	    rp.addProperty(PROP_SITE_ISFROZEN, "false");
 
 	    site.setProviderGroupId(courseSectionId);
 	    siteService.save(site);
@@ -1251,7 +1252,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    rp.addProperty(PROP_SITE_TERM_EID, null);
 	    rp.addProperty(PROP_SITE_TITLE, null);
 	    rp.addProperty(PROP_SITE_ISFROZEN, null);
-	    
+
 	    site.setProviderGroupId(null);
 	    siteService.save(site);
 	}
@@ -1274,7 +1275,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    rp.addProperty(PROP_SITE_TERM, null);
 	    rp.addProperty(PROP_SITE_TERM_EID, null);
 	    rp.addProperty(PROP_SITE_TITLE, null);
-	    rp.addProperty(PROP_SITE_ISFROZEN, null);	    
+	    rp.addProperty(PROP_SITE_ISFROZEN, null);
 
 	    site.setProviderGroupId(null);
 	    siteService.save(site);
@@ -1300,92 +1301,95 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	Section courseS = null;
 	if (courseSets == null)
 	    return null;
-	List<AcademicSession> acadSessions = courseManagementService.getCurrentAcademicSessions();
+	List<AcademicSession> acadSessions =
+		courseManagementService.getCurrentAcademicSessions();
 	Date endDate = null;
-	Date startDate= null;
-	
-	for (AcademicSession acadSession: acadSessions){
-	
-	for (Iterator<CourseSet> cSets = courseSets.iterator(); cSets.hasNext();) {
-	    courseSet = cSets.next();
-	    courseOffs =
-		    courseManagementService
-			    .findCourseOfferings(courseSet.getEid(), acadSession.getEid());
-	    for (Iterator<CourseOffering> cOffs = courseOffs.iterator(); cOffs
+	Date startDate = null;
+
+	for (AcademicSession acadSession : acadSessions) {
+
+	    for (Iterator<CourseSet> cSets = courseSets.iterator(); cSets
 		    .hasNext();) {
-		courseOff = cOffs.next();
-		courseOffEid = courseOff.getEid();
-		sections = courseManagementService.getSections(courseOffEid);
-		if (courseOffEid.startsWith(startsWith)) {
-		    for (Iterator<Section> cSs = sections.iterator(); cSs
-			    .hasNext();) {
-			courseS = cSs.next();
-			String courseTitle =
-				courseManagementService.getCanonicalCourse(
-					courseOff.getCanonicalCourseEid())
-					.getTitle();
-			String courseSId = courseS.getEid();
-			String session =
-				courseOff.getAcademicSession().getTitle();
-			String sigle = courseOff.getCanonicalCourseEid();
-			String section =
-				(SHARABLE_SECTION.equals(courseSId.substring(
-					courseSId.length() - 2, courseSId
-						.length()))) ? SHARABLE_SECTION
-					: courseSId.substring(courseSId
-						.length() - 3, courseSId
-						.length());
+		courseSet = cSets.next();
+		courseOffs =
+			courseManagementService.findCourseOfferings(
+				courseSet.getEid(), acadSession.getEid());
+		for (Iterator<CourseOffering> cOffs = courseOffs.iterator(); cOffs
+			.hasNext();) {
+		    courseOff = cOffs.next();
+		    courseOffEid = courseOff.getEid();
+		    sections =
+			    courseManagementService.getSections(courseOffEid);
+		    if (courseOffEid.startsWith(startsWith)) {
+			for (Iterator<Section> cSs = sections.iterator(); cSs
+				.hasNext();) {
+			    courseS = cSs.next();
+			    String courseTitle =
+				    courseManagementService.getCanonicalCourse(
+					    courseOff.getCanonicalCourseEid())
+					    .getTitle();
+			    String courseSId = courseS.getEid();
+			    String session =
+				    courseOff.getAcademicSession().getTitle();
+			    String sigle = courseOff.getCanonicalCourseEid();
+			    String section =
+				    (SHARABLE_SECTION.equals(courseSId
+					    .substring(courseSId.length() - 2,
+						    courseSId.length()))) ? SHARABLE_SECTION
+					    : courseSId.substring(
+						    courseSId.length() - 3,
+						    courseSId.length());
 
-			String instructorsString = "";
-			int studentNumber = -1;
-			EnrollmentSet enrollmentSet =
-				courseS.getEnrollmentSet();
-			if (enrollmentSet != null) {
-			    // Retrieve official instructors
-			    Set<String> instructors =
-				    enrollmentSet.getOfficialInstructors();
-			    User user = null;
-			    String name = null;
-			    for (String instructor : instructors) {
-				try {
-				    user =
-					    userDirectoryService
-						    .getUserByEid(instructor);
-				    name = user.getDisplayName();
-				    instructorsString += name + " & ";
-				} catch (UserNotDefinedException e) {
-				    e.printStackTrace();
+			    String instructorsString = "";
+			    int studentNumber = -1;
+			    EnrollmentSet enrollmentSet =
+				    courseS.getEnrollmentSet();
+			    if (enrollmentSet != null) {
+				// Retrieve official instructors
+				Set<String> instructors =
+					enrollmentSet.getOfficialInstructors();
+				User user = null;
+				String name = null;
+				for (String instructor : instructors) {
+				    try {
+					user =
+						userDirectoryService
+							.getUserByEid(instructor);
+					name = user.getDisplayName();
+					instructorsString += name + " & ";
+				    } catch (UserNotDefinedException e) {
+					e.printStackTrace();
+				    }
 				}
+				// retrieve student number
+				Set<Enrollment> enrollments =
+					courseManagementService
+						.getEnrollments(enrollmentSet
+							.getEid());
+				if (enrollments != null)
+				    studentNumber = enrollments.size();
 			    }
-			    // retrieve student number
-			    Set<Enrollment> enrollments =
-				    courseManagementService
-					    .getEnrollments(enrollmentSet
-						    .getEid());
-			    if (enrollments != null)
-				studentNumber = enrollments.size();
-			}
-			if (!instructorsString.equals(""))
-			    instructorsString =
-				    instructorsString.substring(0,
-					    instructorsString.length() - 3);
+			    if (!instructorsString.equals(""))
+				instructorsString =
+					instructorsString.substring(0,
+						instructorsString.length() - 3);
 
-			CMCourse cmCourse = new CMCourse();
-			cmCourse.setId(courseS.getEid());
-			cmCourse.setSession(session);
-			cmCourse.setName(courseTitle);
-			cmCourse.setSigle(sigle);
-			cmCourse.setSection(section);
-			cmCourse.setInstructor(instructorsString);
-			cmCourse.setStudentNumber(studentNumber);
-			cmCourses.add(cmCourse);
+			    CMCourse cmCourse = new CMCourse();
+			    cmCourse.setId(courseS.getEid());
+			    cmCourse.setSession(session);
+			    cmCourse.setName(courseTitle);
+			    cmCourse.setSigle(sigle);
+			    cmCourse.setSection(section);
+			    cmCourse.setInstructor(instructorsString);
+			    cmCourse.setStudentNumber(studentNumber);
+			    cmCourses.add(cmCourse);
+			}
 		    }
 		}
 	    }
 	}
-	}
-	log.debug("getCMCourses " + elapsed(start) + " for "
-		+ cmCourses.size() + " courses");
+	log.debug("getCMCourses " + elapsed(start) + " for " + cmCourses.size()
+		+ " courses");
 	return cmCourses;
     } // getCMCourses
 
@@ -1428,9 +1432,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		metadata = new Metadata();
 		metadata.set(Metadata.RESOURCE_NAME_KEY, file.getName());
 		parser = new AutoDetectParser();
-		parser
-			.parse(inputStream, handler, metadata,
-				new ParseContext());
+		parser.parse(inputStream, handler, metadata, new ParseContext());
 
 		// We need to close the inputstream and rebuild it after the
 		// parsing here,
@@ -1444,9 +1446,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    resourceOutputDir));
 		} else {
 		    String s =
-			    addRessource(fileNameToUse, inputStream, metadata
-				    .get(Metadata.CONTENT_TYPE), siteId,
-				    resourceOutputDir);
+			    addRessource(fileNameToUse, inputStream,
+				    metadata.get(Metadata.CONTENT_TYPE),
+				    siteId, resourceOutputDir);
 		    if (!fileNameToUse.equals(s))
 			fileNameChangesMap.put(fileNameToUse, s);
 		}
@@ -1480,11 +1482,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	if (site != null
 		&& "course".equals(site.getType())
 		&& searchTerm != null
-		&& site.getTitle().toLowerCase().contains(
-			searchTerm.toLowerCase())
-		&& site.getTitle().toLowerCase().contains(
-			parseAcademicSession(academicSession).toLowerCase())) {
-	    // Retrieve site info		
+		&& site.getTitle().toLowerCase()
+			.contains(searchTerm.toLowerCase())
+		&& site.getTitle()
+			.toLowerCase()
+			.contains(
+				parseAcademicSession(academicSession)
+					.toLowerCase())) {
+	    // Retrieve site info
 	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());
 	    info.setSiteDescription(site.getDescription());
@@ -1535,9 +1540,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		info.setCourseName(section.getTitle());
 		info.setCourseSection(siteProviderId.substring(siteProviderId
 			.length() - 3));
-		info
-			.setCourseSession(courseOff.getAcademicSession()
-				.getTitle());
+		info.setCourseSession(courseOff.getAcademicSession().getTitle());
 		info.setAcademicCareer(courseOff.getAcademicCareer());
 	    }
 	    // TODO: the coordinator is not saved in the cm. Correct
@@ -1598,11 +1601,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	if (site != null
 		&& siteType.equals(site.getType())
 		&& searchTerm != null
-		&& site.getTitle().toLowerCase().contains(
-			searchTerm)
-		&& site.getTitle().toLowerCase().contains(
-			parseAcademicSession(academicSession).toLowerCase())) {
-	    // Retrieve site info		
+		&& site.getTitle().toLowerCase().contains(searchTerm)
+		&& site.getTitle()
+			.toLowerCase()
+			.contains(
+				parseAcademicSession(academicSession)
+					.toLowerCase())) {
+	    // Retrieve site info
 	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());
 	    info.setSiteDescription(site.getDescription());
@@ -1694,20 +1699,19 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 	log.trace("getCoAndSiteInfo  " + elapsed(start) + "DONE " + siteId);
 	return info;
-    } // getCoAndSiteInfo    
-    
+    } // getCoAndSiteInfo
+
     private boolean getFrozenValue(Site site) {
 	ResourcePropertiesEdit rp = site.getPropertiesEdit();
 	boolean coIsFrozen = false;
-		
-	if (rp.getProperty(PROP_SITE_ISFROZEN)!= null) {
+
+	if (rp.getProperty(PROP_SITE_ISFROZEN) != null) {
 	    if (rp.getProperty(PROP_SITE_ISFROZEN).equals("true")) {
-			coIsFrozen = true;
+		coIsFrozen = true;
 	    }
-	}	
+	}
 	return coIsFrozen;
-    }	        
-    
+    }
 
     /** {@inheritDoc} */
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
@@ -1719,8 +1723,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	log.trace("getAllCoAndSiteInfo (Site List ##### START #####)"
 		+ elapsed(start));
 	allSitesInfo =
-		getSitesForUser(currentUser, SiteService.SITE_VISIT, searchTerm
-			.toLowerCase(), academicSession.toLowerCase(), false);
+		getSitesForUser(currentUser, SiteService.SITE_VISIT,
+			searchTerm.toLowerCase(),
+			academicSession.toLowerCase(), false);
 
 	log.trace("getAllCoAndSiteInfo (Site List ##### SITES #####)"
 		+ elapsed(start));
@@ -1741,11 +1746,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	log.trace("getAllCoAndSiteInfo (Site List ##### START #####)"
 		+ elapsed(start));
-	
+
 	allSitesInfo =
-		getSitesForUser(currentUser, SiteService.SITE_VISIT, searchTerm
-			, academicSession,
-			withFrozenSites);
+		getSitesForUser(currentUser, SiteService.SITE_VISIT,
+			searchTerm, academicSession, withFrozenSites);
 
 	log.trace("getAllCoAndSiteInfo (Site List ##### SITES #####)"
 		+ elapsed(start));
@@ -1757,10 +1761,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return allSitesInfo;
     }
 
-
     protected List<COSite> getSitesForUser(String userId, String permission,
 	    String searchTerm, String academicSession, boolean withFrozenSites) {
-        long start = System.currentTimeMillis();
+	long start = System.currentTimeMillis();
 	log.debug("getSitesForUser ["
 		+ sessionManager.getCurrentSession().getUserEid() + "/"
 		+ permission + "]");
@@ -1768,7 +1771,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	// If we want to retrieve all course we have access to change empty to
 	// null
-	if (searchTerm!=null && searchTerm.trim().equals(""))
+	if (searchTerm != null && searchTerm.trim().equals(""))
 	    searchTerm = "";
 	else if (searchTerm != null)
 	    searchTerm = searchTerm.toLowerCase();
@@ -1809,8 +1812,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    log.info("Empty list of siteIds for user:" + userId
 		    + ", permission: " + permission);
 	}
-        log.debug("getSitesForUser" + elapsed(start) + " for "
-                + allSitesInfo.size() + " sites");
+	log.debug("getSitesForUser" + elapsed(start) + " for "
+		+ allSitesInfo.size() + " sites");
 	return allSitesInfo;
     }
 
@@ -1885,11 +1888,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_COPY);
 	}
-	log
-		.info("user ["
-			+ sessionManager.getCurrentSession().getUserEid()
-			+ "] copies site [" + siteFrom + "] into site ["
-			+ siteTo + "]");
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] copies site [" + siteFrom + "] into site [" + siteTo + "]");
 
 	long start = System.currentTimeMillis();
 	Site newSite = null;
@@ -1956,15 +1956,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	// we update citation ids in the course outline
 	updateCitationIds(siteFrom, siteTo);
 
-	//enableSecurityAdvisor();
-    log.info("*** copySite enableSecurityAdvisor() { OsylManagerServiceImpl *** ");	    
+	// enableSecurityAdvisor();
+	log.info("*** copySite enableSecurityAdvisor() { OsylManagerServiceImpl *** ");
 	siteService.save(newSite);
 
 	if (osylSecurityService.getCurrentUserRole().equals(
 		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
 		|| osylSecurityService.getCurrentUserRole().equals(
 			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-	    //securityService.popAdvisor();
+	    // securityService.popAdvisor();
 	}
 
 	log.info("Finished copying site [" + siteFrom + "] to [" + siteTo
@@ -1994,8 +1994,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    fromColl = citaColl.getCitations();
 
 		    for (Citation citation : fromColl) {
-			newCitations.put(resource.getId() + "/"
-				+ citation.getId(), citaColl);
+			newCitations.put(
+				resource.getId() + "/" + citation.getId(),
+				citaColl);
 		    }
 		} catch (ServerOverloadException e) {
 		    log.debug(e);
@@ -2035,9 +2036,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		oldCollectionRef = uri.substring(0, uri.lastIndexOf("/"));
 		try {
 		    oldCollectionId =
-			    new String((contentHostingService
-				    .getResource(oldCollectionRef))
-				    .getContent());
+			    new String(
+				    (contentHostingService
+					    .getResource(oldCollectionRef))
+					    .getContent());
 		    oldCollection =
 			    org.sakaiproject.citation.cover.CitationService
 				    .getCollection(oldCollectionId);
@@ -2055,14 +2057,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			if (newCitationRef.contains(oldCollectionRef)) {
 			    newColl = newCitations.get(newCitationRef);
 			    newCitation =
-				    newColl
-					    .getCitation(newCitationRef
-						    .substring(
-							    newCitationRef
-								    .lastIndexOf("/") + 1,
-							    newCitationRef
-								    .length())
-						    .trim());
+				    newColl.getCitation(newCitationRef
+					    .substring(
+						    newCitationRef
+							    .lastIndexOf("/") + 1,
+						    newCitationRef.length())
+					    .trim());
 
 			    // We update the citation id
 			    if (compareCitations(oldCitation, newCitation)) {
@@ -2155,21 +2155,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    if (toolId.equalsIgnoreCase("sakai.resources")) {
 		String fromSiteId = oldSite.getId();
-		String toSiteId = newSite.getId();		
-		
-		
-		/** Modification Cyril Mace: We import only resources that are referenced in course outlines (co) **/
-		/*  String fromSiteCollectionId =
-				contentHostingService.getSiteCollection(fromSiteId);
-			String toSiteCollectionId =
-				contentHostingService.getSiteCollection(toSiteId);
-			transferCopyEntitiesMigrate(toolId, fromSiteCollectionId,	toSiteCollectionId);*/
-		
-		importResourcesIntoSiteMigrate(toSiteId,
-				fromSiteId);
-		 
-		/** END Modification Cyril Mace:  **/
-		
+		String toSiteId = newSite.getId();
+
+		/**
+		 * SAKAI-2854: We import only resources that are referenced in
+		 * course outlines (co)
+		 **/
+		importResourcesIntoSiteMigrate(toSiteId, fromSiteId);
+		/** END SAKAI-2854 **/
+
 		resourcesImported = true;
 	    }
 	}
@@ -2186,61 +2180,64 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     } // importToolIntoSiteMigrate
 
-    
     /**
-     * Copy resources that are referenced in courses outlines from one site to one other 
+     * Copy resources that are referenced in courses outlines from one site to
+     * one other (function created for SAKAI-2854)
      * 
-     * @param toSiteId : reference to the destination site where we want to copy our resources 
-     * @param fromSiteId : reference to the site where we select the resources to copy 
+     * @param toSiteId : reference to the destination site where we want to copy
+     *            our resources
+     * @param fromSiteId : reference to the site where we select the resources
+     *            to copy
      */
     private void importResourcesIntoSiteMigrate(String toSiteId,
-    		String fromSiteId) {
-    			//We first get the resources used in co (stored in documentSecurityMap)
-    			COSerialized co =
-    					    osylSiteService
-    						    .getUnfusionnedSerializedCourseOutlineBySiteId(fromSiteId);		 
-    			 COModeledServer coModeled = new COModeledServer(co);
-    			 coModeled.XML2Model(true);
-    			 coModeled.model2XML();
-    			 co.setContent(coModeled.getSerializedContent());
-    			 
-    			 Map<String, String> documentSecurityMap = coModeled.getDocumentSecurityMap();
-    			 
-    			//We loop over the resources of the site and copy the referenced ones
-    			 String valFromSite_ref = contentHostingService.getSiteCollection(fromSiteId);
-    			 String valToSite_ref = contentHostingService.getSiteCollection(toSiteId);
-    				String fromSite_ref =
-    					contentHostingService.getReference(valFromSite_ref).substring(8);
-    				String toSite_ref =
-    						contentHostingService.getReference(valToSite_ref).substring(8);
-    				
-    				String id_work;
-    				try {
-    				    id_work = (fromSite_ref);
-    				    ContentCollection directory =
-    						    contentHostingService.getCollection(id_work);
-    				    
-    				    List<ContentEntity> members = directory.getMemberResources();
-    					for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
-    						.hasNext();) {
-    					    ContentEntity next = (ContentEntity) iMbrs.next();
-    					    String thisEntityRef = next.getId();
-    						String permission = documentSecurityMap.get(thisEntityRef);
+	    String fromSiteId) {
+	// We first get the resources used in co (stored in documentSecurityMap)
+	COSerialized co =
+		osylSiteService
+			.getUnfusionnedSerializedCourseOutlineBySiteId(fromSiteId);
+	COModeledServer coModeled = new COModeledServer(co);
+	coModeled.XML2Model(true);
+	coModeled.model2XML();
+	co.setContent(coModeled.getSerializedContent());
 
-    						if (permission != null) {
-    						    // doc exists in CO
-    							    contentHostingService.copyIntoFolder(thisEntityRef,
-    							    		toSite_ref);
-    					    	}
-    						}
-    				} catch (Exception e) {
-    				    log.error(
-    					    "Unable to copy the resources during the site copy",
-    					    e);
-    				}    	
+	Map<String, String> documentSecurityMap =
+		coModeled.getDocumentSecurityMap();
+
+	// We loop over the resources of the site and copy the referenced ones
+	String valFromSite_ref =
+		contentHostingService.getSiteCollection(fromSiteId);
+	String valToSite_ref =
+		contentHostingService.getSiteCollection(toSiteId);
+	String fromSite_ref =
+		contentHostingService.getReference(valFromSite_ref)
+			.substring(8);
+	String toSite_ref =
+		contentHostingService.getReference(valToSite_ref).substring(8);
+
+	String id_work;
+	try {
+	    id_work = (fromSite_ref);
+	    ContentCollection directory =
+		    contentHostingService.getCollection(id_work);
+
+	    List<ContentEntity> members = directory.getMemberResources();
+	    for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
+		    .hasNext();) {
+		ContentEntity next = (ContentEntity) iMbrs.next();
+		String thisEntityRef = next.getId();
+		String permission = documentSecurityMap.get(thisEntityRef);
+
+		if (permission != null) {
+		    // doc exists in CO
+		    contentHostingService.copyIntoFolder(thisEntityRef,
+			    toSite_ref);
+		}
+	    }
+	} catch (Exception e) {
+	    log.error("Unable to copy the resources during the site copy", e);
+	}
     } // importResourcesIntoSiteMigrate
-    
-    
+
     protected void transferCopyEntitiesMigrate(String toolId,
 	    String fromContext, String toContext) {
 
@@ -2288,15 +2285,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public Map<String, Boolean> getPermissions() {
-	Map<String,Boolean> permissions = new HashMap<String, Boolean>();
-	for(String permission : SecurityInterface.OSYL_MANAGER_PERMISSIONS){
+	Map<String, Boolean> permissions = new HashMap<String, Boolean>();
+	for (String permission : SecurityInterface.OSYL_MANAGER_PERMISSIONS) {
 	    permissions.put(permission, osylSecurityService
-		.isActionAllowedForCurrentUser(permission));
+		    .isActionAllowedForCurrentUser(permission));
 	}
 	return permissions;
     }
-    
-    public Boolean isSuperUser(){
+
+    public Boolean isSuperUser() {
 	return securityService.isSuperUser();
     }
 
