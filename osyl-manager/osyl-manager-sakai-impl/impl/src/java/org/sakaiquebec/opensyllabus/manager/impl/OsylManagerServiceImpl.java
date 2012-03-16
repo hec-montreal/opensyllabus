@@ -2155,14 +2155,21 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    if (toolId.equalsIgnoreCase("sakai.resources")) {
 		String fromSiteId = oldSite.getId();
-		String toSiteId = newSite.getId();
-
-		String fromSiteCollectionId =
-			contentHostingService.getSiteCollection(fromSiteId);
-		String toSiteCollectionId =
-			contentHostingService.getSiteCollection(toSiteId);
-		transferCopyEntitiesMigrate(toolId, fromSiteCollectionId,
-			toSiteCollectionId);
+		String toSiteId = newSite.getId();		
+		
+		
+		/** Modification Cyril Mace: We import only resources that are referenced in course outlines (co) **/
+		/*  String fromSiteCollectionId =
+				contentHostingService.getSiteCollection(fromSiteId);
+			String toSiteCollectionId =
+				contentHostingService.getSiteCollection(toSiteId);
+			transferCopyEntitiesMigrate(toolId, fromSiteCollectionId,	toSiteCollectionId);*/
+		
+		importResourcesIntoSiteMigrate(toSiteId,
+				fromSiteId);
+		 
+		/** END Modification Cyril Mace:  **/
+		
 		resourcesImported = true;
 	    }
 	}
@@ -2179,6 +2186,61 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     } // importToolIntoSiteMigrate
 
+    
+    /**
+     * Copy resources that are referenced in courses outlines from one site to one other 
+     * 
+     * @param toSiteId : reference to the destination site where we want to copy our resources 
+     * @param fromSiteId : reference to the site where we select the resources to copy 
+     */
+    private void importResourcesIntoSiteMigrate(String toSiteId,
+    		String fromSiteId) {
+    			//We first get the resources used in co (stored in documentSecurityMap)
+    			COSerialized co =
+    					    osylSiteService
+    						    .getUnfusionnedSerializedCourseOutlineBySiteId(fromSiteId);		 
+    			 COModeledServer coModeled = new COModeledServer(co);
+    			 coModeled.XML2Model(true);
+    			 coModeled.model2XML();
+    			 co.setContent(coModeled.getSerializedContent());
+    			 
+    			 Map<String, String> documentSecurityMap = coModeled.getDocumentSecurityMap();
+    			 
+    			//We loop over the resources of the site and copy the referenced ones
+    			 String valFromSite_ref = contentHostingService.getSiteCollection(fromSiteId);
+    			 String valToSite_ref = contentHostingService.getSiteCollection(toSiteId);
+    				String fromSite_ref =
+    					contentHostingService.getReference(valFromSite_ref).substring(8);
+    				String toSite_ref =
+    						contentHostingService.getReference(valToSite_ref).substring(8);
+    				
+    				String id_work;
+    				try {
+    				    id_work = (fromSite_ref);
+    				    ContentCollection directory =
+    						    contentHostingService.getCollection(id_work);
+    				    
+    				    List<ContentEntity> members = directory.getMemberResources();
+    					for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
+    						.hasNext();) {
+    					    ContentEntity next = (ContentEntity) iMbrs.next();
+    					    String thisEntityRef = next.getId();
+    						String permission = documentSecurityMap.get(thisEntityRef);
+
+    						if (permission != null) {
+    						    // doc exists in CO
+    							    contentHostingService.copyIntoFolder(thisEntityRef,
+    							    		toSite_ref);
+    					    	}
+    						}
+    				} catch (Exception e) {
+    				    log.error(
+    					    "Unable to copy the resources during the site copy",
+    					    e);
+    				}    	
+    } // importResourcesIntoSiteMigrate
+    
+    
     protected void transferCopyEntitiesMigrate(String toolId,
 	    String fromContext, String toContext) {
 
