@@ -2227,8 +2227,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		String thisEntityRef = next.getId();
 		String permission = documentSecurityMap.get(thisEntityRef);
 
-		if (permission != null) {
-		    // doc exists in CO
+		// we copy if doc exists in CO or if it is doc references
+		if (permission != null || thisEntityRef.contains("Références bibliographiques du cours")) {		    
 		    contentHostingService.copyIntoFolder(thisEntityRef,
 			    toSite_ref);
 		}
