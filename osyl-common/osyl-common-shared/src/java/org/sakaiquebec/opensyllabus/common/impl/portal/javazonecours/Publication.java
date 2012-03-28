@@ -491,7 +491,11 @@ public class Publication {
 		} catch (TransformerConfigurationException tce) {
 			throw new TransformerException(tce.getMessageAndLocation());
 		} catch (TransformerException te) {
-			throw new TransformerException(te.getMessageAndLocation());
+		    log.error("ERROR TRANSFORM: "+xsltName);
+		    log.error("ERROR TRANSFORM TRACE: "+outTrace.toString());
+		    log.error("ERROR TRANSFORM SOURCE: "+xml.toString());
+		    
+		    throw new TransformerException(te.getMessageAndLocation());
 		}
 	}
 
