@@ -75,7 +75,7 @@ final class OsylConfigServiceMessages {
             if (!messagesFile.exists()) {
                 messagesFile = new File(dir, baseFileName
                         + PROPERTIES_EXTENSION);
-                log.warn("Cannot load property file: " + baseFileName
+                log.warn("Cannot load property file: " + dir + baseFileName
                         + " for locale '" + locale+"'");
             }
 
