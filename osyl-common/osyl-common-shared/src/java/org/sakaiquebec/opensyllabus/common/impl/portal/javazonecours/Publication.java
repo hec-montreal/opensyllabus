@@ -483,7 +483,9 @@ public class Publication {
 			StringBuffer outTrace, boolean trace) throws Exception {
 		// ---------------------------------------------------
 
-		Transformer transformer = (Transformer) transformersTable.get(xsltName);
+	    	log.error("TRANSFORM: "+xsltName);
+
+	    	Transformer transformer = (Transformer) transformersTable.get(xsltName);
 		
 		try {
 			transformer.transform(xml, result);
