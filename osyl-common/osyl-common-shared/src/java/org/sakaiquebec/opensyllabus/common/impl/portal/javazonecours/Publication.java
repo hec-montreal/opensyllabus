@@ -2068,10 +2068,8 @@ public class Publication {
 			StringBuffer outTrace, boolean trace) throws Exception {
 		// ---------------------------------------------------
 
-	    	Document xml = xmlSourceDoc;
-	    
 		// --- application securite ---
-		/*Document xml = newDOM();
+		Document xml = newDOM();
 		if (trace)
 			outTrace
 					.append("<hr>================= TraiterPlancours - entree ==========================");
@@ -2079,7 +2077,7 @@ public class Publication {
 		if (trace)
 			outTrace.append("<br>application securite " + nivSecu);
 		processXSLT(xmlSourceDoc, "securite" + nivSecu + ".xsl", xml, outTrace,
-				trace);*/
+				trace);
 
 		if (xml != null) {
 			//nivSecu = ACCESS_PUBLIC or ACCESS_COMMUNITY
