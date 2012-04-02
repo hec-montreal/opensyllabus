@@ -845,6 +845,9 @@ public class Publication {
 		rset.close();
 		ps.close();
 		xmlString = buf.toString();
+		
+		log.error("xml Transform:"+xmlString);
+		
 		return xmlString;
 
 	}
