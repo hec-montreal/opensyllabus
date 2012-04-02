@@ -485,7 +485,23 @@ public class Publication {
 
 	    	log.error("TRANSFORM: "+xsltName);
 
+	    	try{
+		    javax.xml.transform.TransformerFactory tfactory = TransformerFactory.newInstance();
+		    javax.xml.transform.Transformer xform = tfactory.newTransformer();
+		    
+		    java.io.StringWriter writer = new java.io.StringWriter();
+		    javax.xml.transform.Result resultXml = new javax.xml.transform.stream.StreamResult(writer);
+		    
+		    xform.transform(xml, resultXml);
+		    
+		    log.error("TRANSFORM SOURCE: "+writer.toString());
+
+	    	}catch(Exception ex){
+	    	    log.error("ERROR TRANSFORM SOURCE:"+ex.toString());
+	    	}    	
+	    	
 	    	Transformer transformer = (Transformer) transformersTable.get(xsltName);
+	    	
 		
 		try {
 			transformer.transform(xml, result);
@@ -495,8 +511,7 @@ public class Publication {
 		} catch (TransformerException te) {
 		    log.error("ERROR TRANSFORM: "+xsltName);
 		    log.error("ERROR TRANSFORM TRACE: "+outTrace.toString());
-		    log.error("ERROR TRANSFORM SOURCE: "+xml.toString());
-		    
+		    		    
 		    throw new TransformerException(te.getMessageAndLocation());
 		}
 	}
