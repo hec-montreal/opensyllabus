@@ -2220,24 +2220,62 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    ContentCollection directory =
 		    contentHostingService.getCollection(id_work);
 
-	    List<ContentEntity> members = directory.getMemberResources();
-	    for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
-		    .hasNext();) {
-		ContentEntity next = (ContentEntity) iMbrs.next();
-		String thisEntityRef = next.getId();
-		String permission = documentSecurityMap.get(thisEntityRef);
-
-		// we copy if doc exists in CO or if it is doc references
-		if (permission != null || thisEntityRef.contains("Références bibliographiques du cours")) {		    
-		    contentHostingService.copyIntoFolder(thisEntityRef,
-			    toSite_ref);
-		}
-	    }
+	    copyResourcesFromDirectory(directory,
+		    toSite_ref, documentSecurityMap);
 	} catch (Exception e) {
 	    log.error("Unable to copy the resources during the site copy", e);
 	}
     } // importResourcesIntoSiteMigrate
 
+    
+    /**
+     * Copy resources that are referenced in courses outlines from one directory to
+     * one other (function created for SAKAI-2854)
+     * 
+     * @param directory : reference to the directory from where we want to copy
+     *            our resources
+     * @param toSite_ref : reference to the site where we want to copy
+     *            our resources
+     * @param documentSecurityMap : reference to the documents that are referenced in the courses outlines
+     */
+    private void copyResourcesFromDirectory(ContentCollection directory,
+	    String toSite_ref, Map<String, String> documentSecurityMap){	    
+    	try {
+    	List<ContentEntity> members = directory.getMemberResources();
+    	    for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
+    		    .hasNext();) {
+    		ContentEntity next = (ContentEntity) iMbrs.next();
+    		
+    		String thisEntityRef = next.getId();    		
+    		
+    		
+    		//if this is a directory
+    		if ("org.sakaiproject.content.types.folder".equals(next.getResourceType())){
+    		ContentCollection subdirectory =(ContentCollection) next;
+        		
+    			//we get the new destination directory
+        		String toSubSite_ref = toSite_ref + 
+        			thisEntityRef.substring(directory.getId().lastIndexOf("/") + 1);
+        		
+        		//we call recursively the same function
+        		copyResourcesFromDirectory(subdirectory,
+        			toSubSite_ref, documentSecurityMap);
+    		}
+    		else{        		
+        		String permission = documentSecurityMap.get(thisEntityRef);
+        
+        		// we copy if doc exists in CO or if it is doc references
+        		if (permission != null || "org.sakaiproject.citation.impl.CitationList".equals(next.getResourceType())) {		    
+        		    contentHostingService.copyIntoFolder(thisEntityRef,
+        			    toSite_ref);
+        		}
+    		}
+    	    }
+    	} catch (Exception e) {
+    	    log.error("Unable to copy the resources from directory", e);
+    	}
+    } // copyResourcesFromDirectory
+    
     protected void transferCopyEntitiesMigrate(String toolId,
 	    String fromContext, String toContext) {
 
