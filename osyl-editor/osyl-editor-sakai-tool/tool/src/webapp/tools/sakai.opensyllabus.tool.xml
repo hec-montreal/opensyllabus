@@ -5,7 +5,7 @@
 	<tool
 		id="sakai.opensyllabus.tool"
 		title="OpenSyllabus"
-		description="Pour &#233;diter, publier et consulter un plan de cours hyperm&#233;dia">
+		description="For viewing, editing and publishing a course syllabus">
 		
 		<configuration name="help.id" value="sakai.opensyllabus.tool" type="final" />
 		<category name="course" />
