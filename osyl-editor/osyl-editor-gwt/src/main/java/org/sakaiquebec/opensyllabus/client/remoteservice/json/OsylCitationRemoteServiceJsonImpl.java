@@ -23,13 +23,11 @@ package org.sakaiquebec.opensyllabus.client.remoteservice.json;
 
 import java.util.List;
 
-import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.helper.FormHelper;
 import org.sakaiquebec.opensyllabus.client.remoteservice.json.callback.OsylCitationRemoteDirectoryContentCallBackAdaptator;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylCitationRemoteServiceAsync;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationItem;
-import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationListItem;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
@@ -58,7 +56,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
     private static final String PREFERRED_URL = "preferredUrl";
     private static final String PREFERRED_URL_LABEL = "sakai:url_label";
     private static final String BOOKSTORE_URL = "bookstoreUrl";
-    private static final String RESOURCE_TYPE = "asmResourceType";    
+//  private static final String RESOURCE_TYPE = "asmResourceType";    
     private static final String NO_URL = "noUrl";
     private static final String URL="url";
 
@@ -260,75 +258,6 @@ public class OsylCitationRemoteServiceJsonImpl extends
 			preJson.substring(preJson.indexOf("\"path\":\"") + 8);
 		s = s.substring(0, s.indexOf("\""));
 		return s;
-	    }
-
-	});
-
-	if (TRACE) {
-	    Window.alert("add the form to the rootPanel ");
-	}
-
-	RootPanel.get().add(form);
-	if (TRACE) {
-	    Window.alert("Submit the form - createOrUpdateCitation : "
-		    + form.getAction());
-	}
-	form.submit();
-	if (TRACE) {
-	    Window.alert("Form submited ");
-	}
-
-    }
-
-    public void createOrUpdateCitationList(String pRelativePathFolder,
-	    OsylCitationListItem lCitation, final AsyncCallback<Void> callback) {
-
-	if (TRACE) {
-	    Window
-		    .alert("OsylCitationRemoteServiceJsonImpl.createOrUpdateCitationList : "
-			    + lCitation.getFileName());
-	}
-
-	// create form to submit
-	final FormPanel form = new FormPanel();
-	VerticalPanel panel = new VerticalPanel();
-	form.add(panel);
-
-	// determinate form action
-	String action;
-	String listname;
-	if (lCitation.getResourceId() != null) {
-	    // update case
-	    action = remoteUri + lCitation.getResourceId();
-
-	    // create hidden field to define put(update) method
-	    panel.add(FormHelper.createHiddenField("method", "put"));
-	    // create hidden field to define citation id
-	    panel.add(FormHelper.createHiddenField("cid", lCitation
-		    .getFilePath()));
-	}
-	listname = lCitation.getFileName();
-	action = getRessourceUri(pRelativePathFolder);
-	form.setAction(action);
-	form.setMethod(FormPanel.METHOD_POST);
-
-	if (TRACE) {
-	    Window.alert("Create an hidden textbox for each pojo property ");
-	}
-
-	// Create an hidden textbox for each pojo property.
-	panel.add(FormHelper.createHiddenField("listname", listname));
-
-	// add event handler
-	form.addSubmitCompleteHandler(new SubmitCompleteHandler() {
-
-	    public void onSubmitComplete(SubmitCompleteEvent event) {
-		if (TRACE) {
-		    Window.alert("call back from the server : "
-			    + event.getResults());
-		}
-		RootPanel.get().remove(form);
-		callback.onSuccess(null);
 	    }
 
 	});

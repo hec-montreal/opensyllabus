@@ -127,26 +127,4 @@ public class OsylCitationRemoteServiceHostedModeImpl extends
 	}
 	throw new IllegalArgumentException("unreachable directory");
     }
-
-    public void createOrUpdateCitationList(String p_relativePathFolder,
-	    OsylCitationListItem lCitation, AsyncCallback<Void> callback) {
-	List<OsylAbstractBrowserItem> list =
-		findDirectoryByRelativePath(p_relativePathFolder);
-	String id = lCitation.getId();
-	if (list != null) {
-	    if (id != null) {
-		// update an existing one
-		
-	    } else {
-		// create an unique id
-		id = UUID.uuid();
-		lCitation.setId(id);
-		lCitation.setFilePath(p_relativePathFolder);
-	    }
-	    // add the new reference
-	    list.add(lCitation);
-	}
-	callback.onSuccess(null);
-    }
-
 }
