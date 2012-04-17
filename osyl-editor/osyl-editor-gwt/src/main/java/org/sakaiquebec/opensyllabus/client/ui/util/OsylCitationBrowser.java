@@ -22,15 +22,10 @@ package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import java.util.List;
 
-import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
-import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.PushButton;
 
 /**
@@ -71,11 +66,15 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 
     // INHERITED METHODS
     @Override
+	public void initView() {
+    	super.initView();
+    	//Disable the folder add button
+    	getFolderAddButton().setEnabled(false);
+    	getFolderAddButton().setVisible(false);
+    }
+    
+    @Override
     protected void onUpButtonClick() {
-	getFolderAddButton().setEnabled(true);
-	getAddFileButton().setTitle(
-		getController().getUiMessage(
-			"Browser.addCitationListButton.tooltip"));
 	currentCitationListItem = null;
     }
 
@@ -109,22 +108,18 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 
     @Override
     protected PushButton createEditButton() {
-	PushButton pb =
-		createTopButton(getOsylImageBundle().document_edit(),
-			getController().getUiMessage(
-				"Browser.editButton.tooltip"));
-	pb.addClickHandler(new EditButtonClickHandler());
-	return pb;
+    	PushButton pb = new PushButton();
+    	pb.setVisible(false);
+    	pb.setEnabled(false);
+    	return pb;
     }
 
     @Override
     protected PushButton createAddPushButton() {
-	PushButton pb =
-		createTopButton(getOsylImageBundle().document_add(),
-			getController().getUiMessage(
-				"Browser.addCitationListButton.tooltip"));
-	pb.addClickHandler(new AddButtonClickHandler());
-	return pb;
+    	PushButton pb = new PushButton();
+    	pb.setVisible(false);
+    	pb.setEnabled(false);
+    	return pb;
     }
 
     @Override
@@ -154,12 +149,6 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 			"Osyl-RemoteFileBrowser-WaitingState");
 		removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
 	    }
-
-	} else {
-	    OsylCitationItem citation =
-		    (OsylCitationItem) getSelectedAbstractBrowserItem();
-	    citation.setResourceProxyId(resourceProxyId);
-	    openEditor(citation);
 	}
     }
 
@@ -178,63 +167,6 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 
     // ADDED METHODS
 
-    private void createOrUpdateCitationList(
-	    OsylCitationListItem osylCitationListItem) {
-	String citationListName = "";
-	if (osylCitationListItem != null) {
-	    citationListName = osylCitationListItem.getFileName();
-	} else {
-	    citationListName =
-		    getController()
-			    .getUiMessage(
-				    "CitationEditor.AddCitationListPromt.InitCitationListName");
-	    osylCitationListItem = new OsylCitationListItem();
-	}
-
-	citationListName =
-		Window.prompt(getController().getUiMessage(
-			"CitationEditor.AddCitationListPromt.Promt"),
-			citationListName);
-	while (!validateListName(citationListName)) {
-	    Window.alert("'"
-		    + citationListName
-		    + getController().getUiMessage(
-			    "CitationEditor.AddCitationListPromt.InvalidName"));
-	    citationListName =
-		    Window.prompt(getController().getUiMessage(
-			    "CitationEditor.AddCitationListPromt.Promt"),
-			    citationListName);
-	}
-
-	AsyncCallback<Void> asyncCallback = new AsyncCallback<Void>() {
-	    public void onFailure(Throwable caught) {
-		removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
-		final OsylAlertDialog alertBox =
-			new OsylAlertDialog(false, true, OsylController
-				.getInstance().getUiMessage("Global.error"),
-				OsylController.getInstance().getUiMessage(
-					"fileUpload.unableReadRemoteDir")
-					+ caught.getMessage());
-		alertBox.center();
-		alertBox.show();
-	    }
-
-	    public void onSuccess(Void result) {
-		// Call to RemoFileBrowser in order to refresh its
-		// content
-		getRemoteDirectoryListing(getCurrentDirectory()
-			.getDirectoryPath());
-	    }
-	};
-
-	// create or update citation.
-	osylCitationListItem.setFileName(citationListName);
-	OsylRemoteServiceLocator.getCitationRemoteService()
-		.createOrUpdateCitationList(
-			getCurrentDirectory().getDirectoryPath(),
-			osylCitationListItem, asyncCallback);
-    }
-
     public boolean validateListName(String newListName) {
 	return ((!(newListName.length() < 1))
 		&& (!(newListName.length() > 255)) && (validateListNameJSregExp(newListName)));
@@ -245,47 +177,6 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 							       var regExp = /^[^\\\/\?\*\"\'\>\<\:\|]*$/;
 							       return regExp.test(newListName);
 							       }-*/;
-
-    private final class AddButtonClickHandler implements ClickHandler {
-
-	public void onClick(ClickEvent event) {
-	    if (!isInCitationList()) {
-		createOrUpdateCitationList(null);
-	    } else {
-		OsylCitationItem oci = new OsylCitationItem();
-		oci.setFilePath(currentCitationListItem.getFilePath());
-		oci.setResourceType(null);
-		oci.setId(null);
-		openEditor(oci);
-	    }
-	}
-    }
-
-    private final class EditButtonClickHandler implements ClickHandler {
-
-	public void onClick(ClickEvent event) {
-	    if (!isInCitationList()) {
-		if (getSelectedAbstractBrowserItem() instanceof OsylCitationListItem) {
-		    createOrUpdateCitationList((OsylCitationListItem) getSelectedAbstractBrowserItem());
-		} else {
-		    // TODO add folder edit action
-		}
-	    } else {
-		OsylCitationItem citation =
-			(OsylCitationItem) getSelectedAbstractBrowserItem();
-		citation.setResourceProxyId(resourceProxyId);
-		openEditor(citation);
-	    }
-	}
-    }
-
-    private void openEditor(OsylCitationItem citation) {
-	OsylCitationForm osylCitationForm =
-		new OsylCitationForm(getController(), getCurrentDirectory()
-			.getDirectoryPath(), citation);
-	osylCitationForm.addEventHandler(OsylCitationBrowser.this);
-	osylCitationForm.showModal();
-    }
 
     public void firstTimeRefreshBrowser() {
 	boolean fileItemFound = false;
@@ -314,13 +205,8 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
     private void refreshBrowserWithCitationListContent(
 	    OsylCitationListItem osylCitationListItem) {
 	currentCitationListItem = osylCitationListItem;
-	getFolderAddButton().setEnabled(false);
-	getAddFileButton().setTitle(
-		getController().getUiMessage(
-			"Browser.addCitationButton.tooltip"));
 	setCitationListAsDirectory(currentCitationListItem);
 	refreshFileListing(osylCitationListItem.getCitations());
-
     }
 
     private void setCitationListAsDirectory(
