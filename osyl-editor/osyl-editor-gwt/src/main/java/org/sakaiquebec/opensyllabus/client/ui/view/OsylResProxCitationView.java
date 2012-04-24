@@ -151,14 +151,8 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 		.getSelectedCitationProperty(CitationSchema.ISSUE));
 
 	setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
-		.getSelectedCitationProperty(CitationSchema.PAGES));
-
-	setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
-		.getSelectedCitationProperty(CitationSchema.PAGES));
-
-	setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
-		.getSelectedCitationProperty(CitationSchema.PAGES));
-
+			.getSelectedCitationProperty(CitationSchema.PAGES));
+		
 	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
 		COPropertiesType.IDENTIFIER_TYPE_ISN, getEditor()
 			.getSelectedCitationProperty(CitationSchema.ISN));
@@ -177,6 +171,18 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 		getEditor().getSelectedCitationProperty(
 			CitationSchema.PUBLICATION_LOCATION));
 
+	setModelPropertyWithEditorProperty(CitationSchema.EDITOR, getEditor()
+			.getSelectedCitationProperty(CitationSchema.EDITOR));
+
+	setModelPropertyWithEditorProperty(CitationSchema.EDITION, getEditor()
+			.getSelectedCitationProperty(CitationSchema.EDITION));
+	
+	setModelPropertyWithEditorProperty(CitationSchema.START_PAGE, getEditor()
+			.getSelectedCitationProperty(CitationSchema.START_PAGE));
+	
+	setModelPropertyWithEditorProperty(CitationSchema.END_PAGE, getEditor()
+			.getSelectedCitationProperty(CitationSchema.END_PAGE));
+	
 	String hasLink =
 		getEditor().getSelectedCitationProperty(
 			COPropertiesType.IDENTIFIER,

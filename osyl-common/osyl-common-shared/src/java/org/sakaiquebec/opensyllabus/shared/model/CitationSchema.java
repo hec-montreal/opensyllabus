@@ -38,6 +38,8 @@ public interface CitationSchema extends Serializable {
     public static final String TYPE_ARTICLE = "article";
     public static final String TYPE_REPORT = "report";
     public static final String TYPE_PROCEED = "proceed";
+    public static final String TYPE_ELECTRONIC = "electronic";
+    public static final String TYPE_THESIS = "thesis";
 
     public static final String CITATION_IDENTIFIER = "sakai:url_string";
     public static final String CITATION_IDENTIFIER_TYPE = "type_url";
@@ -53,8 +55,11 @@ public interface CitationSchema extends Serializable {
     public static final String TITLE = "title";
     public static final String EDITOR = "editor";
     public static final String CREATOR = "creator";
+    public static final String EDITION = "edition";
     public static final String VOLUME = "volume";
     public static final String ISSUE = "issue";
+    public static final String START_PAGE = "startPage";
+    public static final String END_PAGE = "endPage";
     public static final String PAGES = "pages";
     public static final String PUBLISHER = "publisher";
     public static final String YEAR = "year";

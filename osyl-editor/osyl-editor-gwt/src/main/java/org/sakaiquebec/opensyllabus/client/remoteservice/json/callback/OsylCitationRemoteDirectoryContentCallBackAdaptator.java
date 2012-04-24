@@ -27,10 +27,18 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 	OsylAbstractRemoteDirectoryContentCallBackAdaptator {
 
+	//TODO: get this from settings?
     protected final static List<String> SUPPORTED_CITATION_TYPES =
-	    Arrays.asList(new String[] { CitationSchema.TYPE_ARTICLE,
-		    CitationSchema.TYPE_BOOK, CitationSchema.TYPE_REPORT,
-		    CitationSchema.TYPE_UNKNOWN, CitationSchema.TYPE_PROCEED });
+	    Arrays.asList(
+	    		new String[] { 
+	    				CitationSchema.TYPE_ARTICLE,
+	    				CitationSchema.TYPE_BOOK,
+	    				CitationSchema.TYPE_CHAPTER,
+	    				CitationSchema.TYPE_ELECTRONIC,
+	    				CitationSchema.TYPE_REPORT,
+	    				CitationSchema.TYPE_THESIS,
+	    				CitationSchema.TYPE_UNKNOWN, 
+	    				CitationSchema.TYPE_PROCEED });
 
     /**
      * Value used to map the citation IDENTIFIER_TYPE_URL to preferredUrl of
@@ -68,6 +76,7 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 	JSONString lastModified =
 		(JSONString) jObject.get("DAV:getlastmodified");
 	JSONObject citations = (JSONObject) jObject.get("citations");
+	
 	Set<String> keys = citations.keySet();
 	for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
 	    String citationId = (String) iter.next();
@@ -82,7 +91,9 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 		JSONString isn =
 			(JSONString) properties.get(CitationSchema.ISN);
 		JSONString volume =
-			(JSONString) properties.get(CitationSchema.VOLUME);
+				(JSONString) properties.get(CitationSchema.VOLUME);
+		JSONString edition =
+				(JSONString) properties.get(CitationSchema.EDITION);
 		JSONString issue =
 			(JSONString) properties.get(CitationSchema.ISSUE);
 		JSONString pages =
@@ -101,6 +112,10 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 		JSONString sourceTitle =
 			(JSONString) properties
 				.get(CitationSchema.SOURCE_TITLE);
+		JSONString start_page =
+				(JSONString) properties.get(CitationSchema.START_PAGE);
+		JSONString end_page =
+				(JSONString) properties.get(CitationSchema.END_PAGE);
 
 		//Type of resource
 		JSONString resourceType =
@@ -177,6 +192,8 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			creatorsString == null ? "" : creatorsString);
 		csi.setProperty(CitationSchema.EDITOR,
 			editorsString == null ? "" : editorsString);
+		csi.setProperty(CitationSchema.EDITION,
+			edition == null ? "" : edition.stringValue());
 		csi.setProperty(CitationSchema.VOLUME, volume == null ? ""
 			: volume.stringValue());
 		csi.setProperty(CitationSchema.ISSUE, issue == null ? ""
@@ -190,7 +207,11 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 		csi.setProperty(CitationSchema.DATE, date == null ? "" : date
 			.stringValue());
 		csi.setProperty(CitationSchema.DOI, doi == null ? "" : doi
-			.stringValue());
+				.stringValue());
+		csi.setProperty(CitationSchema.START_PAGE, start_page == null ? "" : start_page
+				.stringValue());
+		csi.setProperty(CitationSchema.END_PAGE, end_page == null ? "" : end_page
+				.stringValue());
 		
 		//Type of resource
 		csi.setProperty(CitationSchema.CITATION_RESOURCE_TYPE,

@@ -46,6 +46,11 @@ public class CitationFormatter {
     private static final String ISN_IDENTIFIER = "%s";
     private static final String DOI_IDENTIFIER = "%d";
     private static final String PUBLICATION_LOCATION_IDENTIFIER = "%l";
+    private static final String EDITION_IDENTIFIER = "%e";
+    private static final String EDITOR_IDENTIFIER = "%r";
+    private static final String START_PAGE_IDENTIFIER = "%q";
+    private static final String END_PAGE_IDENTIFIER = "%z";
+    
 
     public static String format(OsylCitationItem oci, String format) {
 	String formatString = replaceKeysByMessage(format);
@@ -91,8 +96,21 @@ public class CitationFormatter {
 		replace(formatString, TITLE_IDENTIFIER, getProperty(cop,
 			CitationSchema.TITLE));
 	formatString =
-		replace(formatString, SOURCE_TITLE_IDENTIFIER, getProperty(cop,
-			CitationSchema.SOURCE_TITLE));
+			replace(formatString, SOURCE_TITLE_IDENTIFIER, getProperty(cop,
+				CitationSchema.SOURCE_TITLE));
+	formatString =
+			replace(formatString, EDITION_IDENTIFIER, getProperty(cop,
+				CitationSchema.EDITION));
+	formatString =
+			replace(formatString, EDITOR_IDENTIFIER, getProperty(cop,
+				CitationSchema.EDITOR));
+	formatString =
+			replace(formatString, START_PAGE_IDENTIFIER, getProperty(cop,
+				CitationSchema.START_PAGE));
+	formatString =
+			replace(formatString, END_PAGE_IDENTIFIER, getProperty(cop,
+				CitationSchema.END_PAGE));
+	
 	return formatString;
     }
 
@@ -145,6 +163,19 @@ public class CitationFormatter {
 	formatString =
 		replace(formatString, SOURCE_TITLE_IDENTIFIER, getProperty(cop,
 			COPropertiesType.JOURNAL));
+	formatString =
+			replace(formatString, EDITION_IDENTIFIER, getProperty(cop,
+				CitationSchema.EDITION));
+	formatString =
+			replace(formatString, EDITOR_IDENTIFIER, getProperty(cop,
+				CitationSchema.EDITOR));
+	formatString =
+			replace(formatString, START_PAGE_IDENTIFIER, getProperty(cop,
+				CitationSchema.START_PAGE));
+	formatString =
+			replace(formatString, END_PAGE_IDENTIFIER, getProperty(cop,
+				CitationSchema.END_PAGE));
+	
 	return formatString;
     }
 
@@ -158,6 +189,7 @@ public class CitationFormatter {
 		replacement =
 			replacement.substring(1, replacement.length() - 1);
 	    }
+	    
 	    s = s.replace(exp, replacement);
 	}
 	return s;
