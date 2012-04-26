@@ -50,6 +50,7 @@ public class CitationFormatter {
     private static final String EDITOR_IDENTIFIER = "%r";
     private static final String START_PAGE_IDENTIFIER = "%q";
     private static final String END_PAGE_IDENTIFIER = "%z";
+    private static final String URL_IDENTIFIER = "%u";
     
 
     public static String format(OsylCitationItem oci, String format) {
@@ -110,6 +111,9 @@ public class CitationFormatter {
 	formatString =
 			replace(formatString, END_PAGE_IDENTIFIER, getProperty(cop,
 				CitationSchema.END_PAGE));
+	formatString =
+			replace(formatString, URL_IDENTIFIER, getProperty(cop,
+					COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_OTHERLINK)); 
 	
 	return formatString;
     }
@@ -175,6 +179,9 @@ public class CitationFormatter {
 	formatString =
 			replace(formatString, END_PAGE_IDENTIFIER, getProperty(cop,
 				CitationSchema.END_PAGE));
+	formatString =
+			replace(formatString, URL_IDENTIFIER, getProperty(cop,
+					COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_OTHERLINK)); 
 	
 	return formatString;
     }
