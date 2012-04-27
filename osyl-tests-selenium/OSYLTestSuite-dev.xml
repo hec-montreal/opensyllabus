@@ -2,7 +2,7 @@
 
 <suite name="OSYLSuite-FF" verbose="10">
    <!-- parameter name="webSite" value="http://localhost:8080/"/ -->
-   <parameter name="webSite" value="http://osyldev.hec.ca:12346/portal/"/>
+   <parameter name="webSite" value="http://osyldev.hec.ca:12345/"/>
    <parameter name="seleniumHost" value="localhost"/>
    <parameter name="seleniumPort" value="4444"/>
    <parameter name="browser" value="*firefox"/>

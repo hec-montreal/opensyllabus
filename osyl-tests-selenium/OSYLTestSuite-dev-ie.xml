@@ -1,7 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="OSYLSuite-IE" verbose="10">
-   <parameter name="webSite" value="http://osyldev.hec.ca:12346/"/>
+   <parameter name="webSite" value="http://osyldev.hec.ca:12345/"/>
    <parameter name="seleniumHost" value="seleniumrc.hec.ca"/>
    <parameter name="seleniumPort" value="5556"/>
    <parameter name="browser" value="*iexplore"/>
