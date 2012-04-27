@@ -3,7 +3,7 @@
 <suite name="OSYLSuite-FF" verbose="10">
    <!-- webSite is not defined here as it specified on command line to avoid
         having too many xml suite files. -->
-   <parameter name="webSite" value="http://osyldev.hec.ca:12346/portal/"/>
+   <parameter name="webSite" value="http://osyldev.hec.ca:12345/portal/"/>
    <parameter name="seleniumHost" value="seleniumrc.hec.ca"/>
    <parameter name="seleniumPort" value="4444"/>
    <parameter name="browser" value="*firefox"/>
