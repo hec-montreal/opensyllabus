@@ -214,7 +214,7 @@ public class SeancesTest extends AbstractOSYLTest {
 		session().mouseUpAt(locator, "10,10");		
 	}
 	
-	log("The format to fill is ready to open...");
+	log("The format to fill is ready to open...");// popup pour entrer les valeurs du docum
 	
 	// Fill the mandatory fields
 	session().select("//select[@name='cipvalues']", "label=Article");

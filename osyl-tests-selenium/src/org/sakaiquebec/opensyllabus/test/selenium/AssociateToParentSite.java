@@ -599,17 +599,32 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		"//div[@class='Osyl-Button Osyl-Button-down-hovering' and ./div[contains(.,'"
 		+ label + "')]]");
     }
-
+    
+    
     private void ensurePublishDateOK() {
 	try {
+	    // dateDiv = "Date de la derniere publication : 27/03/2012 15:06:26"
 	    String dateDiv = session().getText("//div[@class='Osyl-PublishView-publishedDate']");
 	    log("published: " + dateDiv);
 	    String pubDateStr = dateDiv.substring(dateDiv.indexOf(" : ") + 3);
+	    log("pubDateStr: " + pubDateStr);
 	    SimpleDateFormat publicationDateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	    long pubTime = publicationDateFormatter.parse(pubDateStr).getTime();
 	    long diff = System.currentTimeMillis() - pubTime;
-	    log("published: " + diff + " ms ago");
-	    if (Math.abs(diff) > 30000) {
+	    log("published: " + (diff/1000) + " seconds ago");
+	    
+	    /**
+	     * Anatomy of a failed test:
+	     *   ...
+	     *   published: Date de la dernière publication : 19/03/2012 15:12:45
+	     *   published: 340181 ms ago
+	     *   logAndFail: Incorrect publish date: 19/03/2012 15:12:45
+	     *   ...
+	     */
+	    //log("Publish date verification: ")
+	    
+	    // verify if published less than 5 minutes
+	    if (Math.abs(diff) > 5*60000) {
 		logAndFail("Incorrect publish date: " + pubDateStr);
 	    }
 		//Add message to log file

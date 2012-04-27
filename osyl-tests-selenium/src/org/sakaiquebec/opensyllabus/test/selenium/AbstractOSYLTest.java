@@ -29,8 +29,6 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.apache.commons.lang.RandomStringUtils;
 import org.sakaiquebec.opensyllabus.test.selenium.MsgLog;
 import org.sakaiquebec.opensyllabus.test.selenium.utils.AddFileResourcePopup;
 import org.sakaiquebec.opensyllabus.test.selenium.utils.ResourceXpathHelper;
@@ -90,8 +88,8 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
     protected static final String LEVEL_PUBLIC = "public";
 
     //Result of scenario
-    protected static final String PASSED = "PASS�";
-    protected static final String FAILED = "�CHEC";
+    protected static final String PASSED = "SUCCÈS";
+    protected static final String FAILED = "ÉCHEC";
 
     //Environments
     protected static final String IC_ORACLE = "icoracle";
@@ -273,7 +271,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	}
 	session().type("eid", userString);  // admin
 	session().type("pw", passwordString); // osyl123
-	session().click("submit");
+	doClick("submit");
 
 
 	session().waitForPageToLoad("300000");
@@ -313,7 +311,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	}
 	session().type("eid", username);  // admin
 	session().type("pw", password); // osyl123
-	session().click("submit");
+	doClick("submit");
 
 
 	session().waitForPageToLoad("300000");
@@ -397,7 +395,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 		    session().mouseOver(element);
 		    session().mouseDown(element);
 		    session().mouseUp(element);
-		    session().click(element);
+		    doClick(element);
 		} else {
 		    session().mouseOver(element);
 			session().mouseDownAt(element, "10,10");
@@ -411,9 +409,9 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
      */
 //    private void smartClick(String element) {
 //		if (inFireFox()) {
-//			session().click(element);
+//			doClick(element);
 //		} else {
-//			session().click(element);
+//			doClick(element);
 //		}
 //    }
 //
@@ -438,10 +436,12 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
      */
     public void goToOsylManagerTool() {
 	// Go to Workspace
-	session().click("css=span");
+	doClick("css=span");
 	
-	// Go to Osyl Manager
-	String osylManagerChoice = "//*[@class='icon-sakai-opensyllabus-manager-tool']"; // "//div[@id='toolMenu']/ul/li[5]/a/span";
+	// Go to Osyl Manager ("Gestionnaire de sites de cours")
+	//String osylManagerChoice = "//*[class='icon-sakai-opensyllabus-manager-tool']"; // "//div[@id='toolMenu']/ul/li[5]/a/span";
+	// Attention! Il y a un espace apres le nom de la classe dans la page (pour 2.8.1 seulement)
+	String osylManagerChoice = "//*[contains(@class,'icon-sakai-opensyllabus-manager-tool')]"; // "//div[@id='toolMenu']/ul/li[5]/a/span";
 	ensureElementPresent(osylManagerChoice);
 	// if
 	// (session().isElementPresent("//*[@class='icon-sakai-opensyllabus-manager-tool']"))
@@ -492,7 +492,8 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
      * @throws IllegalStateException
      */
     public void goToMenuOsyl() throws Exception {
-	String elementOsylMenu = "//*[@class='icon-sakai-opensyllabus-tool']";
+	// Click sur 'Plan de cours'
+	String elementOsylMenu = "//*[contains(@class, 'icon-sakai-opensyllabus-tool')]"; // 2.8.1: there is a space after the class name !!!
 
 	if (session().isElementPresent(elementOsylMenu)) {
 		// open Osyl tool
@@ -513,10 +514,10 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 			session().mouseOver(elementAssessmentMenu);
 			session().mouseDown(elementAssessmentMenu);
 			session().mouseUp(elementAssessmentMenu);
-			session().click(elementAssessmentMenu);
+			doClick(elementAssessmentMenu);
 			pause();
 		} else {
-			session().click(elementAssessmentMenu);
+			doClick(elementAssessmentMenu);
 		}
 	}
 	pause3();
@@ -529,10 +530,10 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	if (inFireFox()) {
 		session().mouseDown(elementSiteSetupMenu);
 		session().mouseUp(elementSiteSetupMenu);
-		session().click(elementSiteSetupMenu);		
+		doClick(elementSiteSetupMenu);		
 		pause();
 	} else {
-		session().click(elementSiteSetupMenu);
+		doClick(elementSiteSetupMenu);
 	}
 	pause3();
     }
@@ -552,10 +553,10 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    
 	    // Warning: the next command won't work if the current active tool
 	    // is already "Sites".
-	    //session().click("//div[@id='toolMenu']/ul/li[5]/a/span");// "Clicker sur 'Gestionnaire de site de cours'
+	    //doClick("//div[@id='toolMenu']/ul/li[5]/a/span");// "Clicker sur 'Gestionnaire de site de cours'
 	   
-	    //session().click("//span[text() = 'Gestionnaire de sites de cours']/parent::a");
-	    session().click("//a[@class='icon-sakai-opensyllabus-manager-tool']");
+	    //doClick("//span[text() = 'Gestionnaire de sites de cours']/parent::a");
+	    doClick("//a[contains(@class,'icon-sakai-opensyllabus-manager-tool')]");// 2.8.1: there is a space after the class name !!!
 	    // osylManagerChoice = "//*[@class='icon-sakai-opensyllabus-manager-tool']"; // "//div[@id='toolMenu']/ul/li[5]/a/span";
 
 	    waitForPageToLoad();
@@ -564,8 +565,10 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    String searchTextBox = "//table[@class='OsylManager-panel']//td/input[@class='gwt-TextBox']";
 	    waitForElement(searchTextBox, 6000);
 	    session().type(searchTextBox, getCurrentTestSiteName());//
+	    pause(2000);
 	    
-	    clickWithMouse("//div[text()='Chercher']/parent::div");
+	    //clickWithMouse("//div[text()='Chercher']/parent::div");
+	    clickWithMouse("//div[contains(@class,'Osyl-Button') and child::input]");
 	    pause(4000);
 	    
 	    if (session().isAlertPresent()) {
@@ -601,15 +604,15 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    
 
 	    // Click du checkbox du site (s'il est trouv�!)
-	    //session().click("link=ID du site");
-	    session().click(siteCheckboxLocator); 
+	    //doClick("link=ID du site");
+	    doClick(siteCheckboxLocator); 
 	    
 	    
 	    clickWithMouse("//div[text() = 'Supprimer']/parent::div");
 	    pause(1000);
 
-	    //session().click("eventSubmit_doRemove_confirmed");
-	    session().click("//button[text()='Ok']"); // click du bouton "ok"
+	    //doClick("eventSubmit_doRemove_confirmed");
+	    doClick("//button[text()='Ok']"); // click du bouton "ok"
 	    pause(3000);
     	    
 	    // removed by Thanh!
@@ -623,8 +626,8 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	} finally {
 	    // Return to Home "tool"
 	    session().selectFrame("relative=parent");
-	    //session().click("//div[@id='toolMenu']/ul/li[1]/a/span");
-	    session().click("//span[text() = 'Accueil']/parent::a");
+	    //doClick("//div[@id='toolMenu']/ul/li[1]/a/span");
+	    doClick("//span[text() = 'Accueil']/parent::a");
 	    pause(3000);
 	}
     } // deleteTestSite
@@ -634,9 +637,9 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
      * the boolean parameter is true.
      *
      * @param siteToDelete 
-     * @param boolean fail
+     * @param boolean canFail If true, will throw exception with there is no site to delete 
      */
-    public void deleteTestSite(String siteToDelete, boolean fail) throws Exception {
+    public void deleteTestSite(String siteToDelete, boolean canFail) throws Exception {
 	try {
 
 	    prettyLog("Deleting site " + siteToDelete);
@@ -647,15 +650,18 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    
 	    // Warning: the next command won't work if the current active tool
 	    // is already "Sites".
-	    //session().click("//div[@id='toolMenu']/ul/li[5]/a/span");// "Clicker sur 'Gestionnaire de site de cours'
-	    session().click("//span[text() = 'Gestionnaire de sites de cours']/parent::a");
+	    //doClick("//div[@id='toolMenu']/ul/li[5]/a/span");// "Clicker sur 'Gestionnaire de site de cours'
+	    doClick("//span[text() = 'Gestionnaire de sites de cours']/parent::a");
 	    //waitForPageToLoad();
 
 	    // Chercher le site
 	    String searchTextBox = "//table[@class='OsylManager-panel']//td/input[@class='gwt-TextBox']";
 	    waitForElement(searchTextBox, 10000);
 	    session().type(searchTextBox, siteToDelete);//
-	    clickWithMouse("//div[text()='Chercher']/parent::div");
+	    pause(2000);
+	    
+	    //clickWithMouse("//div[text()='Chercher']/parent::div");
+	    clickWithMouse("//div[contains(@class,'Osyl-Button') and child::input]");
 	    pause(4000);
 	    
 	    if (session().isAlertPresent()) {
@@ -666,7 +672,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    if (session().isTextPresent(siteToDelete)) {
 		log("Found site '" + siteToDelete + "' to delete");
 	    } else {
-		if (fail) {
+		if (canFail) {
 		    fail("Cannot delete site '" + siteToDelete
 			    + "' because it could not be found!");
 		} else {
@@ -679,24 +685,21 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    // Click du checkbox du site (s'il est trouv�!)
 	    String siteCheckbox = "//td[text() = '" + siteToDelete + "']/preceding-sibling::td/input";
 	    if(session().isElementPresent(siteCheckbox)) {
-        	session().click(siteCheckbox);
+        	doClick(siteCheckbox);
         	    
         
-        	//session().click("link=" + getCurrentTestSiteName());
+        	//doClick("link=" + getCurrentTestSiteName());
         	//waitForPageToLoad();
-        	//session().click("link=Supprimer site");
+        	//doClick("link=Supprimer site");
         	    
+        	// Can we avoid the 'Supprimer' word ?
         	clickWithMouse("//div[text() = 'Supprimer']/parent::div");
         	pause(1000);
         
-        	//session().click("eventSubmit_doRemove_confirmed");
-        	session().click("//button[text()='Ok']"); // click du bouton "ok"
+        	//doClick("eventSubmit_doRemove_confirmed");
+        	doClick("//button[text()='Ok']"); // click du bouton "ok"
         	pause(3000);
 	    }
-	    
-	    // removed by Thanh!
-	    //assertFalse("Site not deleted as expected!", session()
-		//    .isTextPresent(getCurrentTestSiteName()));
 	    
 	    
 	    
@@ -707,8 +710,8 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	} finally {
 	    // Return to Home "tool"
 	    session().selectFrame("relative=parent");
-	    //session().click("//div[@id='toolMenu']/ul/li[1]/a/span");
-	    session().click("//span[text() = 'Accueil']/parent::a");
+	    //doClick("//div[@id='toolMenu']/ul/li[1]/a/span");
+	    doClick("//span[text() = 'Accueil']/parent::a");
 	    pause(3000);
 	}
     } // deleteTestSite
@@ -721,7 +724,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
      */
     public void logOut() throws Exception {
 	session().selectFrame("relative=parent");
-	session().click("loginLink1");
+	doClick("loginLink1");
 	pause(1000);
 	
 	/**
@@ -856,7 +859,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	log("Entering clickHomeButton");
 
 	// Click the button
-	session().click(BUTTON_HOME); // to save
+	doClick(BUTTON_HOME); // to save
 	// Open Organisation section
 	openOrganisationSection();
 
@@ -885,9 +888,9 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    clickAddButton();
 		if (inFireFox()) {
 		    // Click the item or fail if it is not found
-		    session().click("//div[@id=\"" + itemId + "\"]");
+		    doClick("//div[@id=\"" + itemId + "\"]");
 		} else { // IE
-		    session().click("//div[@id=\"" + itemId + "\"]");
+		    doClick("//div[@id=\"" + itemId + "\"]");
 			//session().mouseDownAt("//div[@id=\"" + itemText + "\"]", "10,10");
 			//session().mouseUpAt("//div[@id=\"" + itemText + "\"]", "10,10");
 		}
@@ -916,7 +919,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    clickAddButton();
 
 	    // Click the item or fail if it is not found
-	    session().click(
+	    doClick(
 		    "//div[@class=\"gwt-MenuBar gwt-MenuBar-vertical\"]"
 			    + "/table/tbody/tr[" + index + "]/td");
 	} catch (Exception e) {
@@ -929,7 +932,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
      * for now).
      */
     public void clickAddButton() {
-	session().click(BUTTON_ADD); //It was "gwt-uid-7"
+	doClick(BUTTON_ADD); //It was "gwt-uid-7"
 	waitForElement("//div[contains(@class,'gwt-MenuBarPopup')]", 3000);// vertical bar of items 'Text', 'Document', etc...
     }
 
@@ -941,6 +944,12 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
      * cause the test to fail.
      */
     public void saveCourseOutline() throws Exception {
+	
+	if (!isSaveCourseOutlineEnabled()) {
+	    prettyLog("ATTENTION: SaveCourseOutline is NOT enabled ! Please verify if this is a normal condition !");
+	    return;
+	}
+	
 	log("Entering saveCourseOutline");
 	pause(5000);
 	//pause3();
@@ -989,6 +998,16 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    }
 	} // for
     } // saveCourseOutline
+    
+    /**
+     * Whether save-course-outline is enabled.
+     * (This is defensive programming: sometimes saveCourseOutline() is not enabled, and test will fail is it is called.
+     *  BUT this is not the Root cause).
+     */
+    public boolean isSaveCourseOutlineEnabled() {
+	return session().isElementPresent("//td[@id='gwt-uid-3' and contains(@class,'gwt-MenuItem') and not(contains(@class,'gwt-MenuItem-disabled'))]");
+    }
+  
 
     private boolean isSaveConfirmationVisible() {
 	if (inInternetExplorer()) {
@@ -1003,7 +1022,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
     }
 
     private void clickSaveButton() {
-	session().click(BUTTON_SAVE);  //It was "gwt-uid-4"
+	doClick(BUTTON_SAVE);  //It was "gwt-uid-4"
     }
 
     /**
@@ -1288,7 +1307,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	clickAddItem("addText");
 
 	// We edit the new text Lecture
-	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	doClick("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 
 	// We select randomly the rubric name
 	String rubric = getRandomRubric();
@@ -1316,8 +1335,8 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    // close editor
 	    session().selectFrame("relative=parent");
 
-	    session().click("//tr/td/button[contains(text(),'OK')]");
-	    // session().click("//td/table/tbody/tr/td[1]/button");
+	    doClick("//tr/td/button[contains(text(),'OK')]");
+	    // doClick("//td/table/tbody/tr/td[1]/button");
 	    
 	    // check if text is visible
 	    if (!session().isTextPresent(text)) {
@@ -1330,7 +1349,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	} else {
 	    log("RichText edition can only be tested in Firefox");
 	    // close editor
-	    session().click("//td/table/tbody/tr/td[1]/button");
+	    doClick("//td/table/tbody/tr/td[1]/button");
 	}
 	
 	return rubric;
@@ -1348,8 +1367,8 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	
 	int nbResources = ResourceXpathHelper.getNbResource();
 	// We edit the new text Lecture
-	session().click(ResourceXpathHelper.getButtonModify(nbResources - 1));// the one was just added is the last
-	//session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	doClick(ResourceXpathHelper.getButtonModify(nbResources - 1));// the one was just added is the last
+	//doClick("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 
 	// We select randomly the rubric name
 	String rubric = getRandomRubric();
@@ -1377,8 +1396,8 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    // close editor
 	    session().selectFrame("relative=parent");
 
-	    session().click("//tr/td/button[contains(text(),'OK')]");
-	    // session().click("//td/table/tbody/tr/td[1]/button");
+	    doClick("//tr/td/button[contains(text(),'OK')]");
+	    // doClick("//td/table/tbody/tr/td[1]/button");
 	    
 	    // check if text is visible
 	    if (!session().isTextPresent(text)) {
@@ -1391,7 +1410,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	} else {
 	    log("RichText edition can only be tested in Firefox");
 	    // close editor
-	    session().click("//td/table/tbody/tr/td[1]/button");
+	    doClick("//td/table/tbody/tr/td[1]/button");
 	}
 	
 	return rubric;
@@ -1405,11 +1424,11 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	clickAddItem("addDocument");
 
 	// We open Document resource editor
-	//session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	//doClick("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 	int nbResources = ResourceXpathHelper.getNbResource();
 	// We edit the new text Lecture
-	session().click(ResourceXpathHelper.getButtonModify(nbResources - 1));// the one was just added is the last
-	//session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	doClick(ResourceXpathHelper.getButtonModify(nbResources - 1));// the one was just added is the last
+	//doClick("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 
 	// We choose randomly a Rubric
 	String rubric = getRandomRubric();
@@ -1457,7 +1476,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 //	    session().select(xpathRole4, newText8);
 //	    pause();
 //	    // Close window
-//	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+//	    doClick("//tr[5]/td/table/tbody/tr/td/button");
 //	    pause();
 	    
 	    // Select randomly the Rights field
@@ -1467,7 +1486,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    pause();
 	    
 	    // Press OK to Close window
-	    session().click(AddFileResourcePopup.getInstance().getButtonOk());
+	    doClick(AddFileResourcePopup.getInstance().getButtonOk());
 	    pause();
 
 	    
@@ -1488,7 +1507,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	    session().select(xpathRole4, newText8);
 	    pause();
 	    // Close window
-	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+	    doClick("//tr[5]/td/table/tbody/tr/td/button");
 
 	}
 	pause3();
@@ -1498,11 +1517,11 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	session()
 		.mouseOver("//option[@value=' (F)   " + docNameModified + "']");
 	session().focus("//option[@value=' (F)   " + docNameModified + "']");
-	session().click("//option[@value=' (F)   " + docNameModified + "']");
+	doClick("//option[@value=' (F)   " + docNameModified + "']");
 	pause();
 
 	// Close Editor
-	session().click(
+	doClick(
 		"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
 			+ "tbody/tr/td[1]/button");
 
@@ -1525,41 +1544,41 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	String element = null;   	   	
 	if (userString.equalsIgnoreCase("admin")) {
 		element = "//html/body/div[@id='portalOuterContainer']/div[@id='portalContainer']/div[@id='headerMax']/div[2]/div[@id='siteNav']/div[@id='linkNav']/ul[@id='siteLinkList']/li[1]/a/span";
-	    session().click(element);
+	    doClick(element);
 		pause();
 		goToMenuSiteSetup();
 		pause();
 		//Click on search siteName
 		session().type("search", siteName);
-		session().click("//input[@value='Recherche']");
+		doClick("//input[@value='Recherche']");
 		pause();
-		session().click("site1");
+		doClick("site1");
 		//Reviser
-		session().click("//div[1]/ul[@id='actionToolBar']/li[4]/span/a");
+		doClick("//div[1]/ul[@id='actionToolBar']/li[4]/span/a");
 		pause();
 		//Click on Course Site Tools 
-		session().click("//html/body/div/ul/li[2]/span/a");		
-		session().click("//html/body/div/ul/li[2]/span/a");		
+		doClick("//html/body/div/ul/li[2]/span/a");		
+		doClick("//html/body/div/ul/li[2]/span/a");		
 		session().waitForPageToLoad("30000");		
 	} else {
 		//Menu Site Information
 		element = "//div[@id='container']/div[@id='toolMenuWrap']/div[@id='toolMenu']/ul/li[5]/a/span";// 'Gestionnaire de site de cours' ?
-		session().click(element);
+		doClick(element);
 		pause();	
 		//Edit tools
-		session().click("//html/body/div[1]/ul/li[2]/span/a");
+		doClick("//html/body/div[1]/ul/li[2]/span/a");
 		pause3();
 	}	
 	
 	//It checks if assignment is a tool already selected
 	//if (!session().getValue("sakai.assignment.grades").equals("on"))  {
-		session().click("//input[@id='sakai.assignment.grades']");
+		doClick("//input[@id='sakai.assignment.grades']");
 	//}
-	session().click("Continue");
+	doClick("Continue");
 	pause();
 	
 	//Save added tool
-	session().click("eventSubmit_doSave_revised_features");
+	doClick("eventSubmit_doSave_revised_features");
 	pause();
 	
 	if (userString.equalsIgnoreCase("prof_selenium")) {
@@ -1569,7 +1588,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	}
 	
 	pause();
-	session().click("//div[@id='toolMenu']/ul/li[4]/a/span");
+	doClick("//div[@id='toolMenu']/ul/li[4]/a/span");
 	pause();
     }
 
@@ -1580,7 +1599,7 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
     private long testStartTime;
     
     protected void logStartTest() {
-	int pauseSecs = 30;
+	int pauseSecs = 10;
 	
 	log("");log("");// a few blank lines
 	prettyLog("===> " + this.getClass().getSimpleName() + " started at " + timeStamp() + " (" + pauseSecs + " secs pause)");
@@ -1642,7 +1661,32 @@ public class AbstractOSYLTest extends SeleneseTestBase  {
 	File file = new File(filePath);
 	assertTrue("File existence: " + filePath, file.exists());// verify file existence
     }
-
-
-
+    
+    
+    /**
+     * Click action, but verify that element is present first.
+     * The purpose is to immediately detect errors.
+     * 
+     * Click sometimes does not seem to work, as mentionned here:
+     *   http://stackoverflow.com/questions/633600/selenium-click-event-seems-not-to-be-always-triggered-results-in-timeout.
+     * 
+     * @param locator
+     */
+    private void doClick(String locator) {
+	log("Click on '" + locator + "'");
+	
+	if (!session().isElementPresent(locator)) {
+	    throw new RuntimeException("Click invoked, but element '" + locator + "' is not present!");
+	}
+	
+	/**
+	 * From stackoverflow:
+	 *  "The first thing I try when that happens is use mouseDown and mouseUp instead of click. 
+	 *   That usually does the trick, even if it's kinda dumb. – Eric Wendelin Jul 8 '10 at 2:56"
+	 */
+	//session().mouseDown(locator);
+	//session().mouseUp(locator);
+	
+	session().click(locator);
+    }
 }

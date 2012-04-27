@@ -171,6 +171,8 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	// Save modifications
 	saveCourseOutline();
 	pause();
+	
+	
 	// ---------------------------------------------------------------------------//
 	// Add Document //
 	// ---------------------------------------------------------------------------//
@@ -198,7 +200,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 			newText12);
 	
 		// Open form to upload a first document
-		if (inFireFox()) {
+		//if (inFireFox()) {
 	
 		    session().mouseOver(
 			    "//div[@class=\"Osyl-FileBrowserTopButto"
@@ -235,7 +237,8 @@ public class TeachingMaterial extends AbstractOSYLTest {
 		    session().click(AddFileResourcePopup.getInstance().getButtonOk());
 		    pause();
 	
-		}/*
+		//}
+		 /*
 		  * else { session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
 		  * session().focus("//input[@class=\"gwt-FileUpload\"]");
 		  * session().getCursorPosition("//input[@class=\"gwt-FileUpload\ "]");
@@ -243,7 +246,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 		  */
 	
 		// Open form to upload a second document
-		if (inFireFox()) {
+		//if (inFireFox()) {
 	
 		    // Add new document
 		    doccum = FILE_DIR + PPT_FILE;
@@ -265,7 +268,8 @@ public class TeachingMaterial extends AbstractOSYLTest {
 		    session().click(AddFileResourcePopup.getInstance().getButtonOk());
 		    pause();
 	
-		}/*
+		//}
+		 /*
 		  * else { session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
 		  * session().focus("//input[@class=\"gwt-FileUpload\"]"); }
 		  */
@@ -288,6 +292,29 @@ public class TeachingMaterial extends AbstractOSYLTest {
 		//Add message to log file
 		logFile(TEACHING_MATERIAL_TEST, CT_027, PASSED);		
 	}
+	
+	/**
+	 * Citations references are no more avaible (Avril 2012)
+	 */
+	// addCitations();
+	
+	// Save modifications
+	if (isSaveCourseOutlineEnabled()) {
+	    saveCourseOutline();
+	} else {
+	    // SaveCourseOutline should be enabled due to the delete-citation above
+	    prettyLog("ATTENTION: SaveCourseOutline is NOT enabled ! it should be enabled due to 'delete citation' ! Please verify!");
+	}
+	pause();
+
+	session().selectFrame("relative=parent");
+	logOut();
+
+	logEndTest();
+	
+    } // TeachingMaterialTest
+
+    private void addCitations() throws Exception {
 	// ---------------------------------------------------------------------------//
 	// Add Citation //
 	// ---------------------------------------------------------------------------//
@@ -511,16 +538,6 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	
 	//Add message to log file
 	logFile(TEACHING_MATERIAL_TEST, CT_054, PASSED);
-	
-	// Save modifications
-	saveCourseOutline();
-	pause();
-
-	session().selectFrame("relative=parent");
-	logOut();
-
-	logEndTest();
-	
-    } // TeachingMaterialTest
+    }
 
 }

@@ -50,61 +50,811 @@ import org.testng.annotations.Test;
 
 public class AssessmentTest extends AbstractOSYLTest {
 
-    @Test(groups = "OSYL-Suite", description = "OSYLEditor test. Add a contact resource, edit it and save the changes")
-    @Parameters( { "webSite" })
-    public void TestAddAssessment(String webSite) throws Exception {
-	
-	logStartTest();
+        @Test(groups = "OSYL-Suite", description = "OSYLEditor test. Add a contact resource, edit it and save the changes")
+        @Parameters( { "webSite" })
+        public void TestAddAssessment(String webSite) throws Exception {
+    	
+    	logStartTest();
+    
+    	// We log in
+    	logInAsAdmin(webSite);
+    	try {
+    	    deleteTestSite(false);
+    	    goToCurrentSite();
+    	} catch (IllegalStateException e) {
+    	    createTestSite();
+    		logFile(OSYL_TEST, CT_002, PASSED);
+    	    goToCurrentSite();    
+    	}
+    	//waitForOSYL();
+    	logFile(OSYL_TEST, CT_069, PASSED);
+    	
+    	//Add Assessment tool in OutLine Course
+    	addAssessmentInOutLinecours();
+    	//Add a work in Assessment tool
+    	goToMenuAssessment();		
+    	createAssignmentGrades();
+    	//On returning to OutLine Course
+    	goToMenuOsyl();	
+    	
+    	// ---------------------------------------------------------------------------//
+    	// Add Assessment Unit //
+    	// ---------------------------------------------------------------------------//
+    
+    	prettyLog("Add 2 assessment units");
+    	
+    
+    
+    	 /*
+    	  * click on Assessment section and add 2 assessments
+    	  */
+    	openEvaluationsSection();
+    	clickAddItemWithLog("addAssessmentUnit");
+     	clickAddItemWithLog("addAssessmentUnit");
+    	pause(2000);
+    
+    	//Add message to log file
+    	logFile(ASSESSMENT_TEST, CT_009, PASSED);
+    	
+    	/*
+    	 * Modify assessment unit
+    	 */
+    	String assementUnitName = modifyAssessmentUnit();
+    
+    	// We type the clickable text
+	String timeStampStr = timeStamp();// exemple '2012-04-25 14-48-55' 
+	String rubricChosen = addDocumentToAssessment(timeStampStr); // exemple 'Modalités de remise et pénalités'
+    		
+    	/**
+    	 * 
+    	 */
+    	addTextToAssessment();	  
 
-	// We log in
-	logInAsAdmin(webSite);
-	try {
-	    deleteTestSite(false);
-	    goToCurrentSite();
-	} catch (IllegalStateException e) {
-	    createTestSite();
-		logFile(OSYL_TEST, CT_002, PASSED);
-	    goToCurrentSite();    
+    	// The button 'Ajouter' does not exist anymore!!!
+    	// addCitationToAssessment(assementUnitName);
+    	
+    	openOverviewForAssessment();
+    	
+    	// ---------------------------------------------------------------------------//
+    	// Add Assignment tool link in Assessment Unit //
+    	// ---------------------------------------------------------------------------//
+    
+    	addToolLinkToAssessment();
+    	
+    	// ---------------------------------------------------------------------------//
+    	// Add Hyperlink in Assessment Unit //
+    	// ---------------------------------------------------------------------------//
+    
+    	addHyperlinkToAssessment();
+         		
+    	// ---------------------------------------------------------------------------//
+    	// Overview //
+    	// ---------------------------------------------------------------------------//
+    		
+    	verifyAssessmentNameInOverview(timeStampStr, rubricChosen);
+    	
+    	// ---------------------------------------------------------------------------//
+    	// Switch two Assessments //
+    	// ---------------------------------------------------------------------------//
+    
+    	deleteAssessment();
+    	
+
+   	// Save modifications
+    	if (isSaveCourseOutlineEnabled()) {
+    	    saveCourseOutline();
+    	} else {
+    	    // SaveCourseOutline should be enabled due to the delete-citation above
+    	    prettyLog("ATTENTION: SaveCourseOutline is NOT enabled ! it should be enabled due to 'delete assessment' ! Please verify!");
+    	}
+    	pause();
+    
+    	//Add message to log file
+    	logFile(ASSESSMENT_TEST, CT_070, PASSED);	
+    	
+    	// Log out
+    	session().selectFrame("relative=parent");
+    	logOut();
+    	
+    	// ----------------------------------------------
+    	// Test completion
+    	// ----------------------------------------------
+    	logEndTest();
+        }
+
+
+	private void deleteAssessment() throws Exception {
+	    // Click on Assessment section
+	    openEvaluationsSection();
+	    
+	    //pause();
+   
+	    // We now switch the 1st and 2nd assessments (different ways to do it for
+	    // MSIE and FF, unfortunately):
+	    //It needs coding
+   
+	    // ---------------------------------------------------------------------------//
+	    // Delete Assessment Unit //
+	    // ---------------------------------------------------------------------------//
+   
+	    // We delete Assessment 1
+	    prettyLog("Delete first assessment");
+	    session().click(ResourceXpathHelper.getButtonDelete(0));
+	    //session().click("//tr[" + Val2 + "]/td/table/tbody/tr/td[2]/div/table[2]" + "/tbody/tr/td[2]/button");
+   
+	    //session().click("//tr[2]/td/table/tbody/tr/td/button");// confirm deletion
+	    session().click("xpath=(//div[@class='gwt-DialogBox']//button)[1]");
+	    pause(1000);
 	}
-	//waitForOSYL();
-	logFile(OSYL_TEST, CT_069, PASSED);
-	
-	//Add Assessment tool in OutLine Course
-	addAssessmentInOutLinecours();
-	//Add a work in Assessment tool
-	goToMenuAssessment();		
-	createAssignmentGrades();
-	//On returning to OutLine Course
-	goToMenuOsyl();	
-	
+
+
+        /**
+         * 
+         * @param timeStampStr
+         * @param rubricChosen
+         * @throws Exception
+         */
+	private void verifyAssessmentNameInOverview(String timeStampStr,
+		String rubricChosen) throws Exception {
+	    prettyLog("Attendee overview. Expected: " + rubricChosen);
+	    session().click(BUTTON_PREVIEW); //It was "gwt-uid-8"
+	    // Attendee Overview
+	    session().click(
+	    	"//html/body/div/div/table/tbody/tr[2]/td[2]/div/"
+	    		+ "div/table/tbody/tr/td");
+	    pause();
+	    // Click on Assessment section
+	    openEvaluationsSection();
+	    
+	    // Edit first Assessment unit
+	    openResource(0);
+   
+	    	//if (inFireFox()) {	    
+   //		    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //		    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //		    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	    	//} else { // IE
+	    	//	String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+	    	//	session().mouseDownAt(locator, "10,10");
+	    	//	session().mouseUpAt(locator, "10,10");
+	    	//}
+   
+	    if (!session().isTextPresent(rubricChosen)) {
+	        logAndFail("Expected to see rubric [" + rubricChosen
+	    	    + "] after text edition");
+	    }
+	    log("OK: Selected rubric is visible");
+   
+	    if (!session().isTextPresent(timeStampStr)) {
+	        logAndFail("Expected to see rubric [" + timeStampStr
+	    	   + "] after text edition");
+	    }
+	    log("OK: Text is visible");
+   
+	    // Close Overview
+	    session().click(
+	    	"//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
+	    pause();
+	}
+
+
+	private String addHyperlinkToAssessment() throws Exception {
+	    // Click on Assessment section
+	    openEvaluationsSection();
+   
+	    // Edit first Assessment unit
+	    openResource(0);
+   //	if (inFireFox()) {
+   //		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //	} else { // IE
+   //		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+   //		session().mouseDownAt(locator, "10,10");
+   //		session().mouseUpAt(locator, "10,10");
+   //	}
+	    
+	    // Add Hyperlink in Assessment Unit
+	    prettyLog("addURL");
+	    clickAddItem("addURL");
+   
+	    // We edit the new Hyperlink rubric
+	    session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+   
+	    // We select attendee on dissemination level
+	    session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
+	    	"index=0");
+   
+	    // We select randomly the rubric name
+	    String selectedRubric2 = getRandomRubric();
+	    log("Selecting rubric [" + selectedRubric2 + "]");
+	    changeRubric(selectedRubric2);
+   
+	    // We type the clickable text
+	    String newText11 = timeStamp();
+	    session().type("//td[2]/input", newText11);
+   
+	    // We type the URL link
+	    String newText10 = "http://webmail.hec.ca/";
+	    session().type("//tr[2]/td[2]/input", newText10);
+	    pause();
+   
+	    // We click OK to close editor
+	    session().click("//td/table/tbody/tr/td[1]/button");
+   
+	    // We click URL to test
+	    session().click("link=" + newText11);
+   
+	    // Save modifications
+	    saveCourseOutline();
+	    pause();
+   
+	    //Add message to log file
+	    logFile(ASSESSMENT_TEST, CT_028, PASSED);
+	    
+	   	// ---------------------------------------------------------------------------//
+	    	// Verify assessment
+	    	// ---------------------------------------------------------------------------//
+	    	
+	    	if (inFireFox()) {
+	    	    prettyLog("Attendee overview. Expected: " + selectedRubric2);
+	    	    // Overview
+	    	    session().click(BUTTON_PREVIEW); //It was "gwt-uid-8"
+	    	    // Attendee Overview
+	    	    session().click(
+	    		    "//html/body/div/div/table/tbody/tr[2]/td[2]/div/"
+	    			    + "div/table/tbody/tr/td");
+	    	    pause();
+	    
+	    	    // Click on Assessment section
+	    	    openEvaluationsSection();
+	    
+	    	    // Edit the first (? not last) Assessment unit
+	    	    openResource(0);
+	    //	    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	    //	    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	    //	    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	    
+	    	    if (!session().isTextPresent(selectedRubric2)) {
+	    		logAndFail("Expected to see rubric [" + selectedRubric2
+	    			+ "] after text edition");
+	    	    }
+	    	    log("OK: Selected rubric is visible");
+	    
+	    	    // Close Overview
+	    	    session()
+	    		    .click(
+	    			    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
+	    	    pause();
+	    
+	    	 }  
+
+	    return selectedRubric2;
+	}
+
+
+	private void addToolLinkToAssessment() throws Exception {
+	    // Click on Assessment section
+	    openEvaluationsSection();
+	    
+	    // Edit first Assessment unit
+	    openResource(0);
+   //	if (inFireFox()) {
+   //		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //	} else { // IE
+   //		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+   //		session().mouseDownAt(locator, "10,10");
+   //		session().mouseUpAt(locator, "10,10");
+   //	}	
+	    
+	    // Add Hyperlink in Assessment Unit
+	    prettyLog("addEntity");
+	    clickAddItem("addEntity");
+	    
+	    // We edit the new Hyperlink rubric
+	    session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	    // We add an assignment 
+	    pause();
+	    pause();
+	    //pause();
+	    
+	    session().clickAt("//div/div/div/div[2]/table/tbody/tr/td[1]/img", "");
+	    pause();
+	    
+	    session().mouseOver("//tr[2]/td/div/div/div/div[2]/div/div/div[@class='gwt-TreeItem']");
+	    session().mouseDown("//tr[2]/td/div/div/div/div[2]/div/div/div[@class='gwt-TreeItem']");
+	    pause();	
+	    
+	    session().select("listBoxFormElement", "label=Description");
+	    session().type("//tr[2]/td/input", "It's an example for assessment (remis de travaux)");
+	    session().select("//td[4]/table/tbody/tr[2]/td/select", "label=Obligatoire");
+	    pause();	
+	    
+	    // We close Editor
+	    session().click("//td/table/tbody/tr/td[1]/button");
+	    pause();	
+	    
+	    //Add message to log file
+	    logFile(ASSESSMENT_TEST, CT_105, PASSED);
+	}
+
+
+	private void openOverviewForAssessment() throws Exception {
+	    // ---------------------------------------------------------------------------//
+	    // Overview for Assessment Unit //
+	    // ---------------------------------------------------------------------------//	
+	    session().click(BUTTON_PREVIEW); //It was "gwt-uid-8"
+	    // Attendee Overview
+	    session().click(
+	    	"//html/body/div/div/table/tbody/tr[2]/td[2]/div/"
+	    		+ "div/table/tbody/tr/td");
+	    pause();
+	    pause();	
+	    // Click on Assessment section
+	    openEvaluationsSection();
+   
+	    //int Val = nbResources + 3;
+   
+	    // Edit first Assessment unit
+	    openResource(0);
+   //	if (inFireFox()) {	    
+   //		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //	} else { // IE
+   //		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+   //		session().mouseDownAt(locator, "16,16");
+   //		session().mouseUpAt(locator, "16,16");
+   //	}	
+   
+	    /** AH
+	    if (!session().isTextPresent(selectedRubric4)) {
+	        logAndFail("Expected to see rubric [" + selectedRubric4
+	    	    + "] after text edition");
+	    }
+	    log("OK: Selected rubric is visible");
+	     **/
+	    /**
+	    if (inFireFox()) {	
+	    	if (!session().isTextPresent(Auteur)) {
+	    	    logAndFail("Expected to see text [" + Auteur + " (" + Annee + ")."
+	    		    + Titre + "," + Editeur + "," + Lieu + "."
+	    		    + "] after text edition");
+	    	}
+	    	log("OK: Text is visible");
+	    }	**/
+   
+	    // Close Overview
+	    session()
+	    	.click(
+	    		"//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
+	    pause();
+	}
+
+
+	private void addCitationToAssessment(String assementUnitName)
+		throws Exception {
+	    // ---------------------------------------------------------------------------//
+	    // Add Citation in Assessment Unit //
+	    // ---------------------------------------------------------------------------//
+   
+	    // Click on Assessment section
+	    openEvaluationsSection();
+   
+	    // Edit first Assessment unit
+	    prettyLog("Edit first Assessment: Add BiblioResource: " + assementUnitName);
+	    openResource(0);
+   //	if (inFireFox()) {	    
+   //		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+   //	} else { // IE
+   //		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+   //		session().mouseDownAt(locator, "16,16");
+   //		session().mouseUpAt(locator, "16,16");
+   //	}
+   
+	    // Add new Citation
+	    clickAddItemWithLog("addBiblioResource");
+   
+	    // open Citation resource editor
+	    session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	    pause();
+	    pause();
+	    
+	    // We choose randomly a Rubric
+	    String selectedRubric4 = getRandomRubric();
+	    log("Selecting rubric [" + selectedRubric4 + "]");
+	    changeRubric(selectedRubric4);
+   
+	    // Create a new citation list
+	    session().answerOnNextPrompt("NewListe_" + assementUnitName);
+	    log("NewListe_" + assementUnitName + " is created...");
+	    pause();
+	    pause();	
+	    pause();
+	    pause();
+	    // Open form to upload a first Citation (Book)
+	    if (inFireFox()) {
+	    	// Create a new citation list
+	    	String locator = "//div[contains(@title,'Ajouter')]";	
+	        session().mouseOver(locator);
+	        session().mouseDown(locator);
+	        session().mouseUp(locator);	    
+	    	assertTrue(session().isPromptPresent());				
+	    	// Open Citation list works different
+	    	session().click("//tr[2]/td/select");
+	    	pause();
+	    	session().select("//tr[2]/td/select", "(LREF) NewListe_" + assementUnitName);
+	    	pause();		
+	    	session().doubleClick("//tr[2]/td/select/option");
+	    	log("New elements is selected...");		
+	        session().mouseOver(locator);
+	        session().mouseDown(locator);
+	        session().mouseUp(locator);			    
+	    } else { //IE
+	    	// Create a new citation list
+	    	String locator = "//div[contains(@title,'Ajouter')]";	
+	        session().mouseOver(locator);		
+	    	session().mouseDownAt(locator, "10,10");
+	    	session().mouseUpAt(locator, "10,10");
+	    	pause();
+	    	pause();				
+	    	// Open Citation for IE
+	    	session().click("//tr[2]/td/select");
+	    	pause();		
+	    	session().select("//tr[2]/td/select", "index=1");
+	    	pause();		
+	    	session().doubleClick("//tr[2]/td/select/option");
+	    	log("New elements is selected...");			
+	        session().mouseOver(locator);		
+	    	session().mouseDownAt(locator, "10,10");
+	    	session().mouseUpAt(locator, "10,10");		
+	    }	
+	    
+	    
+	    log("The format to fill is ready to open...");
+	    //-----------------------------------------------------------------------
+	    // Check if Opensyllabus displays a message error when the user click OK
+	    // without fill in the fields First Name, Last Name and Title.
+	    log("Validation de données vides...");	
+	    
+	    //session().click("//tr[22]/td/table/tbody/tr/td[1]/button");
+	    session().click(PopupUtils.DocumentAttributesPopup.getButtonOk());
+	    
+	    if (!session().isTextPresent(assementUnitName)) {
+	    	logAndFail("Expected to see text [" + assementUnitName
+	    			+ "] after text edition");
+	    	//Add message to log file
+	    	logFile(ASSESSMENT_TEST, CT_0093, FAILED);		
+	    }
+	    session().click("//tr[2]/td/table/tbody/tr/td/button");// close warning popup
+	    pause(1000);
+	    //pause();
+	    log("Button Citation selected...");	
+	    String Titre = "Titre" + timeStamp();
+	    String Auteur = "Auteur" + timeStamp();		
+	    String Annee = "Annee" + timeStamp();
+	    String Editeur = "Editeur" + timeStamp();
+	    String Lieu = "Lieu" + timeStamp();
+	    String ISBN = "ISBN" + timeStamp();
+	    log("Fields before showing...");	
+   
+	    // Fill the necessary fields	
+	    session().select("//select[@name='cipvalues']", "label=Livre");
+	    session().click("//tr[9]/td/table/tbody/tr/td[3]/input");		
+	    session().type("//tr[9]/td/table/tbody/tr/td[3]/input", Titre);	
+	    session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Auteur);
+	    session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Annee);
+	    session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Editeur);
+	    session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Lieu);
+	    session().type("//tr[19]/td/table/tbody/tr/td[3]/input", ISBN);
+	    log("Fields before showing...");
+	    // Close Window
+	    pause();
+	    session().click(PopupUtils.DocumentAttributesPopup.getButtonOk());
+	    //session().click("//tr[22]/td/table/tbody/tr/td[1]/button");
+	    pause();
+	    pause();
+	    //pause();
+	    //pause();	
+	    log("Fields before showing...");
+	    // Select first resource in browser window
+	    session().focus("//option[@value=' (REF)   " + Titre + "']");
+	    session().select("//tr[2]/td/table/tbody/tr[2]/td/select", "value= " + "(REF)   " + Titre);
+	    session().mouseOver("//option[@value=' (REF)   " + Titre + "']");
+	    session().click("//option[@value=' (REF)   " + Titre + "']");
+	    pause();
+	    pause();
+	    //pause();
+	    
+	    // Close Editor
+	    session().click("//td/table/tbody/tr/td[1]/button");
+	    pause();
+	    pause();	
+	    // Save Assessment for FF and IE	
+	    saveCourseOutline(); 
+	    pause();
+   
+	    //Add message to log file
+	    logFile(ASSESSMENT_TEST, CT_0093, PASSED);
+	}
+
+
+	/**
+	 * 
+	 * @param timeStampStr
+	 * @return The rubric choosen for the document
+	 * @throws Exception
+	 */
+	private String addDocumentToAssessment(String timeStampStr) throws Exception {
+	    // ---------------------------------------------------------------------------//
+	    // Add Document in Assessment Unit //
+	    // ---------------------------------------------------------------------------//
+   
+	    // Click on Assessment section	
+	    openEvaluationsSection();
+   
+	    // Edit first Assessment unit
+	    prettyLog("Edit first Assessment unit: Add document");	
+	    openResource(0);// 0 = first resource
+   
+	    //if (inFireFox()) {	
+	        // Add new document
+	        clickAddItemWithLog("addDocument");
+   
+	        // We open Document resource editor
+	        session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+   
+	        // We select attendee on dissemination level
+	        // session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
+	        // ---It isn't necessary
+	        // "index=0");
+   
+
+		// We choose randomly a Rubric
+	        // exemple "Modalités de remise et pénalités"
+		String rubricChosen = getRandomRubric();
+
+	        log("Selecting rubric [" + rubricChosen + "]");
+	        changeRubric(rubricChosen);
+   
+	        pause(2000);
+	        session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]",
+	    	    timeStampStr);
+   
+	    // Open form to upload a first document
+   
+	        session().mouseOver(
+	    	    "//div[@class=\"Osyl-FileBrowserTopButto"
+	    		    + "n Osyl-FileBrowserTopButton-up\"]");
+	        session().mouseOver(
+	    	    "//div[@class=\"Osyl-FileBrowserTopButto"
+	    		    + "n Osyl-FileBrowserTopButton-up\"]");
+	        session().mouseOver(
+	    	    "//div[@class=\"Osyl-FileBrowserTopButto"
+	    		    + "n Osyl-FileBrowserTopButton-up\"]");
+	        session().mouseOut(
+	    	    "//div[@class=\"Osyl-FileBrowserTopButton"
+	    		    + " Osyl-FileBrowserTopButton-up-hovering\"]");
+	        session().mouseOut(
+	    	    "//div[@class=\"Osyl-FileBrowserTopButton"
+	    		    + " Osyl-FileBrowserTopButton-up-hovering\"]");
+	        session().mouseDown(
+	    	    "//div[@class=\"Osyl-FileBrowserTopButto"
+	    		    + "n Osyl-FileBrowserTopButton-up-hovering\"]");
+	        session().mouseUp(
+	    	    "//div[@class=\"Osyl-FileBrowserTopButton"
+	    		    + " Osyl-FileBrowserTopButton-down-hovering\"]");
+   
+	        pause(2000);
+	        // Open form to upload a first document
+	    	session().type("uploadFormElement", FILE_DIR + XLS_FILE);
+   
+	        // We select randomly the rights field
+	        String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
+	        String newText8 = getRandomOption(xpathRole4);
+	        session().select(xpathRole4, newText8);
+	        pause();
+	    	
+	        //We select randonly the resource type field
+	        String xpathRole5 = "//div[2]/form/table/tbody/tr[7]/td/select";	    
+	        session().select(xpathRole5, getRandomOption(xpathRole5));
+	        pause();
+   
+	        // Close window
+	        session().click("//tr[8]/td/table/tbody/tr/td[1]/button");
+	        pause();
+	        // session().click("document.forms[0].elements[2]");
+   
+	        // Open form to upload a second document
+	        session().mouseOver("//td[3]/div/img");
+	        session().mouseDown("//td[3]/div/img");
+	        session().mouseUp("//td[3]/div/img");
+   
+	        // Choose file
+	    	session().type("//input[@class=\"gwt-FileUpload\"]",FILE_DIR + PPT_FILE);	    
+   
+	        // We select randomly the rights field
+	        xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
+	        newText8 = getRandomOption(xpathRole4);
+	        session().select(xpathRole4, newText8);
+	        //pause();
+   
+	        //We select randonly the resource type field
+	        xpathRole5 = "//div[2]/form/table/tbody/tr[7]/td/select";	    
+	        session().select(xpathRole5, getRandomOption(xpathRole5));
+	        pause();
+   
+	        // Close window
+	        session().click("//tr[8]/td/table/tbody/tr/td[1]/button");
+	        pause();
+   
+	    //else
+	    //{	
+	    	/*
+	    	* else { session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
+	    	* session().focus("//input[@class=\"gwt-FileUpload\"]"); }
+	    	*/
+	    	/**
+	    	String locator = "//div[contains(@title,'Ajouter')]";	
+	    	session().mouseOver(locator);		
+	    	session().mouseDownAt(locator, "10,10");
+	    	session().mouseUpAt(locator, "10,10");
+	    	**/	
+	    //}
+	    // Select the excel file in browser window	
+	    
+	    	session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
+	    		"value= (F" + ")   excel_file_1_.xls"); //fichier-excel_1_.xls
+	    	session().mouseOver("//option[@value=' (F)   excel_file_1_.xls']"); //fichier-excel_1_.xls
+	    	session().focus("//option[@value=' (F)   excel_file_1_.xls']");
+	    	session().click("//option[@value=' (F)   excel_file_1_.xls']"); // fichier-excel_1_.xlsx
+	    	pause();
+   
+	    	// Close Editor
+	    	session().click(
+	    		"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
+	    			+ "tbody/tr/td[1]/button");
+	    		
+	    	// Save modifications
+	    	saveCourseOutline();
+	    	pause();
+   
+	    	//Add message to log file
+	    	logFile(ASSESSMENT_TEST, CT_0092, PASSED);
+	    	
+	    	return rubricChosen;
+	}
+    
+
+    /**
+     * 
+     * @throws Exception
+     */
+    private void addTextToAssessment() throws Exception {
 	// ---------------------------------------------------------------------------//
-	// Add Assessment Unit //
+	// Add Text in Assessment Unit //
 	// ---------------------------------------------------------------------------//
 
-	prettyLog("Add 2 assessment units");
-
-	//click on Assessment section
+	// Click on Assessment section
 	openEvaluationsSection();
+	prettyLog("Edit first Assessment: Add Text");	
+
+	openResource(0);
+
+	String newText9 =
+	    "this is a text resource typed by "
+		    + "selenium, hope it works and you see it. Added on "
+		    + timeStamp() + " in Firefox";
+
+	// Save modifications
+//	saveCourseOutline(); WE dont need this.... Nothing to save (button is grayed out....)
+	pause();
 	//pause();
+	String selectedRubric1 = addText(newText9,LEVEL_PUBLIC);
+
+	if (inFireFox()) {
+	    
+	    // ---------------------------------------------------------------------------//
+	    // Open Attendee Overview
+	    // ---------------------------------------------------------------------------//
+	    prettyLog("Open Attendee Overview. Verify: " + selectedRubric1);
+
+	    // Overview
+	    session().click(BUTTON_PREVIEW); //It was "gwt-uid-8"
+	    // Attendee Overview
+	    session().click(
+		    "//html/body/div/div/table/tbody/tr[2]/td[2]/div/"
+			    + "div/table/tbody/tr/td");
+	    pause();
+	    //pause();
+	    // Click on Assessment section
+	    openEvaluationsSection();
+
+	    // Open first Assessment unit
+	    openResource(0);
+//	    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+//	    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+//	    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+
+	    pause();
+	    
+	    
+//prettyLog("[[[ Skipped this portion!!!");
+	    if (!session().isTextPresent(selectedRubric1)) {
+		logAndFail("Expected to see rubric [" + selectedRubric1
+			+ "] after text edition");
+	    }
+	    log("OK: Selected rubric is visible");
+//prettyLog("]]] Skipped this portion!!!");
+	    
+	    
+
+	    // Close Overview
+	    session()
+		    .click(
+			    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
+
+	    // ---------------------------------------------------------------------------//
+	    // Open Public Overview
+	    // ---------------------------------------------------------------------------//
+	    prettyLog("Open Public Overview: Verify: " + selectedRubric1);
+
+	    // Overview
+	    session().click(BUTTON_PREVIEW); //It was "gwt-uid-8"
+	    // Public Overview
+	    session().click(
+		    "//html/body/div/div/table/tbody/tr[2]/td[2]"
+			    + "/div/div/table/tbody/tr[2]/td");
+	    pause();
+		pause();
+	    // Click on Assessment section
+	    openEvaluationsSection();
+
+	    // Open fist (not last!) Assessment unit
+//	    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+//	    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+//	    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	    openResource(0);
+
+//prettyLog("[[[ Skipped this portion!!!");
+	    if (!(session().isTextPresent(selectedRubric1))) {
+	    	logAndFail("Expected to see rubric [" + selectedRubric1
+			+ "] after text edition on public overview");
+	    	//Add message to log file
+	    	logFile(ASSESSMENT_TEST, CT_0091, FAILED);	    	
+	    }
+	    log("OK: Selected rubric is visible");
+//prettyLog("]]] Skipped this portion!!!");
+
+	    // Close Overview
+	    session()
+		    .click(
+			    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
+	}
 	
-
-	// We add a first Assessment Unit
-	clickAddItemWithLog("addAssessmentUnit");
-
-	// We add a second Assessment Unit
-	clickAddItemWithLog("addAssessmentUnit");
-	pause(2000);
-
 	//Add message to log file
-	logFile(ASSESSMENT_TEST, CT_009, PASSED);
-	
+	logFile(ASSESSMENT_TEST, CT_0091, PASSED);
+    }
+    
 
+    /**
+     * 
+     * @param nbResources
+     * @return the assessment name
+     */
+    private String modifyAssessmentUnit() {
 	// We keep track of how many resources are showing to check that it
 	// is incremented as expected when we add one
 	int nbResources = ResourceXpathHelper.getNbResource();
 	//int resNb = getResourceCount() - 1;
 	log("We start with " + nbResources + " resources");
 
+
+	
 	// ---------------------------------------------------------------------------//
 	// Modify Assessment Unit //
 	// ---------------------------------------------------------------------------//
@@ -270,667 +1020,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	pause();
 	//Add message to log file
 	logFile(ASSESSMENT_TEST, CT_050, PASSED);
-
-	// ---------------------------------------------------------------------------//
-	// Add Document in Assessment Unit //
-	// ---------------------------------------------------------------------------//
-
-	// Click on Assessment section	
-	openEvaluationsSection();
-
-	// Edit first Assessment unit
-	prettyLog("Edit first Assessment unit: Add document");	
-	openResource(0);// 0 = first resource
-
-	if (inFireFox()) {	
-	    // Add new document
-	    clickAddItemWithLog("addDocument");
-
-	    // We open Document resource editor
-	    session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
-
-	    // We select attendee on dissemination level
-	    // session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
-	    // ---It isn't necessary
-	    // "index=0");
-
-	    // We choose randomly a Rubric
-	    String selectedRubric3 = getRandomRubric();
-	    log("Selecting rubric [" + selectedRubric3 + "]");
-	    changeRubric(selectedRubric3);
-
-	    // We type the clickable text
-	    String newText12 = timeStamp();
-	    session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]",
-		    newText12);
-
-	// Open form to upload a first document
-
-	    session().mouseOver(
-		    "//div[@class=\"Osyl-FileBrowserTopButto"
-			    + "n Osyl-FileBrowserTopButton-up\"]");
-	    session().mouseOver(
-		    "//div[@class=\"Osyl-FileBrowserTopButto"
-			    + "n Osyl-FileBrowserTopButton-up\"]");
-	    session().mouseOver(
-		    "//div[@class=\"Osyl-FileBrowserTopButto"
-			    + "n Osyl-FileBrowserTopButton-up\"]");
-	    session().mouseOut(
-		    "//div[@class=\"Osyl-FileBrowserTopButton"
-			    + " Osyl-FileBrowserTopButton-up-hovering\"]");
-	    session().mouseOut(
-		    "//div[@class=\"Osyl-FileBrowserTopButton"
-			    + " Osyl-FileBrowserTopButton-up-hovering\"]");
-	    session().mouseDown(
-		    "//div[@class=\"Osyl-FileBrowserTopButto"
-			    + "n Osyl-FileBrowserTopButton-up-hovering\"]");
-	    session().mouseUp(
-		    "//div[@class=\"Osyl-FileBrowserTopButton"
-			    + " Osyl-FileBrowserTopButton-down-hovering\"]");
-
-	    // Open form to upload a first document
-		session().type("uploadFormElement", FILE_DIR + XLS_FILE);
-
-	    // We select randomly the rights field
-	    String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
-	    String newText8 = getRandomOption(xpathRole4);
-	    session().select(xpathRole4, newText8);
-	    pause();
-		
-	    //We select randonly the resource type field
-	    String xpathRole5 = "//div[2]/form/table/tbody/tr[7]/td/select";	    
-	    session().select(xpathRole5, getRandomOption(xpathRole5));
-	    pause();
-
-	    // Close window
-	    session().click("//tr[8]/td/table/tbody/tr/td[1]/button");
-	    pause();
-	    // session().click("document.forms[0].elements[2]");
-
-	    // Open form to upload a second document
-	    session().mouseOver("//td[3]/div/img");
-	    session().mouseDown("//td[3]/div/img");
-	    session().mouseUp("//td[3]/div/img");
-
-	    // Choose file
-		session().type("//input[@class=\"gwt-FileUpload\"]",FILE_DIR + PPT_FILE);	    
-
-	    // We select randomly the rights field
-	    xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
-	    newText8 = getRandomOption(xpathRole4);
-	    session().select(xpathRole4, newText8);
-	    //pause();
-
-	    //We select randonly the resource type field
-	    xpathRole5 = "//div[2]/form/table/tbody/tr[7]/td/select";	    
-	    session().select(xpathRole5, getRandomOption(xpathRole5));
-	    pause();
-
-	    // Close window
-	    session().click("//tr[8]/td/table/tbody/tr/td[1]/button");
-	    pause();
-
-	//else
-	//{	
-		/*
-		* else { session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
-		* session().focus("//input[@class=\"gwt-FileUpload\"]"); }
-		*/
-		/**
-		String locator = "//div[contains(@title,'Ajouter')]";	
-		session().mouseOver(locator);		
-		session().mouseDownAt(locator, "10,10");
-		session().mouseUpAt(locator, "10,10");
-		**/	
-	//}
-	// Select the excel file in browser window	
-	
-		session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
-			"value= (F" + ")   excel_file_1_.xls"); //fichier-excel_1_.xls
-		session().mouseOver("//option[@value=' (F)   excel_file_1_.xls']"); //fichier-excel_1_.xls
-		session().focus("//option[@value=' (F)   excel_file_1_.xls']");
-		session().click("//option[@value=' (F)   excel_file_1_.xls']"); // fichier-excel_1_.xlsx
-		pause();
-
-		// Close Editor
-		session().click(
-			"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
-				+ "tbody/tr/td[1]/button");
-			
-		// Save modifications
-		saveCourseOutline();
-		pause();
-
-		//Add message to log file
-		logFile(ASSESSMENT_TEST, CT_0092, PASSED);
-		
-	// ---------------------------------------------------------------------------//
-	// Add Text in Assessment Unit //
-	// ---------------------------------------------------------------------------//
-
-	// Click on Assessment section
-	openEvaluationsSection();
-	prettyLog("Edit first Assessment: Add Text");	
-
-	openResource(0);
-
-	String newText9 =
-	    "this is a text resource typed by "
-		    + "selenium, hope it works and you see it. Added on "
-		    + timeStamp() + " in Firefox";
-
-	// Save modifications
-//	saveCourseOutline(); WE dont need this.... Nothing to save (button is grayed out....)
-	pause();
-	//pause();
-	String selectedRubric1 = addText(newText9,LEVEL_PUBLIC);
-
-	if (inFireFox()) {
-	    
-	    // ---------------------------------------------------------------------------//
-	    // Open Attendee Overview
-	    // ---------------------------------------------------------------------------//
-	    prettyLog("Open Attendee Overview. Verify: " + selectedRubric1);
-
-	    // Overview
-	    session().click(BUTTON_PREVIEW); //It was "gwt-uid-8"
-	    // Attendee Overview
-	    session().click(
-		    "//html/body/div/div/table/tbody/tr[2]/td[2]/div/"
-			    + "div/table/tbody/tr/td");
-	    pause();
-	    //pause();
-	    // Click on Assessment section
-	    openEvaluationsSection();
-
-	    // Open first Assessment unit
-	    openResource(0);
-//	    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//	    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//	    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-
-	    pause();
-	    
-	    
-//prettyLog("[[[ Skipped this portion!!!");
-	    if (!session().isTextPresent(selectedRubric1)) {
-		logAndFail("Expected to see rubric [" + selectedRubric1
-			+ "] after text edition");
-	    }
-	    log("OK: Selected rubric is visible");
-//prettyLog("]]] Skipped this portion!!!");
-	    
-	    
-
-	    // Close Overview
-	    session()
-		    .click(
-			    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
-
-	    // ---------------------------------------------------------------------------//
-	    // Open Public Overview
-	    // ---------------------------------------------------------------------------//
-	    prettyLog("Open Public Overview: Verify: " + selectedRubric1);
-
-	    // Overview
-	    session().click(BUTTON_PREVIEW); //It was "gwt-uid-8"
-	    // Public Overview
-	    session().click(
-		    "//html/body/div/div/table/tbody/tr[2]/td[2]"
-			    + "/div/div/table/tbody/tr[2]/td");
-	    pause();
-		pause();
-	    // Click on Assessment section
-	    openEvaluationsSection();
-
-	    // Open fist (not last!) Assessment unit
-//	    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//	    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//	    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    openResource(0);
-
-//prettyLog("[[[ Skipped this portion!!!");
-	    if (!(session().isTextPresent(selectedRubric1))) {
-	    	logAndFail("Expected to see rubric [" + selectedRubric1
-			+ "] after text edition on public overview");
-	    	//Add message to log file
-	    	logFile(ASSESSMENT_TEST, CT_0091, FAILED);	    	
-	    }
-	    log("OK: Selected rubric is visible");
-//prettyLog("]]] Skipped this portion!!!");
-
-	    // Close Overview
-	    session()
-		    .click(
-			    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
-	}
-	
-	//Add message to log file
-	logFile(ASSESSMENT_TEST, CT_0091, PASSED);	  
-	
-	// ---------------------------------------------------------------------------//
-	// Add Citation in Assessment Unit //
-	// ---------------------------------------------------------------------------//
-
-	// Click on Assessment section
-	openEvaluationsSection();
-
-	// Edit first Assessment unit
-	prettyLog("Edit first Assessment: Add BiblioResource: " + newText1);
-	openResource(0);
-//	if (inFireFox()) {	    
-//		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//	} else { // IE
-//		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
-//		session().mouseDownAt(locator, "16,16");
-//		session().mouseUpAt(locator, "16,16");
-//	}
-
-	// Add new Citation
-	clickAddItemWithLog("addBiblioResource");
-
-	// open Citation resource editor
-	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
-	pause();
-	pause();
-	
-	// We choose randomly a Rubric
-	String selectedRubric4 = getRandomRubric();
-	log("Selecting rubric [" + selectedRubric4 + "]");
-	changeRubric(selectedRubric4);
-
-	// Create a new citation list
-	session().answerOnNextPrompt("NewListe" + newText1);
-	log("NewListe" + newText1 + " is created...");
-	pause();
-	pause();	
-	pause();
-	pause();
-	// Open form to upload a first Citation (Book)
-	if (inFireFox()) {
-		// Create a new citation list
-		String locator = "//div[contains(@title,'Ajouter')]";	
-	    session().mouseOver(locator);
-	    session().mouseDown(locator);
-	    session().mouseUp(locator);	    
-		assertTrue(session().isPromptPresent());				
-		// Open Citation list works different
-		session().click("//tr[2]/td/select");
-		pause();
-		session().select("//tr[2]/td/select", "(LREF) NewListe" + newText1);
-		pause();		
-		session().doubleClick("//tr[2]/td/select/option");
-		log("New elements is selected...");		
-	    session().mouseOver(locator);
-	    session().mouseDown(locator);
-	    session().mouseUp(locator);			    
-	} else { //IE
-		// Create a new citation list
-		String locator = "//div[contains(@title,'Ajouter')]";	
-	    session().mouseOver(locator);		
-		session().mouseDownAt(locator, "10,10");
-		session().mouseUpAt(locator, "10,10");
-		pause();
-		pause();				
-		// Open Citation for IE
-		session().click("//tr[2]/td/select");
-		pause();		
-		session().select("//tr[2]/td/select", "index=1");
-		pause();		
-		session().doubleClick("//tr[2]/td/select/option");
-		log("New elements is selected...");			
-	    session().mouseOver(locator);		
-		session().mouseDownAt(locator, "10,10");
-		session().mouseUpAt(locator, "10,10");		
-	}	
-	log("The format to fill is ready to open...");
-	//-----------------------------------------------------------------------
-	// Check if Opensyllabus displays a message error when the user click OK
-	// without fill in the fields First Name, Last Name and Title.
-	log("Validation de données vides...");	
-	
-	//session().click("//tr[22]/td/table/tbody/tr/td[1]/button");
-	session().click(PopupUtils.DocumentAttributesPopup.getButtonOk());
-	
-	if (!session().isTextPresent(newText1)) {
-		logAndFail("Expected to see text [" + newText1
-				+ "] after text edition");
-		//Add message to log file
-		logFile(ASSESSMENT_TEST, CT_0093, FAILED);		
-	}
-	session().click("//tr[2]/td/table/tbody/tr/td/button");// close warning popup
-	pause(1000);
-	//pause();
-	log("Button Citation selected...");	
-	String Titre = "Titre" + timeStamp();
-	String Auteur = "Auteur" + timeStamp();		
-	String Annee = "Annee" + timeStamp();
-	String Editeur = "Editeur" + timeStamp();
-	String Lieu = "Lieu" + timeStamp();
-	String ISBN = "ISBN" + timeStamp();
-	log("Fields before showing...");	
-
-	// Fill the necessary fields	
-	session().select("//select[@name='cipvalues']", "label=Livre");
-	session().click("//tr[9]/td/table/tbody/tr/td[3]/input");		
-	session().type("//tr[9]/td/table/tbody/tr/td[3]/input", Titre);	
-	session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Auteur);
-	session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Annee);
-	session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Editeur);
-	session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Lieu);
-	session().type("//tr[19]/td/table/tbody/tr/td[3]/input", ISBN);
-	log("Fields before showing...");
-	// Close Window
-	pause();
-	session().click(PopupUtils.DocumentAttributesPopup.getButtonOk());
-	//session().click("//tr[22]/td/table/tbody/tr/td[1]/button");
-	pause();
-	pause();
-	//pause();
-	//pause();	
-	log("Fields before showing...");
-	// Select first resource in browser window
-	session().focus("//option[@value=' (REF)   " + Titre + "']");
-	session().select("//tr[2]/td/table/tbody/tr[2]/td/select", "value= " + "(REF)   " + Titre);
-	session().mouseOver("//option[@value=' (REF)   " + Titre + "']");
-	session().click("//option[@value=' (REF)   " + Titre + "']");
-	pause();
-	pause();
-	//pause();
-	
-	// Close Editor
-	session().click("//td/table/tbody/tr/td[1]/button");
-	pause();
-	pause();	
-	// Save Assessment for FF and IE	
-	saveCourseOutline(); 
-	pause();
-
-	//Add message to log file
-	logFile(ASSESSMENT_TEST, CT_0093, PASSED);
-	
-	// ---------------------------------------------------------------------------//
-	// Overview for Assessment Unit //
-	// ---------------------------------------------------------------------------//	
-    session().click(BUTTON_PREVIEW); //It was "gwt-uid-8"
-	// Attendee Overview
-	session().click(
-		"//html/body/div/div/table/tbody/tr[2]/td[2]/div/"
-			+ "div/table/tbody/tr/td");
-	pause();
-	pause();	
-	// Click on Assessment section
-	openEvaluationsSection();
-
-	//int Val = nbResources + 3;
-
-	// Edit first Assessment unit
-	openResource(0);
-//	if (inFireFox()) {	    
-//		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//	} else { // IE
-//		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
-//		session().mouseDownAt(locator, "16,16");
-//		session().mouseUpAt(locator, "16,16");
-//	}	
-
-	/** AH
-	if (!session().isTextPresent(selectedRubric4)) {
-	    logAndFail("Expected to see rubric [" + selectedRubric4
-		    + "] after text edition");
-	}
-	log("OK: Selected rubric is visible");
-	 **/
-	/**
-	if (inFireFox()) {	
-		if (!session().isTextPresent(Auteur)) {
-		    logAndFail("Expected to see text [" + Auteur + " (" + Annee + ")."
-			    + Titre + "," + Editeur + "," + Lieu + "."
-			    + "] after text edition");
-		}
-		log("OK: Text is visible");
-	}	**/
-
-	// Close Overview
-	session()
-		.click(
-			"//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
-	pause();
-	
-	
-	// ---------------------------------------------------------------------------//
-	// Add Assignment tool link in Assessment Unit //
-	// ---------------------------------------------------------------------------//
-
-	// Click on Assessment section
-	openEvaluationsSection();
-	
-	// Edit first Assessment unit
-	openResource(0);
-//	if (inFireFox()) {
-//		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//	} else { // IE
-//		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
-//		session().mouseDownAt(locator, "10,10");
-//		session().mouseUpAt(locator, "10,10");
-//	}	
-	
-	// Add Hyperlink in Assessment Unit
-	prettyLog("addEntity");
-	clickAddItem("addEntity");
-	
-	// We edit the new Hyperlink rubric
-	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
-	// We add an assignment 
-	pause();
-	pause();
-	//pause();
-	
-	session().clickAt("//div/div/div/div[2]/table/tbody/tr/td[1]/img", "");
-	pause();
-	
-	session().mouseOver("//tr[2]/td/div/div/div/div[2]/div/div/div[@class='gwt-TreeItem']");
-	session().mouseDown("//tr[2]/td/div/div/div/div[2]/div/div/div[@class='gwt-TreeItem']");
-	pause();	
-	
-	session().select("listBoxFormElement", "label=Description");
-	session().type("//tr[2]/td/input", "It's an example for assessment (remis de travaux)");
-	session().select("//td[4]/table/tbody/tr[2]/td/select", "label=Obligatoire");
-	pause();	
-	
-	// We close Editor
-	session().click("//td/table/tbody/tr/td[1]/button");
-	pause();	
-	
-	//Add message to log file
-	logFile(ASSESSMENT_TEST, CT_105, PASSED);
-	
-	// ---------------------------------------------------------------------------//
-	// Add Hyperlink in Assessment Unit //
-	// ---------------------------------------------------------------------------//
-
-	// Click on Assessment section
-	openEvaluationsSection();
-
-	// Edit first Assessment unit
-	openResource(0);
-//	if (inFireFox()) {
-//		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//	} else { // IE
-//		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
-//		session().mouseDownAt(locator, "10,10");
-//		session().mouseUpAt(locator, "10,10");
-//	}
-	
-	// Add Hyperlink in Assessment Unit
-	prettyLog("addURL");
-	clickAddItem("addURL");
-
-	// We edit the new Hyperlink rubric
-	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
-
-	// We select attendee on dissemination level
-	session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
-		"index=0");
-
-	// We select randomly the rubric name
-	String selectedRubric2 = getRandomRubric();
-	log("Selecting rubric [" + selectedRubric2 + "]");
-	changeRubric(selectedRubric2);
-
-	// We type the clickable text
-	String newText11 = timeStamp();
-	session().type("//td[2]/input", newText11);
-
-	// We type the URL link
-	String newText10 = "http://webmail.hec.ca/";
-	session().type("//tr[2]/td[2]/input", newText10);
-	pause();
-
-	// We click OK to close editor
-	session().click("//td/table/tbody/tr/td[1]/button");
-
-	// We click URL to test
-	session().click("link=" + newText11);
-
-	// Save modifications
-	saveCourseOutline();
-	pause();
-
-	//Add message to log file
-	logFile(ASSESSMENT_TEST, CT_028, PASSED);
-
-	// ---------------------------------------------------------------------------//
-	// Overview //
-	// ---------------------------------------------------------------------------//
-	
-	if (inFireFox()) {
-	    prettyLog("Attendee overview. Expected: " + selectedRubric2);
-	    // Overview
-	    session().click(BUTTON_PREVIEW); //It was "gwt-uid-8"
-	    // Attendee Overview
-	    session().click(
-		    "//html/body/div/div/table/tbody/tr[2]/td[2]/div/"
-			    + "div/table/tbody/tr/td");
-	    pause();
-
-	    // Click on Assessment section
-	    openEvaluationsSection();
-
-	    // Edit the first (? not last) Assessment unit
-	    openResource(0);
-//	    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//	    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//	    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-
-	    if (!session().isTextPresent(selectedRubric2)) {
-		logAndFail("Expected to see rubric [" + selectedRubric2
-			+ "] after text edition");
-	    }
-	    log("OK: Selected rubric is visible");
-
-	    // Close Overview
-	    session()
-		    .click(
-			    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
-	    pause();
-
-	 }  
-		
-	// ---------------------------------------------------------------------------//
-	// Overview //
-	// ---------------------------------------------------------------------------//
-		
-	prettyLog("Attendee overview. Expected: " + selectedRubric3);
-	session().click(BUTTON_PREVIEW); //It was "gwt-uid-8"
-	// Attendee Overview
-	session().click(
-		"//html/body/div/div/table/tbody/tr[2]/td[2]/div/"
-			+ "div/table/tbody/tr/td");
-	pause();
-	// Click on Assessment section
-	openEvaluationsSection();
-	
-	// Edit first Assessment unit
-	openResource(0);
-
-		//if (inFireFox()) {	    
-//		    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//		    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-//		    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-		//} else { // IE
-		//	String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
-		//	session().mouseDownAt(locator, "10,10");
-		//	session().mouseUpAt(locator, "10,10");
-		//}
-
-	if (!session().isTextPresent(selectedRubric3)) {
-	    logAndFail("Expected to see rubric [" + selectedRubric3
-		    + "] after text edition");
-	}
-	log("OK: Selected rubric is visible");
-
-	if (!session().isTextPresent(newText12)) {
-	    logAndFail("Expected to see rubric [" + newText12
-		   + "] after text edition");
-	}
-	log("OK: Text is visible");
-
-	// Close Overview
-	session().click(
-		"//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
-	pause();
-	
-	}
-
-	// ---------------------------------------------------------------------------//
-	// Switch two Assessments //
-	// ---------------------------------------------------------------------------//
-
-	// Click on Assessment section
-	openEvaluationsSection();
-	
-	//pause();
-
-	// We now switch the 1st and 2nd assessments (different ways to do it for
-	// MSIE and FF, unfortunately):
-	//It needs coding
-
-	// ---------------------------------------------------------------------------//
-	// Delete Assessment Unit //
-	// ---------------------------------------------------------------------------//
-
-	// We delete Assessment 1
-	prettyLog("Delete first assessment");
-	session().click(ResourceXpathHelper.getButtonDelete(0));
-	//session().click("//tr[" + Val2 + "]/td/table/tbody/tr/td[2]/div/table[2]" + "/tbody/tr/td[2]/button");
-
-	//session().click("//tr[2]/td/table/tbody/tr/td/button");// confirm deletion
-	session().click("xpath=(//div[@class='gwt-DialogBox']//button)[1]");
-	pause(1000);
-	
-	// Save modifications
-	saveCourseOutline();
-	pause(3000);	
-	//Add message to log file
-	logFile(ASSESSMENT_TEST, CT_070, PASSED);	
-	
-	// Log out
-	session().selectFrame("relative=parent");
-	logOut();
-	
-	// ----------------------------------------------
-	// Test completion
-	// ----------------------------------------------
-	logEndTest();
+	return newText1;
     }
 
     /**
