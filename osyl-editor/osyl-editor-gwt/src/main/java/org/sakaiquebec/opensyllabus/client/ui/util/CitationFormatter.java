@@ -51,6 +51,9 @@ public class CitationFormatter {
     private static final String START_PAGE_IDENTIFIER = "%q";
     private static final String END_PAGE_IDENTIFIER = "%z";
     private static final String URL_IDENTIFIER = "%u";
+    private static final String DATE_RETRIEVED_IDENTIFIER = "%n";
+    private static final String DOCUMENT_TYPE_IDENTIFIER = "%w";
+    private static final String UNIVERSITY_IDENTIFIER = "%x";
     
 
     public static String format(OsylCitationItem oci, String format) {
@@ -114,7 +117,16 @@ public class CitationFormatter {
 	formatString =
 			replace(formatString, URL_IDENTIFIER, getProperty(cop,
 					COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_OTHERLINK)); 
-	
+	formatString =
+			replace(formatString, DATE_RETRIEVED_IDENTIFIER, getProperty(cop,
+				CitationSchema.DATE_RETRIEVED)); 
+	formatString =
+			replace(formatString, DOCUMENT_TYPE_IDENTIFIER, getProperty(cop,
+				CitationSchema.DOCUMENT_TYPE)); 
+	formatString =
+			replace(formatString, UNIVERSITY_IDENTIFIER, getProperty(cop,
+				CitationSchema.UNIVERSITY)); 
+
 	return formatString;
     }
 
@@ -182,6 +194,15 @@ public class CitationFormatter {
 	formatString =
 			replace(formatString, URL_IDENTIFIER, getProperty(cop,
 					COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_OTHERLINK)); 
+	formatString =
+			replace(formatString, DATE_RETRIEVED_IDENTIFIER, getProperty(cop,
+				CitationSchema.DATE_RETRIEVED)); 
+	formatString =
+			replace(formatString, DOCUMENT_TYPE_IDENTIFIER, getProperty(cop,
+				CitationSchema.DOCUMENT_TYPE)); 
+	formatString =
+			replace(formatString, UNIVERSITY_IDENTIFIER, getProperty(cop,
+				CitationSchema.UNIVERSITY)); 
 	
 	return formatString;
     }

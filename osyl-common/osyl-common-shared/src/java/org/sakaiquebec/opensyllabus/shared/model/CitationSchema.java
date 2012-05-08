@@ -67,6 +67,9 @@ public interface CitationSchema extends Serializable {
     public static final String DOI = "doi";
     public static final String SOURCE_TITLE = "sourceTitle";
     public static final String URL = "url";
+    public static final String DATE_RETRIEVED = "dateRetrieved";
+    public static final String DOCUMENT_TYPE = "documentType";
+    public static final String UNIVERSITY = "university";
     public static final String PUBLICATION_LOCATION = "publicationLocation";
     public static final String CITATION_RESOURCE_TYPE = "asmResourceType";
 }

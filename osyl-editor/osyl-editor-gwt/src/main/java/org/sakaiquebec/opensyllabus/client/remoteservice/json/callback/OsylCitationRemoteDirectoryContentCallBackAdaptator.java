@@ -116,6 +116,12 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 				(JSONString) properties.get(CitationSchema.START_PAGE);
 		JSONString end_page =
 				(JSONString) properties.get(CitationSchema.END_PAGE);
+		JSONString date_retrieved =
+				(JSONString) properties.get(CitationSchema.DATE_RETRIEVED);
+		JSONString document_type =
+				(JSONString) properties.get(CitationSchema.DOCUMENT_TYPE);
+		JSONString university =
+				(JSONString) properties.get(CitationSchema.UNIVERSITY);
 
 		//Type of resource
 		JSONString resourceType =
@@ -211,6 +217,12 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 		csi.setProperty(CitationSchema.START_PAGE, start_page == null ? "" : start_page
 				.stringValue());
 		csi.setProperty(CitationSchema.END_PAGE, end_page == null ? "" : end_page
+				.stringValue());
+		csi.setProperty(CitationSchema.DATE_RETRIEVED, date_retrieved == null ? "" : date_retrieved
+				.stringValue());
+		csi.setProperty(CitationSchema.DOCUMENT_TYPE, document_type == null ? "" : document_type
+				.stringValue());
+		csi.setProperty(CitationSchema.UNIVERSITY, university == null ? "" : university
 				.stringValue());
 		
 		//Type of resource

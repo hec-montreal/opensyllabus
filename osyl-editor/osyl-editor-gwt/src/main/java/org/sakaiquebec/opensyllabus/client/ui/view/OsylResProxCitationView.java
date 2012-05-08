@@ -183,6 +183,15 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	setModelPropertyWithEditorProperty(CitationSchema.END_PAGE, getEditor()
 			.getSelectedCitationProperty(CitationSchema.END_PAGE));
 	
+	setModelPropertyWithEditorProperty(CitationSchema.DATE_RETRIEVED, getEditor()
+			.getSelectedCitationProperty(CitationSchema.DATE_RETRIEVED));
+	
+	setModelPropertyWithEditorProperty(CitationSchema.DOCUMENT_TYPE, getEditor()
+			.getSelectedCitationProperty(CitationSchema.DOCUMENT_TYPE));
+	
+	setModelPropertyWithEditorProperty(CitationSchema.UNIVERSITY, getEditor()
+			.getSelectedCitationProperty(CitationSchema.UNIVERSITY));
+	
 	String hasLink =
 		getEditor().getSelectedCitationProperty(
 			COPropertiesType.IDENTIFIER,
