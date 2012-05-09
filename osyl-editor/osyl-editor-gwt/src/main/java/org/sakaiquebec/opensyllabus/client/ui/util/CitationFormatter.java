@@ -89,7 +89,7 @@ public class CitationFormatter {
 
 	String creator = getProperty(cop, CitationSchema.CREATOR);
 	if (creator.indexOf("&") != -1)
-	    creator = creator.substring(0, creator.indexOf("&")) + "et al.";
+	    creator = creator.substring(0, creator.indexOf("&")) + "<i>et al.</i>";
 	formatString = replace(formatString, CREATOR_IDENTIFIER, creator);
 
 	String city = getProperty(cop, CitationSchema.PUBLICATION_LOCATION);
@@ -165,7 +165,7 @@ public class CitationFormatter {
 
 	String creator = getProperty(cop, COPropertiesType.AUTHOR);
 	if (creator.indexOf("&") != -1)
-	    creator = creator.substring(0, creator.indexOf("&")) + "et al.";
+	    creator = creator.substring(0, creator.indexOf("&")) + "<i>et al.</i>";
 	formatString = replace(formatString, CREATOR_IDENTIFIER, creator);
 
 	String city = getProperty(cop, CitationSchema.PUBLICATION_LOCATION);
