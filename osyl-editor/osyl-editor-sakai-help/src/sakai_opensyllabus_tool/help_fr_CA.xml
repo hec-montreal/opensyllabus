@@ -8,7 +8,91 @@
       <property name="location"><value>/sakai_opensyllabus_tool/osyl_fr_CA.html</value></property>
       <property name="defaultForTool"><value>sakai.opensyllabus.tool</value></property>
    </bean>
+   
+    <bean id="PresentationPlanCours" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baaa_fr_CA</value></property>
+         <property name="name"><value>Présentation du plan de cours </value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baaa_fr_CA.html</value></property>
+   </bean>
  
+ <bean id="InterfaceFonctionnalites" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baab_fr_CA</value></property>
+         <property name="name"><value>L'interface et les fonctionnalités de l'outil Plan de cours </value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baab_fr_CA.html</value></property>
+   </bean>
+   
+    <bean id="RubriqueNiveauDiffusion" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baac_fr_CA</value></property>
+         <property name="name"><value>Rubriques et niveau de diffusion</value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baac_fr_CA.html</value></property>
+   </bean>
+   
+   
+   
+       <bean id="CreerUnPlanDeCours" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baad_fr_CA</value></property>
+         <property name="name"><value>Créer un plan de cours</value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baad_fr_CA.html</value></property>
+   </bean>
+   
+   
+          <bean id="EditerPlanCours" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baae_fr_CA</value></property>
+         <property name="name"><value>Éditer un plan de cours</value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baae_fr_CA.html</value></property>
+   </bean>
+   
+          <bean id="Ajouter/modifier/supprimerTexte" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baaf_fr_CA</value></property>
+         <property name="name"><value>Ajouter, modifier et supprimer du contenu texte </value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baaf_fr_CA.html</value></property>
+   </bean>
+   
+   <bean id="Ajouter/modifier/supprimerDocument" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baag_fr_CA</value></property>
+         <property name="name"><value>Ajouter, modifier et supprimer un document </value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baag_fr_CA.html</value></property>
+   </bean>
+   
+   
+      <bean id="Ajouter/modifier/supprimerHyperlien" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baah_fr_CA</value></property>
+         <property name="name"><value>Ajouter, modifier et supprimer un hyperlien </value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baah_fr_CA.html</value></property>
+   </bean>
+   
+   
+       <bean id="Ajouter/modifier/supprimerLienOutil" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baai_fr_CA</value></property>
+         <property name="name"><value>Ajouter, modifier et supprimer un lien vers un outil </value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baai_fr_CA.html</value></property>
+   </bean>
+   
+    <bean id="Ajouter/modifier/supprimerCoordonnes" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baaj_fr_CA</value></property>
+         <property name="name"><value>Ajouter, modifier et supprimer une coordonnée </value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baaj_fr_CA.html</value></property>
+   </bean>
+   
+       <bean id="Ajouter/modifier/supprimerEvaluation" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baak_fr_CA</value></property>
+         <property name="name"><value>Ajouter, modifier et supprimer une évaluation </value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baak_fr_CA.html</value></property>
+   </bean>
+   
+          <bean id="Ajouter/modifier/supprimerSeance" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baal_fr_CA</value></property>
+         <property name="name"><value>Ajouter, modifier et supprimer des regroupements, séances ou travaux pratiques</value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baal_fr_CA.html</value></property>
+   </bean>
+   
+         <bean id="PublierPlanCours" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baam_fr_CA</value></property>
+         <property name="name"><value>Publier un plan de cours</value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baam_fr_CA.html</value></property>
+   </bean>
+   
+   
     <bean id="org.sakaiproject.api.app.help.TableOfContents" 
           class="org.sakaiproject.component.app.help.model.TableOfContentsBean">
       <property name="name"><value>root</value></property>
