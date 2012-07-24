@@ -98,6 +98,32 @@
          <property name="location"><value>/sakai_opensyllabus_tool/baan_fr_CA.html</value></property>
    </bean>
    
+   
+   
+            <bean id="RechercheInsertionRefBiblio" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baao_fr_CA</value></property>
+         <property name="name"><value>La recherche et l'insertion d'une référence bibliographique</value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baao_fr_CA.html</value></property>
+   </bean>
+   
+              <bean id="RefHECtor" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baap_fr_CA</value></property>
+         <property name="name"><value>Créer une référence bibliographique à partir de HECtor</value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baap_fr_CA.html</value></property>
+   </bean>
+   
+      <bean id="AjouterRefBibPlanDeCours" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baaq_fr_CA</value></property>
+         <property name="name"><value>Ajouter une référence bibliographique dans le plan de cours</value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baaq_fr_CA.html</value></property>
+   </bean>
+   
+        <bean id="SupprimerRef" class="org.sakaiproject.component.app.help.model.ResourceBean">
+         <property name="docId"><value>baar_fr_CA</value></property>
+         <property name="name"><value>Supprimer une référence bibliographique</value></property>
+         <property name="location"><value>/sakai_opensyllabus_tool/baar_fr_CA.html</value></property>
+   </bean>
+   
     <bean id="org.sakaiproject.api.app.help.TableOfContents" 
           class="org.sakaiproject.component.app.help.model.TableOfContentsBean">
       <property name="name"><value>root</value></property>
