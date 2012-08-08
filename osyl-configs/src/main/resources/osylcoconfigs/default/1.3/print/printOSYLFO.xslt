@@ -553,7 +553,7 @@
 					</xsl:text>
 					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
 						<fo:basic-link>
-							<xsl:attribute name="external-destination">http://www.hec.ca/programmes_formations/plagiat.html</xsl:attribute>
+							<xsl:attribute name="external-destination">http://www.hec.ca/plagiat</xsl:attribute>
 							<xsl:text>En savoir plus sur le plagiat...</xsl:text>
 						</fo:basic-link>
 					</fo:inline>
