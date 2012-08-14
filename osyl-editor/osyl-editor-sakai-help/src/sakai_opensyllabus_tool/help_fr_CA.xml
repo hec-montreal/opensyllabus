@@ -42,45 +42,45 @@
          <property name="location"><value>/sakai_opensyllabus_tool/baae_fr_CA.html</value></property>
    </bean>
    
-          <bean id="Ajouter/modifier/supprimerTexte" class="org.sakaiproject.component.app.help.model.ResourceBean">
+          <bean id="AjouterModifierSupprimerTexte" class="org.sakaiproject.component.app.help.model.ResourceBean">
          <property name="docId"><value>baaf_fr_CA</value></property>
          <property name="name"><value>Ajouter, modifier et supprimer du contenu texte </value></property>
          <property name="location"><value>/sakai_opensyllabus_tool/baaf_fr_CA.html</value></property>
    </bean>
    
-   <bean id="Ajouter/modifier/supprimerDocument" class="org.sakaiproject.component.app.help.model.ResourceBean">
+   <bean id="AjouterModifierSupprimerDocument" class="org.sakaiproject.component.app.help.model.ResourceBean">
          <property name="docId"><value>baag_fr_CA</value></property>
          <property name="name"><value>Ajouter, modifier et supprimer un document </value></property>
          <property name="location"><value>/sakai_opensyllabus_tool/baag_fr_CA.html</value></property>
    </bean>
    
    
-      <bean id="Ajouter/modifier/supprimerHyperlien" class="org.sakaiproject.component.app.help.model.ResourceBean">
+      <bean id="AjouterModifierSupprimerHyperlien" class="org.sakaiproject.component.app.help.model.ResourceBean">
          <property name="docId"><value>baah_fr_CA</value></property>
          <property name="name"><value>Ajouter, modifier et supprimer un hyperlien </value></property>
          <property name="location"><value>/sakai_opensyllabus_tool/baah_fr_CA.html</value></property>
    </bean>
    
    
-       <bean id="Ajouter/modifier/supprimerLienOutil" class="org.sakaiproject.component.app.help.model.ResourceBean">
+       <bean id="AjouterModifierSupprimerLienOutil" class="org.sakaiproject.component.app.help.model.ResourceBean">
          <property name="docId"><value>baai_fr_CA</value></property>
          <property name="name"><value>Ajouter, modifier et supprimer un lien vers un outil </value></property>
          <property name="location"><value>/sakai_opensyllabus_tool/baai_fr_CA.html</value></property>
    </bean>
    
-    <bean id="Ajouter/modifier/supprimerCoordonnes" class="org.sakaiproject.component.app.help.model.ResourceBean">
+    <bean id="AjouterModifierSupprimerCoordonnes" class="org.sakaiproject.component.app.help.model.ResourceBean">
          <property name="docId"><value>baaj_fr_CA</value></property>
          <property name="name"><value>Ajouter, modifier et supprimer une coordonnée </value></property>
          <property name="location"><value>/sakai_opensyllabus_tool/baaj_fr_CA.html</value></property>
    </bean>
    
-       <bean id="Ajouter/modifier/supprimerEvaluation" class="org.sakaiproject.component.app.help.model.ResourceBean">
+       <bean id="AjouterModifierSupprimerEvaluation" class="org.sakaiproject.component.app.help.model.ResourceBean">
          <property name="docId"><value>baak_fr_CA</value></property>
          <property name="name"><value>Ajouter, modifier et supprimer une évaluation </value></property>
          <property name="location"><value>/sakai_opensyllabus_tool/baak_fr_CA.html</value></property>
    </bean>
    
-          <bean id="Ajouter/modifier/supprimerSeance" class="org.sakaiproject.component.app.help.model.ResourceBean">
+          <bean id="AjouterModifierSupprimerSeance" class="org.sakaiproject.component.app.help.model.ResourceBean">
          <property name="docId"><value>baal_fr_CA</value></property>
          <property name="name"><value>Ajouter, modifier et supprimer des regroupements, séances ou travaux pratiques</value></property>
          <property name="location"><value>/sakai_opensyllabus_tool/baal_fr_CA.html</value></property>
@@ -92,7 +92,7 @@
          <property name="location"><value>/sakai_opensyllabus_tool/baam_fr_CA.html</value></property>
    </bean>
    
-            <bean id="Ajouter/modifier/supprimerReferenceBiblio" class="org.sakaiproject.component.app.help.model.ResourceBean">
+            <bean id="AjouterModifierSupprimerReferenceBiblio" class="org.sakaiproject.component.app.help.model.ResourceBean">
          <property name="docId"><value>baan_fr_CA</value></property>
          <property name="name"><value>Créer, ajouter, modifier et supprimer une référence bibliographique</value></property>
          <property name="location"><value>/sakai_opensyllabus_tool/baan_fr_CA.html</value></property>
