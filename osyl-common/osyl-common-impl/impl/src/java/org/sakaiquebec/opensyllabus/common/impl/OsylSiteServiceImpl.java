@@ -1452,6 +1452,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return siteService.getSite(siteId);
     }
 
+    /** {@inheritDoc} */
+    public List<Site> getSites(String searchTerm){
+	return siteService.getSites(SiteService.SelectionType.ANY, "course",
+		searchTerm, null, SiteService.SortType.NONE, null);
+    }
+
+    
+    
     /**
      * {@inheritDoc}
      */

@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +86,7 @@ import org.sakaiproject.entity.api.EntityTransferrer;
 import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.IdUsedException;
@@ -307,6 +309,16 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     /**
+     * The event tracking service to be injected by Spring
+     */
+    private EventTrackingService eventTrackingService;
+
+    public void setEventTrackingService(EventTrackingService eventTrackingService) {
+	this.eventTrackingService = eventTrackingService;
+    }
+    
+    
+   /**
      * The time service to be injected by Spring
      */
     private TimeService timeService;
@@ -1585,18 +1597,30 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return info;
     } // getCoAndSiteInfo
 
+    
     /** {@inheritDoc} */
     public COSite getCoAndSiteInfo(String siteId, String searchTerm,
 	    String academicSession, String siteType) {
-	long start = System.currentTimeMillis();
+
 	Site site = null;
-	COSite info = new COSite();
 	try {
 	    site = osylSiteService.getSite(siteId);
 	} catch (IdUnusedException e) {
 	    log.error(e.getMessage());
 	    e.printStackTrace();
 	}
+	
+	return getCoAndSiteInfo(site, searchTerm, academicSession, siteType);
+    }
+   
+    
+    private COSite getCoAndSiteInfo(Site site, String searchTerm,
+	    String academicSession, String siteType) {
+	
+	long start = System.currentTimeMillis();
+	String siteId=null;
+	
+	COSite info = new COSite();
 
 	if (site != null
 		&& siteType.equals(site.getType())
@@ -1607,6 +1631,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			.contains(
 				parseAcademicSession(academicSession)
 					.toLowerCase())) {
+	    
+	    siteId = site.getId();
+	    
 	    // Retrieve site info
 	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());
@@ -1761,12 +1788,17 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return allSitesInfo;
     }
 
+    
+    
     protected List<COSite> getSitesForUser(String userId, String permission,
 	    String searchTerm, String academicSession, boolean withFrozenSites) {
+	
 	long start = System.currentTimeMillis();
+	
 	log.debug("getSitesForUser ["
 		+ sessionManager.getCurrentSession().getUserEid() + "/"
 		+ permission + "]");
+	
 	List<COSite> allSitesInfo = new ArrayList<COSite>();
 
 	// If we want to retrieve all course we have access to change empty to
@@ -1779,44 +1811,134 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	Set<String> authzGroupIds =
 		authzGroupService.getAuthzGroupsIsAllowed(userId, permission,
 			null);
-
-	Iterator<String> it = authzGroupIds.iterator();
-	while (it.hasNext()) {
-	    String authzGroupId = it.next();
-	    Reference r = entityManager.newReference(authzGroupId);
-	    if (r.isKnownType()) {
-		// check if this is a Sakai Site or Group
-		if (r.getType().equals(SiteService.APPLICATION_ID)) {
-		    String type = r.getSubType();
-		    if (SAKAI_SITE_TYPE.equals(type)) {
-			// this is a Site
-			String siteId = r.getId();
-			COSite info =
-				getCoAndSiteInfo(siteId, searchTerm,
-					academicSession, COURSE_TYPE_SITE);
-			if (info != null) {
-			    if (info.isCoIsFrozen() && withFrozenSites) {
-				allSitesInfo.add(info);
-			    } else if (!info.isCoIsFrozen()
-				    && info.getType().equalsIgnoreCase(
-					    COURSE_TYPE_SITE)) {
-				allSitesInfo.add(info);
-			    }
-			}
-		    }
+	
+	
+	List<Site> sites = osylSiteService.getSites(searchTerm);
+	
+	List<Site> filteredSites = filterSitebyAuthzGroupIds(authzGroupIds, sites);
+		
+		
+	//adding the delegated access sites (Phil Rancourt)
+		
+	if(!userId.equalsIgnoreCase("admin")){ //we don't bother with delegated access if we are admin
+		
+	    updateDelegateAccessMap(sites);
+		
+	    addDelegatedAccessSites(filteredSites, sites);
+	}
+	
+	
+	
+	for(Site site : filteredSites){
+	    
+	    COSite info =
+			getCoAndSiteInfo(site, searchTerm,
+				academicSession, COURSE_TYPE_SITE);
+	    
+	    if (info != null) {
+		    
+		if (info.isCoIsFrozen() && withFrozenSites) {
+		    allSitesInfo.add(info);
+		} else if (!info.isCoIsFrozen()
+			    && info.getType().equalsIgnoreCase(
+				    COURSE_TYPE_SITE)) {
+		    allSitesInfo.add(info);
 		}
 	    }
-	}
+	    
+	}//end for
+	
 
 	if (allSitesInfo.isEmpty()) {
 	    log.info("Empty list of siteIds for user:" + userId
 		    + ", permission: " + permission);
 	}
+	
 	log.debug("getSitesForUser" + elapsed(start) + " for "
 		+ allSitesInfo.size() + " sites");
+	
 	return allSitesInfo;
     }
 
+    
+    
+    /**
+     * Add the sites for which the user has access through the delegated access tool
+     * 
+     * @param filteredSites the filtered site list
+     * @param sites the search result site list
+     */
+    private void addDelegatedAccessSites(List<Site> filteredSites, List<Site> sites){
+	
+	Object delegatedAccessMap = sessionManager.getCurrentSession().getAttribute("delegatedaccess.accessmap");
+	
+	if(delegatedAccessMap!=null && delegatedAccessMap instanceof Map){
+	
+	    for(Site s : sites){
+	    
+		String siteRef = "/site/"+s.getId();
+	    
+		if(((Map)delegatedAccessMap).get(siteRef)!=null){
+		    filteredSites.add(s);
+		}
+		
+	    }//end for
+				
+	}//end if
+		
+    }
+    
+    
+    /**
+     * Update the delegate access map for the current user by sending an event tracking notification for every site
+     * 
+     * @param sites
+     */
+    private void updateDelegateAccessMap(List<Site> sites){
+	
+	Set keySet = null;
+	
+	Object delegatedAccessMap = sessionManager.getCurrentSession().getAttribute("delegatedaccess.accessmap");
+	
+	if(delegatedAccessMap!=null && delegatedAccessMap instanceof Map){
+	    keySet = ((Map)delegatedAccessMap).keySet();
+	}
+		
+	for(Site s : sites){
+	    String siteRef = "/site/"+s.getId();
+	    
+	    if(keySet==null || !keySet.contains(siteRef)){
+		eventTrackingService.post(eventTrackingService.newEvent("dac.checkaccess", siteRef, false, NotificationService.NOTI_REQUIRED));
+	    }
+	}
+    }
+    
+    
+    
+    /**
+     * Return a list of site authorized for the current user
+     *     
+     * @param authzGroupIds
+     * @param sites the search result site lsit
+     * @return
+     */
+    private List<Site> filterSitebyAuthzGroupIds(Set<String> authzGroupIds, List<Site> sites){
+	
+	List<Site> filteredSites = new ArrayList<Site>();
+	
+	for(Site s : sites){
+	    String siteRef = "/site/"+s.getId();
+	    
+	    if(authzGroupIds.contains(siteRef)){
+		filteredSites.add(s);
+	    }
+	}
+	
+	return filteredSites;	
+    }
+    
+    
+    
     public List<CMAcademicSession> getAcademicSessions() {
 	List<AcademicSession> acadSessionsList =
 		courseManagementService.getAcademicSessions();

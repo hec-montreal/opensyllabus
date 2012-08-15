@@ -56,6 +56,8 @@
 			ref="org.sakaiproject.tool.api.SessionManager" />
 		<property name="siteService"
 			ref="org.sakaiproject.site.api.SiteService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
 		<property name="osylService"
 			ref="org.sakaiquebec.opensyllabus.api.OsylService" />
 		<property name="osylSiteService"

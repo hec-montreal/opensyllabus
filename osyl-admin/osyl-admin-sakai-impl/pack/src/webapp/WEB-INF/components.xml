@@ -350,6 +350,12 @@
 		parent="osylAbstractQuartzJob">
 	</bean>
 
+	<bean id="createSiteHierarchyjob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreateSiteHierarchyJobImpl"
+		parent="osylAbstractQuartzJob">
+	</bean>
+	
+	
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osyltransferjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
@@ -605,5 +611,22 @@
 		</property>
 	</bean>
 
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.createSiteHierarchyjob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+
+		<property name="beanId">
+			<value>createSiteHierarchyjob</value>
+		</property>
+
+		<property name="jobName">
+			<value>Create HEC site hierarchy (1st step)</value>
+		</property>
+
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
 
 </beans>

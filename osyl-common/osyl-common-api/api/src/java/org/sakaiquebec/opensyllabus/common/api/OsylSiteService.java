@@ -310,6 +310,11 @@ public interface OsylSiteService extends EntityProducer {
      */
     public void convertAndSave(String webapp, COSerialized co) throws Exception;
 
+    
+    
+    
+    public List<Site> getSites(String searchTerm);
+    
     /**
      * Retrieves the site name that represents the association between the site
      * and the course management.
