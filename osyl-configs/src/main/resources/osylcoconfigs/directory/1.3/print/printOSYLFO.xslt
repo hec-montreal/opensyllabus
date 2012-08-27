@@ -872,19 +872,87 @@
 	<fo:block space-after="10px">
 		<fo:block font-size="10pt">
 			<xsl:choose>
-				<xsl:when test="resourceType='article' or resourceType='proceed'">
-					<fo:inline><xsl:value-of select="author"/></fo:inline>
-					<fo:inline>(<xsl:value-of select="year"/>). </fo:inline>
-					<fo:inline>«<xsl:value-of select="title"/>»</fo:inline>
+				<xsl:when test="resourceType='article'" >					
+					<xsl:choose>
+						<xsl:when test="contains(author,'&amp;')">
+							<fo:inline><xsl:value-of select="substring-before(author,'&amp;')"/> et al.</fo:inline>
+						</xsl:when>
+						<xsl:otherwise>
+							<fo:inline><xsl:value-of select="author"/></fo:inline>
+						</xsl:otherwise>
+					</xsl:choose>
+					<fo:inline> (<xsl:value-of select="year"/>). </fo:inline>
+					<fo:inline>« <xsl:value-of select="title"/> »</fo:inline>
 					<fo:inline font-style="italic">, <xsl:value-of select="journal"/></fo:inline>
 					<fo:inline>, vol.<xsl:value-of select="volume"/></fo:inline>
-					<fo:inline>, no.<xsl:value-of select="issue"/></fo:inline>
-					<fo:inline>, p.<xsl:value-of select="pages"/></fo:inline>
-					<fo:inline>.</fo:inline>
+					<fo:inline>, no.<xsl:value-of select="issue"/>.</fo:inline>
+				</xsl:when>
+				<xsl:when test="resourceType='chapter'" >
+					<xsl:choose>
+						<xsl:when test="contains(author,'&amp;')">
+							<fo:inline><xsl:value-of select="substring-before(author,'&amp;')"/> et al.</fo:inline>
+						</xsl:when>
+						<xsl:otherwise>
+							<fo:inline><xsl:value-of select="author"/></fo:inline>
+						</xsl:otherwise>
+					</xsl:choose>
+					<fo:inline> (<xsl:value-of select="year"/>). </fo:inline>
+					<fo:inline><xsl:value-of select="title"/></fo:inline>
+					<fo:inline font-style="italic">, <xsl:value-of select="journal"/></fo:inline>
+					<fo:inline>, <xsl:value-of select="edition"/> éd</fo:inline>
+					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
+					<fo:inline>- <xsl:value-of select="endPage"/></fo:inline>
+				</xsl:when>
+				<xsl:when test="resourceType='electronic'" >
+					<xsl:choose>
+						<xsl:when test="contains(author,'&amp;')">
+							<fo:inline><xsl:value-of select="substring-before(author,'&amp;')"/> et al.</fo:inline>
+						</xsl:when>
+						<xsl:otherwise>
+							<fo:inline><xsl:value-of select="author"/></fo:inline>
+						</xsl:otherwise>
+					</xsl:choose>
+					<fo:inline> (<xsl:value-of select="year"/>). </fo:inline>
+					<fo:inline font-style="italic"><xsl:value-of select="title"/></fo:inline>
+					<fo:inline>, <xsl:value-of select="journal"/>.</fo:inline>
+				</xsl:when>
+				<xsl:when test="resourceType='proceed'" >
+					<xsl:choose>
+						<xsl:when test="contains(author,'&amp;')">
+							<fo:inline><xsl:value-of select="substring-before(author,'&amp;')"/> et al.</fo:inline>
+						</xsl:when>
+						<xsl:otherwise>
+							<fo:inline><xsl:value-of select="author"/></fo:inline>
+						</xsl:otherwise>
+					</xsl:choose>
+					<fo:inline> (<xsl:value-of select="year"/>). </fo:inline>
+					<fo:inline>« <xsl:value-of select="title"/> »</fo:inline>
+					<fo:inline font-style="italic">, <xsl:value-of select="journal"/>.</fo:inline>
+				</xsl:when>
+				<xsl:when test="resourceType='thesis'" >
+					<xsl:choose>
+						<xsl:when test="contains(author,'&amp;')">
+							<fo:inline><xsl:value-of select="substring-before(author,'&amp;')"/> et al.</fo:inline>
+						</xsl:when>
+						<xsl:otherwise>
+							<fo:inline><xsl:value-of select="author"/></fo:inline>
+						</xsl:otherwise>
+					</xsl:choose>
+					<fo:inline> (<xsl:value-of select="year"/>)</fo:inline>
+					<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>
+					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
+					<fo:inline>, p.<xsl:value-of select="pages"/>.</fo:inline>
 				</xsl:when>
 				<xsl:when  test="resourceType='book' or resourceType='report'">
-					<fo:inline><xsl:value-of select="author"/></fo:inline>
-					<fo:inline>(<xsl:value-of select="year"/>)</fo:inline>
+					<xsl:choose>
+						<xsl:when test="contains(author,'&amp;')">
+							<fo:inline><xsl:value-of select="substring-before(author,'&amp;')"/> et al.</fo:inline>
+						</xsl:when>
+						<xsl:otherwise>
+							<fo:inline><xsl:value-of select="author"/></fo:inline>
+						</xsl:otherwise>
+					</xsl:choose>
+					<fo:inline> (<xsl:value-of select="year"/>)</fo:inline>
 					<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>
 					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
 					<fo:inline>, <xsl:value-of select="publisher"/></fo:inline>
@@ -894,7 +962,7 @@
 							<fo:inline>ISBN:<xsl:value-of select="identifier[@type='isn']"/></fo:inline>
 						</fo:block>
 					</xsl:if>
-				</xsl:when>
+				</xsl:when>				
 				<xsl:otherwise>
 					<fo:inline><xsl:value-of select="title"/></fo:inline>
 				</xsl:otherwise>
