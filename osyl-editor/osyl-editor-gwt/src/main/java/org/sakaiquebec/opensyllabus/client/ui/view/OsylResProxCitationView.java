@@ -370,7 +370,9 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     	
     	Boolean useDefaultUrl = 
     			((isn != null && !isn.equals("")) &&
-				(type.equals(CitationSchema.TYPE_BOOK) || type.equals(CitationSchema.TYPE_CHAPTER)) &&
+				(type.equals(CitationSchema.TYPE_BOOK) || 
+					type.equals(CitationSchema.TYPE_CHAPTER) || 
+					type.equals(CitationSchema.TYPE_REPORT)) &&
 				getController().getSettings().containsKey("opensyllabus.editor.defaultBookstoreUrl")); 
 
     	if (!url.equals("disable")) {

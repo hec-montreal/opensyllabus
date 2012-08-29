@@ -1213,8 +1213,11 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		OsylSettings settings = getView().getController().getSettings();
 		
 		String type = selectedFile.getProperty(CitationSchema.TYPE);
+		// All citations that come from the library are reports for some reason
 		Boolean useDefaultUrl = (selectedFile.getIsn() != "" && 
-				(type.equals(CitationSchema.TYPE_BOOK) || type.equals(CitationSchema.TYPE_CHAPTER)) &&
+				(type.equals(CitationSchema.TYPE_BOOK) || 
+						type.equals(CitationSchema.TYPE_CHAPTER) || 
+						type.equals(CitationSchema.TYPE_REPORT)) &&
 				settings.containsKey("opensyllabus.editor.defaultBookstoreUrl"));
 		
 		// if the database has an entry for bookstoreUrl
