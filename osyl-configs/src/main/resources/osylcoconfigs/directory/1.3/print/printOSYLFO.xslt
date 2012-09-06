@@ -901,7 +901,8 @@
 					<fo:inline font-style="italic">, <xsl:value-of select="journal"/></fo:inline>
 					<fo:inline>, <xsl:value-of select="edition"/> éd</fo:inline>
 					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
-					<fo:inline>- <xsl:value-of select="endPage"/></fo:inline>
+					<fo:inline>, p. <xsl:value-of select="pages"/>.</fo:inline>
+					<fo:inline>-<xsl:value-of select="endPage"/>.</fo:inline>
 				</xsl:when>
 				<xsl:when test="resourceType='electronic'" >
 					<xsl:choose>
@@ -915,6 +916,17 @@
 					<fo:inline> (<xsl:value-of select="year"/>). </fo:inline>
 					<fo:inline font-style="italic"><xsl:value-of select="title"/></fo:inline>
 					<fo:inline>, <xsl:value-of select="journal"/>.</fo:inline>
+					<fo:inline>
+						<xsl:choose>
+							<xsl:when test="$lang = 'FR'">
+								<xsl:text> Récupéré le </xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text> Retrieved on </xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+					</fo:inline>
+					<fo:inline><xsl:value-of select="dateRetrieved"/></fo:inline>
 				</xsl:when>
 				<xsl:when test="resourceType='proceed'" >
 					<xsl:choose>
@@ -939,7 +951,9 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<fo:inline> (<xsl:value-of select="year"/>)</fo:inline>
-					<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>
+					<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>					
+					<fo:inline>, Thèse (Ph.D.)</fo:inline>
+					<fo:inline>, <xsl:value-of select="publisher"/></fo:inline>
 					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
 					<fo:inline>, p.<xsl:value-of select="pages"/>.</fo:inline>
 				</xsl:when>
