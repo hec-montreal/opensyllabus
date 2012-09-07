@@ -1008,8 +1008,11 @@
 						<xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='bookstore']"/></xsl:with-param>
 					</xsl:when>
 					<xsl:when test="identifier/@type='isn'">
-						<xsl:with-param name="identifier">http://<xsl:value-of select="identifier[@type='isn']"/></xsl:with-param>
+						<xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='isn']"/></xsl:with-param>
 					</xsl:when>
+					<xsl:otherwise>
+						<xsl:with-param name="identifier">http://something-isnt-right.com</xsl:with-param>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:call-template>
 		</xsl:if>
