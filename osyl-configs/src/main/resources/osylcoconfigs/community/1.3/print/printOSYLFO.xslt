@@ -901,7 +901,7 @@
 					<fo:inline font-style="italic">, <xsl:value-of select="journal"/></fo:inline>
 					<fo:inline>, <xsl:value-of select="edition"/> éd</fo:inline>
 					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
-					<fo:inline>, p. <xsl:value-of select="pages"/>.</fo:inline>
+					<fo:inline>, p. <xsl:value-of select="startPage"/></fo:inline>
 					<fo:inline>-<xsl:value-of select="endPage"/>.</fo:inline>
 				</xsl:when>
 				<xsl:when test="resourceType='electronic'" >
@@ -953,8 +953,8 @@
 					<fo:inline> (<xsl:value-of select="year"/>)</fo:inline>
 					<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>					
 					<fo:inline>, Thèse (Ph.D.)</fo:inline>
-					<fo:inline>, <xsl:value-of select="publisher"/></fo:inline>
-					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
+					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>					
+					<fo:inline>, <xsl:value-of select="university"/></fo:inline>
 					<fo:inline>, p.<xsl:value-of select="pages"/>.</fo:inline>
 				</xsl:when>
 				<xsl:when  test="resourceType='book' or resourceType='report'">
