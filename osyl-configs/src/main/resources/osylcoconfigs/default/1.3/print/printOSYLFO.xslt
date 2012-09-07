@@ -999,11 +999,18 @@
 				 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='library']"/></xsl:with-param>
 			</xsl:call-template>
 		</xsl:if>
-		<xsl:if test="identifier/@type='bookstore'">
+		<xsl:if test="identifier/@type='bookstore' or (identifier/@type='isn' and (resourceType='book' or resourceType='chapter' or resourceType='report'))">
 			<xsl:call-template name="BiblioResource_link">
-				 <xsl:with-param name="img">bookstore_link</xsl:with-param>
-				 <xsl:with-param name="link_text">bookstore_link_text</xsl:with-param>
-				 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='bookstore']"/></xsl:with-param>
+				<xsl:with-param name="img">bookstore_link</xsl:with-param>
+				<xsl:with-param name="link_text">bookstore_link_text</xsl:with-param>
+				<xsl:choose>
+					<xsl:when test="identifier/@type='bookstore'">
+						<xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='bookstore']"/></xsl:with-param>
+					</xsl:when>
+					<xsl:when test="identifier/@type='isn'">
+						<xsl:with-param name="identifier">http://<xsl:value-of select="identifier[@type='isn']"/></xsl:with-param>
+					</xsl:when>
+				</xsl:choose>
 			</xsl:call-template>
 		</xsl:if>
 		<xsl:if test="identifier/@type='other_link'">
