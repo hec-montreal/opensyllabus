@@ -1000,7 +1000,7 @@
 			</xsl:call-template>
 		</xsl:if>
 		<xsl:choose>
-			<xsl:when test="identifier/@type='bookstore'">
+			<xsl:when test="identifier/@type='bookstore'"> <!--and identifier[@type='bookstore']!='disable'">-->
 				<xsl:call-template name="BiblioResource_link">
 					<xsl:with-param name="img">bookstore_link</xsl:with-param>
 					<xsl:with-param name="link_text">bookstore_link_text</xsl:with-param>
@@ -1011,7 +1011,7 @@
 				<xsl:call-template name="BiblioResource_link">
 					<xsl:with-param name="img">bookstore_link</xsl:with-param>
 					<xsl:with-param name="link_text">bookstore_link_text</xsl:with-param>
-					<xsl:with-param name="identifier">http://www.coophec.com/default.aspx?<xsl:value-of select="identifier[@type='isn']"/></xsl:with-param>
+					<xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='isn']"/></xsl:with-param>
 				</xsl:call-template>
 			</xsl:when>
 		</xsl:choose>
