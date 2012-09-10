@@ -897,7 +897,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<fo:inline> (<xsl:value-of select="year"/>). </fo:inline>
-					<fo:inline><xsl:value-of select="title"/></fo:inline>
+					<fo:inline>« <xsl:value-of select="title"/> »</fo:inline>
 					<fo:inline font-style="italic">, <xsl:value-of select="journal"/></fo:inline>
 					<fo:inline>, <xsl:value-of select="edition"/> éd</fo:inline>
 					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
