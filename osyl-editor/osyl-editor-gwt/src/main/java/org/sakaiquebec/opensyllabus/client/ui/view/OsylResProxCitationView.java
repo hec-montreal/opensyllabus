@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,15 +29,12 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.CitationFormatter;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCitationEditor;
-import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylLinkEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COProperty;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
-
-import com.google.gwt.user.client.Window;
 
 /**
  * Class providing display and edition capabilities for citations resources.
@@ -361,16 +359,36 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     }
 
     public String getCitationBookstoreLink() {
-	String url =
-		getProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE);
-	if (url == null || url.equals(""))
-	    return null;
-	else
-	    return url;
+    	String isn =
+    			getProperty(COPropertiesType.IDENTIFIER,
+    					COPropertiesType.IDENTIFIER_TYPE_ISN);
+    	String url =
+    			getProperty(COPropertiesType.IDENTIFIER,
+    					COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE);
+    	String type = 
+    			getProperty(COPropertiesType.RESOURCE_TYPE);
+    	
+    	Boolean useDefaultUrl = 
+    			((isn != null && !isn.equals("")) &&
+				(type.equals(CitationSchema.TYPE_BOOK) || 
+					type.equals(CitationSchema.TYPE_CHAPTER) || 
+					type.equals(CitationSchema.TYPE_REPORT)) &&
+				getController().getSettings().containsKey("opensyllabus.editor.defaultBookstoreUrl")); 
 
+    	if (!url.equals("inactif")) {
+    		if (url != null && !url.equals("")) {
+    			return url;
+    		}
+    		else if (useDefaultUrl) {
+    			return MessageFormat.format(
+								getController().getSettings().getSettingsProperty("opensyllabus.editor.defaultBookstoreUrl"), 
+								isn);
+    		}
+    	}
+
+    	return null;
     }
-
+    
     public String getCitationResourceType() {
 	String resourceType = getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
 
