@@ -100,7 +100,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
 	    action = remoteUri + p_citation.getFilePath();
 
 	    // create hidden field to define put(update) method
-	    panel.add(FormHelper.createHiddenField("method", "put"));
+	    panel.add(FormHelper.createHiddenField("_method", "put"));
 	    // create hidden field to define citation id
 	    panel.add(FormHelper.createHiddenField("cid", p_citation.getId()));
 
