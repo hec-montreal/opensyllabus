@@ -1800,32 +1800,32 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		+ permission + "]");
 	
 	List<COSite> allSitesInfo = new ArrayList<COSite>();
+		
 
-	// If we want to retrieve all course we have access to change empty to
-	// null
-	if (searchTerm != null && searchTerm.trim().equals(""))
-	    searchTerm = "";
-	else if (searchTerm != null)
-	    searchTerm = searchTerm.toLowerCase();
-
-	Set<String> authzGroupIds =
-		authzGroupService.getAuthzGroupsIsAllowed(userId, permission,
-			null);
-	
-	
-	List<Site> sites = osylSiteService.getSites(searchTerm);
-	
-	List<Site> filteredSites = filterSitebyAuthzGroupIds(authzGroupIds, sites);
-		
-		
-	//adding the delegated access sites (Phil Rancourt)
-		
-	if(!userId.equalsIgnoreCase("admin")){ //we don't bother with delegated access if we are admin
-		
-	    updateDelegateAccessMap(sites);
-		
-	    addDelegatedAccessSites(filteredSites, sites);
+	if (searchTerm != null) {
+	    searchTerm = searchTerm.trim().toLowerCase();
 	}
+
+	List<Site> sites = osylSiteService.getSites(searchTerm);
+
+	List<Site> filteredSites = null;
+
+	
+	if (userId.equalsIgnoreCase("admin")) {
+	    filteredSites = sites;
+	} else {
+
+	    Set<String> authzGroupIds =
+		    authzGroupService.getAuthzGroupsIsAllowed(userId,
+			    permission, null);
+
+	    filteredSites = filterSitebyAuthzGroupIds(authzGroupIds, sites);
+
+	    // adding the delegated access sites (Phil Rancourt)
+	    updateDelegateAccessMap(sites);
+
+	    addDelegatedAccessSites(filteredSites, sites);
+	}	
 	
 	
 	

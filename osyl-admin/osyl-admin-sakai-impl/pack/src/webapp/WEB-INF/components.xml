@@ -355,6 +355,12 @@
 		parent="osylAbstractQuartzJob">
 	</bean>
 	
+	<bean id="removeUsersFromSitejob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RemoveUsersFromSiteJobImpl"
+		parent="osylAbstractQuartzJob">
+		<property name="entityManager" ref="org.sakaiproject.entity.api.EntityManager" />
+	</bean>
+	
 	
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osyltransferjob"
@@ -627,6 +633,25 @@
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
+	</bean>
+	
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.removeUsersFromSitejob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+
+		<property name="beanId">
+			<value>removeUsersFromSitejob</value>
+		</property>
+
+		<property name="jobName">
+			<value>Remove users from zc2 sites</value>
+		</property>
+
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+			
 	</bean>
 
 </beans>
