@@ -805,8 +805,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    String message =
 		    "The synchronization did not take place because"
 			    + " one of the extract files is missing";
-	    emailService.send("admin.zonecours2@hec.ca",
-		    "admin.zonecours2@hec.ca",
+	    emailService.send(getAdminZoneCours2EMail(),
+		    getAdminZoneCours2EMail(),
 		    "Synchronization with PeopleSoft failed", message, null,
 		    null, null);
 	    return;
@@ -922,8 +922,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    String message =
 		    "Synchronization with PeopleSoft failed cause :\n"
 			    + e.toString();
-	    emailService.send("admin.zonecours2@hec.ca",
-		    "admin.zonecours2@hec.ca",
+	    emailService.send(getAdminZoneCours2EMail(),
+		    getAdminZoneCours2EMail(),
 		    "Synchronization with PeopleSoft failed", message, null,
 		    null, null);
 	    e.printStackTrace();
@@ -1516,5 +1516,10 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    return false;
 	}
     }
+    
+    private String getAdminZoneCours2EMail(){
+	return ServerConfigurationService.getString("mail.admin.zc2");
+    }
+
 
 }

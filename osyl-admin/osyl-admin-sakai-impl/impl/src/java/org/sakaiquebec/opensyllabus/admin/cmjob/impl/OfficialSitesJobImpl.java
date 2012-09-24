@@ -42,6 +42,8 @@ import org.sakaiproject.email.api.EmailMessage;
 import org.sakaiproject.site.api.Site;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
+import org.sakaiproject.component.cover.ServerConfigurationService;
+
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -235,11 +237,11 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 						    + " un partageable a été crée et le cours "
 						    + getSiteName(section)
 						    + " automatiquement rattaché à celui-ci.<br>Si vous ne souhaitez pas utiliser le contenu du partageable, vous pouvez vous détacher de celui-ci à l'aide du gestionnaire de plan de cours");
-					    message.setFrom("zonecours2@hec.ca");
+					    message.setFrom(getZoneCours2EMail());
 					    List<EmailAddress> ccRecipients =
 						    new ArrayList<EmailAddress>();
 					    ccRecipients.add(new EmailAddress(
-						    "zonecours2@hec.ca"));
+						    getZoneCours2EMail()));
 					    message.setRecipients(
 						    RecipientType.CC,
 						    ccRecipients);
@@ -586,4 +588,9 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
     protected void loginToSakai() {
 	super.loginToSakai("OfficialSitesJob");
     }
+    
+    private String getZoneCours2EMail(){
+	return ServerConfigurationService.getString("mail.zc2");
+    }
+
 }

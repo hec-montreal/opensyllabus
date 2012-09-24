@@ -10,6 +10,8 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.user.api.User;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.DeleteAllMyWorkspaceJob;
+import org.sakaiproject.component.cover.ServerConfigurationService;
+
 
 /**
  * Deletes all My Workspace sites.
@@ -68,7 +70,7 @@ public class DeleteAllMyWorkspaceJobImpl extends OsylAbstractQuartzJobImpl
 	    }
 	}
 	// send GDSC users
-	emailService.send("zonecours2@hec.ca", "zonecours2@hec.ca",
+	emailService.send(getZoneCours2EMail(), getZoneCours2EMail(),
 		"Liste des utilisateurs du GDSC", sb.toString(), null, null,
 		null);
 
@@ -84,4 +86,9 @@ public class DeleteAllMyWorkspaceJobImpl extends OsylAbstractQuartzJobImpl
     protected void loginToSakai() {
 	super.loginToSakai("DeleteAllMyWorkspaceJob");
     }
+    
+    private String getZoneCours2EMail(){
+	return ServerConfigurationService.getString("mail.zc2");
+    }
+
 }
