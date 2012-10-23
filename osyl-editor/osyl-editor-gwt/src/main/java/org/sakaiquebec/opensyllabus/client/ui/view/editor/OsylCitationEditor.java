@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,7 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxCitationView;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COProperty;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
+import org.sakaiquebec.opensyllabus.shared.model.OsylSettings;
 import org.sakaiquebec.opensyllabus.shared.util.LinkValidator;
 
 import com.google.gwt.core.client.GWT;
@@ -857,8 +859,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    COPropertiesType.IDENTIFIER_TYPE_NOLINK);
 	}
 	if (disableBookstoreLinkCheckBox.getValue()) {
-	    selectedFile.removeProperty(COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE);
+	    selectedFile.setProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE, "inactif");
 	} else {
 	    bookStoreLink.setText(LinkValidator.parseLink(bookStoreLink
 		    .getText()));
@@ -1206,18 +1208,57 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			getIdentifierType(selectedFile,
 				COPropertiesType.IDENTIFIER_TYPE_LIBRARY),
 			getUiMessage("ResProxCitationView.link.label")));
-
-		if (hasIdentifierType(selectedFile,
-			COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE)) {
+		
+		// Handle bookstore url
+		OsylSettings settings = getView().getController().getSettings();
+		
+		String type = selectedFile.getProperty(CitationSchema.TYPE);
+		// All citations that come from the library are reports for some reason
+		Boolean useDefaultUrl = (selectedFile.getIsn() != "" && 
+				(type.equals(CitationSchema.TYPE_BOOK) || 
+						type.equals(CitationSchema.TYPE_CHAPTER) || 
+						type.equals(CitationSchema.TYPE_REPORT)) &&
+				settings.containsKey("opensyllabus.editor.defaultBookstoreUrl"));
+		
+		// if the database has an entry for bookstoreUrl
+		if (hasIdentifierType(selectedFile,	COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE)) {
+			String dbBookstoreUrl = getIdentifierType(selectedFile, COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE);
+			
+			// if it's the word inactif, someone's disabled the link in the osyl interface
+			if (dbBookstoreUrl.equals("inactif")) {
+				if (useDefaultUrl) {
+					bookStoreLink.setText(
+							MessageFormat.format(
+									settings.getSettingsProperty("opensyllabus.editor.defaultBookstoreUrl"), 
+									selectedFile.getIsn()));
+				}
+				else {
+					bookStoreLink.setText("");
+				}
+				disableBookstoreLinkCheckBox.setValue(true);
+				bookStoreLink.setEnabled(false);
+			}
+			else {
+				disableBookstoreLinkCheckBox.setValue(false);
+				bookStoreLink.setEnabled(true);
+				bookStoreLink.setText(dbBookstoreUrl);
+			}
+		}
+		else if (useDefaultUrl)
+		{
 		    disableBookstoreLinkCheckBox.setValue(false);
 		    bookStoreLink.setEnabled(true);
-		    bookStoreLink.setText(getIdentifierType(selectedFile,
-			    COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE));
-		} else {
-		    disableBookstoreLinkCheckBox.setValue(true);
-		    bookStoreLink.setText("");
-		    bookStoreLink.setEnabled(false);
+			bookStoreLink.setText(
+					MessageFormat.format(
+							settings.getSettingsProperty("opensyllabus.editor.defaultBookstoreUrl"), 
+							selectedFile.getIsn()));
 		}
+		else {
+			disableBookstoreLinkCheckBox.setValue(true);
+			bookStoreLink.setText("");
+			bookStoreLink.setEnabled(false);
+		}
+
 		// Type of resource
 		String resourceTypeCitation =
 			selectedFile
