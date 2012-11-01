@@ -483,8 +483,6 @@ public class Publication {
 			StringBuffer outTrace, boolean trace) throws Exception {
 		// ---------------------------------------------------
 
-	    	log.error("TRANSFORM: "+xsltName);
-
 	    	try{
 		    javax.xml.transform.TransformerFactory tfactory = TransformerFactory.newInstance();
 		    javax.xml.transform.Transformer xform = tfactory.newTransformer();
@@ -494,7 +492,6 @@ public class Publication {
 		    
 		    xform.transform(xml, resultXml);
 		    
-		    log.error("TRANSFORM SOURCE: "+writer.toString());
 
 	    	}catch(Exception ex){
 	    	    log.error("ERROR TRANSFORM SOURCE:"+ex.toString());
@@ -845,9 +842,7 @@ public class Publication {
 		rset.close();
 		ps.close();
 		xmlString = buf.toString();
-		
-		log.error("xml Transform:"+xmlString);
-		
+				
 		return xmlString;
 
 	}
