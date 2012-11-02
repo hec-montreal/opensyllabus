@@ -814,8 +814,15 @@ public class OsylEditorEntryPoint implements EntryPoint {
     // TODO: Move function used by the browser in the file BrowserUtil.java
     public static int parsePixels(String value) {
 	int pos = value.indexOf("px");
-	if (pos != -1)
-	    value = value.substring(0, pos);
+	int posComma = value.indexOf(".");
+	
+	if (posComma != -1){
+		value = value.substring(0, posComma);
+		}
+	else if (pos != -1){
+		value = value.substring(0, pos);
+		}
+		
 	return Integer.parseInt(value);
     }
 
