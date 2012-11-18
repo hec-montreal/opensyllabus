@@ -173,6 +173,13 @@ public class CreateSiteHierarchyJobImpl extends OsylAbstractQuartzJobImpl  imple
 	    
 	    if(acadCareer!=null){
 		siteProperties.addProperty(getHierarchyLevel3(), acadCareer);
+		
+		//PR - patch pour certains cours du MBA
+		if(acadCareer.equalsIgnoreCase("MBA")){
+			if(acadDepartment==null || acadDepartment.equals("")){
+			    siteProperties.addProperty(getHierarchyLevel2(), "Programme de MBA"); 
+			}
+	    	}//fin de la patch
 	    }
 	}
 	
