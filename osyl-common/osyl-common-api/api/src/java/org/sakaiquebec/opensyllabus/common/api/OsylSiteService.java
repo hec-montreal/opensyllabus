@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.EntityProducer;
 import org.sakaiproject.exception.IdUnusedException;
@@ -216,6 +217,15 @@ public interface OsylSiteService extends EntityProducer {
     public boolean hasBeenPublished(String siteId);
 
     /**
+     * Returns the public Course Outline for the site ID specified.
+     * 
+     * @param String the course outline ID
+     * @return the CourseOutline POJO corresponding to the specified ID
+     * @throws Exception
+     */
+    public COSerialized getSerializedPublicCourseOutline(String siteId) throws Exception;
+
+    /**
      * Returns the CourseOutline whose ID is specified.
      * 
      * @param String the course outline ID
@@ -323,6 +333,14 @@ public interface OsylSiteService extends EntityProducer {
      * @return
      */
     public String getSiteName(String sectionId);
+
+    /**
+     * Retrieves the session name from an AcademicSession from course management
+     * 
+     * @param session
+     * @return
+     */
+    public String getSessionName(AcademicSession session);
 
     /**
      * Retrive date of last publication

@@ -1173,6 +1173,27 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	getSiteInfo(thisCo, thisCo.getSiteId());
 	return thisCo;
     }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @throws Exception
+     */
+    public COSerialized getSerializedPublicCourseOutline(String siteId) throws Exception {
+	long start = System.currentTimeMillis();
+	COSerialized publicCO = null;
+	try {
+	    publicCO = resourceDao.getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+		    	siteId,
+		    	SecurityInterface.ACCESS_PUBLIC);
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline by siteId", e);
+	} finally {
+	    log.debug("getSerializedPublicCourseOutline  " + siteId
+		    + elapsed(start));
+	}
+	return publicCO;
+    }
 
     /**
      * {@inheritDoc}
@@ -1935,7 +1956,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return program;
     }
 
-    private String getSessionName(AcademicSession session) {
+    public String getSessionName(AcademicSession session) {
 	String sessionName = null;
 	String sessionId = session.getEid();
 	Date startDate = session.getStartDate();
