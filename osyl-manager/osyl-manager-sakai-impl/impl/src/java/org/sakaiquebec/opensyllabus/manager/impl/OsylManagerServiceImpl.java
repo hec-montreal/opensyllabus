@@ -1816,7 +1816,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	List<Site> filteredSites = null;
 
 	
-	if (userId.equalsIgnoreCase("admin")) {
+	if (isSuperUser()) {
 	    filteredSites = sites;
 	} else {
 
