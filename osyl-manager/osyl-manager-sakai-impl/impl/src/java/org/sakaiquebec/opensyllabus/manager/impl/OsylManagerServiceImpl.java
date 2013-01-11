@@ -36,14 +36,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
-import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -55,11 +54,8 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
-import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.FunctionManager;
-import org.sakaiproject.authz.api.GroupNotDefinedException;
-import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.citation.api.Citation;
@@ -83,7 +79,6 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.EntityManager;
 import org.sakaiproject.entity.api.EntityProducer;
 import org.sakaiproject.entity.api.EntityTransferrer;
-import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.event.api.EventTrackingService;
@@ -103,6 +98,7 @@ import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.api.TimeService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
+import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserNotDefinedException;
@@ -354,6 +350,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     public void setOsylSecurityService(OsylSecurityService osylSecurityService) {
 	this.osylSecurityService = osylSecurityService;
+    }
+    
+    /**
+     * The Tool Manager service to be injected by Spring
+     */
+    private ToolManager toolManager;
+
+    public void setToolManager(ToolManager toolManager) {
+	this.toolManager = toolManager;
     }
 
     /**
@@ -2447,8 +2452,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public Map<String, Boolean> getPermissions() {
 	Map<String, Boolean> permissions = new HashMap<String, Boolean>();
 	for (String permission : SecurityInterface.OSYL_MANAGER_PERMISSIONS) {
-	    permissions.put(permission, osylSecurityService
-		    .isActionAllowedForCurrentUser(permission));
+	    permissions.put(permission, osylSecurityService.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()), permission));
 	}
 	return permissions;
     }
