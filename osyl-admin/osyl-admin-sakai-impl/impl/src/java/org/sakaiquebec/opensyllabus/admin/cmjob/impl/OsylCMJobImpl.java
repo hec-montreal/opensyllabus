@@ -57,7 +57,6 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericExamensMapFactory
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericProfCoursMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericProgrammeEtudesMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericRequirementsCoursMapFactory;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericSecretairesMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericServiceEnseignementMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMapEntry;
@@ -65,8 +64,6 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProgrammeEtudesMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProgrammeEtudesMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.RequirementsCoursMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.RequirementsCoursMapEntry;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.SecretairesMap;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.SecretairesMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEntry;
 
@@ -131,11 +128,6 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
      * ending date
      */
     private DetailSessionsMap detailSessionMap = null;
-
-    /**
-     * Map used to store information about the secretaries.
-     */
-    private SecretairesMap secretairesMap = null;
 
     /**
      * Map used to store information about the departments.
@@ -752,7 +744,6 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	File etudiantFile = new File(directory, ETUDIANT_FILE);
 	File horairesFile = new File(directory, HORAIRES_FILE);
 	File profFile = new File(directory, PROF_FILE);
-	File secretairesFile = new File(directory, SECRETAIRES_FILE);
 	File servensFile = new File(directory, SERV_ENS_FILE);
 	File progEtudFile = new File(directory, PROG_ETUD_FILE);
 	File chargeFormFile = new File(directory, CHARGE_FORMATION);
@@ -760,9 +751,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	if (sessionFile.exists() && coursFile.exists() && etudiantFile.exists()
 		&& horairesFile.exists() && profFile.exists()
-		&& secretairesFile.exists() && servensFile.exists()
-		&& progEtudFile.exists() && chargeFormFile.exists()
-		&& requirementsFile.exists()) {
+		&& servensFile.exists() && progEtudFile.exists()
+		&& chargeFormFile.exists() && requirementsFile.exists()) {
 	    return true;
 	}
 
@@ -845,13 +835,6 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		    GenericProfCoursMapFactory.buildMap(directory
 			    + File.separator + PROF_FILE, detailCoursMap,
 			    detailSessionMap);
-
-	    secretairesMap =
-		    GenericSecretairesMapFactory.getInstance(directory
-			    + File.separator + SECRETAIRES_FILE);
-	    secretairesMap =
-		    GenericSecretairesMapFactory.buildMap(directory
-			    + File.separator + SECRETAIRES_FILE);
 
 	    etudCoursMap =
 		    GenericEtudiantCoursMapFactory.getInstance(directory
@@ -1193,7 +1176,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
     }
 
     /**
-     * This method is used to load teachers, secretaries, interns .... For now
+     * This method is used to load teachers, interns .... For now
      * it is used just for teachers and secretaries. Each secretary will be
      * automatically added to all the courses of the service she is associated
      * to;
@@ -1201,7 +1184,6 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
     public void loadMembership() {
 	assignChargeFormation();
 	assignTeachers();
-	syncSecretaries();
 	syncCmExceptions();
     }
 
@@ -1294,62 +1276,6 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    }
 	}
 
-    }
-
-    /*
-     * Loads the secretaries and assigns them to the courses in their associated
-     * SE.
-     */
-    private void syncSecretaries() {
-	SecretairesMapEntry entry = null;
-	String deptId = null;
-	String acadOrg = null;
-	List<String> secretaries = null;
-	List<DetailCoursMapEntry> cours = null;
-	ServiceEnseignementMapEntry servEnsEntry = null;
-
-	Set<String> keys = servEnsMap.keySet();
-
-	// les cours du certificat
-	secretaries = secretairesMap.getSecretairesCertificat();
-	cours = detailCoursMap.getCoursByAcadCareer(CERTIFICAT);
-
-	addSecretariesToMembership(secretaries, cours);
-	// /////////////////////////////////////////
-
-	// les cours qui ne sont pas du certificat
-	for (String key : keys) {
-	    servEnsEntry = servEnsMap.get(key);
-	    deptId = servEnsEntry.getDeptId();
-	    acadOrg = servEnsEntry.getAcadOrg();
-
-	    secretaries =
-		    secretairesMap.getSecretairesByAcadOrg(Integer
-			    .parseInt(deptId));
-	    cours = detailCoursMap.getNonCERTFCoursByAcadOrg(acadOrg);
-
-	    addSecretariesToMembership(secretaries, cours);
-	}
-	// ////////////////////////////////////////
-	// Mise a jour des acces des secretaires
-	Set<String> acmKeys = actualSecretaryMembership.keySet();
-	Membership member = null;
-	String courseId = null;
-	String userId = null;
-	for (String key : acmKeys) {
-	    member = actualSecretaryMembership.get(key);
-	    userId = member.getUserId();
-	    courseId = key.substring(member.getUserId().length());
-	    if (cmService.isSectionDefined(courseId)) {
-		cmAdmin.removeSectionMembership(userId, courseId);
-	    }
-	    if (cmService.isCourseOfferingDefined(courseId)) {
-		cmAdmin.removeCourseOfferingMembership(userId, courseId);
-	    }
-	    log.info("L'utilisateur " + userId + " n'est plus membre du cours "
-		    + courseId);
-
-	}
     }
 
     private void syncCmExceptions() {
