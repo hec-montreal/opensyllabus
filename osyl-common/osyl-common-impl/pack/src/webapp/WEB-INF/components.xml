@@ -39,6 +39,7 @@
 
 
 	<!-- BEGIN HEC ONLY SAKAI-2723 -->
+	<!-- removed for ZCII-400
 	<bean
 		id="org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO"
 		class="org.sakaiquebec.opensyllabus.common.impl.portal.OsylTransformToZCCOImpl"
@@ -60,6 +61,7 @@
 		class="org.sakaiquebec.opensyllabus.common.impl.portal.publish3.ZCPublisherServiceImpl"
 		init-method="init" destroy-method="destroy" singleton="true">
 	</bean>
+	-->
 	<!-- END HEC ONLY SAKAI-2723 -->
 	
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylContentService"
@@ -87,10 +89,8 @@
 		<property name="coRelationDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 
-		<!-- BEGIN HEC ONLY SAKAI-2723 -->	
-		<property name="osylTransformToZCCO"
-			ref="org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO" />
-		<!-- END HEC ONLY SAKAI-2723 -->
+		<property name="hecCourseArchiveService"
+			ref="ca.hec.archive.api.HecCourseArchiveService" />
 
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"

@@ -1,7 +1,6 @@
 package org.sakaiquebec.opensyllabus.common.impl;
 
 import java.io.BufferedInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -68,7 +67,6 @@ import org.sakaiquebec.opensyllabus.common.api.OsylEventService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
-import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO;// HEC ONLY SAKAI-2723
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
@@ -92,6 +90,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.tidy.Tidy;
+
+import ca.hec.archive.api.HecCourseArchiveService;
 
 public class OsylPublishServiceImpl implements OsylPublishService {
 
@@ -181,14 +181,15 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	this.cmService = cmService;
     }
 
-    // BEGIN HEC ONLY SAKAI-2723
-    private OsylTransformToZCCO osylTransformToZCCO;
+    // BEGIN HEC ONLY ARCHIVE MODULE
+    private HecCourseArchiveService hecCourseArchiveService;
 
-    public void setOsylTransformToZCCO(OsylTransformToZCCO osylTransformToZCCO) {
-	this.osylTransformToZCCO = osylTransformToZCCO;
+    public void setHecCourseArchiveService(HecCourseArchiveService hecCourseArchiveService) {
+	this.hecCourseArchiveService = hecCourseArchiveService;
     }
 
-    // END HEC ONLY SAKAI-2723
+    // END HEC ONLY ARCHIVE MODULE
+    
     // END SPRING INJECTION
 
     /**
@@ -1112,21 +1113,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// BEGIN HEC ONLY SAKAI-2723
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
+	// see ZCII-400 (02-13-2013)
 	
-	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
-		|| access.equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)) {
-
-	    String portalActivated =
-		    ServerConfigurationService
-			    .getString("hec.portail.activated");
-
-	    if (portalActivated != null
-		    && portalActivated.equalsIgnoreCase("true")) {
-		osylTransformToZCCO.sendXmlAndDoc(publishedCO, access);
-	    }
-
+	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)) {
+	    hecCourseArchiveService.saveCourseMetadataToArchive(publishedCO);
 	}	 
-	 
 	 
 	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_ATTENDEE)) {
 
@@ -1237,14 +1228,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	deletePublishedContent(siteId);
 	COSerialized co =
 		osylSiteService.getSerializedCourseOutline(siteId, webappDir);
-
-	// BEGIN HEC ONLY SAKAI-2723
-	String portalActivated =
-		ServerConfigurationService.getString("hec.portail.activated");
-	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
-	    osylTransformToZCCO.unpublish(siteId, co.getLang());
-	}
-	// END HEC ONLY SAKAI-2723
+	
+	// remove section from archive table
+	hecCourseArchiveService.deleteArchiveCourseSection(siteId);
 
 	// remove publication date in DB
 	resourceDao.setPublicationDate(co.getCoId(), null);
