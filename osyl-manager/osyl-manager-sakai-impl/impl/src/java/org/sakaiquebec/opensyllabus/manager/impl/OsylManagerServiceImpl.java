@@ -789,47 +789,64 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    String searchTerm) {
 
 	Map<String, String> siteMap = new HashMap<String, String>();
-	@SuppressWarnings("unchecked")
-	String term = "";
-	if (searchTerm.equals("")) {
-	    term = null;
+	String currentUser = sessionManager.getCurrentSessionUserId();
+	
+	long start = System.currentTimeMillis();
+	
+	log.debug("getOsylSites ["
+		+ sessionManager.getCurrentSession().getUserEid() + "]");
+	
+	if (searchTerm != null) {
+	    searchTerm = searchTerm.trim().toLowerCase();
+	} 
+
+	List<Site> sites = osylSiteService.getSites(searchTerm);
+	List<Site> filteredSites = null;
+
+	if (isSuperUser()) {
+	    filteredSites = sites;
 	} else {
-	    term = searchTerm;
-	}
-	String[] typesToSearch = new String[] { COURSE_TYPE_SITE };
-	List<Site> sites =
-		siteService.getSites(SiteService.SelectionType.ACCESS,
-			typesToSearch, term, null,
-			SiteService.SortType.TITLE_ASC, null);
-	for (Iterator<Site> siteIterator = sites.iterator(); siteIterator
-		.hasNext();) {
-	    Site site = (Site) siteIterator.next();
-	    if (site.getTitle().toLowerCase()
-		    .contains(searchTerm.toLowerCase())) {
-		@SuppressWarnings("unchecked")
-		List<SitePage> pagelist = site.getPages();
-		for (Iterator<SitePage> iter = pagelist.iterator(); iter
-			.hasNext();) {
-		    SitePage sitePage = (SitePage) iter.next();
-		    if (!sitePage.getTools(
-			    new String[] { "sakai.opensyllabus.tool" })
-			    .isEmpty()) {
-			if (osylSiteService.hasBeenPublished(site.getId())) {
-			    boolean isInHierarchy = false;
-			    for (String siteId : siteIds) {
-				isInHierarchy =
-					isInHierarchy
-						|| isSiteinSiteHierarchy(
-							site.getId(), siteId);
-			    }
-			    if (!isInHierarchy && !getFrozenValue(site))
-				siteMap.put(site.getId(), site.getTitle());
+	    Set<String> authzGroupIds =
+		    authzGroupService.getAuthzGroupsIsAllowed(currentUser,
+			    SiteService.SITE_VISIT, null);
+
+	    filteredSites = filterSitebyAuthzGroupIds(authzGroupIds, sites);
+
+	    // adding the delegated access sites (Phil Rancourt)
+	    updateDelegateAccessMap(sites);
+
+	    addDelegatedAccessSites(filteredSites, sites);
+	}	
+
+	for(Site site : filteredSites){
+	    List<SitePage> pagelist = site.getPages();
+	    for(SitePage page : pagelist) {
+		if(!page.getTools(new String[] {"sakai.opensyllabus.tool"}).isEmpty())
+		{
+		    if (osylSiteService.hasBeenPublished(site.getId())) {
+			boolean isInHierarchy = false;
+			for (String siteId : siteIds) {
+			    isInHierarchy =
+				    isInHierarchy
+				    || isSiteinSiteHierarchy(
+					    site.getId(), siteId);
 			}
-			break;
+			if (!isInHierarchy && !getFrozenValue(site))
+			    siteMap.put(site.getId(), site.getTitle());
 		    }
+		    break;
 		}
 	    }
+	}//end for filteredSites
+
+
+	if (siteMap.isEmpty()) {
+	    log.info("Empty list of siteIds for user:" + currentUser);
 	}
+	
+	log.debug("getOsylSites" + elapsed(start) + " for "
+		+ siteMap.size() + " sites");
+		
 	return siteMap;
     }
 
