@@ -32,7 +32,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.text.Normalizer;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -45,12 +47,14 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.w3c.dom.Node;
 
@@ -123,6 +127,22 @@ public class FOPHelper {
 	    }
 	} catch (Exception e) {
 	    log.error("Could not create pdf version of CO", e);
+	    
+	    
+	    //ZCII-515 : On crée maintenant un fichier xml contenant le xml du plan de cours qui ne s'imprime pas bien.
+	    String date = new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date());	    
+	    String xmlLogPath = ServerConfigurationService.getString("opensyllabus.failed.xml.directory.path");
+	    String xmlLogFile = siteId + "_" + date + ".xml";
+	    
+	    File xmlLogDirectory = new File(xmlLogPath);	    
+	    if (!xmlLogDirectory.exists()){
+	    	xmlLogDirectory.mkdirs();
+	    }
+	    	
+	    String xmlLogFileFullPath = xmlLogDirectory.getAbsolutePath() + File.separator + xmlLogFile;	    
+	    FileUtils.writeStringToFile(new File(xmlLogFileFullPath), xml,"UTF-8");	    
+	    // END ZCII-515 
+	    
 	    throw e;
 	}
 	return pdffile;
