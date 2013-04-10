@@ -67,6 +67,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
+import org.sakaiquebec.opensyllabus.shared.util.CitationsUtils;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 import org.w3c.dom.Document;
@@ -1631,7 +1632,17 @@ public class COModeledServer {
 	// reset id of the resource
 	cocrp.getResource().setId(UUID.uuid());
 	if (!cocrp.getResource().getType().equals(COContentResourceType.URL)) {
-	    String uri =
+	    
+		// We update the citation url format
+		String citationUrl = cocrp.getResource().getProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+		cocrp.getResource().addProperty(COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_LIBRARY,
+				CitationsUtils.formatCitationUrl(citationUrl));
+		// end citation url format update
+		
+		String uri =
 		    cocrp.getResource().getProperty(
 			    COPropertiesType.IDENTIFIER,
 			    COPropertiesType.IDENTIFIER_TYPE_URI);
