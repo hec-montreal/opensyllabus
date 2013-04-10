@@ -35,6 +35,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COProperty;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
+import org.sakaiquebec.opensyllabus.shared.util.CitationsUtils;
 
 /**
  * Class providing display and edition capabilities for citations resources.
@@ -354,8 +355,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	if (url == null || url.equals(""))
 	    return null;
 	else
-	    return url;
-
+		return CitationsUtils.formatCitationUrl(url);
     }
 
     public String getCitationBookstoreLink() {
