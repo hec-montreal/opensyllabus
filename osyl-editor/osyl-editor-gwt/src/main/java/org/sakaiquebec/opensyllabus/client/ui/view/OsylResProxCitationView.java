@@ -355,7 +355,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	if (url == null || url.equals(""))
 	    return null;
 	else
-		return CitationsUtils.formatCitationUrl(url);
+		return url;
     }
 
     public String getCitationBookstoreLink() {

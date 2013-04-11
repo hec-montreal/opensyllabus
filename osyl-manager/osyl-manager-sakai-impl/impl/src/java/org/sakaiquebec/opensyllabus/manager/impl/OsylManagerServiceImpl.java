@@ -2225,7 +2225,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		} catch (TypeException e) {
 		    e.printStackTrace();
 		} finally {
+			// modify the citation URIs to point to the new ones in resources
 		    model.changeCitationUrl(citationsChangeMap);
+		    // convert the citation library URLs from taos to the new server
+		    model.convertCitationLibraryUrls();
 		    model.model2XML();
 		    co.setContent(model.getSerializedContent());
 		    try {

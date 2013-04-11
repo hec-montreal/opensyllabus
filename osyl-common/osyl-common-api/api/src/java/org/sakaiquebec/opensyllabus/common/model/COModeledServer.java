@@ -1542,6 +1542,37 @@ public class COModeledServer {
 	}
     }
     
+	// ZCII-390
+	// We update the citation url format
+	public void convertCitationLibraryUrls() {
+		convertCitationLibraryUrls(this.getModeledContent());
+	}
+
+	private void convertCitationLibraryUrls(COElementAbstract element) {
+		try {
+			if (element.isCOContentResourceProxy()) {
+				COContentResourceProxy cocrp = (COContentResourceProxy) element;
+				String citationUrl = cocrp.getResource().getProperty(
+						COPropertiesType.IDENTIFIER,
+						COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+				if (citationUrl != null) {
+					cocrp.getResource().addProperty(
+							COPropertiesType.IDENTIFIER,
+							COPropertiesType.IDENTIFIER_TYPE_LIBRARY,
+							CitationsUtils.formatCitationUrl(citationUrl));
+				}
+			} else {
+				for (int i = 0; i < element.getChildrens().size(); i++) {
+					convertCitationLibraryUrls((COElementAbstract) element
+							.getChildrens().get(i));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	// end citation url format update
+    
     public void resetXML(Map<String, String> filenameChangesMap) {
 	resetXML(this.getModeledContent(), filenameChangesMap);
     }
@@ -1633,14 +1664,6 @@ public class COModeledServer {
 	cocrp.getResource().setId(UUID.uuid());
 	if (!cocrp.getResource().getType().equals(COContentResourceType.URL)) {
 	    
-		// We update the citation url format
-		String citationUrl = cocrp.getResource().getProperty(
-				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
-		cocrp.getResource().addProperty(COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_LIBRARY,
-				CitationsUtils.formatCitationUrl(citationUrl));
-		// end citation url format update
 		
 		String uri =
 		    cocrp.getResource().getProperty(

@@ -1111,6 +1111,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    eventTrackingService.post(eventTrackingService.newEvent(
 		    OsylEventService.EVENT_OPENSYLLABUS_ACCESS,
 		    getSiteReference(siteId), false));
+
+	    // convert citation library urls
+	    COModeledServer model = new COModeledServer(thisCo);
+		model.XML2Model();
+		model.convertCitationLibraryUrls();
+		model.model2XML();	
+		thisCo.setContent(model.getSerializedContent());
+
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by siteId", e);
 	} finally {
@@ -1186,6 +1194,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    publicCO = resourceDao.getPublishedSerializedCourseOutlineBySiteIdAndAccess(
 		    	siteId,
 		    	SecurityInterface.ACCESS_PUBLIC);
+
+	    // convert citation library urls
+	    COModeledServer model = new COModeledServer(publicCO);
+		model.XML2Model();
+		model.convertCitationLibraryUrls();
+		model.model2XML();
+		publicCO.setContent(model.getSerializedContent());
+
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by siteId", e);
 	} finally {

@@ -226,6 +226,14 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	} catch (Exception e) {
 	    log.error("Unable to get site info", e);
 	}
+
+    // convert citation library urls
+	COModeledServer model = new COModeledServer(thisCo);
+	model.XML2Model();
+	model.convertCitationLibraryUrls();
+	model.model2XML();	
+	thisCo.setContent(model.getSerializedContent());
+
 	log.debug("getSerializedPublishedCourseOutlineForAccessType"
 		+ elapsed(start) + siteId);
 	return thisCo;
