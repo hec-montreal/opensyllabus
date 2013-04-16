@@ -20,6 +20,15 @@
   </properties>
 
   <dependencies>
+	<dependency>
+   	  <groupId>org.sakaiproject.kernel</groupId>
+      <artifactId>sakai-component-manager</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-citations-api</artifactId>
+    </dependency>
   	<dependency>
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
@@ -55,6 +64,9 @@
           <include>**/*.xml</include>
           <include>**/*.java</include>
         </includes>
+        <excludes>
+          <exclude>**/CitationsUtils.java</exclude>
+        </excludes>
         <filtering>false</filtering>
       </resource>
     </resources>
