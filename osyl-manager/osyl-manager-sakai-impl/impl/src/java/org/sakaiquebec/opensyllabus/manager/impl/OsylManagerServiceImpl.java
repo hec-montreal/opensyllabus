@@ -611,7 +611,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void readXML(String xmlReference, String siteId, String webapp)
 	    throws Exception {
 	if (!osylSecurityService
-		.isActionAllowedForCurrentUser(SecurityInterface.OSYL_MANAGER_FUNCTION_IMPORT)) {
+		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_IMPORT)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_IMPORT);
@@ -652,7 +652,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void readZip(String zipReference, String siteId, String webapp)
 	    throws Exception {
 	if (!osylSecurityService
-		.isActionAllowedForCurrentUser(SecurityInterface.OSYL_MANAGER_FUNCTION_IMPORT)) {
+		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_IMPORT)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_IMPORT);
@@ -875,7 +875,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    throws OsylPermissionException {
 	String url = null;
 	if (!osylSecurityService
-		.isActionAllowedForCurrentUser(SecurityInterface.OSYL_MANAGER_FUNCTION_EXPORT)) {
+		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_EXPORT)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_EXPORT);
@@ -1188,7 +1188,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     public void dissociate(String siteId, String parentId) throws Exception {
 	if (!osylSecurityService
-		.isActionAllowedForCurrentUser(SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
+		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE);
@@ -1233,7 +1233,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void associateToCM(String courseSectionId, String siteId,
 	    String webappDir) throws Exception, SessionCompatibilityException {
 	if (!osylSecurityService
-		.isActionAllowedForCurrentUser(SecurityInterface.OSYL_MANAGER_FUNCTION_ATTACH)) {
+		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_ATTACH)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_ATTACH);
@@ -1295,7 +1295,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void dissociateFromCM(String siteId, String webappDir)
 	    throws Exception {
 	if (!osylSecurityService
-		.isActionAllowedForCurrentUser(SecurityInterface.OSYL_MANAGER_FUNCTION_ATTACH)) {
+		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_ATTACH)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_ATTACH);
@@ -2027,7 +2027,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     public void copySite(String siteFrom, String siteTo) throws Exception {
 	if (!osylSecurityService
-		.isActionAllowedForCurrentUser(SecurityInterface.OSYL_MANAGER_FUNCTION_COPY)) {
+		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_COPY)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_COPY);
@@ -2450,7 +2450,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void deleteSite(String siteId) throws Exception,
 	    OsylPermissionException {
 	if (!osylSecurityService
-		.isActionAllowedForCurrentUser(SecurityInterface.OSYL_MANAGER_FUNCTION_DELETE)) {
+		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_DELETE)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_DELETE);
@@ -2461,7 +2461,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public String createSite(String siteTitle, String configRef, String lang)
 	    throws Exception, OsylPermissionException {
 	if (!osylSecurityService
-		.isActionAllowedForCurrentUser(SecurityInterface.OSYL_MANAGER_FUNCTION_CREATE)) {
+		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_CREATE)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_CREATE);
