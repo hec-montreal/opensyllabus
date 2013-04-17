@@ -322,7 +322,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    coursEntry = (DetailCoursMapEntry) cours.next();
 	    
 	    //we do not make any processing for ZC1 courses
-	    if ("ZC1".equals(coursEntry.getClassSection())) {
+	    if (!"ZC1".equals(coursEntry.getClassSection())) {
 	    	if (!DetailCoursMapEntry.CLASS_STATUS_CANCELLED.equals(coursEntry
 	    		    .getClassStat())) {
 	    		canonicalCourseId = getCanonicalCourseId(coursEntry);
