@@ -643,8 +643,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		newResource.setContentType(MimeConstants.MIME_PDF);
 		contentHostingService.commitResource(newResource,
 			NotificationService.NOTI_NONE);
-		osylSecurityService.applyPermissions(newResource.getId(),
-			access);
+		osylSecurityService.applyPermissions(siteId, newResource.getId(), access);
 		f.delete();
 	    } catch (PermissionException e) {
 		e.printStackTrace();
