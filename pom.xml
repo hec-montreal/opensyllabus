@@ -5,13 +5,13 @@
   <parent>
     <artifactId>base</artifactId>
     <groupId>org.sakaiproject</groupId>
-    <version>2.8.1</version>
+    <version>2.9.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
   <artifactId>osyl</artifactId>
-  <!-- version>2.7.1</version -->
+  <version>2.9.1</version>
   <packaging>pom</packaging>
 
   <name>Sakai Quebec OpenSyllabus</name>
@@ -40,8 +40,8 @@
     <module>osyl-configs</module>
     <module>osyl-common</module>
     <module>osyl-editor</module>
-    <module>osyl-manager</module><!-- HEC ONLY SAKAI-2723 -->
-    <module>osyl-admin</module><!-- HEC ONLY SAKAI-2723 -->
+    <!--<module>osyl-manager</module>--><!-- HEC ONLY SAKAI-2723 -->
+    <!-- <module>osyl-admin</module>--><!-- HEC ONLY SAKAI-2723 --> 
   </modules>
 
   <pluginRepositories>
@@ -80,87 +80,68 @@
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-configs</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-common-shared</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-common-impl</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-common-api</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-editor-server-api</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-editor-sakai-impl</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-admin-server-api</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-admin-sakai-impl</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-manager-server-api</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-manager-sakai-impl</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
-      <!-- BEGIN HEC ONLY SAKAI-2723 --> 
-      <dependency>
-      	<groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>osyl-portal-sakai-impl</artifactId>
-       <version>${sakai.version}</version>
-      </dependency>
-      <dependency>
-      	<groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>osyl-portal-server-api</artifactId>
-        <version>${sakai.version}</version>
-     </dependency>
-     <!-- END HEC ONLY SAKAI-2723 --> 
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.managergwt</groupId>
         <artifactId>osyl-manager-gwt</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.editorgwt</groupId>
         <artifactId>osyl-editor-gwt</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.admingwt</groupId>
         <artifactId>osyl-admin-gwt</artifactId>
-        <version>${sakai.version}</version>
+        <version>${sakai.opensyllabus.version}</version>
       </dependency>
-      <!-- BEGIN HEC ONLY SAKAI-2723 -->
-      <dependency>
-      	<groupId>org.sakaiquebec.opensyllabus.portalgwt</groupId>
-        <artifactId>osyl-portal-gwt</artifactId>
-       <version>${sakai.version}</version>
-     </dependency>
-	<!-- END HEC ONLY SAKAI-2723 -->
       <!--  sakai -->
       <dependency>
         <groupId>org.sakaiproject</groupId>
@@ -189,8 +170,23 @@
       	<artifactId>coursemanagement-api</artifactId>
       	<!-- version>1.1.3</version -->
       	<version>${sakai.edu-services.version}</version>
-      	<scope>provided</scope>
-      </dependency>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-presence-api</artifactId>
+			<version>${sakai.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-message-api</artifactId>
+			<version>${sakai.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-announcement-api</artifactId>
+			<version>${sakai.version}</version>
+		</dependency>
 
       <!-- spring and hibernate -->
       <dependency>
@@ -274,7 +270,7 @@
         <version>3.2</version>
       </dependency>
       <dependency>
-        <groupId>net.sf.ehcache</groupId>
+        <groupId>net.sf</groupId>
         <artifactId>ehcache</artifactId>
         <version>${sakai.ehcache.version}</version>
       </dependency>
