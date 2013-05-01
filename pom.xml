@@ -41,6 +41,7 @@
     <module>osyl-common</module>
     <module>osyl-editor</module>
     <module>osyl-manager</module><!-- HEC ONLY SAKAI-2723 -->
+    <module>osyl-admin</module><!-- HEC ONLY SAKAI-2723 -->
   </modules>
 
   <pluginRepositories>
