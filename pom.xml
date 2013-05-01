@@ -40,8 +40,7 @@
     <module>osyl-configs</module>
     <module>osyl-common</module>
     <module>osyl-editor</module>
-    <!--<module>osyl-manager</module>--><!-- HEC ONLY SAKAI-2723 -->
-    <!-- <module>osyl-admin</module>--><!-- HEC ONLY SAKAI-2723 --> 
+    <module>osyl-manager</module><!-- HEC ONLY SAKAI-2723 -->
   </modules>
 
   <pluginRepositories>
@@ -270,8 +269,8 @@
         <version>3.2</version>
       </dependency>
       <dependency>
-        <groupId>net.sf</groupId>
-        <artifactId>ehcache</artifactId>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache-core</artifactId>
         <version>${sakai.ehcache.version}</version>
       </dependency>
       <dependency>
