@@ -134,13 +134,15 @@ public class FOPHelper {
 	    String xmlLogPath = ServerConfigurationService.getString("opensyllabus.failed.xml.directory.path");
 	    String xmlLogFile = siteId + "_" + date + ".xml";
 	    
-	    File xmlLogDirectory = new File(xmlLogPath);	    
-	    if (!xmlLogDirectory.exists()){
-	    	xmlLogDirectory.mkdirs();
-	    }
+	    if (!"".equals(xmlLogPath)) {
+	    	File xmlLogDirectory = new File(xmlLogPath);	    
+	    	if (!xmlLogDirectory.exists()){
+	    		xmlLogDirectory.mkdirs();
+	    	}
 	    	
-	    String xmlLogFileFullPath = xmlLogDirectory.getAbsolutePath() + File.separator + xmlLogFile;	    
-	    FileUtils.writeStringToFile(new File(xmlLogFileFullPath), xml,"UTF-8");	    
+	    	String xmlLogFileFullPath = xmlLogDirectory.getAbsolutePath() + File.separator + xmlLogFile;	    
+	    	FileUtils.writeStringToFile(new File(xmlLogFileFullPath), xml,"UTF-8");	    
+	    }
 	    // END ZCII-515 
 	    
 	    throw e;
