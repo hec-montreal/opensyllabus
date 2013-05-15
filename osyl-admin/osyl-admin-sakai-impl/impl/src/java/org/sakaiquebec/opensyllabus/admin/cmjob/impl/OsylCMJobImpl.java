@@ -1,13 +1,11 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +39,8 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
+import org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl;
+import org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylAbstractQuartzJobImpl;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailChargeFormationMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailChargeFormationMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailCoursMap;
@@ -581,6 +581,22 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	return sessionName;
     }
+    
+    private String getSessionName(String sessionId, Date startDate) {
+    	String sessionName = null;
+    	Calendar startCalendarDate = Calendar.getInstance();
+    	startCalendarDate.setTime(startDate);
+    	String year = Integer.toString(startCalendarDate.get(Calendar.YEAR));
+
+    	if ((sessionId.charAt(3)) == '1')
+    	    sessionName = OfficialSitesJobImpl.WINTER + year;
+    	if ((sessionId.charAt(3)) == '2')
+    	    sessionName = OfficialSitesJobImpl.SUMMER + year;
+    	if ((sessionId.charAt(3)) == '3')
+    	    sessionName = OfficialSitesJobImpl.FALL + year;
+
+    	return sessionName;
+        }
 
     /*
      * Creates or updates the special section used for the sharable sites
@@ -678,13 +694,13 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	while (sessions.hasNext()) {
 	    sessionEntry = (DetailSessionsMapEntry) sessions.next();
-	    eid = sessionEntry.getUniqueKey();
-	    title = sessionEntry.getDescAnglais();
+	    eid = sessionEntry.getUniqueKey();	    
 	    description = sessionEntry.getDescAnglais();
 	    try {
 		startDate =
 			DateFormat.getDateInstance().parse(
 				sessionEntry.getBeginDate());
+		title = getSessionName(eid, startDate);
 		endDate =
 			DateFormat.getDateInstance().parse(
 				sessionEntry.getEndDate());
