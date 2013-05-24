@@ -1524,7 +1524,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    CompatibilityException, FusionException, OsylPermissionException,
 	    VersionCompatibilityException {
 	if (!osylSecurityService
-		.isActionAllowedForCurrentUser(SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
+		.isActionAllowedInSite(toolManager.getCurrentPlacement().getContext()), SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE);
