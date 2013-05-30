@@ -1523,8 +1523,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public void associate(String siteId, String parentId) throws Exception,
 	    CompatibilityException, FusionException, OsylPermissionException,
 	    VersionCompatibilityException {
-	if (!osylSecurityService
-		.isActionAllowedInSite(toolManager.getCurrentPlacement().getContext(), SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
+    	
+    
+    // if the user is not admin, or have permission in the current site, throw exception
+    // (first check is because the quartz job has no current site)
+	if (!(securityService.isSuperUser() ||
+			(toolManager.getCurrentPlacement() != null &&
+			osylSecurityService.isActionAllowedInSite(
+					getSiteReference(toolManager.getCurrentPlacement().getContext()), SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE)))) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE);
