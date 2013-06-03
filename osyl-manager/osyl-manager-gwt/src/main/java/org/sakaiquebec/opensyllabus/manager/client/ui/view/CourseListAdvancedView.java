@@ -23,7 +23,6 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
@@ -36,7 +35,6 @@ import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
 import com.google.gwt.gen2.table.client.ScrollTable;
@@ -65,10 +63,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	OsylManagerEventHandler, ClickHandler {
 
-    private static final String WINTER = "winter";
-    private static final String SUMMER = "summer";
-    private static final String FALL = "fall";
-    
     private static String DIRECTORY_TYPE_SITE = "directory";
     
     private static String DIRECTORY_SITE = "D";
@@ -147,9 +141,8 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 			    //Trimestre
 			    if (!coSite.getType().equalsIgnoreCase(
 				    DIRECTORY_TYPE_SITE)) {
-				scSiteList.getDataTable().setHTML(rowNum, 2,
-					getLocalizedSessionName(coSite
-						.getCourseSession()));
+				scSiteList.getDataTable()
+					.setHTML(rowNum, 2, coSite.getCourseSession());
 			    } else {
 				scSiteList.getDataTable()
 					.setHTML(rowNum, 2, "");				
@@ -538,28 +531,6 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 
     public void setStyleRow(String styleRow) {
 	this.styleRow = styleRow;
-    }
-
-    private String getLocalizedSessionName(String sessionName) {
-
-	if (sessionName == null || "".equals(sessionName)) {
-	    return "";
-	} else {
-	    StringTokenizer strTok = new StringTokenizer(sessionName);
-	    String season = strTok.nextToken().toLowerCase();
-
-	    if (WINTER.equals(season)) {
-		season = messages.academicSessionWinter();
-	    } else if (SUMMER.equals(season)) {
-		season = messages.academicSessionSummer();
-	    } else if (FALL.equals(season)) {
-		season = messages.academicSessionFall();
-	    } else {
-		season = "";
-	    }
-	    return season + " "
-		    + (strTok.hasMoreTokens() ? strTok.nextToken() : "");
-	}
     }
 
 }
