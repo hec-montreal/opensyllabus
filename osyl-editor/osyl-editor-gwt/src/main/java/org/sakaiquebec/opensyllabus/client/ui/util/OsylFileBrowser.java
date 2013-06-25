@@ -22,6 +22,7 @@
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import java.util.List;
+import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -43,7 +44,7 @@ import com.google.gwt.user.client.ui.PushButton;
  */
 public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 
-    private List<String> rightsList;
+    private Map<String, String> rightsMap;
 
     private List<String> typesResourceList;
 
@@ -55,7 +56,7 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 
     /**
      * Constructor.
-     * 
+     *
      * @param model
      * @param newController
      */
@@ -81,7 +82,7 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 		    new OsylFileUpload(getController().getUiMessages()
 			    .getMessage("fileUpload.addResource"),
 			    getController(), getCurrentDirectory()
-				    .getDirectoryPath(), rightsList,
+				    .getDirectoryPath(), rightsMap,
 			    typesResourceList);
 	    osylFileUpload.addEventHandler(OsylFileBrowser.this);
 	    osylFileUpload.showModal();
@@ -132,11 +133,11 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 			this.fileUpdateRequestHandler);
     }
 
-    public void setRightsList(List<String> rightsList) {
-	this.rightsList = rightsList;
-    }
+    public void setRightsMap(Map<String, String> rightsMap) {
+		this.rightsMap = rightsMap;
+	}
 
-    public void setTypesResourceList(List<String> typesResourceList) {
+	public void setTypesResourceList(List<String> typesResourceList) {
 	this.typesResourceList = typesResourceList;
     }
 

@@ -16,6 +16,8 @@ package org.sakaiquebec.opensyllabus.client.ui.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.WindowPanel;
@@ -57,7 +59,7 @@ import com.google.gwt.user.client.ui.ListBox;
 /**
  * Pop-up window to show a file upload form. The file is saved on the server and
  * the client-side model is modified accordingly.
- * 
+ *
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  * @version $Id: $
  */
@@ -89,7 +91,7 @@ public class OsylFileUpload extends WindowPanel implements
     private List<UploadFileEventHandler> uploadEvtHandlerList =
 	    new ArrayList<UploadFileEventHandler>();
 
-    private List<String> rightsList;
+    private Map<String, String> rightsMap;
 
     private ListBox rightsListBox;
 
@@ -103,11 +105,11 @@ public class OsylFileUpload extends WindowPanel implements
 
     /**
      * Constructor.
-     * 
+     *
      * @param osylController
      */
     public OsylFileUpload(String title, OsylController osylController,
-	    String currentDirectory, List<String> rightsList,
+	    String currentDirectory, Map<String, String> rightsMap,
 	    List<String> typesResourceList) {
 	super(title);
 	// set some properties for WindowPanel
@@ -116,7 +118,7 @@ public class OsylFileUpload extends WindowPanel implements
 	setCaptionAction(null);
 	setController(osylController);
 	this.currentFolder = currentDirectory;
-	this.rightsList = rightsList;
+	this.rightsMap = rightsMap;
 	this.typesResourceList = typesResourceList;
 	uiMessages = osylController.getUiMessages();
 	coMessages = osylController.getCoMessages();
@@ -180,8 +182,8 @@ public class OsylFileUpload extends WindowPanel implements
 	// Add a "choose rights status" listbox
 	rightsListBox = new ListBox();
 	// TODO erreur sur la ligne 157 rightsList probablement null.
-	for (String license : this.rightsList) {
-	    rightsListBox.addItem(license);
+	for (Entry<String, String> rightsMapEntry : this.rightsMap.entrySet()) {
+	    rightsListBox.addItem(rightsMapEntry.getValue(), rightsMapEntry.getKey());
 	}
 	rightsListBox.setItemSelected(0, true);
 	rightsListBox.addChangeHandler(new ChangeHandler() {
@@ -370,7 +372,7 @@ public class OsylFileUpload extends WindowPanel implements
 
     /**
      * Parse the JSON String returned after file upload
-     * 
+     *
      * @param jsonString
      * @return a boolean of the success state
      */
@@ -380,7 +382,7 @@ public class OsylFileUpload extends WindowPanel implements
 
     /**
      * Gets the resource name
-     * 
+     *
      * @param jsonString
      * @return The resource name
      */

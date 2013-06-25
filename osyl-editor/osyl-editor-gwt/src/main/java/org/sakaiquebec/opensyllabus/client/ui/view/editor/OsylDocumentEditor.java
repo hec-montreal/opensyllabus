@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -52,7 +53,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -73,7 +73,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Document editor to be used within {@link OsylAbstractView}. The edition mode
  * uses a Rich-text editor and the view mode displays a clickable link.
- * 
+ *
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  */
 public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
@@ -114,7 +114,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
      * working for.
-     * 
+     *
      * @param parent
      */
     public OsylDocumentEditor(OsylAbstractView parent) {
@@ -981,25 +981,16 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 					ResourcesLicencingInfo result) {
 				    resourceLicensingInfo = result;
 
-				    List<String> rightsList =
-					    new ArrayList<String>();
-
-				    if (OsylController.getInstance()
-					    .isInHostedMode()) {
-					rightsList =
-						resourceLicensingInfo
-							.getCopyrightTypeList();
-				    } else {
+					Map<String, String> rightsMap = new HashMap<String, String>();
 					for (String rightKey : resourceLicensingInfo
-						.getCopyrightTypeList()) {
-					    rightsList.add(getView()
-						    .getUiMessage(rightKey));
+							.getCopyrightTypeList()) {
+						rightsMap.put(rightKey, getView()
+								.getUiMessage(rightKey));
 					}
-				    }
 				    ((OsylFileBrowser) browser)
-					    .setRightsList(rightsList);
+					    .setRightsMap(rightsMap);
 
-				    buildLicenseListBox(rightsList);
+				    buildLicenseListBox(rightsMap);
 
 				    List<String> typesResourceList =
 					    new ArrayList<String>();
@@ -1015,18 +1006,12 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				}
 			    });
 	} else {
-	    List<String> rightsList = new ArrayList<String>();
-
-	    if (OsylController.getInstance().isInHostedMode()) {
-		rightsList = resourceLicensingInfo.getCopyrightTypeList();
-	    } else {
-		for (String rightKey : resourceLicensingInfo
-			.getCopyrightTypeList()) {
-		    rightsList.add(getView().getUiMessage(rightKey));
+		Map<String, String> rightsMap = new HashMap<String, String>();
+		for (String rightKey : resourceLicensingInfo.getCopyrightTypeList()) {
+			rightsMap.put(rightKey, getView().getUiMessage(rightKey));
 		}
-	    }
-	    ((OsylFileBrowser) browser).setRightsList(rightsList);
-	    buildLicenseListBox(rightsList);
+		((OsylFileBrowser) browser).setRightsMap(rightsMap);
+		buildLicenseListBox(rightsMap);
 
 	    // ---------------------------------------------------------
 	    // Types of documents
@@ -1042,11 +1027,11 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	}
     }
 
-    private void buildLicenseListBox(List<String> rightsList) {
+    private void buildLicenseListBox(Map<String, String> rightsMap) {
 	resourceLicensingInfo.getCopyrightTypeList();
 	licenseListBox.clear();
-	for (String right : rightsList) {
-	    licenseListBox.addItem(right);
+	for (Entry<String, String> rightsMapEntry : rightsMap.entrySet()) {
+		licenseListBox.addItem(rightsMapEntry.getValue(), rightsMapEntry.getKey());
 	}
 	refreshBrowsingComponents();
     }
@@ -1090,10 +1075,12 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		descriptionTextArea.setText(selectedFile.getDescription());
 
 		for (int i = 0; i < licenseListBox.getItemCount(); i++) {
-		    String item = licenseListBox.getValue(i);
-		    if (item.equals(selectedFile.getCopyrightChoice())) {
-			licenseListBox.setItemSelected(i, true);
-			isFound = true;
+			if (licenseListBox.getValue(i).equals(
+					selectedFile.getCopyrightChoice())
+					|| licenseListBox.getItemText(i).equals(
+							selectedFile.getCopyrightChoice())) {
+				licenseListBox.setItemSelected(i, true);
+				isFound = true;
 		    }
 		}
 		for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {

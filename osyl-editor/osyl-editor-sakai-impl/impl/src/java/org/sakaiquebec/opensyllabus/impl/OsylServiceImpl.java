@@ -53,7 +53,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * Sets the <code>SiteService</code>.
-     * 
+     *
      * @param siteService
      */
     public void setSiteService(SiteService siteService) {
@@ -62,7 +62,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * The chs to be injected by Spring
-     * 
+     *
      * @uml.property name="contentHostingService"
      * @uml.associationEnd
      */
@@ -70,7 +70,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * Sets the <code>ContentHostingService</code>.
-     * 
+     *
      * @param contentHostingService
      * @uml.property name="contentHostingService"
      */
@@ -108,7 +108,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * Sets the {@link OsylContentService}.
-     * 
+     *
      * @param osylContentService
      */
     public void setOsylContentService(OsylContentService osylContentService) {
@@ -117,7 +117,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * Sets the <code>SessionManager</code>.
-     * 
+     *
      * @param sessionManager
      */
     public void setSessionManager(SessionManager sessionManager) {
@@ -126,7 +126,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * The citation service to be injected by Spring
-     * 
+     *
      * @uml.property name="citationService"
      * @uml.associationEnd multiplicity="(0 -1)"
      *                     elementType="org.sakaiproject.citation.api.Citation"
@@ -135,7 +135,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * Sets the <code>CitationService</code>.
-     * 
+     *
      * @param citationService
      * @uml.property name="citationService"
      */
@@ -198,7 +198,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * Sets the {@link CORelationDao}.
-     * 
+     *
      * @param coRelationDAO
      */
     public void setCORelationDao(CORelationDao coRelationDao) {
@@ -209,7 +209,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * Sets the {@link COConfigDao}.
-     * 
+     *
      * @param coConfigDAO
      */
     public void setCOConfigDao(COConfigDao coConfigDao) {
@@ -218,7 +218,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * The security service to be injected by Spring
-     * 
+     *
      * @uml.property name="osylSecurityService"
      * @uml.associationEnd
      */
@@ -226,7 +226,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     * 
+     *
      * @param securityService
      */
     public void setOsylSecurityService(OsylSecurityService securityService) {
@@ -239,7 +239,7 @@ public class OsylServiceImpl implements OsylService {
 
 	ContentResourceEdit resource = null;
 	String resourceDir = getResourceReference(siteId);
-    log.info("*** linkCitationsToSite SecurityAdvisor advisor = new SecurityAdvisor() { OsylServiceImpl *** ");	    
+    log.info("*** linkCitationsToSite SecurityAdvisor advisor = new SecurityAdvisor() { OsylServiceImpl *** ");
 
 	SecurityAdvisor advisor = new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
@@ -369,7 +369,7 @@ public class OsylServiceImpl implements OsylService {
     /**
      * Get a valid resource reference base URL to be used in later calls. Will
      * get deprecated very soon!
-     * 
+     *
      * @return a String of the base URL
      */
     public String getResourceReference() {
@@ -389,7 +389,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * Add a collection (similar to a sub-directory) under the resource tool.
-     * 
+     *
      * @param dir name of collection
      * @param parent where to create it (null means top-level)
      * @return boolean whether the collection was added or not
@@ -425,7 +425,7 @@ public class OsylServiceImpl implements OsylService {
 
     /**
      * Tells if a collection is already created in sakai.
-     * 
+     *
      * @param a String of the collection id.
      * @return boolean whether the collection exists
      */
@@ -444,9 +444,9 @@ public class OsylServiceImpl implements OsylService {
 	ResourcesLicencingInfo resourcesLicencingInfo =
 		new ResourcesLicencingInfo();
 	List<String> copyrightTypeList = new ArrayList<String>();
-	if (ServerConfigurationService.getStrings("copyrighttype") != null) {
+	if (ServerConfigurationService.getStrings("copyright.types") != null) {
 	    String[] copyrighttypeTab =
-		    ServerConfigurationService.getStrings("copyrighttype");
+		    ServerConfigurationService.getStrings("copyright.types");
 	    for (String copyright : copyrighttypeTab) {
 		copyrightTypeList.add(copyright);
 	    }
@@ -464,7 +464,7 @@ public class OsylServiceImpl implements OsylService {
 	    String parent =
 		    coRelationDao.getParentOfCourseOutline(currentSiteId);
 	    if (resourceURI.indexOf(parent, 0) != -1) {
-		
+
 
 	    }
 
