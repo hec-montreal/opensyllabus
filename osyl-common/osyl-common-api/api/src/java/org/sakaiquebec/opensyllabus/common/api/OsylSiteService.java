@@ -41,7 +41,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
  * This interface contains all the variables and functions needed by all the
  * tools of OpenSyllabus (OsylEditor, OsylManager, OsylAdmin). It allows to
  * retrieve informations from a course outline and the site related to it.
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -111,7 +111,7 @@ public interface OsylSiteService extends EntityProducer {
     /**
      * Title of iFrame presenting rules and regulations (English).
      */
-    public static final String HEC_WELCOME_EN = "Welcome in this course";
+    public static final String HEC_WELCOME_EN = "Welcome to this course";
 
     /**
      * Base name of files containing a summary and links of rules and
@@ -126,14 +126,14 @@ public interface OsylSiteService extends EntityProducer {
     /**
      * Get a valid resource reference base site URL to be used in later calls.
      * Will get deprecated very soon!
-     * 
+     *
      * @return a String of the base URL
      */
     public String getCurrentSiteReference();
 
     /**
      * Get a valid resource reference base site URL to be used in later calls.
-     * 
+     *
      * @param siteId the id of the site to get its reference.
      * @return a String of the base URL
      */
@@ -141,7 +141,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Returns whether a site with the specified title exists.
-     * 
+     *
      * @param siteTitle
      * @return true or false
      * @throws Exception
@@ -152,7 +152,7 @@ public interface OsylSiteService extends EntityProducer {
      * From the information given by the user, we create a new Site that will
      * contain a course outline that will be associated to a course of the
      * course management or will be a work site.
-     * 
+     *
      * @param siteId
      * @param siteTitle
      * @param siteSession
@@ -167,7 +167,7 @@ public interface OsylSiteService extends EntityProducer {
     /**
      * From the information given by the user, we create a new Site that will
      * contain a sharable course outline.
-     * 
+     *
      * @param siteId
      * @param siteTitle
      * @param siteSession
@@ -181,14 +181,14 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Returns the actual site id of this context.
-     * 
+     *
      * @return a String of the current site id.
      */
     public String getCurrentSiteId() throws Exception;
 
     /**
      * This method adds site info to the COSerialized.
-     * 
+     *
      * @param co the COSerialized
      * @param siteId The current site id.
      * @throws Exception
@@ -197,28 +197,28 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Check if the Co of the current context has been published
-     * 
+     *
      * @return true if published
      */
     public boolean hasBeenPublished();
 
     /**
      * Check if a Co in edition exists for the give site
-     * 
+     *
      * @return true if course line exists
      */
     public boolean hasCourseOutline(String siteId);
 
     /**
      * Check if the Co with the siteId has been published
-     * 
+     *
      * @return true if published
      */
     public boolean hasBeenPublished(String siteId);
 
     /**
      * Returns the public Course Outline for the site ID specified.
-     * 
+     *
      * @param String the course outline ID
      * @return the CourseOutline POJO corresponding to the specified ID
      * @throws Exception
@@ -227,7 +227,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Returns the CourseOutline whose ID is specified.
-     * 
+     *
      * @param String the course outline ID
      * @return the CourseOutline POJO corresponding to the specified ID
      * @throws Exception
@@ -237,7 +237,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Returns the CourseOutline of the current context.
-     * 
+     *
      * @return the CourseOutline POJO corresponding to the current context.
      * @throws FusionException
      * @throws Exception
@@ -247,7 +247,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Returns the CourseOutline of the current context (version unfusionned).
-     * 
+     *
      * @return the CourseOutline POJO corresponding to the current context.
      */
     public COSerialized getUnfusionnedSerializedCourseOutlineBySiteId(String id);
@@ -257,7 +257,7 @@ public interface OsylSiteService extends EntityProducer {
      * this instance has never been saved before (i.e.: its ID is -1). In this
      * case, it is the responsibility of the client application to keep track of
      * this new ID, notably to save it again at a later time.
-     * 
+     *
      * @param COSerialized POJO
      * @return the CourseOutline ID
      * @throws Exception
@@ -267,7 +267,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * We create a new course outline from a xmlContent
-     * 
+     *
      * @param xmlData
      * @return
      */
@@ -301,7 +301,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Get the id of the config used by site identified by siteId
-     * 
+     *
      * @param siteId
      * @return
      */
@@ -315,20 +315,20 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Convert the co to the most up to date version of osyl
-     * 
+     *
      * @param co
      */
     public void convertAndSave(String webapp, COSerialized co) throws Exception;
 
-    
-    
-    
+
+
+
     public List<Site> getSites(String searchTerm);
-    
+
     /**
      * Retrieves the site name that represents the association between the site
      * and the course management.
-     * 
+     *
      * @param sectionId
      * @return
      */
@@ -336,7 +336,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Retrieves the session name from an AcademicSession from course management
-     * 
+     *
      * @param session
      * @return
      */
@@ -344,7 +344,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Retrive date of last publication
-     * 
+     *
      * @param siteId
      * @return
      */
@@ -352,7 +352,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Get date of last modification
-     * 
+     *
      * @param siteId
      * @return
      */
@@ -360,7 +360,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Get co for export
-     * 
+     *
      * @param siteId
      * @param webappDir
      * @return
@@ -371,7 +371,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * delete site (all xml related to this site)
-     * 
+     *
      * @param siteId
      * @throws Exception
      */
@@ -387,7 +387,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Add an annoucment in site
-     * 
+     *
      * @param siteId
      * @param subject
      * @param body
@@ -399,7 +399,7 @@ public interface OsylSiteService extends EntityProducer {
 
     /**
      * Send an event
-     * 
+     *
      * @param eventType
      * @param resource
      */
