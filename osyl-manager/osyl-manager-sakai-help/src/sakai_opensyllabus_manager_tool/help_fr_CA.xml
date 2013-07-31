@@ -7,7 +7,7 @@
       	<value>osyl_manager_fr_CA</value>
       </property>
       <property name="name">
-      	<value>Aide Gestionnaire de plans de cours</value>
+      	<value>Aide</value>
       </property>
       <property name="location">
       	<value>/sakai_opensyllabus_manager_tool/osyl_manager_fr_CA.html</value>
@@ -16,8 +16,8 @@
       	<value>sakai.opensyllabus.manager.tool</value>
       </property>
    </bean>
- 
-    <bean id="org.sakaiproject.api.app.help.TableOfContents" 
+
+    <bean id="org.sakaiproject.api.app.help.TableOfContents"
           class="org.sakaiproject.component.app.help.model.TableOfContentsBean">
       <property name="name">
       	<value>root</value>
@@ -31,8 +31,8 @@
                <property name="resources">
                   <list>
                      <ref bean="opensyllabusManagerOverview"/>
-                          
-                
+
+
                   </list>
                </property>
             </bean>
