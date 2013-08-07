@@ -309,8 +309,6 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	try {
 	    if (justCreated) {
 		osylManagerService.associateToCM(section.getEid(), siteName);
-		Site site = siteService.getSite(siteName);
-		siteService.save(site);
 		log.info("The site " + siteName
 			+ " has been created and associated to the section "
 			+ section.getEid() + " in the Course Management");
@@ -381,19 +379,14 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 		log.info("The site " + siteName + " already exist.");
 	    }
 
-	    Site sharable = siteService.getSite(siteName);
-
 	    if (justCreated)
 		try {
-
 		    osylManagerService.associateToCM(sharableSection.getEid(),
 			    siteName);
 		} catch (Exception e) {
 		    log.error("Could not associate site " + siteName
 			    + " with CM", e);
 		}
-
-	    siteService.save(sharable);
 	} catch (Exception e) {
 	    log.error(e.getMessage());
 	    return null;
@@ -588,7 +581,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
     protected void loginToSakai() {
 	super.loginToSakai("OfficialSitesJob");
     }
-    
+
     private String getZoneCours2EMail(){
 	return ServerConfigurationService.getString("mail.zc2");
     }
