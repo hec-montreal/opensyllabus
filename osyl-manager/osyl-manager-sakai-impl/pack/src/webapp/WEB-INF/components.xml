@@ -24,7 +24,7 @@
 				<value>osyl.manager.associate</value>
 		    </list>
 		</property>
-		<!-- 
+		<!--
 		<property name="functionsToAllow">
 		    <map>
 		        <entry key="Instructor">
@@ -32,7 +32,7 @@
 		                <value>osyl.manager.import</value>
 		                <value>osyl.manager.export</value>
 		            </list>
-		        </entry>        
+		        </entry>
 		        <entry key="Teaching Assistant">
 		            <list>
 		                <value>osyl.manager.import</value>
@@ -68,7 +68,7 @@
 			ref="org.sakaiproject.content.api.ContentHostingService" />
 		<property name="courseManagementService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
-		<property name="osylContentService" 
+		<property name="osylContentService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
 		<property name="entityManager"
 			ref="org.sakaiproject.entity.api.EntityManager" />
@@ -76,7 +76,7 @@
 			ref="org.sakaiproject.authz.api.AuthzGroupService" />
 		<property name="securityService"
 			ref="org.sakaiproject.authz.api.SecurityService" />
-		<property name="functionManager" 
+		<property name="functionManager"
 			ref="org.sakaiproject.authz.api.FunctionManager" />
 		<property name="timeService"
 			ref="org.sakaiproject.time.api.TimeService" />
@@ -86,6 +86,8 @@
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 			<property name="toolManager"
 			ref="org.sakaiproject.tool.api.ToolManager" />
+		<property name="projectLogic"
+			ref="org.sakaiproject.delegatedaccess.logic.ProjectLogic" />
 	</bean>
 
 </beans>

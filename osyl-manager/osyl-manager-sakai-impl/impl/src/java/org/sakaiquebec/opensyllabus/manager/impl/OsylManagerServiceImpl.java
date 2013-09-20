@@ -76,6 +76,8 @@ import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.Enrollment;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.delegatedaccess.logic.ProjectLogic;
+import org.sakaiproject.delegatedaccess.model.SiteSearchResult;
 import org.sakaiproject.entity.api.EntityManager;
 import org.sakaiproject.entity.api.EntityProducer;
 import org.sakaiproject.entity.api.EntityTransferrer;
@@ -224,7 +226,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Sets the {@link OsylContentService}.
-     * 
+     *
      * @param osylContentService
      */
     public void setOsylContentService(OsylContentService osylContentService) {
@@ -312,8 +314,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void setEventTrackingService(EventTrackingService eventTrackingService) {
 	this.eventTrackingService = eventTrackingService;
     }
-    
-    
+
+
    /**
      * The time service to be injected by Spring
      */
@@ -351,7 +353,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void setOsylSecurityService(OsylSecurityService osylSecurityService) {
 	this.osylSecurityService = osylSecurityService;
     }
-    
+
     /**
      * The Tool Manager service to be injected by Spring
      */
@@ -375,6 +377,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void setCoRelationDao(CORelationDao relationDao) {
 	this.coRelationDao = relationDao;
     }
+
+    /**
+     * The ProjectLogic service to be injected by Spring
+     */
+    private ProjectLogic projectLogic;
+
+    public void setProjectLogic(ProjectLogic projectLogic) {
+		this.projectLogic = projectLogic;
+	}
 
     /**
      * The type of site we are creating
@@ -556,7 +567,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Get a valid resource reference base site URL to be used in later calls.
-     * 
+     *
      * @return a String of the base URL
      */
     private String getSiteReference(Site site) {
@@ -568,7 +579,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Add a collection (similar to a sub-directory) under the resource tool.
-     * 
+     *
      * @param dir name of collection
      * @param site where to create it (null means top-level)
      * @return boolean whether the collection was added or not
@@ -592,7 +603,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Tells if a collection is already created in sakai.
-     * 
+     *
      * @param id String of the collection id.
      * @return boolean whether the collection exists
      */
@@ -706,7 +717,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * FIXME Task SAKAI-1609. This method is used to update the description and
      * the license of the Sakai resource during importation of a course outline
      * in a new site. It should be removed after the migration.
-     * 
+     *
      * @param element
      */
     private void updateResourceMetaInfo(COElementAbstract element) {
@@ -790,15 +801,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	Map<String, String> siteMap = new HashMap<String, String>();
 	String currentUser = sessionManager.getCurrentSessionUserId();
-	
+
 	long start = System.currentTimeMillis();
-	
+
 	log.debug("getOsylSites ["
 		+ sessionManager.getCurrentSession().getUserEid() + "]");
-	
+
 	if (searchTerm != null) {
 	    searchTerm = searchTerm.trim().toLowerCase();
-	} 
+	}
 
 	List<Site> sites = osylSiteService.getSites(searchTerm);
 	List<Site> filteredSites = null;
@@ -812,11 +823,16 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    filteredSites = filterSitebyAuthzGroupIds(authzGroupIds, sites);
 
-	    // adding the delegated access sites (Phil Rancourt)
-	    updateDelegateAccessMap(sites);
-
-	    addDelegatedAccessSites(filteredSites, sites);
-	}	
+	    // on ne retient que les sites pour lesquels l'utilisateur a les droits d'accès
+	    List<SiteSearchResult> listSiteSearchResults = projectLogic.searchUserSites(searchTerm, null, false, false);
+	    for (SiteSearchResult siteSearchResult : listSiteSearchResults) {
+	    	for (Site site : sites) {
+		    	if (site.getId().equals(siteSearchResult.getSiteId())) {
+		    		filteredSites.add(site);
+		    	}
+			}
+		}
+	}
 
 	for(Site site : filteredSites){
 	    List<SitePage> pagelist = site.getPages();
@@ -843,10 +859,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	if (siteMap.isEmpty()) {
 	    log.info("Empty list of siteIds for user:" + currentUser);
 	}
-	
+
 	log.debug("getOsylSites" + elapsed(start) + " for "
 		+ siteMap.size() + " sites");
-		
+
 	return siteMap;
     }
 
@@ -1015,7 +1031,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * List the files in a sites and zip them
-     * 
+     *
      * @param siteId
      * @return zipFile a temporary zip file...
      * @throws IOException
@@ -1113,7 +1129,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * Get the delay (in minutes) to wait before deleting export zip defined in
      * the sakai.properties
-     * 
+     *
      * @return
      */
     private int getDeleteExportDelay() {
@@ -1429,7 +1445,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Import files contained in the osylPackage to Sakai resources
-     * 
+     *
      * @param zipReference
      * @param siteId
      */
@@ -1619,7 +1635,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return info;
     } // getCoAndSiteInfo
 
-    
+
     /** {@inheritDoc} */
     public COSite getCoAndSiteInfo(String siteId, String searchTerm,
 	    String academicSession, String siteType) {
@@ -1631,17 +1647,17 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    log.error(e.getMessage());
 	    e.printStackTrace();
 	}
-	
+
 	return getCoAndSiteInfo(site, searchTerm, academicSession, siteType);
     }
-   
-    
+
+
     private COSite getCoAndSiteInfo(Site site, String searchTerm,
 	    String academicSession, String siteType) {
-	
+
 	long start = System.currentTimeMillis();
 	String siteId=null;
-	
+
 	COSite info = new COSite();
 
 	if (site != null
@@ -1653,9 +1669,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			.contains(
 				parseAcademicSession(academicSession)
 					.toLowerCase())) {
-	    
+
 	    siteId = site.getId();
-	    
+
 	    // Retrieve site info
 	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());
@@ -1810,19 +1826,19 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return allSitesInfo;
     }
 
-    
-    
+
+
     protected List<COSite> getSitesForUser(String userId, String permission,
 	    String searchTerm, String academicSession, boolean withFrozenSites) {
-	
+
 	long start = System.currentTimeMillis();
-	
+
 	log.debug("getSitesForUser ["
 		+ sessionManager.getCurrentSession().getUserEid() + "/"
 		+ permission + "]");
-	
+
 	List<COSite> allSitesInfo = new ArrayList<COSite>();
-		
+
 
 	if (searchTerm != null) {
 	    searchTerm = searchTerm.trim().toLowerCase();
@@ -1832,7 +1848,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	List<Site> filteredSites = null;
 
-	
+
 	if (isSuperUser()) {
 	    filteredSites = sites;
 	} else {
@@ -1843,22 +1859,27 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    filteredSites = filterSitebyAuthzGroupIds(authzGroupIds, sites);
 
-	    // adding the delegated access sites (Phil Rancourt)
-	    updateDelegateAccessMap(sites);
+	    // on ne retient que les sites pour lesquels l'utilisateur a les droits d'accès
+	    List<SiteSearchResult> listSiteSearchResults = projectLogic.searchUserSites(searchTerm, null, false, false);
+	    for (SiteSearchResult siteSearchResult : listSiteSearchResults) {
+	    	for (Site site : sites) {
+		    	if (site.getId().equals(siteSearchResult.getSiteId())) {
+		    		filteredSites.add(site);
+		    	}
+			}
+		}
+	}
 
-	    addDelegatedAccessSites(filteredSites, sites);
-	}	
-	
-	
-	
+
+
 	for(Site site : filteredSites){
-	    
+
 	    COSite info =
 			getCoAndSiteInfo(site, searchTerm,
 				academicSession, COURSE_TYPE_SITE);
-	    
+
 	    if (info != null) {
-		    
+
 		if (info.isCoIsFrozen() && withFrozenSites) {
 		    allSitesInfo.add(info);
 		} else if (!info.isCoIsFrozen()
@@ -1867,100 +1888,45 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    allSitesInfo.add(info);
 		}
 	    }
-	    
+
 	}//end for
-	
+
 
 	if (allSitesInfo.isEmpty()) {
 	    log.info("Empty list of siteIds for user:" + userId
 		    + ", permission: " + permission);
 	}
-	
+
 	log.debug("getSitesForUser" + elapsed(start) + " for "
 		+ allSitesInfo.size() + " sites");
-	
+
 	return allSitesInfo;
     }
 
-    
-    
-    /**
-     * Add the sites for which the user has access through the delegated access tool
-     * 
-     * @param filteredSites the filtered site list
-     * @param sites the search result site list
-     */
-    private void addDelegatedAccessSites(List<Site> filteredSites, List<Site> sites){
-	
-	Object delegatedAccessMap = sessionManager.getCurrentSession().getAttribute("delegatedaccess.accessmap");
-	
-	if(delegatedAccessMap!=null && delegatedAccessMap instanceof Map){
-	
-	    for(Site s : sites){
-	    
-		String siteRef = "/site/"+s.getId();
-	    
-		if(((Map)delegatedAccessMap).get(siteRef)!=null){
-		    filteredSites.add(s);
-		}
-		
-	    }//end for
-				
-	}//end if
-		
-    }
-    
-    
-    /**
-     * Update the delegate access map for the current user by sending an event tracking notification for every site
-     * 
-     * @param sites
-     */
-    private void updateDelegateAccessMap(List<Site> sites){
-	
-	Set keySet = null;
-	
-	Object delegatedAccessMap = sessionManager.getCurrentSession().getAttribute("delegatedaccess.accessmap");
-	
-	if(delegatedAccessMap!=null && delegatedAccessMap instanceof Map){
-	    keySet = ((Map)delegatedAccessMap).keySet();
-	}
-		
-	for(Site s : sites){
-	    String siteRef = "/site/"+s.getId();
-	    
-	    if(keySet==null || !keySet.contains(siteRef)){
-		eventTrackingService.post(eventTrackingService.newEvent("dac.checkaccess", siteRef, false, NotificationService.NOTI_REQUIRED));
-	    }
-	}
-    }
-    
-    
-    
     /**
      * Return a list of site authorized for the current user
-     *     
+     *
      * @param authzGroupIds
      * @param sites the search result site lsit
      * @return
      */
     private List<Site> filterSitebyAuthzGroupIds(Set<String> authzGroupIds, List<Site> sites){
-	
+
 	List<Site> filteredSites = new ArrayList<Site>();
-	
+
 	for(Site s : sites){
 	    String siteRef = "/site/"+s.getId();
-	    
+
 	    if(authzGroupIds.contains(siteRef)){
 		filteredSites.add(s);
 	    }
 	}
-	
-	return filteredSites;	
+
+	return filteredSites;
     }
-    
-    
-    
+
+
+
     public List<CMAcademicSession> getAcademicSessions() {
 	List<AcademicSession> acadSessionsList =
 		courseManagementService.getAcademicSessions();
@@ -2330,7 +2296,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * Copy resources that are referenced in courses outlines from one site to
      * one other (function created for SAKAI-2854)
-     * 
+     *
      * @param toSiteId : reference to the destination site where we want to copy
      *            our resources
      * @param fromSiteId : reference to the site where we select the resources
@@ -2374,11 +2340,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
     } // importResourcesIntoSiteMigrate
 
-    
+
     /**
      * Copy resources that are referenced in courses outlines from one directory to
      * one other (function created for SAKAI-2854)
-     * 
+     *
      * @param directory : reference to the directory from where we want to copy
      *            our resources
      * @param toSite_ref : reference to the site where we want to copy
@@ -2386,33 +2352,33 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * @param documentSecurityMap : reference to the documents that are referenced in the courses outlines
      */
     private void copyResourcesFromDirectory(ContentCollection directory,
-	    String toSite_ref, Map<String, String> documentSecurityMap){	    
+	    String toSite_ref, Map<String, String> documentSecurityMap){
     	try {
     	List<ContentEntity> members = directory.getMemberResources();
     	    for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
     		    .hasNext();) {
     		ContentEntity next = (ContentEntity) iMbrs.next();
-    		
-    		String thisEntityRef = next.getId();    		
-    		
-    		
+
+    		String thisEntityRef = next.getId();
+
+
     		//if this is a directory
     		if ("org.sakaiproject.content.types.folder".equals(next.getResourceType())){
     		ContentCollection subdirectory =(ContentCollection) next;
-        		
+
     			//we get the new destination directory
-        		String toSubSite_ref = toSite_ref + 
+        		String toSubSite_ref = toSite_ref +
         			thisEntityRef.substring(directory.getId().lastIndexOf("/") + 1);
-        		
+
         		//we call recursively the same function
         		copyResourcesFromDirectory(subdirectory,
         			toSubSite_ref, documentSecurityMap);
     		}
-    		else{        		
+    		else{
         		String permission = documentSecurityMap.get(thisEntityRef);
-        
+
         		// we copy if doc exists in CO or if it is doc references
-        		if (permission != null || "org.sakaiproject.citation.impl.CitationList".equals(next.getResourceType())) {		    
+        		if (permission != null || "org.sakaiproject.citation.impl.CitationList".equals(next.getResourceType())) {
         		    contentHostingService.copyIntoFolder(thisEntityRef,
         			    toSite_ref);
         		}
@@ -2422,7 +2388,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     	    log.error("Unable to copy the resources from directory", e);
     	}
     } // copyResourcesFromDirectory
-    
+
     protected void transferCopyEntitiesMigrate(String toolId,
 	    String fromContext, String toContext) {
 
