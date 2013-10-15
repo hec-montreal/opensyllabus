@@ -64,7 +64,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	OsylManagerEventHandler, ClickHandler {
 
     private static String DIRECTORY_TYPE_SITE = "directory";
-    
+
     private static String DIRECTORY_SITE = "D";
     private static String FROZEN_SITE = "X";
 
@@ -94,7 +94,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	    new AsyncCallback<List<COSite>>() {
 
 		public void onFailure(Throwable caught) {
-		    Window.alert(messages.rpcFailure());
+			Window.alert(messages.searchError());
 		}
 
 		public void onSuccess(List<COSite> result) {
@@ -145,7 +145,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 					.setHTML(rowNum, 2, coSite.getCourseSession());
 			    } else {
 				scSiteList.getDataTable()
-					.setHTML(rowNum, 2, "");				
+					.setHTML(rowNum, 2, "");
 			    }
 			    //Course name
 			    scSiteList.getDataTable().setHTML(rowNum, 3,

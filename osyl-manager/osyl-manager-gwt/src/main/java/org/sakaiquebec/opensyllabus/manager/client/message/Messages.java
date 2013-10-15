@@ -92,7 +92,7 @@ public interface Messages extends ConstantsWithLookup {
     String chooseLang();
 
     String siteNameNotValid();
-    
+
     String siteNameOfficialRestriction();
 
     String noConfig();
@@ -349,4 +349,6 @@ public interface Messages extends ConstantsWithLookup {
     String deleteAction_delete_error_hasChild_detail();
 
     String init_failed();
+
+    String searchError();
 }

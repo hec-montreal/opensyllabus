@@ -23,8 +23,8 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
@@ -59,7 +59,7 @@ public class CourseListView extends OsylManagerAbstractView implements
 	    new AsyncCallback<List<COSite>>() {
 
 		public void onFailure(Throwable caught) {
-		    Window.alert(getController().getMessages().rpcFailure());
+			Window.alert(getController().getMessages().searchError());
 		}
 
 		public void onSuccess(List<COSite> result) {
@@ -92,9 +92,9 @@ public class CourseListView extends OsylManagerAbstractView implements
 				    siteListBox.setItemSelected(i, true);
 				    newCOSites.add(cos);
 				    break;
-				} 
+				}
 			    }
-			    
+
 			}
 			setControllerSelectedSitesWithListBoxSelectedSites();
 		    }
