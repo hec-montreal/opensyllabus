@@ -115,7 +115,7 @@ import org.w3c.dom.Element;
 
 /**
  * Implementation of the <code>OsylSiteService</code>
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -175,7 +175,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>CitationService</code>.
-     * 
+     *
      * @param citationService
      * @uml.property name="citationService"
      */
@@ -197,7 +197,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylConfigService}.
-     * 
+     *
      * @param osylConfigService
      */
     public void setConfigService(OsylConfigService osylConfigService) {
@@ -217,7 +217,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Dependency: EntityManager.
-     * 
+     *
      * @param service The EntityManager.
      */
     public void setEntityManager(EntityManager entityManager) {
@@ -226,7 +226,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     * 
+     *
      * @param securityService
      */
     public void setOsylSecurityService(OsylSecurityService securityService) {
@@ -235,7 +235,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylContentService}.
-     * 
+     *
      * @param osylContentService
      */
     public void setOsylContentService(OsylContentService osylContentService) {
@@ -249,7 +249,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>ContentHostingService</code>.
-     * 
+     *
      * @param contentHostingService
      */
     public void setContentHostingService(
@@ -259,7 +259,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link CORelationDao}.
-     * 
+     *
      * @param configDao
      */
     public void setCoRelationDao(CORelationDao relationDao) {
@@ -268,7 +268,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link ResourceDao}.
-     * 
+     *
      * @param resourceDao
      */
     public void setResourceDao(ResourceDao resourceDao) {
@@ -277,7 +277,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link COConfigDao}.
-     * 
+     *
      * @param configDao
      */
     public void setConfigDao(COConfigDao configDao) {
@@ -286,7 +286,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>SiteService</code>.
-     * 
+     *
      * @param siteService
      */
     public void setSiteService(SiteService siteService) {
@@ -749,6 +749,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    log.info("Added announcement page");
 		    addTool(site, "sakai.opensyllabus.tool");
 		    log.info("Added opensyllabus page");
+		    addTool(site, "sakai.assignment.grades");
+		    log.info("Added assignment page");
 		    addTool(site, "sakai.resources");
 		    log.info("Added resources page");
 		    addTool(site, "sakai.siteinfo");
@@ -1116,7 +1118,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    COModeledServer model = new COModeledServer(thisCo);
 		model.XML2Model();
 		model.convertCitationLibraryUrls();
-		model.model2XML();	
+		model.model2XML();
 		thisCo.setContent(model.getSerializedContent());
 
 	} catch (Exception e) {
@@ -1159,7 +1161,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		User u =
 			userDirectoryService.getUser(sessionManager.getSession(
 				thisCo.getLockedBy()).getUserId());
-		
+
 		if (u.getFirstName() == null || u.getLastName() == null
 			|| "".equals(u.getFirstName())
 			|| "".equals(u.getLastName())) {
@@ -1172,8 +1174,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    + " "
 			    + u.getLastName().substring(0, 1).toUpperCase()
 			    + u.getLastName().substring(1));
-		}		
-		
+		}
+
 	    } catch (Exception ex) {
 		log.error("Unable to retrieve name of CO locker", ex);
 	    }
@@ -1181,10 +1183,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	getSiteInfo(thisCo, thisCo.getSiteId());
 	return thisCo;
     }
-    
+
     /**
      * {@inheritDoc}
-     * 
+     *
      * @throws Exception
      */
     public COSerialized getSerializedPublicCourseOutline(String siteId) throws Exception {
@@ -1213,7 +1215,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @throws Exception
      */
     public COSerialized getSerializedCourseOutline(String siteId,
@@ -1294,7 +1296,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @throws Exception
      */
     public boolean updateSerializedCourseOutline(COSerialized co)
@@ -1350,7 +1352,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * Writes the XML into a temp file. This is a temporary measure. TODO
      * SAKAI-1932: find a better way to backup course outlines, possibly
      * computing differences and limiting how long and how many copies are kept.
-     * 
+     *
      * @param co
      * @throws IOException
      */
@@ -1495,8 +1497,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		searchTerm, null, SiteService.SortType.NONE, null);
     }
 
-    
-    
+
+
     /**
      * {@inheritDoc}
      */
@@ -1523,8 +1525,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public void associate(String siteId, String parentId) throws Exception,
 	    CompatibilityException, FusionException, OsylPermissionException,
 	    VersionCompatibilityException {
-    	
-    
+
+
     // if the user is not admin, or have permission in the current site, throw exception
     // (first check is because the quartz job has no current site)
 	if (!(securityService.isSuperUser() ||
