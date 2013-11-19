@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -19,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CourseEventSynchroJob;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Job de synchro du fichier d'extract contenant les événements de cours avec la
@@ -39,27 +41,14 @@ public class CourseEventSynchroJobImpl implements CourseEventSynchroJob {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
+	@Transactional
 	public void execute(String filePath) {
 
 		BufferedReader bufferedReader = null;
 
-		log.info("Début du job de synchro du fichier d'extract contenant les événements de cours avec la table HEC_EVENT");
+		log.info("Début de la job de synchro du fichier d'extract contenant les événements de cours avec la table HEC_EVENT");
 
 		try {
-
-			// on récupère la date de début la plus ancienne des sessions en
-			// cours
-			// TODO décommenter
-			// Date dateDebutSession = (Date) jdbcTemplate
-			// .queryForObject(
-			// "select min(START_DATE) from CM_ACADEMIC_SESSION_T where IS_CURRENT = 1",
-			// Date.class);
-			//
-			// log.info("Suppression des événements dont la date de début est inférieure à "
-			// + dateDebutSession);
-			// jdbcTemplate
-			// .update("delete from HEC_EVENT where TO_DATE(DATE_HEURE_DEBUT, 'yyyy-mm-dd hh24:mi') < ?",
-			// new Object[] { dateDebutSession });
 
 			log.info("création d'une table temporaire TMP_HEC_EVENT");
 			jdbcTemplate
@@ -82,7 +71,8 @@ public class CourseEventSynchroJobImpl implements CourseEventSynchroJob {
 			log.info("Alimentation de la table temporaire TMP_HEC_EVENT");
 			jdbcTemplate
 					.batchUpdate(
-							"insert into TMP_HEC_EVENT (CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, SEQ, CLASS_EXAM_TYPE, DATE_HEURE_DEBUT, DATE_HEURE_FIN, FACILITY_ID, DESCR_FACILITY, DESCR) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+							"insert into TMP_HEC_EVENT (CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, SEQ, CLASS_EXAM_TYPE, DATE_HEURE_DEBUT, DATE_HEURE_FIN, FACILITY_ID, DESCR_FACILITY, DESCR) " +
+							"values (?, ?, ?, ?, ?, ?, to_date(?, 'yyyy-mm-dd hh24:mi'),  to_date(?, 'yyyy-mm-dd hh24:mi'), ?, ?, ?)",
 							new BatchPreparedStatementSetter() {
 
 								@Override
@@ -118,6 +108,17 @@ public class CourseEventSynchroJobImpl implements CourseEventSynchroJob {
 									return extractLines.size();
 								}
 							});
+
+			log.info("Récupération de la date de début de l'événement le plus ancien présent dans le fichier d'extract");
+			Date dateDebutMin = (Date) jdbcTemplate.queryForObject(
+					"select min(DATE_HEURE_DEBUT) from TMP_HEC_EVENT",
+					Date.class);
+
+			log.info("Suppression des événements dont la date de début est inférieure à "
+					+ dateDebutMin);
+			jdbcTemplate
+					.update("delete from HEC_EVENT where DATE_HEURE_DEBUT < ?",
+							new Object[] { dateDebutMin });
 
 			log.info("Réinitialisation du champ STATE de la table HEC_EVENT");
 			jdbcTemplate.update("update HEC_EVENT set STATE = null");
@@ -164,7 +165,7 @@ public class CourseEventSynchroJobImpl implements CourseEventSynchroJob {
 			log.info("suppression de la table temporaire TMP_HEC_EVENT");
 			jdbcTemplate.execute("drop table TMP_HEC_EVENT");
 
-			log.info("Fin du job de synchro du fichier d'extract contenant les événements de cours avec la table HEC_EVENT");
+			log.info("Fin de la job de synchro du fichier d'extract contenant les événements de cours avec la table HEC_EVENT");
 
 		} catch (FileNotFoundException e) {
 			log.error(e);
