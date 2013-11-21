@@ -3,7 +3,6 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
@@ -12,6 +11,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CourseEventSynchroJob;
+import org.sakaiquebec.opensyllabus.admin.cmjob.api.InvalidStateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,7 +28,7 @@ public class CourseEventSynchroJobTest {
 	private DataSource dataSource;
 
 	@Test
-	public void executeTest() throws IOException, SQLException {
+	public void executeTest() throws IOException, InvalidStateException {
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		jdbcTemplate.update("delete from HEC_EVENT");
@@ -53,6 +53,16 @@ public class CourseEventSynchroJobTest {
 				4,
 				jdbcTemplate
 						.queryForInt("select count(*) from HEC_EVENT where state = 'A'"));
+
+		try {
+			courseEventSynchroJob.execute(file.getAbsolutePath());
+			Assert.fail("InvalidStateException attendue");
+		} catch (InvalidStateException e) {
+		}
+
+		// on remet le champ state à null pour simuler le passage de la job de
+		// propagation des événements vers le calendrier
+		jdbcTemplate.update("update hec_event set state = null");
 
 		fileWriter = new FileWriter(file);
 		fileWriter
@@ -93,13 +103,30 @@ public class CourseEventSynchroJobTest {
 				1,
 				jdbcTemplate
 						.queryForInt("select count(*) from HEC_EVENT where state is null"));
-		jdbcTemplate.update("delete from HEC_EVENT");
+		// jdbcTemplate.update("delete from HEC_EVENT");
 	}
 
 	@Ignore
 	@Test
-	public void executeRealDataTest() {
+	public void executeRealDataWithoutFacilityLabelTest() throws IOException, InvalidStateException {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		jdbcTemplate.update("delete from HEC_EVENT");
 		courseEventSynchroJob
-				.execute("test/resources/org/sakaiquebec/opensyllabus/admin/cmjob/impl/horaires_cours.dat");
+				.execute("test/resources/org/sakaiquebec/opensyllabus/admin/cmjob/impl/horaires_cours_2013-11-04.csv");
+		// on remet le champ state à null pour simuler le passage de la job de
+		// propagation des événements vers le calendrier
+		jdbcTemplate.update("update hec_event set state = null");
+		courseEventSynchroJob
+				.execute("test/resources/org/sakaiquebec/opensyllabus/admin/cmjob/impl/horaires_cours_2013-11-11.csv");
+
+	}
+
+	@Ignore
+	@Test
+	public void executeRealDataTest() throws IOException, InvalidStateException {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		jdbcTemplate.update("delete from HEC_EVENT");
+		courseEventSynchroJob
+				.execute("test/resources/org/sakaiquebec/opensyllabus/admin/cmjob/impl/horaires_cours_.dat");
 	}
 }
