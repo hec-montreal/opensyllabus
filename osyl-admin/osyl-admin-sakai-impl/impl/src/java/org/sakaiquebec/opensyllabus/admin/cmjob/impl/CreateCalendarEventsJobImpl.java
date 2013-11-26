@@ -127,7 +127,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
     		log.debug("get events to update");
     		List<HecEvent> eventsUpdate = jdbcTemplate.query(
-    				select_from + "where (STATE = 'M' or STATE = 'D') and EVENT_ID is not null",
+    				select_from + "where (STATE = 'M' or STATE = 'D')",
     				new HecEventRowMapper());
 
     		log.debug("loop and update "+ eventsUpdate.size() + " events");
