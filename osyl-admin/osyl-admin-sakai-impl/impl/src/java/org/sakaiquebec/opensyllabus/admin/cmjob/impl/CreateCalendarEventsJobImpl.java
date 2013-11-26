@@ -92,7 +92,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
     		log.debug("get events to add");
     		List<HecEvent> eventsAdd = jdbcTemplate.query(
-    				select_from + "where STATE = 'A' or EVENT_ID is null",
+    				select_from + "where STATE = 'A' or (EVENT_ID is null and STATE <> 'D')",
     				new HecEventRowMapper());
 
     		log.debug("loop and add " + eventsAdd.size() + " events");
@@ -118,6 +118,11 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 						event.getSection(),
 						event.getExamType(),
 						event.getSequenceNumber());
+
+    			if (eventId != null) {
+    				addcount++;
+    			}
+
     		}
 
     		log.debug("get events to update");
@@ -133,7 +138,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 						event.getSessionId(),
 						event.getSection());
 
-    			updateCalendarEvent(
+    			boolean updateSuccess = updateCalendarEvent(
     					siteId,
     					event.getEventId(),
     					event.getState(),
@@ -150,7 +155,9 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     						event.getSection(),
     						event.getExamType(),
     						event.getSequenceNumber());
-        			updatecount++;
+
+        			if (updateSuccess)
+        				updatecount++;
     			}
     			else if (event.getState().equals("D")) {
     				deleteHecEvent(
@@ -160,11 +167,13 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     						event.getSection(),
     						event.getExamType(),
     						event.getSequenceNumber());
-    				deletecount++;
+
+    				if (updateSuccess)
+    					deletecount++;
     			}
     		}
 		} catch (PermissionException e) {
-			// TODO Auto-generated catch block
+			log.error(e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -221,7 +230,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		return event.getId();
     }
 
-    private void updateCalendarEvent(String siteId, String eventId, String state, Date newStartTime, Date newEndTime, String newLocation)
+    private boolean updateCalendarEvent(String siteId, String eventId, String state, Date newStartTime, Date newEndTime, String newLocation)
     		throws PermissionException {
 
     	Calendar calendar;
@@ -233,7 +242,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		} catch (Exception e) {
 			log.info("Error retrieving event " + eventId + " for site " + siteId);
 			e.printStackTrace();
-			return;
+			return false;
 		}
 
 		if (state.equals("M")) {
@@ -252,6 +261,8 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 				" from " + newStartTime.toString() +
 				" to " + newEndTime.toString() +
 				" in " + newLocation);
+
+		return true;
     }
 
     private Calendar getCalendar(String siteId) throws IdUnusedException, PermissionException {
