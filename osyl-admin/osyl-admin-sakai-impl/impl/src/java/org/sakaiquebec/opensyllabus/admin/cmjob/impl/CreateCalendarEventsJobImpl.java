@@ -46,6 +46,7 @@ import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.time.cover.TimeService;
+import org.sakaiquebec.opensyllabus.admin.cmjob.api.CreateCalendarEventsJob;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -55,7 +56,7 @@ import ca.hec.commons.utils.FormatUtils;
  * @author curtis.van-osch@hec.ca
  * @version $Id: $
  */
-public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl implements Job {
+public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl implements CreateCalendarEventsJob {
 
     private static Log log = LogFactory.getLog(CreateCalendarEventsJobImpl.class);
 
@@ -80,7 +81,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		this.calendarService = calendarService;
 	}
 
-	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+	public void execute(JobExecutionContext arg0) {
     	log.debug("starting CreateCalendarEventsJob");
     	int addcount = 0, updatecount = 0, deletecount = 0;
 
@@ -88,96 +89,135 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
     	String select_from = "select CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, CLASS_EXAM_TYPE, SEQ, DATE_HEURE_DEBUT, "
 				+ "DATE_HEURE_FIN, DESCR_FACILITY, STATE, EVENT_ID from HEC_EVENT ";
-    	try {
+    	String order_by = " order by CATALOG_NBR, STRM, CLASS_SECTION ";
 
-    		log.debug("get events to add");
-    		List<HecEvent> eventsAdd = jdbcTemplate.query(
-    				select_from + "where STATE = 'A' or (EVENT_ID is null and STATE <> 'D')",
-    				new HecEventRowMapper());
+    	log.debug("get events to add");
+    	List<HecEvent> eventsAdd = jdbcTemplate.query(
+    			select_from + "where (EVENT_ID is null and (STATE is null or STATE <> 'D'))" + order_by,
+    			new HecEventRowMapper());
 
-    		log.debug("loop and add " + eventsAdd.size() + " events");
-    		for (HecEvent event : eventsAdd) {
-				String siteId = getSiteId(
-						event.getCatalogNbr(),
-						event.getSessionId(),
-						event.getSection());
+    	// keep track of the last event's site id, so we know if the calendar was found or not
+    	String previousSiteId = "";
+    	boolean calendarFound = false;
 
-    			String eventId = createCalendarEvent(
-    					siteId,
-    					event.getStartTime(),
-    					event.getEndTime(),
-    					getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()),
-    					getType(event.getExamType()),
-    					event.getLocation());
+    	log.debug("loop and add " + eventsAdd.size() + " events");
+    	for (HecEvent event : eventsAdd) {
+    		String siteId = getSiteId(
+    				event.getCatalogNbr(),
+    				event.getSessionId(),
+    				event.getSection());
 
+    		String eventId = null;
+    		// only attempt event creation if this is a new site or the calendar was found before
+    		if (!siteId.equals(previousSiteId) || calendarFound)
+    		{
+    			try {
+
+    				Calendar calendar = getCalendar(siteId);
+    				calendarFound = true;
+
+    				eventId = createCalendarEvent(
+    						calendar,
+    						event.getStartTime(),
+    						event.getEndTime(),
+    						getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()),
+    						getType(event.getExamType()),
+    						event.getLocation());
+
+    			} catch (IdUnusedException e) {
+    				log.info("Calendar for site " + siteId + " not found");
+    				calendarFound = false;
+    			} catch (PermissionException e) {
+    				e.printStackTrace();
+    				return;
+    			}
+    		}
+
+    		clearHecEventState(
+    				eventId,
+    				event.getCatalogNbr(),
+    				event.getSessionId(),
+    				event.getSessionCode(),
+    				event.getSection(),
+    				event.getExamType(),
+    				event.getSequenceNumber());
+
+    		if (eventId != null) {
+    			addcount++;
+    		}
+
+    		previousSiteId = siteId;
+    	}
+
+    	log.debug("get events to update");
+    	List<HecEvent> eventsUpdate = jdbcTemplate.query(
+    			select_from + "where (STATE = 'M' or STATE = 'D')" + order_by,
+    			new HecEventRowMapper());
+
+    	log.debug("loop and update "+ eventsUpdate.size() + " events");
+    	for (HecEvent event : eventsUpdate) {
+
+    		String siteId = getSiteId(
+    				event.getCatalogNbr(),
+    				event.getSessionId(),
+    				event.getSection());
+
+			boolean updateSuccess = false;
+    		// only attempt event update if this is a new site or the calendar was found before
+    		if (!siteId.equals(previousSiteId) || calendarFound)
+    		{
+    			Calendar calendar;
+    			try {
+    				calendar = getCalendar(siteId);
+    				calendarFound = true;
+
+    				updateSuccess = updateCalendarEvent(
+    						calendar,
+    						event.getEventId(),
+    						event.getState(),
+    						event.getStartTime(),
+    						event.getEndTime(),
+    						event.getLocation());
+
+    			} catch (IdUnusedException e) {
+    				log.info("Calendar for site " + siteId + " not found");
+    				calendarFound = false;
+    			} catch (PermissionException e) {
+    				e.printStackTrace();
+    				return;
+    			}
+    		}
+
+    		if (event.getState().equals("M")) {
     			clearHecEventState(
-    					eventId,
-    					event.getCatalogNbr(),
-						event.getSessionId(),
-						event.getSessionCode(),
-						event.getSection(),
-						event.getExamType(),
-						event.getSequenceNumber());
-
-    			if (eventId != null) {
-    				addcount++;
-    			}
-
-    		}
-
-    		log.debug("get events to update");
-    		List<HecEvent> eventsUpdate = jdbcTemplate.query(
-    				select_from + "where (STATE = 'M' or STATE = 'D')",
-    				new HecEventRowMapper());
-
-    		log.debug("loop and update "+ eventsUpdate.size() + " events");
-    		for (HecEvent event : eventsUpdate) {
-
-				String siteId = getSiteId(
-						event.getCatalogNbr(),
-						event.getSessionId(),
-						event.getSection());
-
-    			boolean updateSuccess = updateCalendarEvent(
-    					siteId,
     					event.getEventId(),
-    					event.getState(),
-    					event.getStartTime(),
-    					event.getEndTime(),
-    					event.getLocation());
+    					event.getCatalogNbr(),
+    					event.getSessionId(),
+    					event.getSessionCode(),
+    					event.getSection(),
+    					event.getExamType(),
+    					event.getSequenceNumber());
 
-    			if (event.getState().equals("M")) {
-        			clearHecEventState(
-        					event.getEventId(),
-        					event.getCatalogNbr(),
-    						event.getSessionId(),
-    						event.getSessionCode(),
-    						event.getSection(),
-    						event.getExamType(),
-    						event.getSequenceNumber());
-
-        			if (updateSuccess)
-        				updatecount++;
-    			}
-    			else if (event.getState().equals("D")) {
-    				deleteHecEvent(
-    						event.getCatalogNbr(),
-    						event.getSessionId(),
-    						event.getSessionCode(),
-    						event.getSection(),
-    						event.getExamType(),
-    						event.getSequenceNumber());
-
-    				if (updateSuccess)
-    					deletecount++;
-    			}
+    			if (updateSuccess)
+    				updatecount++;
     		}
-		} catch (PermissionException e) {
-			log.error(e.getMessage());
-			e.printStackTrace();
-		}
+    		else if (event.getState().equals("D")) {
+    			deleteHecEvent(
+    					event.getCatalogNbr(),
+    					event.getSessionId(),
+    					event.getSessionCode(),
+    					event.getSection(),
+    					event.getExamType(),
+    					event.getSequenceNumber());
 
-		logoutFromSakai();
+    			if (updateSuccess)
+    				deletecount++;
+    		}
+
+			previousSiteId = siteId;
+    	}
+
+    	logoutFromSakai();
     	log.debug("exiting CreateCalendarEventsJob");
     	log.debug("added: " + addcount + " updated: " + updatecount + " deleted: " + deletecount);
     } // execute
@@ -199,30 +239,27 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
 	}
 
-	private String createCalendarEvent(String siteId, Date startTime, Date endTime, String title, String type, String location)
-    		throws PermissionException {
-
-		Calendar calendar;
+	private String createCalendarEvent(Calendar calendar, Date startTime, Date endTime, String title, String type, String location)
+	{
+		CalendarEvent event;
 		try {
-			calendar = getCalendar(siteId);
-		} catch (IdUnusedException e) {
-			log.info("Error retrieving calendar for site " + siteId);
+			// add event to calendar
+			event = calendar.addEvent(
+					TimeService.newTimeRange(TimeService.newTime(startTime.getTime()), TimeService.newTime(endTime.getTime())),
+					title,
+					null,
+					type,
+					location,
+					CalendarEvent.EventAccess.SITE,
+					null,
+					EntityManager.newReferenceList());
+
+		} catch (PermissionException e) {
+			e.printStackTrace();
 			return null;
 		}
 
-		// add event to calendar
-		CalendarEvent event = calendar.addEvent(
-				TimeService.newTimeRange(TimeService.newTime(startTime.getTime()), TimeService.newTime(endTime.getTime())),
-				title,
-				null,
-				type,
-				location,
-				CalendarEvent.EventAccess.SITE,
-				null,
-				EntityManager.newReferenceList());
-
-		log.info("creating event: " + title +
-				" in " + siteId +
+		log.info("created event: " + title +
 				" from " + startTime.toString() +
 				" to " + endTime.toString() +
 				" in " + location);
@@ -230,17 +267,15 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		return event.getId();
     }
 
-    private boolean updateCalendarEvent(String siteId, String eventId, String state, Date newStartTime, Date newEndTime, String newLocation)
-    		throws PermissionException {
-
-    	Calendar calendar;
+    private boolean updateCalendarEvent(Calendar calendar, String eventId, String state,
+    		Date newStartTime, Date newEndTime, String newLocation)
+    {
     	CalendarEventEdit edit;
 
 		try {
-			calendar = getCalendar(siteId);
 			edit = calendar.getEditEvent(eventId, CalendarService.EVENT_MODIFY_CALENDAR);
 		} catch (Exception e) {
-			log.info("Error retrieving event " + eventId + " for site " + siteId);
+			log.info("Error retrieving event " + eventId);
 			e.printStackTrace();
 			return false;
 		}
@@ -257,7 +292,6 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
 		calendar.commitEvent(edit);
 		log.debug("updated ("+state+") event: " + edit.getDisplayName() +
-				" in " + siteId +
 				" from " + newStartTime.toString() +
 				" to " + newEndTime.toString() +
 				" in " + newLocation);
@@ -266,8 +300,12 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     }
 
     private Calendar getCalendar(String siteId) throws IdUnusedException, PermissionException {
-       	String calRef = calendarService.calendarReference(siteId, SiteService.MAIN_CONTAINER);
-		return calendarService.getCalendar(calRef);
+    	if (siteService.siteExists(siteId)) {
+    		String calRef = calendarService.calendarReference(siteId, SiteService.MAIN_CONTAINER);
+    		return calendarService.getCalendar(calRef);
+    	} else {
+    		throw new IdUnusedException("Site does not exist");
+    	}
     }
 
     private String getSiteId(String catalog_nbr, String session_code, String section) {
