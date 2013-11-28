@@ -38,9 +38,8 @@ import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
+import org.sakaiquebec.opensyllabus.admin.cmjob.api.CourseEventSynchroJob;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
-import org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl;
-import org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylAbstractQuartzJobImpl;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailChargeFormationMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailChargeFormationMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailCoursMap;
@@ -90,7 +89,7 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEn
 
 /**
  * The class is an implementation of the OsylCMJob as job launched by the quartz
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -177,9 +176,19 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
     private HashMap<String, Membership> actualSecretaryMembership;
 
     /**
+     * Course event synchro job (injected by spring)
+     */
+	private CourseEventSynchroJob courseEventSynchroJob;
+
+    /**
      * Our logger
      */
     private static Log log = LogFactory.getLog(OsylCMJobImpl.class);
+
+    public void setCourseEventSynchroJob(
+			CourseEventSynchroJob courseEventSynchroJob) {
+		this.courseEventSynchroJob = courseEventSynchroJob;
+	}
 
     /* load the instructors and assigns them to their courses */
     private void assignTeachers() {
@@ -320,7 +329,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	while (cours.hasNext()) {
 	    coursEntry = (DetailCoursMapEntry) cours.next();
-	    
+
 	    //we do not make any processing for ZC1 courses
 	    if (!"ZC1".equals(coursEntry.getClassSection())) {
 	    	if (!DetailCoursMapEntry.CLASS_STATUS_CANCELLED.equals(coursEntry
@@ -484,8 +493,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    		} catch (Exception e) {
 	    		    e.printStackTrace();
 	    		}
-	    	    }	
-	    }	    
+	    	    }
+	    }
 	}
 
     }
@@ -581,7 +590,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	return sessionName;
     }
-    
+
     private String getSessionName(String sessionId, Date startDate) {
     	String sessionName = null;
     	Calendar startCalendarDate = Calendar.getInstance();
@@ -694,7 +703,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	while (sessions.hasNext()) {
 	    sessionEntry = (DetailSessionsMapEntry) sessions.next();
-	    eid = sessionEntry.getUniqueKey();	    
+	    eid = sessionEntry.getUniqueKey();
 	    description = sessionEntry.getDescAnglais();
 	    try {
 		startDate =
@@ -921,6 +930,10 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    syncEnrollments();
 	    log.info("Enrollments updated successfully");
 
+	    // course events synch
+		courseEventSynchroJob.execute(directory + File.separator
+			+ HORAIRES_FILE);
+
 	} catch (Exception e) {
 	    String message =
 		    "Synchronization with PeopleSoft failed cause :\n"
@@ -1007,12 +1020,12 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 			if (member.getRole().equals(SECRETARY_ROLE))
 			    actualSecretaryMembership.put(member.getUserId()
 				    + sectionId, member);
-			
+
 			//Retrieve coordinators
 			if (member.getRole().equals(COORDONNATEUR_ROLE))
 			    actualCoordinatorMemberships.put(member.getUserId()
 				    + sectionId, member);
-			
+
 		    }
 
 		    // We retrieve the sections and the memberships in the
@@ -1025,7 +1038,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 			memberships =
 				cmService.getSectionMemberships(sectionId);
 			for (Membership member : memberships) {
-			    
+
 			    if (member.getRole().equals(COORDONNATEUR_ROLE)
 				    && sectionId.equals(SHARABLE_SECTION))
 				actualCoordinatorMemberships.put(member.getUserId()
@@ -1364,7 +1377,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
     /**
      * Check if we have a directory site associated.
-     * 
+     *
      * @param canCourse
      * @return
      */
@@ -1394,7 +1407,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
     /**
      * Get the name of the directory site associated
-     * 
+     *
      * @param canCourseId
      * @return
      */
@@ -1449,7 +1462,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
     /**
      * Check whether a site with the given title exists.
-     * 
+     *
      * @param siteTitle
      * @return
      */
@@ -1462,7 +1475,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    return false;
 	}
     }
-    
+
     private String getAdminZoneCours2EMail(){
 	return ServerConfigurationService.getString("mail.admin.zc2");
     }

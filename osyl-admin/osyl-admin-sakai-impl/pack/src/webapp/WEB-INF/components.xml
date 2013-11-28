@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-	"http://www.springframework.org/dtd/spring-beans.dtd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
-<beans>
 	<bean id="org.sakaiquebec.opensyllabus.admin.api.OsylAdminService"
 		class="org.sakaiquebec.opensyllabus.admin.impl.OsylAdminServiceImpl"
-		init-method="init" singleton="true">
+		init-method="init">
 		<!-- Sakai dependencies -->
 		<property name="osylAdminSiteName">
 			<value>opensyllabusAdmin</value>
@@ -227,11 +229,11 @@
 		<property name="securityService" ref="org.sakaiproject.authz.api.SecurityService" />
 	</bean>
 
-	<!-- ConfigurationService bean handles institution-specific configuration 
+	<!-- ConfigurationService bean handles institution-specific configuration
 		for the Citations Helper -->
 	<bean id="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService"
 		class="org.sakaiquebec.opensyllabus.admin.impl.ConfigurationServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init" destroy-method="destroy">
 
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
@@ -279,10 +281,23 @@
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
 	</bean>
 
+	<bean id="courseEventSynchroJob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CourseEventSynchroJobImpl">
+		<property name="dataSource" ref="javax.sql.DataSource" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="javax.sql.DataSource" />
+	</bean>
+
+	<!-- enable the configuration of transactional behavior based on annotations -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
 
 	<bean id="osylcmjob"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImpl"
 		parent="osylAbstractQuartzJob">
+		<property name="courseEventSynchroJob" ref="courseEventSynchroJob"/>
 	</bean>
 
 	<bean id="offSitesjob"
@@ -354,13 +369,13 @@
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreateSiteHierarchyJobImpl"
 		parent="osylAbstractQuartzJob">
 	</bean>
-	
+
 	<bean id="removeUsersFromSitejob"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RemoveUsersFromSiteJobImpl"
 		parent="osylAbstractQuartzJob">
 		<property name="entityManager" ref="org.sakaiproject.entity.api.EntityManager" />
 	</bean>
-	
+
 	<bean id="removeUsersFromCMjob"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RemoveUsersFromCMJobImpl"
 		parent="osylAbstractQuartzJob">
@@ -377,7 +392,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osyltransferjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>osyltransferjob</value>
@@ -395,7 +410,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.addcmTitlePropertyjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>addcmTitlePropertyjob</value>
@@ -413,7 +428,7 @@
 
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>osylcmjob</value>
@@ -430,7 +445,7 @@
 
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.offSitesjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>offSitesjob</value>
@@ -449,7 +464,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.roleSynchrojob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>roleSynchrojob</value>
@@ -467,7 +482,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.freezeSitesjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>freezeSitesjob</value>
@@ -485,7 +500,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.unFreezeSitesjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>unFreezeSitesjob</value>
@@ -504,7 +519,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.changePermSynchrojob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>changePermSynchrojob</value>
@@ -522,7 +537,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.changeOsylEditorSiteTypejob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>changeOsylEditorSiteTypejob</value>
@@ -541,7 +556,7 @@
 
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylconvjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>osylconvjob</value>
@@ -559,7 +574,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.addHomePageJob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>addHomePageJob</value>
@@ -577,7 +592,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.createPrintVersionJob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>createPrintVersionJob</value>
@@ -595,7 +610,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.applyXslOnCourseOutline"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>applyXslOnCourseOutline</value>
@@ -614,7 +629,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.deleteAllMyWorkspaces"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>deleteAllMyWorkspaces</value>
@@ -632,7 +647,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.createSiteHierarchyjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>createSiteHierarchyjob</value>
@@ -646,11 +661,11 @@
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
-	
+
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.removeUsersFromSitejob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>removeUsersFromSitejob</value>
@@ -663,13 +678,13 @@
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-			
+
 	</bean>
-	
+
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.removeUsersFromCMjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 
 		<property name="beanId">
 			<value>removeUsersFromCMjob</value>
@@ -681,7 +696,7 @@
 
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>			
+		</property>
 	</bean>
 
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.createCalendarEventsJob"
