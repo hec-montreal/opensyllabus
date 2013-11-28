@@ -90,7 +90,8 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     			select_from + "where (EVENT_ID is null and (STATE is null or STATE <> 'D'))" + order_by,
     			new HecEventRowMapper());
 
-    	// keep track of the last event's site id, so we know if the calendar was found or not
+    	// keep track of the last event's site id and calendar, so we can use the calendar if it was already found
+    	Calendar calendar = null;
     	String previousSiteId = "";
     	boolean calendarFound = false;
 
@@ -103,20 +104,11 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
     		String eventId = null;
     		// only attempt event creation if this is a new site or the calendar was found before
-    		if (!siteId.equals(previousSiteId) || calendarFound)
+    		if (!siteId.equals(previousSiteId))
     		{
     			try {
-
-    				Calendar calendar = getCalendar(siteId);
+    				calendar = getCalendar(siteId);
     				calendarFound = true;
-
-    				eventId = createCalendarEvent(
-    						calendar,
-    						event.getStartTime(),
-    						event.getEndTime(),
-    						getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()),
-    						getType(event.getExamType()),
-    						event.getLocation());
 
     			} catch (IdUnusedException e) {
     				log.debug("Calendar for site " + siteId + " not found");
@@ -125,6 +117,16 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     				e.printStackTrace();
     				return;
     			}
+    		}
+
+    		if (calendarFound) {
+				eventId = createCalendarEvent(
+						calendar,
+						event.getStartTime(),
+						event.getEndTime(),
+						getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()),
+						getType(event.getExamType()),
+						event.getLocation());
     		}
 
     		clearHecEventState(
@@ -157,20 +159,11 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
 			boolean updateSuccess = false;
     		// only attempt event update if this is a new site or the calendar was found before
-    		if (!siteId.equals(previousSiteId) || calendarFound)
+    		if (!siteId.equals(previousSiteId))
     		{
-    			Calendar calendar;
     			try {
     				calendar = getCalendar(siteId);
     				calendarFound = true;
-
-    				updateSuccess = updateCalendarEvent(
-    						calendar,
-    						event.getEventId(),
-    						event.getState(),
-    						event.getStartTime(),
-    						event.getEndTime(),
-    						event.getLocation());
 
     			} catch (IdUnusedException e) {
     				log.debug("Calendar for site " + siteId + " not found");
@@ -179,6 +172,16 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     				e.printStackTrace();
     				return;
     			}
+    		}
+
+    		if (calendarFound) {
+				updateSuccess = updateCalendarEvent(
+						calendar,
+						event.getEventId(),
+						event.getState(),
+						event.getStartTime(),
+						event.getEndTime(),
+						event.getLocation());
     		}
 
     		if (event.getState().equals("M")) {
