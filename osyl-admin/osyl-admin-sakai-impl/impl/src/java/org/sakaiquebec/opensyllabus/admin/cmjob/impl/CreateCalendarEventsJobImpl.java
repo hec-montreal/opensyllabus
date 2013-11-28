@@ -22,9 +22,7 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -33,16 +31,13 @@ import lombok.Data;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.sakaiproject.calendar.api.Calendar;
 import org.sakaiproject.calendar.api.CalendarEvent;
 import org.sakaiproject.calendar.api.CalendarEventEdit;
 import org.sakaiproject.calendar.api.CalendarService;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.time.cover.TimeService;
@@ -82,7 +77,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 	}
 
 	public void execute(JobExecutionContext arg0) {
-    	log.debug("starting CreateCalendarEventsJob");
+    	log.info("starting CreateCalendarEventsJob");
     	int addcount = 0, updatecount = 0, deletecount = 0;
 
     	loginToSakai("CreateCalendarEventsJob");
@@ -91,7 +86,6 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 				+ "DATE_HEURE_FIN, DESCR_FACILITY, STATE, EVENT_ID from HEC_EVENT ";
     	String order_by = " order by CATALOG_NBR, STRM, CLASS_SECTION ";
 
-    	log.debug("get events to add");
     	List<HecEvent> eventsAdd = jdbcTemplate.query(
     			select_from + "where (EVENT_ID is null and (STATE is null or STATE <> 'D'))" + order_by,
     			new HecEventRowMapper());
@@ -100,7 +94,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     	String previousSiteId = "";
     	boolean calendarFound = false;
 
-    	log.debug("loop and add " + eventsAdd.size() + " events");
+    	log.info("loop and add " + eventsAdd.size() + " events");
     	for (HecEvent event : eventsAdd) {
     		String siteId = getSiteId(
     				event.getCatalogNbr(),
@@ -125,7 +119,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     						event.getLocation());
 
     			} catch (IdUnusedException e) {
-    				log.info("Calendar for site " + siteId + " not found");
+    				log.debug("Calendar for site " + siteId + " not found");
     				calendarFound = false;
     			} catch (PermissionException e) {
     				e.printStackTrace();
@@ -149,12 +143,11 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     		previousSiteId = siteId;
     	}
 
-    	log.debug("get events to update");
     	List<HecEvent> eventsUpdate = jdbcTemplate.query(
     			select_from + "where (STATE = 'M' or STATE = 'D')" + order_by,
     			new HecEventRowMapper());
 
-    	log.debug("loop and update "+ eventsUpdate.size() + " events");
+    	log.info("loop and update "+ eventsUpdate.size() + " events");
     	for (HecEvent event : eventsUpdate) {
 
     		String siteId = getSiteId(
@@ -180,7 +173,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     						event.getLocation());
 
     			} catch (IdUnusedException e) {
-    				log.info("Calendar for site " + siteId + " not found");
+    				log.debug("Calendar for site " + siteId + " not found");
     				calendarFound = false;
     			} catch (PermissionException e) {
     				e.printStackTrace();
@@ -218,8 +211,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     	}
 
     	logoutFromSakai();
-    	log.debug("exiting CreateCalendarEventsJob");
-    	log.debug("added: " + addcount + " updated: " + updatecount + " deleted: " + deletecount);
+    	log.info("added: " + addcount + " updated: " + updatecount + " deleted: " + deletecount);
     } // execute
 
 	private void clearHecEventState(String event_id, String catalog_nbr, String session_id, String session_code, String section,
@@ -259,7 +251,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 			return null;
 		}
 
-		log.info("created event: " + title +
+		log.debug("created event: " + title +
 				" from " + startTime.toString() +
 				" to " + endTime.toString() +
 				" in " + location);
