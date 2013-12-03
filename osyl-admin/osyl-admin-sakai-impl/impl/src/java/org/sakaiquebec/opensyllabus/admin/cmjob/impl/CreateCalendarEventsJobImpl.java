@@ -24,10 +24,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
 import lombok.Data;
+import lombok.Setter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,10 +40,13 @@ import org.sakaiproject.calendar.api.CalendarEventEdit;
 import org.sakaiproject.calendar.api.CalendarService;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.time.cover.TimeService;
+import org.sakaiproject.util.ResourceLoader;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CreateCalendarEventsJob;
+import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -54,12 +59,15 @@ import ca.hec.commons.utils.FormatUtils;
 public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl implements CreateCalendarEventsJob {
 
     private static Log log = LogFactory.getLog(CreateCalendarEventsJobImpl.class);
+	private static ResourceLoader rb = new ResourceLoader("org.sakaiquebec.opensyllabus.admin.cmjob.impl.bundle.CMJobMessages");
 
     private final String EVENT_TYPE_CLASS_SESSION = "Class session";
     private final String EVENT_TYPE_CANCELLATION = "Cancellation";
     private final String EVENT_TYPE_EXAM = "Exam";
     private final String EVENT_TYPE_QUIZ = "Quiz";
+    private final String EVENT_TYPE_SPECIAL = "Special event";
 
+    @Setter
     private CalendarService calendarService;
 
 	private JdbcTemplate jdbcTemplate;
@@ -68,13 +76,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
-	public CalendarService getCalendarService() {
-		return calendarService;
-	}
 
-	public void setCalendarService(CalendarService calendarService) {
-		this.calendarService = calendarService;
-	}
 
 	public void execute(JobExecutionContext arg0) {
     	log.info("starting CreateCalendarEventsJob");
@@ -83,7 +85,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     	loginToSakai("CreateCalendarEventsJob");
 
     	String select_from = "select CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, CLASS_EXAM_TYPE, SEQ, DATE_HEURE_DEBUT, "
-				+ "DATE_HEURE_FIN, DESCR_FACILITY, STATE, EVENT_ID from HEC_EVENT ";
+				+ "DATE_HEURE_FIN, DESCR_FACILITY, STATE, DESCR, EVENT_ID from HEC_EVENT ";
     	String order_by = " order by CATALOG_NBR, STRM, CLASS_SECTION ";
 
     	List<HecEvent> eventsAdd = jdbcTemplate.query(
@@ -126,7 +128,8 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 						event.getEndTime(),
 						getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()),
 						getType(event.getExamType()),
-						event.getLocation());
+						event.getLocation(),
+						event.getDescription());
     		}
 
     		clearHecEventState(
@@ -181,7 +184,8 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 						event.getState(),
 						event.getStartTime(),
 						event.getEndTime(),
-						event.getLocation());
+						event.getLocation(),
+						event.getDescription());
     		}
 
     		if (event.getState().equals("M")) {
@@ -234,7 +238,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
 	}
 
-	private String createCalendarEvent(Calendar calendar, Date startTime, Date endTime, String title, String type, String location)
+	private String createCalendarEvent(Calendar calendar, Date startTime, Date endTime, String title, String type, String location, String description)
 	{
 		CalendarEvent event;
 		try {
@@ -242,7 +246,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 			event = calendar.addEvent(
 					TimeService.newTimeRange(TimeService.newTime(startTime.getTime()), TimeService.newTime(endTime.getTime())),
 					title,
-					null,
+					description,
 					type,
 					location,
 					CalendarEvent.EventAccess.SITE,
@@ -263,35 +267,45 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     }
 
     private boolean updateCalendarEvent(Calendar calendar, String eventId, String state,
-    		Date newStartTime, Date newEndTime, String newLocation)
+    		Date newStartTime, Date newEndTime, String newLocation, String newDescription)
     {
     	CalendarEventEdit edit;
 
-		try {
-			edit = calendar.getEditEvent(eventId, CalendarService.EVENT_MODIFY_CALENDAR);
-		} catch (Exception e) {
-			log.info("Error retrieving event " + eventId);
-			e.printStackTrace();
-			return false;
+    	try {
+    		edit = calendar.getEditEvent(eventId, CalendarService.EVENT_MODIFY_CALENDAR);
+    	} catch (IdUnusedException e) {
+    		log.error("Event " + eventId + " does not exist");
+    		return false;
+    	} catch (Exception e) {
+    		log.error("Error retrieving event " + eventId);
+    		e.printStackTrace();
+    		return false;
 		}
 
-		if (state.equals("M")) {
-			if (newStartTime != null && newEndTime != null)
-				edit.setRange(TimeService.newTimeRange(TimeService.newTime(newStartTime.getTime()), TimeService.newTime(newEndTime.getTime())));
-			if (newLocation != null)
-				edit.setLocation(newLocation);
-		}
-		else if (state.equals("D")) {
-			edit.setType(EVENT_TYPE_CANCELLATION);
-		}
+    	if (state.equals("M")) {
+    		if (newStartTime != null && newEndTime != null)
+    			edit.setRange(TimeService.newTimeRange(TimeService.newTime(newStartTime.getTime()), TimeService.newTime(newEndTime.getTime())));
+    		if (newLocation != null)
+    			edit.setLocation(newLocation);
+    		if (newDescription != null)
+    			edit.setDescription(newDescription);
+    	}
+    	else if (state.equals("D")) {
+    		try {
+				calendar.removeEvent(edit);
+			} catch (PermissionException e) {
+	    		log.error("User doesn't have permission to delete event " + eventId);
+	    		return false;
+			}
+    	}
 
-		calendar.commitEvent(edit);
-		log.debug("updated ("+state+") event: " + edit.getDisplayName() +
-				" from " + newStartTime.toString() +
-				" to " + newEndTime.toString() +
-				" in " + newLocation);
+    	calendar.commitEvent(edit);
+    	log.debug("updated ("+state+") event: " + edit.getDisplayName() +
+    			" from " + newStartTime.toString() +
+    			" to " + newEndTime.toString() +
+    			" in " + newLocation);
 
-		return true;
+    	return true;
     }
 
     private Calendar getCalendar(String siteId) throws IdUnusedException, PermissionException {
@@ -311,31 +325,34 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     	return siteId;
     }
 
-    // TODO Externalize labels
 	private String getEventTitle(String siteId, String type, Integer seq_num) {
-		String title = "";
+
 		if (type.equals(" "))
-			title = "Séance " + seq_num + " du cours " + siteId;
+			return rb.getFormattedMessage("calendar.event-title.session", new Object[] { seq_num, siteId });
 		else if (type.equals("INTR"))
-			title = "Examen intra-trimestriel du cours " + siteId;
+			return rb.getFormattedMessage("calendar.event-title.intra", new Object[] { siteId });
 		else if (type.equals("FIN"))
-			title = "Examen final du cours " + siteId;
-		else if (type.equals("TEST"))
-			title = "Test du cours " + siteId;
-		return title;
+			return rb.getFormattedMessage("calendar.event-title.final", new Object[] { siteId });
+		else if (type.equals("TEST") || type.equals("QUIZ"))
+			return rb.getFormattedMessage("calendar.event-title.test", new Object[] { siteId });
+		else
+			return rb.getFormattedMessage("calendar.event-title.other", new Object[] { type, siteId });
 	}
 
 	private String getType(String exam_type) {
-		if (exam_type.equals("INTR") || exam_type.equals("FIN"))
+		if (exam_type.equals(" "))
+			return EVENT_TYPE_CLASS_SESSION;
+		else if (exam_type.equals("INTR") || exam_type.equals("FIN"))
 			return this.EVENT_TYPE_EXAM;
-		else if (exam_type.equals("TEST"))
+		else if (exam_type.equals("TEST") || exam_type.equals("QUIZ"))
 			return EVENT_TYPE_QUIZ;
-		else return this.EVENT_TYPE_CLASS_SESSION;
+		else
+			return EVENT_TYPE_SPECIAL;
 	}
 
 	@Data
 	private class HecEvent {
-		String catalogNbr, sessionId, sessionCode, section, state, examType, location, eventId;
+		String catalogNbr, sessionId, sessionCode, section, state, examType, location, description, eventId;
 		Integer sequenceNumber;
 		Date startTime, endTime;
 	}
@@ -355,6 +372,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 			event.setStartTime(rs.getTimestamp("DATE_HEURE_DEBUT"));
 			event.setEndTime(rs.getTimestamp("DATE_HEURE_FIN"));
 			event.setLocation(rs.getString("DESCR_FACILITY"));
+			event.setDescription(rs.getString("DESCR"));
 			event.setEventId(rs.getString("EVENT_ID"));
 			event.setState(rs.getString("STATE"));
 

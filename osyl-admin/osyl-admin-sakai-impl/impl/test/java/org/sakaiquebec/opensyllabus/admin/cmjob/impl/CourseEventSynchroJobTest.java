@@ -27,6 +27,7 @@ public class CourseEventSynchroJobTest {
 	@Autowired
 	private DataSource dataSource;
 
+	@Ignore
 	@Test
 	public void executeTest() throws IOException, InvalidStateException {
 
@@ -115,18 +116,15 @@ public class CourseEventSynchroJobTest {
 				.execute("test/resources/org/sakaiquebec/opensyllabus/admin/cmjob/impl/horaires_cours_2013-11-04.csv");
 		// on remet le champ state à null pour simuler le passage de la job de
 		// propagation des événements vers le calendrier
-		jdbcTemplate.update("update hec_event set state = null");
+	//	jdbcTemplate.update("update hec_event set state = null");
 		courseEventSynchroJob
 				.execute("test/resources/org/sakaiquebec/opensyllabus/admin/cmjob/impl/horaires_cours_2013-11-11.csv");
 
 	}
 
-	@Ignore
 	@Test
 	public void executeRealDataTest() throws IOException, InvalidStateException {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		jdbcTemplate.update("delete from HEC_EVENT");
 		courseEventSynchroJob
-				.execute("test/resources/org/sakaiquebec/opensyllabus/admin/cmjob/impl/horaires_cours_.dat");
+				.execute("test/resources/org/sakaiquebec/opensyllabus/admin/cmjob/impl/horaires_cours.dat");
 	}
 }
