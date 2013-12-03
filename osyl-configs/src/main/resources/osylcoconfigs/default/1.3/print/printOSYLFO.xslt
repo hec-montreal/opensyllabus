@@ -1320,7 +1320,7 @@
 					<xsl:text>Electronic</xsl:text>
 				</xsl:when>
 				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Electronica</xsl:text>
+					<xsl:text>Electrónica</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
 				</xsl:otherwise>

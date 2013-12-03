@@ -7,8 +7,8 @@
       xmlns:fo="http://www.w3.org/1999/XSL/Format"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-	<xsl:strip-space elements="comment availability"/> 
-	
+	<xsl:strip-space elements="comment availability"/>
+
 	<xsl:output method="xml" encoding="UTF-8" indent="yes" />
 	<xsl:param name="imagePath"></xsl:param>
 	<xsl:param name="serverUrl"></xsl:param>
@@ -527,7 +527,7 @@
 						<xsl:text>HEC Montréal Regulations</xsl:text>
 					</xsl:otherwise>
 			</xsl:choose>
-		</xsl:with-param>			
+		</xsl:with-param>
 	</xsl:call-template>
 	<xsl:call-template name="RubricTitle">
 		<xsl:with-param name="label">
@@ -567,7 +567,7 @@
 						even expulsion from HEC Montréal. Violations are analyzed  based on the facts and circumstances,
 						and sanctions are applied accordingly.
 					</xsl:text>
-					<fo:inline font-size="10pt" color="blue" text-decoration="underline"> 
+					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
 						<fo:basic-link>
 							<xsl:attribute name="external-destination">http://www.hec.ca/en/programs_training/plagiarism.html</xsl:attribute><xsl:text>Learn more about plagiarism...</xsl:text>
 						</fo:basic-link>
@@ -592,7 +592,7 @@
 		<xsl:choose>
 			<xsl:when test="$lang='FR'">
 				<fo:block>
-					<xsl:text>Les étudiants sont priés de prendre connaissance de la politique d'utilisation de calculatrices lors d'examens lorsque celles-ci sont autorisées.</xsl:text> 
+					<xsl:text>Les étudiants sont priés de prendre connaissance de la politique d'utilisation de calculatrices lors d'examens lorsque celles-ci sont autorisées.</xsl:text>
 					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
 						<fo:basic-link>
 							<xsl:attribute name="external-destination">http://www.hec.ca/etudiant_actuel/technologies/calculatrices_autorisees/calculatrices.html</xsl:attribute>
@@ -604,7 +604,7 @@
 			<xsl:otherwise>
 				<fo:block>
 					<xsl:text>Please consult the </xsl:text>
-					<fo:inline font-size="10pt" color="blue" text-decoration="underline"> 
+					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
 						<fo:basic-link>
 							<xsl:attribute name="external-destination">http://www.hec.ca/en/current_student/technologies/calculators.html</xsl:attribute><xsl:text>calculator usage policy</xsl:text>
 						</fo:basic-link>
@@ -872,7 +872,7 @@
 	<fo:block space-after="10px">
 		<fo:block font-size="10pt">
 			<xsl:choose>
-				<xsl:when test="resourceType='article'" >					
+				<xsl:when test="resourceType='article'" >
 					<xsl:choose>
 						<xsl:when test="contains(author,'&amp;')">
 							<fo:inline><xsl:value-of select="substring-before(author,'&amp;')"/> et al.</fo:inline>
@@ -951,9 +951,9 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<fo:inline> (<xsl:value-of select="year"/>)</fo:inline>
-					<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>					
+					<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>
 					<fo:inline>, Thèse (Ph.D.)</fo:inline>
-					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>					
+					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
 					<fo:inline>, <xsl:value-of select="university"/></fo:inline>
 					<fo:inline>, p.<xsl:value-of select="pages"/>.</fo:inline>
 				</xsl:when>
@@ -976,7 +976,7 @@
 							<fo:inline>ISBN:<xsl:value-of select="identifier[@type='isn']"/></fo:inline>
 						</fo:block>
 					</xsl:if>
-				</xsl:when>				
+				</xsl:when>
 				<xsl:otherwise>
 					<fo:inline><xsl:value-of select="title"/></fo:inline>
 				</xsl:otherwise>
@@ -1306,7 +1306,7 @@
 					<xsl:text>Electronic</xsl:text>
 				</xsl:when>
 				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Electronica</xsl:text>
+					<xsl:text>Electrónica</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
 				</xsl:otherwise>
@@ -1415,15 +1415,15 @@
 	<xsl:param name="date"></xsl:param>
 
 	<xsl:call-template name="getDay">
-		<xsl:with-param name="date" select="$date"/>							
+		<xsl:with-param name="date" select="$date"/>
 	</xsl:call-template>
 	<xsl:text disable-output-escaping="yes">/</xsl:text>
 	<xsl:call-template name="getMonth">
-		<xsl:with-param name="date" select="$date"/>							
+		<xsl:with-param name="date" select="$date"/>
 	</xsl:call-template>
 	<xsl:text disable-output-escaping="yes">/</xsl:text>
 	<xsl:call-template name="getYear">
-		<xsl:with-param name="date" select="$date"/>							
+		<xsl:with-param name="date" select="$date"/>
 	</xsl:call-template>
 
 </xsl:template>
@@ -1641,7 +1641,7 @@
     </xsl:when>
   </xsl:choose>
 </xsl:template>
-  
+
 <!-- ===================================== -->
 <xsl:template name="lastIndexOf">
    <xsl:param name="string" />
