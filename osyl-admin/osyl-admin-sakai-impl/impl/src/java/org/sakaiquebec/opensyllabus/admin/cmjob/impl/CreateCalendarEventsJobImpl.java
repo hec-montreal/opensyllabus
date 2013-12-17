@@ -102,6 +102,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     		String siteId = getSiteId(
     				event.getCatalogNbr(),
     				event.getSessionId(),
+    				event.getSessionCode(),
     				event.getSection());
 
     		String eventId = null;
@@ -158,6 +159,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     		String siteId = getSiteId(
     				event.getCatalogNbr(),
     				event.getSessionId(),
+    				event.getSessionCode(),
     				event.getSection());
 
 			boolean updateSuccess = false;
@@ -317,9 +319,13 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     	}
     }
 
-    private String getSiteId(String catalog_nbr, String session_code, String section) {
+    private String getSiteId(String catalog_nbr, String session_id, String session_code, String section) {
     	String siteId = FormatUtils.formatCourseId(catalog_nbr);
-    	siteId += "." + FormatUtils.getSessionName(session_code);
+    	siteId += "." + FormatUtils.getSessionName(session_id);
+
+    	if (!session_code.equals("1"))
+    		siteId += session_code;
+
     	siteId += "." + section;
 
     	return siteId;
