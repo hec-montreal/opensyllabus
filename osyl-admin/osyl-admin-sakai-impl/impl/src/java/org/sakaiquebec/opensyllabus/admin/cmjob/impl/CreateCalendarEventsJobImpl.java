@@ -256,10 +256,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 			return null;
 		}
 
-		log.debug("created event: " + title +
-				" from " + startTime.toString() +
-				" to " + endTime.toString() +
-				" in " + location);
+		log.debug("created event: " + title + " in site " + calendar.getContext());
 
 		return event.getId();
     }
@@ -298,10 +295,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     	}
 
     	calendar.commitEvent(edit);
-    	log.debug("updated ("+state+") event: " + edit.getDisplayName() +
-    			" from " + newStartTime.toString() +
-    			" to " + newEndTime.toString() +
-    			" in " + newLocation);
+    	log.debug("updated ("+state+") event: " + edit.getDisplayName() + " in site " + calendar.getContext());
 
     	return true;
     }
