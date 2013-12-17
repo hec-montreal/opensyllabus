@@ -24,7 +24,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -40,13 +39,11 @@ import org.sakaiproject.calendar.api.CalendarEventEdit;
 import org.sakaiproject.calendar.api.CalendarService;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.util.ResourceLoader;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CreateCalendarEventsJob;
-import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -62,7 +59,6 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 	private static ResourceLoader rb = new ResourceLoader("org.sakaiquebec.opensyllabus.admin.cmjob.impl.bundle.CMJobMessages");
 
     private final String EVENT_TYPE_CLASS_SESSION = "Class session";
-    private final String EVENT_TYPE_CANCELLATION = "Cancellation";
     private final String EVENT_TYPE_EXAM = "Exam";
     private final String EVENT_TYPE_QUIZ = "Quiz";
     private final String EVENT_TYPE_SPECIAL = "Special event";
@@ -246,7 +242,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		try {
 			// add event to calendar
 			event = calendar.addEvent(
-					TimeService.newTimeRange(TimeService.newTime(startTime.getTime()), TimeService.newTime(endTime.getTime())),
+					TimeService.newTimeRange(TimeService.newTime(startTime.getTime()), TimeService.newTime(endTime.getTime()), true, false),
 					title,
 					description,
 					type,
@@ -286,7 +282,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
     	if (state.equals("M")) {
     		if (newStartTime != null && newEndTime != null)
-    			edit.setRange(TimeService.newTimeRange(TimeService.newTime(newStartTime.getTime()), TimeService.newTime(newEndTime.getTime())));
+    			edit.setRange(TimeService.newTimeRange(TimeService.newTime(newStartTime.getTime()), TimeService.newTime(newEndTime.getTime()), true, false));
     		if (newLocation != null)
     			edit.setLocation(newLocation);
     		if (newDescription != null)
