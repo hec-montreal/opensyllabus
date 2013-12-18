@@ -314,7 +314,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     	siteId += "." + FormatUtils.getSessionName(session_id);
 
     	if (!session_code.equals("1"))
-    		siteId += session_code;
+    		siteId += "." + session_code;
 
     	siteId += "." + section;
 
