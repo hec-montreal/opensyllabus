@@ -128,16 +128,15 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			(JSONValue) properties
 				.get(CitationSchema.CITATION_RESOURCE_TYPE);
 
-		String resourceType = "";
-		if (resourceType != null) {
+		JSONString resourceType = null;
+		if (resourceTypeValue != null) {
 			JSONArray typeArray = resourceTypeValue.isArray();
-			JSONString typeString = resourceTypeValue.isString();
 
 			if (typeArray != null) {
 				// use only the first asmResourceType
-				resourceType = typeArray.get(0).toString();
+				resourceType = (JSONString) typeArray.get(0);
 			} else {
-				resourceType = typeString.stringValue();
+				resourceType = (JSONString) resourceTypeValue;
 			}
 		}
 
@@ -238,7 +237,8 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 				.stringValue());
 		
 		//Type of resource
-		csi.setProperty(CitationSchema.CITATION_RESOURCE_TYPE, resourceType);
+		csi.setProperty(CitationSchema.CITATION_RESOURCE_TYPE,
+				resourceType == null ? "" : resourceType.stringValue());
 
 		csi.setProperty(CitationSchema.PUBLICATION_LOCATION,
 			publicationLocation == null ? "" : publicationLocation
@@ -268,7 +268,8 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 
 		csi.setProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.RESOURCE_TYPE,
-			resourceType);
+			resourceType == null ? ""
+					: resourceType.stringValue());
 
 		csi.setProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE,
