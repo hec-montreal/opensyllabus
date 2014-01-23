@@ -136,10 +136,8 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			if (typeArray != null) {
 				// use only the first asmResourceType
 				resourceType = typeArray.get(0).toString();
-				Window.alert("setProperty successful");
 			} else {
 				resourceType = typeString.stringValue();
-				Window.alert("setProperty successful");
 			}
 		}
 
