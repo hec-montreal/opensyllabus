@@ -23,7 +23,7 @@
 	<inherits name='org.sakaiquebec.opensyllabus.shared' />
 
 	<extend-property name="locale" values="fr_CA" />
-	<set-property name="user.agent" value="gecko1_8"/>
+	<extend-property name="locale" values="es" />
 	<!-- Specify the app entry point class. -->
 	<entry-point class='org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint' />
 	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint" />
