@@ -211,6 +211,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    while (cours.hasNext()) {
 		detailsCours = (DetailCoursMapEntry) cours.next();
 
+		if (!detailsCours.getClassSection().equals("ZC1")) {
 		EnrollmentSet enrollmentSet = null;
 		Set<String> instructors = new HashSet<String>();
 		String coordinator = null;
@@ -274,6 +275,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		    }
 		}
 	    }
+	}
 
 	}
     }
