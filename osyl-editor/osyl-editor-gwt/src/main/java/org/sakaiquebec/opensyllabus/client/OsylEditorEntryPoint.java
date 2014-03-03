@@ -53,7 +53,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * The "Main Class" (EntryPoint in GWT) of the OpenSyllabus Editor.
- * 
+ *
  * @author <a href="mailto:claude.coulombe@umontreal.ca">Claude Coulombe</a>
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  * @author <a href="mailto:gilles-philippe.leblanc@umontreal.ca">Gilles-Philippe
@@ -219,7 +219,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	    }
 	};
 	setSakaiScrollBar(isInSakai() ? "hidden" : "auto");
-	t.schedule(500);
+	t.scheduleRepeating(500);
 	if (OsylController.getInstance().isInHostedMode()) {
 	    DOM.setStyleAttribute(getRootPanel().getElement(), "fontSize",
 		    "12px");
@@ -239,7 +239,11 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * resized.
      */
     public void setToolSize() {
-	int h = getDesiredToolHeight();
+	int h = Math.max(
+			getDesiredToolHeight(),
+			Math.max(editorMainView.getOsylTreeView().getTree()
+					.getOffsetHeight(), editorMainView.getWorkspaceView()
+					.getCurrentView().getOffsetHeight()) + 144);
 	int sc = 0;
 	if (isInSakai()) {
 	    setSakaiIFrameHeight(h);
@@ -275,7 +279,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * set the display type for the scrollbars of the iframe containing the
      * tool.
-     * 
+     *
      * @params the css type of display for the scrollbars.
      */
     private static void setSakaiScrollBar(String value) {
@@ -285,7 +289,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * Returns the Sakai current iframe containing the tool. If the tool isn't
      * in Sakai environment (stand alone), return current window.
-     * 
+     *
      * @return the Sakai iframe element.
      */
     public static native Element getSakaiToolIframe() /*-{
@@ -296,7 +300,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * Returns the Sakai footer DOM's element. If the tool isn't in Sakai
      * environment (stand alone), return nothing.
-     * 
+     *
      * @return the Sakai footer element.
      */
     public static native Element getSakaiFooter() /*-{
@@ -306,7 +310,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * Returns the Sakai footer DOM's element. If the tool isn't in Sakai
      * environment (stand alone), return nothing.
-     * 
+     *
      * @return the Sakai footer element.
      */
     public static native Element getSakaiLeftMenu() /*-{
@@ -316,7 +320,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * Returns, in pixels, the total height of the Sakai left menu section. If
      * the tool isn't in Sakai environment (stand alone), return 0.
-     * 
+     *
      * @return number of pixels for the height of the Sakai left menu.
      */
     public static int getSakaiLeftMenuHeight() {
@@ -327,7 +331,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * Returns, in pixels, the total height of the Sakai footer section. If the
      * tool isn't in Sakai environment (stand alone), return 0.
-     * 
+     *
      * @return number of pixels for the height of the Sakai footer.
      */
     public static int getSakaiFooterHeight() {
@@ -341,7 +345,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * also based on the presence of scrollbar du to left Sakai menu height and
      * the scrollY of the Window. If the tool isn't in Sakai environment (stand
      * alone), return the viewport height.
-     * 
+     *
      * @return number of pixels for the desired height for the tool.
      */
     private static int getDesiredToolHeight() {
@@ -391,7 +395,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * Returns the current viewport height. This is the height of current
      * visible area.
-     * 
+     *
      * @return int viewport height in pixel
      */
     public static native int getViewportHeight() /*-{
@@ -413,7 +417,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * Returns the current total page's height. This is the total height of all
      * objects in the page, including Sakai.
-     * 
+     *
      * @return int total page height in pixel
      */
     public static native int getTotalHeight() /*-{
@@ -434,7 +438,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * Returns the current viewport width. This is the width of current visible
      * area.
-     * 
+     *
      * @return int viewport width in pixel
      */
     public static native int getViewportWidth() /*-{
@@ -486,7 +490,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 
     /**
      * If Osyl is currently loaded in Sakai environment or is is stand alone.
-     * 
+     *
      * @return Boolean state if is in Sakai.
      */
 
@@ -496,7 +500,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 
     /**
      * If the current Browser is Internet Explorer.
-     * 
+     *
      * @return Boolean state if is in IE.
      */
     public static native boolean isInternetExplorer() /*-{
@@ -506,7 +510,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * Returns the current vertical scroll position in browser (ie: for the
      * whole Sakai page).
-     * 
+     *
      * @return int number of pixels from top
      */
     private static native int getGlobalScrollY() /*-{
@@ -516,13 +520,13 @@ public class OsylEditorEntryPoint implements EntryPoint {
 						 } else {
 						 // In Firefox
 						 return top.pageYOffset;
-						 } 
+						 }
 						 }-*/;
 
     /**
      * Returns the current horizontal scroll position in browser (ie: for the
      * whole Sakai page).
-     * 
+     *
      * @return int number of pixel from left
      */
     public static native int getGlobalScrollX() /*-{
@@ -532,13 +536,13 @@ public class OsylEditorEntryPoint implements EntryPoint {
 						} else {
 						// In Firefox
 						return $wnd.top.pageXOffset;
-						} 
+						}
 						}-*/;
 
     /**
      * Returns, in pixels, the space above the tool (The Sakai navigation
      * header). If the tool isn't in Sakai environment (stand alone), return 0.
-     * 
+     *
      * @return number of pixels above the tool
      */
     public static int getToolAbsoluteTop() {
@@ -549,7 +553,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * Returns, in pixel, the space to the left of the tool (The Sakai
      * navigation left column). If the tool isn't in Sakai environment (stand
      * alone), return 0.
-     * 
+     *
      * @return number of pixels before the tool
      */
     public static int getToolAbsoluteLeft() {
@@ -558,7 +562,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 
     /**
      * Returns the current vertical scroll position in OSYL.
-     * 
+     *
      * @return int number of pixel from top
      */
     public static int getYPosition() {
@@ -573,7 +577,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 
     /**
      * Returns the current horizontal scroll position.
-     * 
+     *
      * @return int number of pixel from left
      */
     public static int getXPosition() {
@@ -618,7 +622,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * Shows the specified PopupPanel widget as close as possible to the top of
      * interface (but always below the toolBar). After the specified default
      * delay (3 seconds) it will be hidden.
-     * 
+     *
      * @param p widget
      */
     public static void showWidgetOnTop(PopupPanel panel) {
@@ -629,7 +633,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * Shows the specified PopupPanel widget as close as possible to the top of
      * interface (but always below the toolBar). After the specified amount of
      * time (in ms) it is hidden.
-     * 
+     *
      * @param p widget
      * @param time
      */
@@ -675,7 +679,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * Sakai navigation header to ensure the centering of the specified pop-up.
      * Warning: the widget must already be visible otherwise its dimensions may
      * not be available! You should ensure that widget.show() is called before.
-     * 
+     *
      * @param widget the pop-up to center
      */
     public static void centerObject(PopupPanel widget) {
@@ -693,7 +697,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * Makes the main window (the one containing Sakai) scroll to the specified
      * position.
-     * 
+     *
      * @param y pixels from the top
      */
     public static native void scrollToYPosition(int y) /*-{
@@ -702,7 +706,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 
     /**
      * Returns the RootPanel's width.
-     * 
+     *
      * @return int width in pixel
      */
     public int getToolWidth() {
@@ -740,7 +744,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * Returns the the Course Outline with XML representation. If the model has
      * been modified, the XML representation needs to be updated by calling
      * prepareModelForSave().
-     * 
+     *
      * @return {@link COSerialized} Course Outline including XML representation
      */
     public COSerialized getSerializedCourseOutline() {
@@ -815,14 +819,14 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public static int parsePixels(String value) {
 	int pos = value.indexOf("px");
 	int posComma = value.indexOf(".");
-	
+
 	if (posComma != -1){
 		value = value.substring(0, posComma);
 		}
 	else if (pos != -1){
 		value = value.substring(0, pos);
 		}
-		
+
 	return Integer.parseInt(value);
     }
 
@@ -837,7 +841,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * Find the DOM element with the specified Id. Created the search in the
      * Sakai environnement.
-     * 
+     *
      * @params String elm: DOM Id to search.
      * @return Element with the specific Id.
      */
@@ -848,7 +852,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     /**
      * set the display type for the scrollbars of the iframe containing the
      * tool.
-     * 
+     *
      * @params String searchClass: DOM class to search.
      * @params Element node: root node where begin the search (optionnal).
      * @params String tag: specific html tag to search (optionnal).
@@ -868,10 +872,10 @@ public class OsylEditorEntryPoint implements EntryPoint {
 				      j++;
 				      }
 				      }
-				      var newElements = 
+				      var newElements =
 				      @org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint::createElements(I)(classElements.length);
 				      for (i = 0;i < classElements.length; i++) {
-				      @org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint::setElement([Lcom/google/gwt/user/client/Element;ILcom/google/gwt/user/client/Element;)(newElements, i, classElements[i]); 
+				      @org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint::setElement([Lcom/google/gwt/user/client/Element;ILcom/google/gwt/user/client/Element;)(newElements, i, classElements[i]);
 				      }
 				      return newElements;
 				      }-*/;

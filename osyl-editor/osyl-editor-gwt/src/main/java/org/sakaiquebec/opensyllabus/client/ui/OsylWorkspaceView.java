@@ -42,11 +42,11 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * OsylWorkspaceView is the main area in OpenSyllabus editor.<br/>
  * <br/>
- * 
+ *
  * OsylWorkspaceView implements {@link ViewContextSelectionEventHandler} to be
  * notified that it has to refresh its view, for instance when the user clicked
  * on a lecture to display it.
- * 
+ *
  * @version $Id: $
  */
 public class OsylWorkspaceView extends OsylViewableComposite implements
@@ -62,7 +62,7 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 	setWorkspacePanel(new SimplePanel());
 	getWorkspacePanel().setSize("100%", "100%");
 	initWidget(getWorkspacePanel());
-	
+
     }
 
     public COElementAbstract getModel() {
@@ -111,7 +111,7 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 	    } else if (getModel().isCOStructureElement()) {
 		// Display a COStructureElement
 		getWorkspacePanel().clear();
-		
+
 		// Special case: evaluation
 		if (COStructureElementType.ASSESSMENT_STRUCT
 			.equals(((COStructureElement) getModel()).getType())) {
@@ -123,7 +123,7 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 		else{
 			OsylCOStructureView newView =
 				new OsylCOStructureView(getModel(), getController(),false, viewFirstElement);
-			currentView = newView; 
+			currentView = newView;
 		}
 		getWorkspacePanel().add(currentView);
 	    } else if(getModel().isCOUnitStructure()){
@@ -150,4 +150,7 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 	return this;
     }
 
+	public Widget getCurrentView() {
+		return currentView;
+	}
 }
