@@ -211,70 +211,72 @@ OsylCMJob {
 			while (cours.hasNext()) {
 				detailsCours = (DetailCoursMapEntry) cours.next();
 
-				EnrollmentSet enrollmentSet = null;
-				Set<String> instructors = new HashSet<String>();
-				String coordinator = null;
+				// seulement traiter les sections qui ne sont pas ZC1
+				if (!detailsCours.getClassSection().equals("ZC1")) {
+					EnrollmentSet enrollmentSet = null;
+					Set<String> instructors = new HashSet<String>();
+					String coordinator = null;
 
-				// Add instructor to section
-				String enrollmentSetId =
-						getCourseSectionEnrollmentSetId(detailsCours);
+					// Add instructor to section
+					String enrollmentSetId =
+							getCourseSectionEnrollmentSetId(detailsCours);
 
-				enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
-				enrollmentSet.setDefaultEnrollmentCredits(detailsCours
-						.getUnitsMinimum());
-				instructors = enrollmentSet.getOfficialInstructors();
-				if (instructors == null)
-					instructors = new HashSet<String>();
-				if (matricule != null)
-					instructors.add(matricule);
-				else {
-					log.warn("The course " + enrollmentSetId
-							+ " does not have instructors");
-					// TODO: send mail also
-				}
-				enrollmentSet.setOfficialInstructors(instructors);
-				cmAdmin.updateEnrollmentSet(enrollmentSet);
-				log.info("Instructors for " + detailsCours.getUniqueKey()
-						+ ": " + instructors.toString());
+					enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
+					enrollmentSet.setDefaultEnrollmentCredits(detailsCours
+							.getUnitsMinimum());
+					instructors = enrollmentSet.getOfficialInstructors();
+					if (instructors == null)
+						instructors = new HashSet<String>();
+					if (matricule != null)
+						instructors.add(matricule);
+					else {
+						log.warn("The course " + enrollmentSetId
+								+ " does not have instructors");
+						// TODO: send mail also
+					}
+					enrollmentSet.setOfficialInstructors(instructors);
+					cmAdmin.updateEnrollmentSet(enrollmentSet);
+					log.info("Instructors for " + detailsCours.getUniqueKey()
+							+ ": " + instructors.toString());
 
-				if (detailsCours.getCoordonnateur() == null) {
-					// We don't have a coordinator: not expected!
-					log.warn("The course " + enrollmentSetId
-							+ " does not have a coordinator");
-					// TODO: send mail also
-				} else {
-					coordinator = detailsCours.getCoordonnateur().getEmplId();
-					// Add coordinator to course offering for CERTIFICAT
-					if (detailsCours.isInCertificat()
-							|| detailsCours.isQualiteComm()) {
-
-						courseOfferingId = getCourseOfferingId(detailsCours);
-						cmAdmin.addOrUpdateCourseOfferingMembership(
-								coordinator, COORDONNATEUR_ROLE,
-								courseOfferingId, ACTIVE_STATUS);
-						actualCoordinatorMemberships.remove(coordinator
-								+ courseOfferingId);
-						log.info("Coordinators for "
-								+ detailsCours.getUniqueKey() + ": "
-								+ coordinator);
+					if (detailsCours.getCoordonnateur() == null) {
+						// We don't have a coordinator: not expected!
+						log.warn("The course " + enrollmentSetId
+								+ " does not have a coordinator");
+						// TODO: send mail also
 					} else {
-						// Add coordinator to sharable site for other courses
-						enrollmentSetId =
-								getCourseOfferingId(detailsCours)
-								+ SHARABLE_SECTION;
-						cmAdmin.addOrUpdateSectionMembership(coordinator,
-								COORDONNATEUR_ROLE, enrollmentSetId,
-								ACTIVE_STATUS);
-						actualCoordinatorMemberships.remove(coordinator
-								+ enrollmentSetId);
-						log.info("Coordinators for "
-								+ detailsCours.getUniqueKey() + ": "
-								+ coordinator);
+						coordinator = detailsCours.getCoordonnateur().getEmplId();
+						// Add coordinator to course offering for CERTIFICAT
+						if (detailsCours.isInCertificat()
+								|| detailsCours.isQualiteComm()) {
 
+							courseOfferingId = getCourseOfferingId(detailsCours);
+							cmAdmin.addOrUpdateCourseOfferingMembership(
+									coordinator, COORDONNATEUR_ROLE,
+									courseOfferingId, ACTIVE_STATUS);
+							actualCoordinatorMemberships.remove(coordinator
+									+ courseOfferingId);
+							log.info("Coordinators for "
+									+ detailsCours.getUniqueKey() + ": "
+									+ coordinator);
+						} else {
+							// Add coordinator to sharable site for other courses
+							enrollmentSetId =
+									getCourseOfferingId(detailsCours)
+									+ SHARABLE_SECTION;
+							cmAdmin.addOrUpdateSectionMembership(coordinator,
+									COORDONNATEUR_ROLE, enrollmentSetId,
+									ACTIVE_STATUS);
+							actualCoordinatorMemberships.remove(coordinator
+									+ enrollmentSetId);
+							log.info("Coordinators for "
+									+ detailsCours.getUniqueKey() + ": "
+									+ coordinator);
+
+						}
 					}
 				}
 			}
-
 		}
 	}
 
