@@ -240,7 +240,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     public void setToolSize() {
 	int h = Math.max(
-			getDesiredToolHeight(),
+			Math.round(getDesiredToolHeight()),
 			Math.max(editorMainView.getOsylTreeView().getTree()
 					.getOffsetHeight(), editorMainView.getWorkspaceView()
 					.getCurrentView().getOffsetHeight()) + 144);
