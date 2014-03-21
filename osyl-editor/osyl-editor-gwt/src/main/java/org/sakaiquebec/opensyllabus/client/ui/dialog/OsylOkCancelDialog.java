@@ -19,6 +19,7 @@ import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -32,7 +33,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * SWING tutorial : How to Make Dialogs
  * http://java.sun.com/docs/books/tutorial/uiswing/components/dialog.html
  * OsylOkCancelDialog coding example:
- * 
+ *
  * <pre>
  * final OsylOkCancelDialog dialogBox =
  * 	new OsylOkCancelDialog(false, true, &quot;Dialog Title&quot;,
@@ -40,7 +41,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * dialogBox.center();
  * dialogBox.show();
  * </pre>
- * 
+ *
  * @author <a href="mailto:claude.coulombe@umontreal.ca">Claude Coulombe</a>
  * @version $Id: $
  */
@@ -63,7 +64,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
     /**
      * Constructor using default title and standard behavior (autohide is false
      * and modal is true).
-     * 
+     *
      * @param dialogContent : the text content of the dialog
      */
     public OsylOkCancelDialog(String dialogContent) {
@@ -73,7 +74,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
     /**
      * Constructor using standard behavior (autohide is false and modal is
      * true).
-     * 
+     *
      * @param dialogTitle : the title of the dialog
      * @param dialogContent : the text content of the dialog
      */
@@ -84,7 +85,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 
     /**
      * OsylOkCancelDialog Constructor
-     * 
+     *
      * @param autoHide : true if the dialog should be automatically hidden when
      *            the user clicks outside of it
      * @param modal : true if keyboard and mouse events for widgets not
@@ -100,7 +101,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 
     /**
      * OsylOkCancelDialog Constructor with default title.
-     * 
+     *
      * @param autoHide : true if the dialog should be automatically hidden when
      *            the user clicks outside of it
      * @param modal : true if keyboard and mouse events for widgets not
@@ -116,7 +117,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 
     /**
      * OsylOkCancelDialog Constructor specifying every possible parameter
-     * 
+     *
      * @param autoHide : true if the dialog should be automatically hidden when
      *            the user clicks outside of it
      * @param modal : true if keyboard and mouse events for widgets not
@@ -182,7 +183,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 
     /**
      * Returns true if OK has been clicked, false otherwise.
-     * 
+     *
      * @return the selectedValue value.
      */
     public boolean getSelectedValue() {
@@ -206,7 +207,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 
     /**
      * Adds a <code>ClickListener</code> to the okButton.
-     * 
+     *
      * @param clickListener
      */
     public void addOkButtonCLickHandler(ClickHandler clickListener) {
@@ -215,7 +216,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 
     /**
      * Adds a <code>ClickListener</code> to the cancelButton.
-     * 
+     *
      * @param clickListener
      */
     public void addCancelButtonClickHandler(ClickHandler clickListener) {
@@ -240,9 +241,16 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
      * be wrong!
      */
     public void centerAndFocus() {
-	OsylEditorEntryPoint.centerObject(this);
-	// We explicitly give the focus to the cancel button for easy dismiss!
-	cancelButton.setFocus(true);
+    	//OsylEditorEntryPoint.centerObject(this);
+    	int left = (Window.getClientWidth() - getOffsetWidth()) >> 1;
+    	int top = (getParentWindowHeight() - 138 - getOffsetHeight()) >> 1;
+    	setPopupPosition(Math.max(Window.getScrollLeft() + left, 0),
+    			Math.max(getParentPageYOffset() + top, 0));
+
+		// We explicitly give the focus to the cancel button for easy dismiss!
+		cancelButton.setFocus(true);
     }
 
+    private static native int getParentPageYOffset() /*-{ return $wnd.parent.pageYOffset; }-*/;
+    private static native int getParentWindowHeight() /*-{ return $wnd.parent.innerHeight; }-*/;
 }

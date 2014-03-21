@@ -18,6 +18,7 @@ import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -33,7 +34,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * OsylAlertDialog coding example: final OsylAlertDialog alertBox = new
  * OsylAlertDialog(false, true, "Dialog Title", "The content of the Dialog");
  * alertBox.center(); alertBox.show();
- * 
+ *
  * @param autoHide : true if the dialog should be automatically hidden when the
  *                user clicks outside of it
  * @param modal : true if keyboard and mouse events for widgets not contained by
@@ -56,7 +57,7 @@ public class OsylAlertDialog extends OsylAbstractLightBox {
     /**
      * Constructor specifying content and using default title and standard
      * behavior (autohide is false and modal is true).
-     * 
+     *
      * @param dialogContent : the text content of the dialog
      */
     public OsylAlertDialog(String dialogContent) {
@@ -66,7 +67,7 @@ public class OsylAlertDialog extends OsylAbstractLightBox {
     /**
      * Constructor specifying title and content and using standard behavior
      * (autohide is false and modal is true).
-     * 
+     *
      * @param dialogTitle : the title of the dialog
      * @param dialogContent : the text content of the dialog
      */
@@ -79,7 +80,7 @@ public class OsylAlertDialog extends OsylAbstractLightBox {
      * behavior is needed (either non-modal or autohide), this constructor
      * should not be used. Use {@link OsylAlertDialog#OsylAlertDialog(String)}
      * instead.
-     * 
+     *
      * @param autoHide : true if the dialog should be automatically hidden when
      *                the user clicks outside of it
      * @param modal : true if keyboard and mouse events for widgets not
@@ -95,7 +96,7 @@ public class OsylAlertDialog extends OsylAbstractLightBox {
      * Constructor specifying all parameters. Unless uncommon behavior is needed
      * (either non-modal or autohide), this constructor should not be used. Use
      * {@link OsylAlertDialog#OsylAlertDialog(String, String)} instead.
-     * 
+     *
      * @param autoHide : true if the dialog should be automatically hidden when
      *                the user clicks outside of it
      * @param modal : true if keyboard and mouse events for widgets not
@@ -142,8 +143,16 @@ public class OsylAlertDialog extends OsylAbstractLightBox {
 
     /** {@inheritDoc} */
     public void center() {
-	OsylEditorEntryPoint.centerObject(this);
+//    	OsylEditorEntryPoint.centerObject(this);
+    	int left = (Window.getClientWidth() - getOffsetWidth()) >> 1;
+    	int top = (getParentWindowHeight() - 138 - getOffsetHeight()) >> 1;
+    	setPopupPosition(Math.max(Window.getScrollLeft() + left, 0),
+    			Math.max(getParentPageYOffset() + top, 0));
     }
+
+    private static native int getParentPageYOffset() /*-{ return $wnd.parent.pageYOffset; }-*/;
+    private static native int getParentWindowHeight() /*-{ return $wnd.parent.innerHeight; }-*/;
+
 
     /**
      * {@inheritDoc}
@@ -154,7 +163,7 @@ public class OsylAlertDialog extends OsylAbstractLightBox {
 	// As the window'd default behavior is to grow only vertically, we
 	// use its size to compute its current area and we recompute its size
 	// according to a standard w/h ratio.
-	
+
 	// We remove the decoration width and height before computing the area
 	int decoration_w = 20;
 	int decoration_h = 50;

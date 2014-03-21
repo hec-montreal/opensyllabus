@@ -23,7 +23,9 @@ package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 import java.util.Iterator;
 import java.util.List;
 
+import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.Caption;
+import org.gwt.mosaic.ui.client.GlassPanel;
 import org.gwt.mosaic.ui.client.ImageButton;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.gwt.mosaic.ui.client.Caption.CaptionRegion;
@@ -41,6 +43,10 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.shared.model.COElementMoveable;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -49,6 +55,7 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -62,6 +69,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -103,7 +111,7 @@ public abstract class OsylAbstractEditor extends Composite {
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
      * working for.
-     * 
+     *
      * @param view
      */
     public OsylAbstractEditor(OsylAbstractView view) {
@@ -216,7 +224,7 @@ public abstract class OsylAbstractEditor extends Composite {
     }
 
     protected ImageAndTextButton createButtonEdit() {
-	AbstractImagePrototype imgEditButton = 
+	AbstractImagePrototype imgEditButton =
 	    AbstractImagePrototype.create(getOsylImageBundle().edit());
 	String title = getView().getUiMessage("edit");
 	ClickHandler listener = new OsylEditClickListener(getView());
@@ -255,7 +263,7 @@ public abstract class OsylAbstractEditor extends Composite {
     /**
      * Creates a {@link DialogBox} containing the editor for this resProx using
      * the specified title.
-     * 
+     *
      * @param title
      */
     protected void createEditBox(String title) {
@@ -409,12 +417,35 @@ public abstract class OsylAbstractEditor extends Composite {
 
 	// Sizes the pop-up to fit the preferred size of the its subcomponents,
 	// shows it modal and centers it.
-	pop.showModal(true);
-	
+	//pop.showModal(true);
+
+	// le showModal, ne permet pas de spécifier la position....
+	final Element glass = Document.get().createDivElement();
+	glass.setClassName("mosaic-GlassPanel-default");
+	glass.getStyle().setPosition(Position.ABSOLUTE);
+	glass.getStyle().setLeft(0, Unit.PX);
+	glass.getStyle().setTop(0, Unit.PX);
+	glass.getStyle().setZIndex(10000);
+	Document.get().getBody().appendChild(glass);
+	pop.addCloseHandler(new CloseHandler<PopupPanel>() {
+		@Override
+		public void onClose(CloseEvent<PopupPanel> event) {
+			glass.removeFromParent();
+		}
+	});
+
+	pop.setAnimationEnabled(true);
+	pop.pack();
+	int left = (Window.getClientWidth() - pop.getOffsetWidth()) >> 1;
+	int top = (getParentWindowHeight() - 138 - pop.getOffsetHeight()) >> 1;
+	pop.setPopupPosition(Math.max(Window.getScrollLeft() + left, 0),
+			Math.max(getParentPageYOffset() + top, 0));
+	pop.show();
+
 	// remember original height
 	originalEditorPopupHeight = pop.getOffsetHeight();
 	originalEditorWidgetHeight = getEditorTopWidget().getOffsetHeight();
-	
+
 	// And we give the focus to the editor using a deferred command
 	// (otherwise it doesn't always work)
 	DeferredCommand.addCommand(new Command() {
@@ -424,14 +455,17 @@ public abstract class OsylAbstractEditor extends Composite {
 	});
     } // createEditBox
 
-    protected void refreshTargetCoAbsractElementListBox(ListBox lb) {
+    private static native int getParentPageYOffset() /*-{ return $wnd.parent.pageYOffset; }-*/;
+    private static native int getParentWindowHeight() /*-{ return $wnd.parent.innerHeight; }-*/;
+
+	protected void refreshTargetCoAbsractElementListBox(ListBox lb) {
 	generateTargetCoAbstractElementListBox(lb);
     }
 
     /**
      * Test if an element could be move under another and create a list of
      * potential targets.
-     * 
+     *
      * @return ListBox<Label,Uuid> of possible CoAbstractElement targets for the
      *         move to operation.
      */

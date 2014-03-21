@@ -25,22 +25,23 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEventHandler;
+import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEventHandler.ClosePushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler;
+import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler.EditPushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresClosePushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresEditPushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresPublishPushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresSavePushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.OsylModelUpdatedEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
-import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
-import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
-import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEventHandler.ClosePushButtonEvent;
-import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler.EditPushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler.PublishPushButtonEvent;
+import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler.SavePushButtonEvent;
+import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
@@ -53,11 +54,18 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
 /**
@@ -65,7 +73,7 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  * the OsylToolbarView constructor takes care of instantiating the toolbar
  * itself and creating the appropriate listeners.<br/>
  * <br/>
- * 
+ *
  * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Leprêtre</a>
  * @version $Id: OsylToolbarView.java 521 2008-05-21 22:34:37Z
  *          sacha.lepretre@crim.ca $
@@ -88,10 +96,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
     public OsylToolbarView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
 	osylToolbar = new OsylTextToolbar(getController());
-	
+
 	disableSavePushButton();
 	osylController.getModelController().addEventHandler(this);
-	
+
 	initWidget(getOsylToolbar());
     }
 
@@ -196,7 +204,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		/* Preview mode specific menu buttons */
 		getOsylToolbar().getClosePushButton().setVisible(false);
 
-		/* Edition type menu buttons */		
+		/* Edition type menu buttons */
 		getOsylToolbar().getSavePushButton().setVisible(true);
 		getOsylToolbar().getPreviewSeparator().setVisible(true);
 		getOsylToolbar().getViewMenuItem().setVisible(true);
@@ -296,20 +304,20 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	}
     } // refreshView
 
-    
+
     public void enableSavePushButton(){
 	setSavePushButtonCommand();
 	getOsylToolbar().enableSavePushButton();
-	
+
     }
-    
+
     public void disableSavePushButton(){
 	getOsylToolbar().getSavePushButton().setCommand(null);
 	getOsylToolbar().disableSavePushButton();
     }
-    
-    
-    
+
+
+
     private void createAllowedCOUnitStructureAddAction(COUnitStructure model) {
 	List<COModelInterface> subModels =
 		getController().getOsylConfig().getOsylConfigRuler()
@@ -412,41 +420,67 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	});
     }
 
-    private void setSelectDateButtonCommand() {
-	getOsylToolbar().getSelectDateButton().setCommand(new Command() {
-	    public void execute() {
+	private void setSelectDateButtonCommand() {
+		getOsylToolbar().getSelectDateButton().setCommand(new Command() {
+			public void execute() {
 
-		final WindowPanel datePickerWind =
-			new WindowPanel(
-				getUiMessage("toolbar.button.selectDate.datePicker.title"),
-				false);
-		// set to the starting viewContext
-		final DateTimeFormat dtf =
-			getController().getSettings().getDateFormat();
-		DatePicker dp = new DatePicker();
-		dp.setVisible(true);
-		dp.addValueChangeHandler(new ValueChangeHandler<Date>() {
-		    @SuppressWarnings("deprecation")
-		    public void onValueChange(ValueChangeEvent<Date> event) {
-			datePickerWind.hide();
-			Date d = event.getValue();
-			d.setHours(0);
-			d.setMinutes(0);
-			d.setSeconds(0);
-			getController().setSelectedDate(d);
-			getOsylToolbar().getSelectDateButton().setHTML(
-				getUiMessage("toolbar.button.selectDate")
-					+ dtf.format(d));
-			getOsylToolbar().getSelectDateButton().addStyleName(
-				"Osyl-newElement");
-			getOsylToolbar().getDeleteDateButton().setVisible(true);
-		    }
+				final WindowPanel datePickerWind = new WindowPanel(
+						getUiMessage("toolbar.button.selectDate.datePicker.title"),
+						false);
+				// set to the starting viewContext
+				final DateTimeFormat dtf = getController().getSettings()
+						.getDateFormat();
+				DatePicker dp = new DatePicker();
+				dp.setVisible(true);
+				dp.addValueChangeHandler(new ValueChangeHandler<Date>() {
+					@SuppressWarnings("deprecation")
+					public void onValueChange(ValueChangeEvent<Date> event) {
+						datePickerWind.hide();
+						Date d = event.getValue();
+						d.setHours(0);
+						d.setMinutes(0);
+						d.setSeconds(0);
+						getController().setSelectedDate(d);
+						getOsylToolbar().getSelectDateButton().setHTML(
+								getUiMessage("toolbar.button.selectDate")
+										+ dtf.format(d));
+						getOsylToolbar().getSelectDateButton().addStyleName(
+								"Osyl-newElement");
+						getOsylToolbar().getDeleteDateButton().setVisible(true);
+					}
+				});
+				datePickerWind.add(dp);
+
+				// le showModal, ne permet pas de spécifier la position....
+				final Element glass = Document.get().createDivElement();
+				glass.setClassName("mosaic-GlassPanel-default");
+				glass.getStyle().setPosition(Position.ABSOLUTE);
+				glass.getStyle().setLeft(0, Unit.PX);
+				glass.getStyle().setTop(0, Unit.PX);
+				glass.getStyle().setZIndex(10000);
+				Document.get().getBody().appendChild(glass);
+				datePickerWind.addCloseHandler(new CloseHandler<PopupPanel>() {
+					@Override
+					public void onClose(CloseEvent<PopupPanel> event) {
+						glass.removeFromParent();
+					}
+				});
+
+				datePickerWind.setAnimationEnabled(true);
+				datePickerWind.pack();
+				int left = (Window.getClientWidth() - datePickerWind
+						.getOffsetWidth()) >> 1;
+				int top = (getParentWindowHeight() - 138 - datePickerWind
+						.getOffsetHeight()) >> 1;
+				datePickerWind.setPopupPosition(
+						Math.max(Window.getScrollLeft() + left, 0),
+						Math.max(top, 0));
+				datePickerWind.show();
+			}
 		});
-		datePickerWind.add(dp);
-		datePickerWind.showModal();
-	    }
-	});
-    }
+	}
+
+    public static native int getParentWindowHeight() /*-{ return $wnd.parent.innerHeight; }-*/;
 
     private void setDeleteDateButtonCommand() {
 	getOsylToolbar().getDeleteDateButton().setCommand(new Command() {
