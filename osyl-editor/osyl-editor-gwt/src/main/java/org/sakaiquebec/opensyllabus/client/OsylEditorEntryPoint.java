@@ -41,6 +41,8 @@ import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
@@ -239,11 +241,24 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * resized.
      */
     public void setToolSize() {
-	int h = Math.max(
-			Math.round(getDesiredToolHeight()),
-			Math.max(editorMainView.getOsylTreeView().getTree()
-					.getOffsetHeight(), editorMainView.getWorkspaceView()
-					.getCurrentView().getOffsetHeight()) + 144);
+    int workspaceViewMainPanelHeight = 0;
+    NodeList<com.google.gwt.dom.client.Element> tableElementList = Document.get().getElementsByTagName("table");
+    for (int i = 0; i < tableElementList.getLength(); i++) {
+    	if ("Osyl-WorkspaceView-MainPanel".equals(tableElementList.getItem(i).getClassName())) {
+    		workspaceViewMainPanelHeight = tableElementList.getItem(i).getOffsetHeight();
+    		break;
+    	}
+	}
+    int treeViewHeight = 0;
+    NodeList<com.google.gwt.dom.client.Element> divElementList = Document.get().getElementsByTagName("div");
+    for (int i = 0; i < divElementList.getLength(); i++) {
+    	if ("Osyl-TreeView-Tree".equals(divElementList.getItem(i).getClassName())) {
+    		treeViewHeight = divElementList.getItem(i).getOffsetHeight();
+    		break;
+    	}
+	}
+	int h = Math.max(Math.round(getDesiredToolHeight()),
+				Math.max(treeViewHeight, workspaceViewMainPanelHeight) + 144);
 	int sc = 0;
 	if (isInSakai()) {
 	    setSakaiIFrameHeight(h);
@@ -260,6 +275,10 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	}
 	setToolWidth();
     }
+
+//    public static native int getWorkspaceViewMainPanelHeight() /*-{
+//    	return $wnd.document.querySelector(".Osyl-WorkspaceView-MainPanel").offsetHeight;
+//    }-*/;
 
     /**
      * overrides the default initial Sakai environnement UI for correct display
