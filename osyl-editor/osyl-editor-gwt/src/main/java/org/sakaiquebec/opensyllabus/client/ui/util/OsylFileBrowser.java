@@ -30,10 +30,17 @@ import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocato
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 
 /**
@@ -85,9 +92,37 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 				    .getDirectoryPath(), rightsMap,
 			    typesResourceList);
 	    osylFileUpload.addEventHandler(OsylFileBrowser.this);
-	    osylFileUpload.showModal();
+
+
+//	    osylFileUpload.showModal();
+	    // le showModal, ne permet pas de spécifier la position....
+		final Element glass = Document.get().createDivElement();
+		glass.setClassName("mosaic-GlassPanel-default");
+		glass.getStyle().setPosition(Position.ABSOLUTE);
+		glass.getStyle().setLeft(0, Unit.PX);
+		glass.getStyle().setTop(0, Unit.PX);
+		glass.getStyle().setZIndex(10000);
+		Document.get().getBody().appendChild(glass);
+		osylFileUpload.addCloseHandler(new CloseHandler<PopupPanel>() {
+			@Override
+			public void onClose(CloseEvent<PopupPanel> event) {
+				glass.removeFromParent();
+			}
+		});
+
+		osylFileUpload.setAnimationEnabled(true);
+		osylFileUpload.setGlassEnabled(false);
+		osylFileUpload.pack();
+		int left = (Window.getClientWidth() - osylFileUpload.getOffsetWidth()) >> 1;
+		int top = (getParentWindowHeight() - 138 - osylFileUpload.getOffsetHeight()) >> 1;
+		osylFileUpload.setPopupPosition(Math.max(Window.getScrollLeft() + left, 0),
+				Math.max(getParentPageYOffset() + top, 0));
+		osylFileUpload.show();
 	}
     }
+
+    private static native int getParentPageYOffset() /*-{ return $wnd.parent.pageYOffset; }-*/;
+    private static native int getParentWindowHeight() /*-{ return $wnd.parent.innerHeight; }-*/;
 
     @Override
     protected String getCurrentSelectionLabel() {
