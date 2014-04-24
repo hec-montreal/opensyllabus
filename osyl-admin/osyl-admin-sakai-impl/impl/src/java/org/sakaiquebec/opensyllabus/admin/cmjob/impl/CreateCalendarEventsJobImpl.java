@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -37,6 +38,7 @@ import org.sakaiproject.calendar.api.Calendar;
 import org.sakaiproject.calendar.api.CalendarEvent;
 import org.sakaiproject.calendar.api.CalendarEventEdit;
 import org.sakaiproject.calendar.api.CalendarService;
+import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
@@ -62,6 +64,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     private final String EVENT_TYPE_EXAM = "Exam";
     private final String EVENT_TYPE_QUIZ = "Quiz";
     private final String EVENT_TYPE_SPECIAL = "Special event";
+    private final String CAREER_MBA = "MBA";
 
     @Setter
     private CalendarService calendarService;
@@ -102,22 +105,35 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     				event.getSection());
 
     		String eventId = null;
-    		// only attempt event creation if this is a new site or the calendar was found before
+
     		if (!siteId.equals(previousSiteId))
     		{
-    			try {
-    				calendar = getCalendar(siteId);
-    				calendarFound = true;
+    			// this is a new site id, calendar not found yet
+				calendarFound = false;
 
-    			} catch (IdUnusedException e) {
+				try {
+    				calendar = getCalendar(siteId);
+
+					// don't bother adding the events if this is an MBA site (ZCII-1495)
+    				// pretend we didn't find the calendar
+    				String courseOfferingEid = event.getCatalogNbr() + event.getSessionId() + event.getSessionCode();
+    				CourseOffering courseOffering = cmService.getCourseOffering(courseOfferingEid);
+
+    				if (!courseOffering.getAcademicCareer().equals(CAREER_MBA)) {
+						calendarFound = true;
+					} else {
+	    				log.debug(siteId + " is for MBA, don't create events");
+					}
+
+				} catch (IdUnusedException e) {
     				log.debug("Calendar for site " + siteId + " not found");
-    				calendarFound = false;
     			} catch (PermissionException e) {
     				e.printStackTrace();
     				return;
     			}
     		}
 
+    		// only attempt event creation if the calendar was found
     		if (calendarFound) {
 				eventId = createCalendarEvent(
 						calendar,
@@ -159,16 +175,27 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     				event.getSection());
 
 			boolean updateSuccess = false;
-    		// only attempt event update if this is a new site or the calendar was found before
     		if (!siteId.equals(previousSiteId))
     		{
+    			// new site, calendar not yet found
+    			calendarFound = false;
+
     			try {
     				calendar = getCalendar(siteId);
-    				calendarFound = true;
+
+					// don't bother if this is an MBA site (ZCII-1495)
+    				// pretend we didn't find the calendar
+    				String courseOfferingEid = event.getCatalogNbr() + event.getSessionId() + event.getSessionCode();
+    				CourseOffering courseOffering = cmService.getCourseOffering(courseOfferingEid);
+
+    				if (!courseOffering.getAcademicCareer().equals(CAREER_MBA)) {
+						calendarFound = true;
+					} else {
+	    				log.debug(siteId + " is for MBA, don't create events");
+					}
 
     			} catch (IdUnusedException e) {
     				log.debug("Calendar for site " + siteId + " not found");
-    				calendarFound = false;
     			} catch (PermissionException e) {
     				e.printStackTrace();
     				return;
