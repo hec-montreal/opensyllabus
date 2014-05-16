@@ -22,7 +22,11 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -33,6 +37,8 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.coursemanagement.api.AcademicSession;
+import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.EntityManager;
@@ -64,8 +70,8 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 			.getLog(RemoveUsersFromCMJobImpl.class);
 
 
-	//map containing the user to be removed from a site for a particular role
-	private HashMap<String, String> userRoleMap = new HashMap<String, String>();
+	//map containing the user to be removed from a site for a particular role (including sites to exclude)
+	private HashMap<String, HashMap> removeUsersMap = new HashMap<String, HashMap>();
 
 
 
@@ -82,9 +88,24 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 
 		for(String userEid : usersToRemove){
 
-			String userRole = userRoleMap.get(userEid);
+			HashMap<String, String> parameters = removeUsersMap.get(userEid);
+			String userRole = parameters.get("role");
+			List<String> excludeSites = Arrays.asList(parameters.get("excludeSites").split(","));
+
+			//trim the sites to exclude
+			for(int i=0; i < excludeSites.size(); i++) {
+				String s = excludeSites.get(i);
+				excludeSites.set(i, s.trim());
+			}
+
+			if (userRole.equals(null)) {
+				log.error("Role is a required parameter.");
+				continue;
+			}
+
 			log.debug("userEid:"+userEid);
 			log.debug("userRole:"+userRole);
+			log.debug("excludeSites: " + excludeSites.toString());
 
 			// remove membership from course offerings
 			Map<String, String> courseOfferingRoleMap = cmService.findCourseOfferingRoles(userEid);
@@ -96,6 +117,12 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 				log.debug("courseOfferingEid: " + courseOfferingEid + " courseOfferingRole: " + courseOfferingRole);
 
 				if(userRole.equals(courseOfferingRole)){
+					// only try if the site should not be excluded
+					CourseOffering courseOffering = cmService.getCourseOffering(courseOfferingEid);
+					if (!excludeSites.equals(null) && isSiteExcluded(courseOffering, excludeSites)) {
+						log.debug("exclude CO: "+courseOfferingEid);
+						break;
+					}
 
 					if(cmAdmin.removeCourseOfferingMembership(userEid, courseOfferingEid)){
 						log.info("SUCCESS removing user:"+userEid+" from CO:"+courseOfferingEid);
@@ -116,6 +143,12 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 				log.debug("courseSectionEid:" + courseSectionEid+" courseSectionRole: "+courseSectionRole);
 
 				if(userRole.equals(courseSectionRole)){
+					// only try if the site should not be excluded
+					Section section = cmService.getSection(courseSectionEid);
+					if (!excludeSites.equals(null) && isSiteExcluded(section, excludeSites)) {
+						log.debug("exclude Section: "+courseSectionEid);
+						break;
+					}
 
 					if(cmAdmin.removeSectionMembership(userEid, courseSectionEid)){
 						log.info("SUCCESS removing user:"+userEid+" from Section:"+courseSectionEid);
@@ -137,6 +170,11 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 					instructors.remove(userEid);
 					enrollment.setOfficialInstructors(instructors);
 
+					if (!excludeSites.equals(null) && isSiteExcluded(section, excludeSites)) {
+						log.debug("exclude Section: "+section.getEid());
+						continue;
+					}
+
 					cmAdmin.updateEnrollmentSet(enrollment);
 					log.info("SUCCESS removing instructor:"+userEid+" from Section:"+section.getEid());
 				}
@@ -152,10 +190,40 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 
 
 
+	private boolean isSiteExcluded(Section section, List<String> excludeSites) {
+		String courseOfferingEid = section.getCourseOfferingEid();
+		CourseOffering co = cmService.getCourseOffering(courseOfferingEid);
+
+		return isSiteExcluded(co, excludeSites);
+	}
+
+
+
+
+	private boolean isSiteExcluded(CourseOffering courseOffering, List<String> excludeSites) {
+		AcademicSession session = courseOffering.getAcademicSession();
+		String sessionName = "";
+
+		Date startDate = session.getStartDate();
+		String year = startDate.toString().substring(0, 4);
+
+		if ((session.getEid().charAt(3)) == '1')
+		    sessionName = "H" + year;
+		else if ((session.getEid().charAt(3)) == '2')
+		    sessionName = "E" + year;
+		else if ((session.getEid().charAt(3)) == '3')
+		    sessionName = "A" + year;
+
+		return excludeSites.contains(courseOffering.getCanonicalCourseEid()) ||
+				excludeSites.contains(courseOffering.getCanonicalCourseEid() + "." + sessionName);
+	}
+
+
+
 
 	private Set<String> getUsersToRemove(){
 
-		return userRoleMap.keySet();
+		return removeUsersMap.keySet();
 	}
 
 
@@ -208,27 +276,37 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 
 				Element userElement = (Element)user;
 
-				NodeList idList = userElement.getElementsByTagName("id");
+				String id = null;
+				HashMap<String, String> parameters = new HashMap<String, String>();
 
+				NodeList idList = userElement.getElementsByTagName("id");
 				if(idList!=null && idList.getLength()!=0){
 
 					Element idElement = (Element)idList.item(0);
 
 					NodeList textIDList = idElement.getChildNodes();
-					String id = ((Node)textIDList.item(0)).getNodeValue().trim();
-
-					NodeList roleList = userElement.getElementsByTagName("role");
-
-					if(roleList!=null && roleList.getLength()!=0){
-
-						Element roleElement = (Element)roleList.item(0);
-
-						NodeList textRoleList = roleElement.getChildNodes();
-						String role = ((Node)textRoleList.item(0)).getNodeValue().trim();
-
-						userRoleMap.put(id, role);
-					}
+					id = ((Node)textIDList.item(0)).getNodeValue().trim();
 				}
+
+				NodeList roleList = userElement.getElementsByTagName("role");
+				if(roleList!=null && roleList.getLength()!=0){
+					Element roleElement = (Element)roleList.item(0);
+
+					NodeList textRoleList = roleElement.getChildNodes();
+					String role = ((Node)textRoleList.item(0)).getNodeValue().trim();
+					parameters.put("role", role);
+				}
+
+				NodeList excludeSitesList = userElement.getElementsByTagName("excludeSites");
+				if(excludeSitesList!=null && excludeSitesList.getLength()!=0){
+					Element excludeSitesElement = (Element)excludeSitesList.item(0);
+
+					NodeList textExcludeSitesList = excludeSitesElement.getChildNodes();
+					String excludeSites = ((Node)textExcludeSitesList.item(0)).getNodeValue().trim();
+					parameters.put("excludeSites", excludeSites);
+				}
+
+				removeUsersMap.put(id, parameters);
 			}
 
 		}//end for userlist
