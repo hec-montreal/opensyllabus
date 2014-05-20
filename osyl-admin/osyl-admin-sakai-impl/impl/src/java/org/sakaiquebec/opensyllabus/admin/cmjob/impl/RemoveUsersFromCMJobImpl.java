@@ -121,7 +121,7 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 					CourseOffering courseOffering = cmService.getCourseOffering(courseOfferingEid);
 					if (!excludeSites.equals(null) && isSiteExcluded(courseOffering, excludeSites)) {
 						log.debug("exclude CO: "+courseOfferingEid);
-						break;
+						continue;
 					}
 
 					if(cmAdmin.removeCourseOfferingMembership(userEid, courseOfferingEid)){
@@ -147,7 +147,7 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 					Section section = cmService.getSection(courseSectionEid);
 					if (!excludeSites.equals(null) && isSiteExcluded(section, excludeSites)) {
 						log.debug("exclude Section: "+courseSectionEid);
-						break;
+						continue;
 					}
 
 					if(cmAdmin.removeSectionMembership(userEid, courseSectionEid)){
