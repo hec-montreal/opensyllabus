@@ -90,15 +90,21 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 
 			HashMap<String, String> parameters = removeUsersMap.get(userEid);
 			String userRole = parameters.get("role");
-			List<String> excludeSites = Arrays.asList(parameters.get("excludeSites").split(","));
 
-			//trim the sites to exclude
-			for(int i=0; i < excludeSites.size(); i++) {
-				String s = excludeSites.get(i);
-				excludeSites.set(i, s.trim());
+			String excludeSitesString = parameters.get("excludeSites");
+			List<String> excludeSites = null;
+
+			if (excludeSitesString != null) {
+				excludeSites = Arrays.asList(excludeSitesString.split(","));
+
+				//trim the sites to exclude
+				for(int i=0; i < excludeSites.size(); i++) {
+					String s = excludeSites.get(i);
+					excludeSites.set(i, s.trim());
+				}
 			}
 
-			if (userRole.equals(null)) {
+			if (userRole == null) {
 				log.error("Role is a required parameter.");
 				continue;
 			}
@@ -119,7 +125,7 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 				if(userRole.equals(courseOfferingRole)){
 					// only try if the site should not be excluded
 					CourseOffering courseOffering = cmService.getCourseOffering(courseOfferingEid);
-					if (!excludeSites.equals(null) && isSiteExcluded(courseOffering, excludeSites)) {
+					if (excludeSites != null && isSiteExcluded(courseOffering, excludeSites)) {
 						log.debug("exclude CO: "+courseOfferingEid);
 						continue;
 					}
@@ -145,7 +151,7 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 				if(userRole.equals(courseSectionRole)){
 					// only try if the site should not be excluded
 					Section section = cmService.getSection(courseSectionEid);
-					if (!excludeSites.equals(null) && isSiteExcluded(section, excludeSites)) {
+					if (excludeSites != null && isSiteExcluded(section, excludeSites)) {
 						log.debug("exclude Section: "+courseSectionEid);
 						continue;
 					}
@@ -170,7 +176,7 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 					instructors.remove(userEid);
 					enrollment.setOfficialInstructors(instructors);
 
-					if (!excludeSites.equals(null) && isSiteExcluded(section, excludeSites)) {
+					if (excludeSites != null && isSiteExcluded(section, excludeSites)) {
 						log.debug("exclude Section: "+section.getEid());
 						continue;
 					}
