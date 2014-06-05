@@ -92,10 +92,10 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 			String userRole = parameters.get("role");
 
 			String excludeSitesString = parameters.get("excludeSites");
-			List<String> excludeSites = null;
+			List<String> excludeSites = new ArrayList<String>();
 
 			if (excludeSitesString != null) {
-				excludeSites = Arrays.asList(excludeSitesString.split(","));
+				excludeSites.addAll(Arrays.asList(excludeSitesString.split(",")));
 
 				//trim the sites to exclude
 				for(int i=0; i < excludeSites.size(); i++) {
@@ -308,8 +308,12 @@ public class RemoveUsersFromCMJobImpl extends OsylAbstractQuartzJobImpl  impleme
 					Element excludeSitesElement = (Element)excludeSitesList.item(0);
 
 					NodeList textExcludeSitesList = excludeSitesElement.getChildNodes();
-					String excludeSites = ((Node)textExcludeSitesList.item(0)).getNodeValue().trim();
-					parameters.put("excludeSites", excludeSites);
+					Node excludeSitesNode = (Node)textExcludeSitesList.item(0);
+					String excludeSites = null;
+					if (excludeSitesNode != null) {
+						excludeSites = excludeSitesNode.getNodeValue();
+					}
+					parameters.put("excludeSites", (excludeSites!=null) ? excludeSites.trim() : "");
 				}
 
 				removeUsersMap.put(id, parameters);
