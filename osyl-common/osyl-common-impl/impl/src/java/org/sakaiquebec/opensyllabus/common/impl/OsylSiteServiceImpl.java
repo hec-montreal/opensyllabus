@@ -745,6 +745,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    // we add the tools
 		    addHomePage(site, lang);
 		    log.info("Added home page");
+		    addTool(site, "sakai.schedule");
+		    log.info("Added agenda page");
 		    addTool(site, "sakai.announcements");
 		    log.info("Added announcement page");
 		    addTool(site, "sakai.opensyllabus.tool");
@@ -1441,14 +1443,21 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	synAnncCfg.save();
 
 	// 3nd tool
+	ToolConfiguration synCalCfg =
+			addTool(site, homePage, "sakai.summary.calendar");
+		synCalCfg.setLayoutHints("1,1");
+		synCalCfg.save();
+
+		// 4th tool
 	if (Locale.CANADA_FRENCH.toString().equals(locale)) {
 	    toolTitle = HEC_MONTREAL_RULES_TITLE_FR_CA;
 	} else {
 	    toolTitle = HEC_MONTREAL_RULES_TITLE_EN;
 	}
+
 	iframeCfg =
 		addTool(site, homePage, "sakai.rutgers.linktool", toolTitle);
-	iframeCfg.setLayoutHints("1,1");
+	iframeCfg.setLayoutHints("2,1");
 
 	iframeProps = iframeCfg.getPlacementConfig();
 	iframeProps.put("height", "400px");
