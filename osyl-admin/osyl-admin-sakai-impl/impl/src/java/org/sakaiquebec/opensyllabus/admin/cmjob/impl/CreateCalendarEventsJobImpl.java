@@ -40,6 +40,7 @@ import org.sakaiproject.calendar.api.CalendarEventEdit;
 import org.sakaiproject.calendar.api.CalendarService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
@@ -128,11 +129,15 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 					Section section = cmService.getSection(site.getProviderGroupId());
 	        		courseOffering = cmService.getCourseOffering(section.getCourseOfferingEid());
 
+				} catch (IdNotFoundException e) {
+					log.debug("Site " + siteId + " not associated to course management");
 				} catch (IdUnusedException e) {
     				log.debug("Site or Calendar for " + siteId + " does not exist");
-    			} catch (PermissionException e) {
+				} catch (PermissionException e) {
     				e.printStackTrace();
     				return;
+       			} catch (Exception e) {
+    				e.printStackTrace();
     			}
     		}
 
@@ -206,17 +211,21 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 					Section section = cmService.getSection(site.getProviderGroupId());
 	        		courseOffering = cmService.getCourseOffering(section.getCourseOfferingEid());
 
+				} catch (IdNotFoundException e) {
+					log.debug("Site " + siteId + " not associated to course management");
     			} catch (IdUnusedException e) {
     				log.debug("Site or Calendar for " + siteId + " does not exist.");
     			} catch (PermissionException e) {
     				e.printStackTrace();
     				return;
+    			} catch (Exception e) {
+    				e.printStackTrace();
     			}
     		}
 
     		if (courseOffering != null && calendarFound) {
 
-    			// don't bother adding the events if this is an MBA site (ZCII-1495)
+    			// don't bother modifying the events if this is an MBA site (ZCII-1495)
         		// and the event is not a final or mid-term (intratrimestriel) exam
         		if (!courseOffering.getAcademicCareer().equals(CAREER_MBA) ||
         				event.getExamType().equals(PSFT_EXAM_TYPE_INTRA) ||
