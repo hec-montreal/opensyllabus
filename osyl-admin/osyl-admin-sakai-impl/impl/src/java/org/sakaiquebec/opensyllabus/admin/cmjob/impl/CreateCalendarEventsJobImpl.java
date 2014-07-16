@@ -323,12 +323,18 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     private boolean updateCalendarEvent(Calendar calendar, String eventId, String state,
     		Date newStartTime, Date newEndTime, String newLocation, String newDescription)
     {
+    	if (eventId == null)
+    		return false;
+
     	CalendarEventEdit edit;
 
     	try {
     		edit = calendar.getEditEvent(eventId, CalendarService.EVENT_MODIFY_CALENDAR);
     	} catch (IdUnusedException e) {
-    		log.error("Event " + eventId + " does not exist");
+    		log.debug("Event " + eventId + " does not exist");
+    		return false;
+    	} catch (NullPointerException e) {
+    		log.debug("Event " + eventId + " does not exist");
     		return false;
     	} catch (Exception e) {
     		log.error("Error retrieving event " + eventId);
