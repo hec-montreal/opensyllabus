@@ -42,6 +42,7 @@ public class COStructureElementType {
     public static final String ASSESSMENT_INTRO_STRUCT = "AssessmentIntroStruct";
     public static final String ASSESSMENT_STRUCT = "AssessmentStruct";
     public static final String PLAGIARISM_STRUCT = "PlagiarismStruct";
+    public static final String CALCULATOR_STRUCT = "CalculatorStruct";
     public static final String PEDAGOGICAL_APPROACH_STRUCT = "PedagogicalApproachStruct";
     public static final String LEARNING_MATERIAL_STRUCT = "LearningMaterialStruct";
     public static final String PEDAGOGICAL_STRUCT = "PedagogicalStruct";
@@ -58,6 +59,7 @@ public class COStructureElementType {
     public static final String PURPOSEFUL_STUDIES_STRUCT = "PurposefulStudiesStruct";
     public static final String INDIVIDUAL_VALUATION_OF_STUDIES_STRUCT = "IndividualValuationOfStudiesStruct";
     public static final String NEW_PLAGIARISM_STRUCT = "NewPlagiarismStruct";
+    public static final String NEW_CALCULATOR_STRUCT = "NewCalculatorStruct";
     public static final String PEDAGOGIC_APPROACHES_STRUCT = "PedagogicApproachesStruct";
     public static final String PEDAGOGIC_RESOURCES_STRUCT = "PedagogicResourcesStruct";
     public static final String ORGANIZATION_OF_LESSON_HEADER_STRUCT = "OrganizationOfLessonHeaderStruct";

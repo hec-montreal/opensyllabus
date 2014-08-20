@@ -35,6 +35,10 @@ public class COContentRubric implements COModelInterface{
     public static final boolean TRACE = false;
 
     public static final String RUBRIC_TYPE_UNDEFINED = "undefined";
+    
+    public static final String RUBRIC_TYPE_PLAGIARISM = "plagiarism";
+    
+    public static final String RUBRIC_TYPE_CALCULATOR = "calculator";
 
     // TODO delete this hack as soon as possible
     public static final String RUBRIC_TYPE_NEWS = "news";

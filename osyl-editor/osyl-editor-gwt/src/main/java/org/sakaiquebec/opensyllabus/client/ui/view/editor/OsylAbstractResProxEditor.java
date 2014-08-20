@@ -468,8 +468,9 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	lb.addItem(getUiMessage("selectRubric"), undefinedRubricType);
 	for (int i = 0; i < choices.length; i++) {
 	    String rubricType = choices[i];
-	    if (!COContentRubric.RUBRIC_TYPE_UNDEFINED.equals(rubricType)) {
-			lb.addItem(getView().getCoMessages().getShortMessage(rubricType),
+	    if (!COContentRubric.RUBRIC_TYPE_UNDEFINED.equals(rubricType) && 
+	    		!COContentRubric.RUBRIC_TYPE_PLAGIARISM.equals(rubricType)) {
+			lb.addItem((getView().getCoMessages().getShortMessage(rubricType)),
 				rubricType);
 			if (rubricType.equalsIgnoreCase(resProx.getRubricType(propertyType))) {
 			lb.setItemSelected(i, true);

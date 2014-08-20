@@ -20,6 +20,7 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylEditableMouseOverListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
+import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
@@ -68,6 +69,8 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
     protected String propertyType;
     protected boolean viewFirstElement;
 
+    protected String rubricType;
+	
     /**
      * Constructor specifying the model to be displayed and edited by this
      * OsylAbstractView. The current {@link OsylController} must be provided.
@@ -148,7 +151,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 
     /**
      * ==================== COMMON METHODS =====================
-     */
+     */ 
 
     /**
      * Initializes the widgets. This method must absolutely be invoked before
@@ -158,14 +161,15 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 	// / The view extends Composite therefore it is absolutely necessary to
 	// call initWidget on our main widget
 	super.initWidget(getMainPanel());
-
+	
+	
 	// We add the editor and the button panel
 	if (!("false".equals(getModel()
 		.getProperty(COPropertiesType.VISIBILITY)) && getController()
 		.isReadOnly())) {
 	    getMainPanel().add(getEditor());
 	    getEditor().setWidth("100%");
-	    setStylePrimaryName("Osyl-UnitView-ResPanel");
+	    setStylePrimaryName("Osyl-UnitView-ResPanel ");
 	    if (viewFirstElement) {
 		this.addStyleName("Osyl-firstElementOfView");
 	    }
@@ -173,7 +177,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 		this.addStyleName("Osyl-UnitView-ResPanel-ReadOnly");
 	    }
 
-	    if (!getController().isReadOnly()) {
+	    if (!getController().isReadOnly() && !COContentRubric.RUBRIC_TYPE_PLAGIARISM.equals(rubricType)) {
 		getMainPanel().add(getButtonPanel());
 		getMainPanel().add(getUpAndDownPanel());
 

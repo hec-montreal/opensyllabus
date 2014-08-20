@@ -37,6 +37,7 @@ public class COUnitType {
     public static final String ASSESSMENT_INTRO_UNIT = "AssessmentIntroUnit";
     public final static String ASSESSMENT_UNIT = "AssessmentUnit";
     public final static String PLAGIARISM_UNIT = "PlagiarismUnit";
+    public final static String CALCULATOR_UNIT = "CalculatorUnit";
     public final static String PEDAGOGICAL_APPROACH_UNIT = "PedagogicalApproachUnit";
     public final static String LEARNING_MATERIAL_UNIT = "LearningMaterialUnit";
     public final static String PEDAGOGICAL_UNIT = "PedagogicalUnit";
@@ -56,6 +57,7 @@ public class COUnitType {
     public static final String INFORMATION_UNIT = "InformationUnit";
     public static final String MODALITY_OF_VALUATION_UNIT = "ModalityOfValuationUnit";
     public static final String NEW_PLAGIARISM_UNIT = "NewPlagiarismUnit";
+    public static final String NEW_CALCULATOR_UNIT = "NewCalculatorUnit";
     public static final String PEDAGOGIC_APPROACHES_UNIT = "PedagogicApproachesUnit";
     public static final String PEDAGOGIC_RESOURCES_UNIT = "PedagogicResourcesUnit";  
     public static final String PERIODE_UNIT = "PeriodeUnit";  
