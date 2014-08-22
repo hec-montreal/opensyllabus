@@ -26,7 +26,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
-
 /**
  * Class providing display and edition capabilities for Text resources.
  * 
@@ -35,8 +34,7 @@ import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
  */
 public class OsylResProxTextView extends OsylAbstractResProxView {
 
-	
-	/**
+    /**
      * Constructor specifying the model to display and edit as well as the
      * current {@link OsylController}.
      * 
@@ -50,21 +48,6 @@ public class OsylResProxTextView extends OsylAbstractResProxView {
 	initView();
     }
 
-    /**
-     * Constructor specifying the model to display and edit as well as the
-     * current {@link OsylController}.
-     * 
-     * @param model
-     * @param osylController
-     */
-    protected OsylResProxTextView(COModelInterface model,
-	    OsylController osylController, String rubricType) {
-	super(model, osylController);
-	setEditor(new OsylRichTextEditor(this));
-	this.rubricType = rubricType;
-	initView();
-    }
-    
     /**
      * ===================== OVERRIDEN METHODS ===================== See
      * superclass for javadoc!
@@ -84,7 +67,7 @@ public class OsylResProxTextView extends OsylAbstractResProxView {
      * Returns the text value of current model.
      */
     public String getTextFromModel() {
-	return (getModel().getResource().getProperty(COPropertiesType.TEXT));
+	return getModel().getResource().getProperty(COPropertiesType.TEXT);
     }
 
     @Override

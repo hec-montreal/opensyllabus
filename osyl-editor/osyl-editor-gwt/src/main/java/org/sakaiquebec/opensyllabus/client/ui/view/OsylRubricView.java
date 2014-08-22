@@ -135,7 +135,7 @@ public class OsylRubricView extends OsylViewableComposite {
 	    COContentResource resource =
 		    (COContentResource) resProx.getResource();
 	    if (resource.getType().equals(COContentResourceType.TEXT)) {
-		oe = new OsylResProxTextView(resProx, getController(), getModel().getType());
+		oe = new OsylResProxTextView(resProx, getController());
 	    } else if (resource.getType()
 		    .equals(COContentResourceType.DOCUMENT)) {
 		oe = new OsylResProxDocumentView(resProx, getController());

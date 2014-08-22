@@ -983,7 +983,7 @@ public class COModeled extends COSerialized {
      */
     private void createChildElement(Document document, Element parent,
 	    COContentResourceProxy child, boolean saveParentInfos) {
- 	if (child.isEditable() || (!child.isEditable())) {
+	if (child.isEditable() || (!child.isEditable() && saveParentInfos)) {
 	    Element coContentResourceProxyElem =
 		    document.createElement(CO_RES_PROXY_NODE_NAME);
 
