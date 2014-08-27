@@ -25,9 +25,13 @@ import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTML;
+
 
 /**
  * This view is used to display a list of COContentUnit, for instance a list of
@@ -74,10 +78,46 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 	getMainPanel().setStylePrimaryName("Osyl-WorkspaceView-MainPanel");
 	refreshView();
 	initWidget(getMainPanel());
-    }
+  }
 
     public void refreshView() {
 	getMainPanel().clear();
+	
+	//**************Add plagiarism and calculator text
+	
+	if ((getModel().getType()).equals(COStructureElementType.ASSESSMENT_STRUCT)){
+		VerticalPanel rulesPanel = new VerticalPanel();
+		//rulesPanel.setWidth("100%");
+		rulesPanel.setStylePrimaryName("Osyl-UnitView-ResPanel");
+		
+		Label plagiarism_label, calculator_label;
+		HTML plagiarism_content,  calculator_content;
+		
+		plagiarism_label = new Label(getCoMessages().getMessage("plagiarism"));
+		plagiarism_label.setStylePrimaryName("Osyl-UnitView-Title Osyl-Title3 Osyl-RubricTitle");
+		
+		plagiarism_content = new HTML(getCoMessages().getMessage("plagiarism_content"));
+		plagiarism_content.setStylePrimaryName("Osyl-ASMStructure-description");
+		
+		calculator_label = new Label(getCoMessages().getMessage("calculator_label"));
+		calculator_label.setStylePrimaryName("Osyl-UnitView-Title Osyl-Title3 Osyl-RubricTitle");
+		
+		calculator_content = new HTML(getCoMessages().getMessage("calculator_content"));
+		calculator_content.setStylePrimaryName("Osyl-ASMStructure-description");
+		
+		rulesPanel.add(plagiarism_label);
+		rulesPanel.add(plagiarism_content);
+		rulesPanel.add(calculator_label);
+		rulesPanel.add(calculator_content);
+		
+		
+		
+		getMainPanel().add(rulesPanel);
+	
+	}
+	
+	//***********End Add plagiarism and calculator text
+	
 	editableTitleLabel =
 		new OsylCOStructureLabelView(getModel(), getController(),
 			false, OsylStyleLevelChooser.getLevelStyle(getModel()),isViewFirstElement());
