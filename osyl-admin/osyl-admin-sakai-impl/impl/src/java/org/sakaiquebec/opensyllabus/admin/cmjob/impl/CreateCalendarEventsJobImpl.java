@@ -45,7 +45,7 @@ import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
-import org.sakaiproject.site.cover.SiteService;
+
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.util.ResourceLoader;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CreateCalendarEventsJob;
@@ -367,7 +367,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
     private Calendar getCalendar(String siteId) throws IdUnusedException, PermissionException {
     	if (siteService.siteExists(siteId)) {
-    		String calRef = calendarService.calendarReference(siteId, SiteService.MAIN_CONTAINER);
+    		String calRef = calendarService.calendarReference(siteId, siteService.MAIN_CONTAINER);
     		return calendarService.getCalendar(calRef);
     	} else {
     		throw new IdUnusedException("Site does not exist");
@@ -387,17 +387,50 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     }
 
 	private String getEventTitle(String siteId, String type, Integer seq_num) {
+		
+		Site site = null;
+		String courseSiteTittle = "";
+		
+		try{
+			site = siteService.getSite(siteId);
+			courseSiteTittle = site.getProperties().getPropertyFormatted("title");
+		}catch (IdUnusedException e){
+			log.error("The site " + siteId + "does not exist");
+		}
+		
 
-		if (type.equals(" "))
-			return rb.getFormattedMessage("calendar.event-title.session", new Object[] { seq_num, siteId });
-		else if (type.equals(PSFT_EXAM_TYPE_INTRA))
-			return rb.getFormattedMessage("calendar.event-title.intra", new Object[] { siteId });
-		else if (type.equals(PSFT_EXAM_TYPE_FINAL))
-			return rb.getFormattedMessage("calendar.event-title.final", new Object[] { siteId });
-		else if (type.equals(PSFT_EXAM_TYPE_TEST) || type.equals(PSFT_EXAM_TYPE_QUIZ))
-			return rb.getFormattedMessage("calendar.event-title.test", new Object[] { siteId });
-		else
-			return rb.getFormattedMessage("calendar.event-title.other", new Object[] { type, siteId });
+		if (type.equals(" ")){
+			if (courseSiteTittle != "")
+				return (courseSiteTittle + " ( " + rb.getFormattedMessage("calendar.event-title.session", new Object[] { seq_num, siteId }) + " )");
+			else
+				return rb.getFormattedMessage("calendar.event-title.session", new Object[] { seq_num, siteId });
+		}
+		else if (type.equals(PSFT_EXAM_TYPE_INTRA)){
+			if (courseSiteTittle != "")
+				return (courseSiteTittle + " ( " + rb.getFormattedMessage("calendar.event-title.intra", new Object[] { siteId }) + " )");
+			else
+				return rb.getFormattedMessage("calendar.event-title.intra", new Object[] { siteId });
+		}
+		else if (type.equals(PSFT_EXAM_TYPE_FINAL)){
+			if (courseSiteTittle != "")
+				return (courseSiteTittle + " ( " + rb.getFormattedMessage("calendar.event-title.final", new Object[] { siteId }) + " )");
+			else
+				return rb.getFormattedMessage("calendar.event-title.final", new Object[] { siteId });
+		}
+		else if (type.equals(PSFT_EXAM_TYPE_TEST) || type.equals(PSFT_EXAM_TYPE_QUIZ)){
+			if (courseSiteTittle != "")
+				return (courseSiteTittle + " ( " + rb.getFormattedMessage("calendar.event-title.test", new Object[] { siteId }) + " )");
+			else
+				rb.getFormattedMessage("calendar.event-title.test", new Object[] { siteId });
+		}
+	
+		else{
+			if (courseSiteTittle != "")
+				return (courseSiteTittle + " ( " + rb.getFormattedMessage("calendar.event-title.other", new Object[] { type, siteId }) + " )");
+		}
+
+		return rb.getFormattedMessage("calendar.event-title.other", new Object[] { type, siteId });
+	
 	}
 
 	private String getType(String exam_type) {
