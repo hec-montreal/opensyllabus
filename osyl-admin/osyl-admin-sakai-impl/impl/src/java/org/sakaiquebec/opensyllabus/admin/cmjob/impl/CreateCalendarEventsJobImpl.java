@@ -401,32 +401,32 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
 		if (type.equals(" ")){
 			if (courseSiteTittle != "")
-				return (courseSiteTittle + " ( " + rb.getFormattedMessage("calendar.event-title.session", new Object[] { seq_num, siteId }) + " )");
+				return (courseSiteTittle + " (" + rb.getFormattedMessage("calendar.event-title.session", new Object[] { seq_num, siteId }) + ")");
 			else
 				return rb.getFormattedMessage("calendar.event-title.session", new Object[] { seq_num, siteId });
 		}
 		else if (type.equals(PSFT_EXAM_TYPE_INTRA)){
 			if (courseSiteTittle != "")
-				return (courseSiteTittle + " ( " + rb.getFormattedMessage("calendar.event-title.intra", new Object[] { siteId }) + " )");
+				return (courseSiteTittle + " (" + rb.getFormattedMessage("calendar.event-title.intra", new Object[] { siteId }) + ")");
 			else
 				return rb.getFormattedMessage("calendar.event-title.intra", new Object[] { siteId });
 		}
 		else if (type.equals(PSFT_EXAM_TYPE_FINAL)){
 			if (courseSiteTittle != "")
-				return (courseSiteTittle + " ( " + rb.getFormattedMessage("calendar.event-title.final", new Object[] { siteId }) + " )");
+				return (courseSiteTittle + " (" + rb.getFormattedMessage("calendar.event-title.final", new Object[] { siteId }) + ")");
 			else
 				return rb.getFormattedMessage("calendar.event-title.final", new Object[] { siteId });
 		}
 		else if (type.equals(PSFT_EXAM_TYPE_TEST) || type.equals(PSFT_EXAM_TYPE_QUIZ)){
 			if (courseSiteTittle != "")
-				return (courseSiteTittle + " ( " + rb.getFormattedMessage("calendar.event-title.test", new Object[] { siteId }) + " )");
+				return (courseSiteTittle + " (" + rb.getFormattedMessage("calendar.event-title.test", new Object[] { siteId }) + ")");
 			else
 				rb.getFormattedMessage("calendar.event-title.test", new Object[] { siteId });
 		}
 	
 		else{
 			if (courseSiteTittle != "")
-				return (courseSiteTittle + " ( " + rb.getFormattedMessage("calendar.event-title.other", new Object[] { type, siteId }) + " )");
+				return (courseSiteTittle + " (" + rb.getFormattedMessage("calendar.event-title.other", new Object[] { type, siteId }) + ")");
 		}
 
 		return rb.getFormattedMessage("calendar.event-title.other", new Object[] { type, siteId });
