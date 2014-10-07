@@ -39,7 +39,9 @@ import org.sakaiproject.email.api.ContentType;
 import org.sakaiproject.email.api.EmailAddress;
 import org.sakaiproject.email.api.EmailAddress.RecipientType;
 import org.sakaiproject.email.api.EmailMessage;
+import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.SitePage;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
 import org.sakaiproject.component.cover.ServerConfigurationService;
@@ -52,6 +54,95 @@ import org.sakaiproject.component.cover.ServerConfigurationService;
 public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	OfficialSitesJob {
 
+    private static Log log = LogFactory.getLog(OfficialSitesJobImpl.class);
+
+    	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+    	
+    		log.info("start OfficialSitesJob");
+    		
+    		loginToSakai();
+
+    		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
+
+    		List<AcademicSession> allSessions = cmService.getAcademicSessions();
+
+    		List<String> courses = adminConfigService.getCourses();
+
+    		log.info("Retrieve course offerings");
+    		// Associated to canonical courses
+    		if (courses != null && courses.size() > 0) {
+    			log.info("use defined courses: " + courses.toString());
+    			String coId = null;
+    			for (String courseId : courses) {
+    				for (AcademicSession session : allSessions) {
+    					coId = courseId + session.getEid();
+    					if (cmService.isCourseOfferingDefined(coId))
+    						courseOfferings.add(cmService.getCourseOffering(coId));
+    				}
+
+    			}
+    		} else {
+    			// Retrieve all the course sets
+    			Set<CourseSet> allCourseSets = cmService.getCourseSets();
+    			//Set<CourseOffering> courseOfferings = null;
+
+    			for (CourseSet courseSet : allCourseSets) {
+    				for (AcademicSession session : allSessions) {
+    					courseOfferings.addAll(
+    							cmService.findCourseOfferings(courseSet.getEid(),
+    									session.getEid()));
+    				}
+    			}
+    		}
+
+    		log.info("found " + courseOfferings.size() + " course offerings");
+
+    		for (CourseOffering co : courseOfferings) {
+    			String siteId = getSiteName(co);
+    			Set<Section> sections = cmService.getSections(co.getEid());
+
+    			if (siteService.siteExists(siteId)) {
+    				log.info(siteId + " already exists");
+    			} else if (sections == null || sections.size() < 1) {
+    				log.info(siteId + " has no sections");    				
+    			} else {
+    				log.info(siteId + " doesn't exists, create it and associate to CM CourseOffering");
+
+    				try {
+    					Site site = siteService.addSite(siteId, "course");
+    					site.setTitle(co.getTitle());
+    					site.setPublished(true);
+    					site.setJoinable(false);
+
+    					ResourcePropertiesEdit rp = site.getPropertiesEdit();
+    					rp.addProperty("term", co.getAcademicSession().getTitle());
+
+    					String providerGroupId = "";
+    					for (Section section : sections) {
+    						providerGroupId += "+" + section.getEid();
+    				    }    			
+    					site.setProviderGroupId(providerGroupId);
+
+    					//add site info
+    					SitePage page = site.addPage();
+    					page.setTitle(toolManager.getTool("sakai.siteinfo").getTitle());
+    					page.setLayout(SitePage.LAYOUT_SINGLE_COL);
+    					page.addTool("sakai.siteinfo");
+    					
+    					siteService.save(site);
+    				} catch (Exception e) {
+    					e.printStackTrace();
+    				}
+
+    				break;
+    			}
+    		}
+    		logoutFromSakai();
+    		
+    		log.info("end OfficialSitesJob");
+    	}
+
+ /*	
     private Set<CourseSet> allCourseSets = null;
 
     private Set<CourseOffering> courseOffs = null;
@@ -286,40 +377,44 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	}
 	logoutFromSakai();
     } // execute
+    	private boolean createSite(CourseOffering offering) {
+    		String siteName = getSiteName(offering);
+    		String lang;
+    		boolean justCreated = false;
+//    		if (offering.getLang() == null)
+    			lang = TEMPORARY_LANG;
+//  		else
 
-    private boolean createSite(Section section) {
-	String siteName = getSiteName(section);
-	String lang;
-	boolean justCreated = false;
-	if (section.getLang() == null)
-	    lang = TEMPORARY_LANG;
-	else
-	    lang = section.getLang();
-	// 2 try/catch distinct to make the difference between
-	// a creation problem and an association problem
-	try {
-	    if (!osylSiteService.siteExists(siteName)) {
-		osylSiteService.createSite(siteName, OSYL_CO_CONFIG, lang);
-		justCreated = true;
-	    }
+//    			lang = section.getLang();
 
-	} catch (Exception e) {
-	    log.error("Could not create site " + siteName, e);
-	}
-	try {
-	    if (justCreated) {
-		osylManagerService.associateToCM(section.getEid(), siteName);
-		log.info("The site " + siteName
-			+ " has been created and associated to the section "
-			+ section.getEid() + " in the Course Management");
-	    }
-	    return true;
-	} catch (Exception e) {
-	    log.error("Could not associate site " + siteName + " with CM", e);
-	}
-	log.debug("The site " + siteName + " has not been created");
-	return false;
-    }
+
+    			
+    		// 2 try/catch distinct to make the difference between
+    		// a creation problem and an association problem
+    		try {
+    			if (!osylSiteService.siteExists(siteName)) {
+    				osylSiteService.createSite(siteName, OSYL_CO_CONFIG, lang);
+    				justCreated = true;
+    			}
+
+    		} catch (Exception e) {
+    			log.error("Could not create site " + siteName, e);
+    		}
+    		try {
+    			if (justCreated) {
+    				osylManagerService.associateToCM(section.getEid(), siteName);
+    				log.info("The site " + siteName
+    						+ " has been created and associated to the section "
+    						+ section.getEid() + " in the Course Management");
+    			}
+    			return true;
+    		} catch (Exception e) {
+    			log.error("Could not associate site " + siteName + " with CM", e);
+    		}
+    		log.debug("The site " + siteName + " has not been created");
+    		return false;
+    	}
+    
 
     private boolean hasSharable(Set<Section> sections) {
 	int nbSections = 0;
@@ -414,176 +509,104 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	return sessions;
     }
+*/
+ 
+    	private String getSessionName(AcademicSession session) {
+    		String sessionName = null;
+    		String sessionId = session.getEid();
+    		Date startDate = session.getStartDate();
+    		String year = startDate.toString().substring(0, 4);
 
-    private String getSessionName(AcademicSession session) {
-	String sessionName = null;
-	String sessionId = session.getEid();
-	Date startDate = session.getStartDate();
-	String year = startDate.toString().substring(0, 4);
+    		if ((sessionId.charAt(3)) == '1')
+    			sessionName = WINTER + year;
+    		if ((sessionId.charAt(3)) == '2')
+    			sessionName = SUMMER + year;
+    		if ((sessionId.charAt(3)) == '3')
+    			sessionName = FALL + year;
 
-	if ((sessionId.charAt(3)) == '1')
-	    sessionName = WINTER + year;
-	if ((sessionId.charAt(3)) == '2')
-	    sessionName = SUMMER + year;
-	if ((sessionId.charAt(3)) == '3')
-	    sessionName = FALL + year;
+    		return sessionName;
+    	}
+ 
+    private String getSiteName(CourseOffering offering) {
+    	String siteName = null;
+    	String courseOffId = offering.getEid();
+    	String canCourseId = (offering.getCanonicalCourseEid()).trim();
+    	AcademicSession session = offering.getAcademicSession();
+    	String sessionId = session.getEid();
 
-	return sessionName;
-    }
+    	String courseId = null;
+    	String courseIdFront = null;
+    	String courseIdMiddle = null;
+    	String courseIdBack = null;
 
-    private String getSiteName(Section section) {
-	String siteName = null;
-	String sectionId = section.getEid();
-	String courseOffId = section.getCourseOfferingEid();
-	CourseOffering courseOff = cmService.getCourseOffering(courseOffId);
-	String canCourseId = (courseOff.getCanonicalCourseEid()).trim();
-	AcademicSession session = courseOff.getAcademicSession();
-	String sessionId = session.getEid();
+    	String sessionTitle = null;
+    	String periode = null;
 
-	String courseId = null;
-	String courseIdFront = null;
-	String courseIdMiddle = null;
-	String courseIdBack = null;
+    	if (canCourseId.length() == 7) {
+    		courseIdFront = canCourseId.substring(0, 2);
+    		courseIdMiddle = canCourseId.substring(2, 5);
+    		courseIdBack = canCourseId.substring(5);
+    		courseId =
+    				courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
+    	} else if (canCourseId.length() == 6) {
+    		courseIdFront = canCourseId.substring(0, 1);
+    		courseIdMiddle = canCourseId.substring(1, 4);
+    		courseIdBack = canCourseId.substring(4);
+    		courseId =
+    				courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
+    	} else {
+    		courseId = canCourseId;
+    	}
 
-	String sessionTitle = null;
-	String periode = null;
-	String groupe = null;
+    	if (canCourseId.matches(".*[^0-9].*")) {
+    		if (canCourseId.endsWith("A") || canCourseId.endsWith("E")
+    				|| canCourseId.endsWith("R")) {
+    			if (canCourseId.length() == 8) {
+    				courseIdFront = canCourseId.substring(0, 2);
+    				courseIdMiddle = canCourseId.substring(2, 5);
+    				courseIdBack = canCourseId.substring(5);
+    				courseId =
+    						courseIdFront + "-" + courseIdMiddle + "-"
+    								+ courseIdBack;
 
-	if (canCourseId.length() == 7) {
-	    courseIdFront = canCourseId.substring(0, 2);
-	    courseIdMiddle = canCourseId.substring(2, 5);
-	    courseIdBack = canCourseId.substring(5);
-	    courseId =
-		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-	} else if (canCourseId.length() == 6) {
-	    courseIdFront = canCourseId.substring(0, 1);
-	    courseIdMiddle = canCourseId.substring(1, 4);
-	    courseIdBack = canCourseId.substring(4);
-	    courseId =
-		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-	} else {
-	    courseId = canCourseId;
-	}
+    			}
+    			if (canCourseId.length() == 7) {
+    				courseIdFront = canCourseId.substring(0, 1);
+    				courseIdMiddle = canCourseId.substring(1, 4);
+    				courseIdBack = canCourseId.substring(4);
+    				courseId =
+    						courseIdFront + "-" + courseIdMiddle + "-"
+    								+ courseIdBack;
 
-	if (canCourseId.matches(".*[^0-9].*")) {
-	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")
-		    || canCourseId.endsWith("R")) {
-		if (canCourseId.length() == 8) {
-		    courseIdFront = canCourseId.substring(0, 2);
-		    courseIdMiddle = canCourseId.substring(2, 5);
-		    courseIdBack = canCourseId.substring(5);
-		    courseId =
-			    courseIdFront + "-" + courseIdMiddle + "-"
-				    + courseIdBack;
+    			}
+    		} else
+    			courseId = canCourseId;
+    	}
+    	sessionTitle = getSessionName(session);
 
-		}
-		if (canCourseId.length() == 7) {
-		    courseIdFront = canCourseId.substring(0, 1);
-		    courseIdMiddle = canCourseId.substring(1, 4);
-		    courseIdBack = canCourseId.substring(4);
-		    courseId =
-			    courseIdFront + "-" + courseIdMiddle + "-"
-				    + courseIdBack;
+    	if (sessionId.matches(".*[pP].*")) {
+    		periode = sessionId.substring(sessionId.length() - 2);
+    	}
 
-		}
-	    } else
-		courseId = canCourseId;
-	}
-	sessionTitle = getSessionName(session);
+    	if (periode == null)
+    		siteName = courseId + "." + sessionTitle;
+    	else
+    		siteName =
+    		courseId + "." + sessionTitle + "." + periode;
 
-	if (sessionId.matches(".*[pP].*")) {
-	    periode = sessionId.substring(sessionId.length() - 2);
-	}
-
-	groupe = sectionId.substring(courseOffId.length());
-
-	if (periode == null)
-	    siteName = courseId + "." + sessionTitle + "." + groupe;
-	else
-	    siteName =
-		    courseId + "." + sessionTitle + "." + periode + "."
-			    + groupe;
-
-	return siteName;
-    }
-
-    private String getSharableSiteName(CourseOffering courseOff) {
-	String siteName = null;
-	String canCourseId = (courseOff.getCanonicalCourseEid()).trim();
-	AcademicSession session = courseOff.getAcademicSession();
-	String sessionId = session.getEid();
-
-	String courseId = null;
-	String courseIdFront = null;
-	String courseIdMiddle = null;
-	String courseIdBack = null;
-
-	String sessionTitle = null;
-	String periode = null;
-
-	if (canCourseId.length() == 7) {
-	    courseIdFront = canCourseId.substring(0, 2);
-	    courseIdMiddle = canCourseId.substring(2, 5);
-	    courseIdBack = canCourseId.substring(5);
-	    courseId =
-		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-	} else if (canCourseId.length() == 6) {
-	    courseIdFront = canCourseId.substring(0, 1);
-	    courseIdMiddle = canCourseId.substring(1, 4);
-	    courseIdBack = canCourseId.substring(4);
-	    courseId =
-		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-	} else {
-	    courseId = canCourseId;
-	}
-
-	if (canCourseId.matches(".*[^0-9].*")) {
-	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")) {
-		if (canCourseId.length() == 8) {
-		    courseIdFront = canCourseId.substring(0, 2);
-		    courseIdMiddle = canCourseId.substring(2, 5);
-		    courseIdBack = canCourseId.substring(5);
-		    courseId =
-			    courseIdFront + "-" + courseIdMiddle + "-"
-				    + courseIdBack;
-
-		}
-		if (canCourseId.length() == 7) {
-		    courseIdFront = canCourseId.substring(0, 1);
-		    courseIdMiddle = canCourseId.substring(1, 4);
-		    courseIdBack = canCourseId.substring(4);
-		    courseId =
-			    courseIdFront + "-" + courseIdMiddle + "-"
-				    + courseIdBack;
-
-		}
-	    } else
-		courseId = canCourseId;
-	}
-
-	sessionTitle = getSessionName(session);
-
-	if (sessionId.matches(".*[pP].*")) {
-	    periode = sessionId.substring(sessionId.length() - 2);
-	}
-
-	if (periode == null)
-	    siteName = courseId + "." + sessionTitle;
-	else
-	    siteName = courseId + "." + sessionTitle + "." + periode;
-
-	return siteName;
+    	return siteName;
     }
 
     /**
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	super.loginToSakai("OfficialSitesJob");
+    	super.loginToSakai("OfficialSitesJob");
     }
 
     private String getZoneCours2EMail(){
-	return ServerConfigurationService.getString("mail.zc2");
+    	return ServerConfigurationService.getString("mail.zc2");
     }
+
 
 }
