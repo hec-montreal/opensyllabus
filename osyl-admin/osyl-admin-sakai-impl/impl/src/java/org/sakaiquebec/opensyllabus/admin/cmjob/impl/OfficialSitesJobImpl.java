@@ -119,9 +119,13 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 
     					String providerGroupId = "";
     					for (Section section : sections) {
-    						providerGroupId += "+" + section.getEid();
-    				    }    			
-    					site.setProviderGroupId(providerGroupId);
+    						if (providerGroupId.length() > 0)
+    							providerGroupId += "+";
+    						providerGroupId += section.getEid();
+    				    }    		
+    					
+    					if (providerGroupId.length() > 0) 
+    						site.setProviderGroupId(providerGroupId);
 
     					//add site info
     					SitePage page = site.addPage();
