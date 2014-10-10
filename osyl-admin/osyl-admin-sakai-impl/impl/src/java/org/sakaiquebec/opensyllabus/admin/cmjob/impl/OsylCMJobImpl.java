@@ -174,6 +174,10 @@ OsylCMJob {
 	 * Any secretary currently registered as member of a site in the system.
 	 */
 	private HashMap<String, Membership> actualSecretaryMembership;
+	
+	private Date actualStartDate = null;
+	
+	private Date actualEndIntervalDate = null;
 
 	/**
 	 * Course event synchro job (injected by spring)
@@ -970,14 +974,28 @@ OsylCMJob {
 		Iterator<DetailSessionsMapEntry> sessions =
 				detailSessionMap.values().iterator();
 
-		while (sessions.hasNext()) {
-			sessionEntry = sessions.next();
-			sessionId = sessionEntry.getUniqueKey();
-			if (cmService.isAcademicSessionDefined(sessionId)) {
-				academicSession = cmService.getAcademicSession(sessionId);
-				academicSessions.add(academicSession);
+		try{
+			while (sessions.hasNext()) {
+				sessionEntry = sessions.next();
+				sessionId = sessionEntry.getUniqueKey();
+				if (actualStartDate == null)
+	    		    actualStartDate =
+	    			    DateFormat.getDateInstance().parse(
+	    				    sessionEntry.getBeginDate());
+	    		if (cmService.isAcademicSessionDefined(sessionId)) {
+	    		    academicSession = cmService.getAcademicSession(sessionId);
+	    		    academicSessions.add(academicSession);
+	    		}
+	    
+	    		if (!sessions.hasNext())
+	    		    actualEndIntervalDate =
+	    			    DateFormat.getDateInstance().parse(
+	    				    sessionEntry.getEndDate());
+	    		
 			}
-		}
+      	} catch (ParseException e) {
+    	    e.printStackTrace();
+    	}
 
 		// Retrieve the course offerings we will update
 		// Retrieve the students (enrollment ) we will update
