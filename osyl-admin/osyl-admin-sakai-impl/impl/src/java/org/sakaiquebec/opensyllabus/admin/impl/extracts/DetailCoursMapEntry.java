@@ -115,6 +115,12 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     public void setCoordonnateur(ProfCoursMapEntry coordonnateur) {
 	this.coordonnateur = coordonnateur;
     }
+    
+    public boolean hasCoordonnateur (){
+	if (coordonnateur == null)
+	    return false;
+	return true;
+    }
 
     public String getUniqueKey() {
 	return getUniqueKey(getCatalogNbr(), getStrmId(), getClassSection());

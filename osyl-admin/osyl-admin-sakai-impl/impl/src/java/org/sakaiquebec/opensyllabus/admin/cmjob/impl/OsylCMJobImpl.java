@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,15 +39,12 @@ import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CourseEventSynchroJob;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailChargeFormationMap;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailChargeFormationMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailCoursMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailCoursMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailSessionsMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailSessionsMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.EtudiantCoursMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.EtudiantCoursMapEntry;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericDetailChargeFormationMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericDetailCoursMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericDetailSessionsMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericEtudiantCoursMapFactory;
@@ -132,6 +128,13 @@ OsylCMJob {
 	 * Map used to store information about the departments.
 	 */
 	private ServiceEnseignementMap servEnsMap = null;
+	
+	
+	/**
+	 * Map used to store information about the requirements associated to a course
+	 */
+	private RequirementsCoursMap requirementsCoursMap = null;
+	
 
 	/**
 	 * Map used to store information about the programs
@@ -143,12 +146,6 @@ OsylCMJob {
 	 */
 	private GenericExamensMapFactory examenMap = null;
 
-	/**
-	 * Map used to store information about the charge de formation
-	 */
-	private DetailChargeFormationMap chargeFormationMap = null;
-
-	private RequirementsCoursMap requirementsCoursMap;
 
 	/**
 	 * Students currently registered as enrolled in the system
@@ -174,6 +171,10 @@ OsylCMJob {
 	 * Any secretary currently registered as member of a site in the system.
 	 */
 	private HashMap<String, Membership> actualSecretaryMembership;
+	
+	private Date actualStartDate = null;
+	
+	private Date actualEndIntervalDate = null;
 
 	/**
 	 * Course event synchro job (injected by spring)
@@ -239,74 +240,23 @@ OsylCMJob {
 					log.info("Instructors for " + detailsCours.getUniqueKey()
 							+ ": " + instructors.toString());
 
-					if (detailsCours.getCoordonnateur() == null) {
-						// We don't have a coordinator: not expected!
-						log.warn("The course " + enrollmentSetId
-								+ " does not have a coordinator");
-						// TODO: send mail also
-					} else {
-						coordinator = detailsCours.getCoordonnateur().getEmplId();
-						// Add coordinator to course offering for CERTIFICAT
-						if (detailsCours.isInCertificat()
-								|| detailsCours.isQualiteComm()) {
-
-							courseOfferingId = getCourseOfferingId(detailsCours);
-							cmAdmin.addOrUpdateCourseOfferingMembership(
-									coordinator, COORDONNATEUR_ROLE,
-									courseOfferingId, ACTIVE_STATUS);
-							actualCoordinatorMemberships.remove(coordinator
-									+ courseOfferingId);
-							log.info("Coordinators for "
-									+ detailsCours.getUniqueKey() + ": "
-									+ coordinator);
-						} else {
-							// Add coordinator to sharable site for other courses
-							enrollmentSetId =
-									getCourseOfferingId(detailsCours)
-									+ SHARABLE_SECTION;
-							cmAdmin.addOrUpdateSectionMembership(coordinator,
-									COORDONNATEUR_ROLE, enrollmentSetId,
-									ACTIVE_STATUS);
-							actualCoordinatorMemberships.remove(coordinator
-									+ enrollmentSetId);
-							log.info("Coordinators for "
-									+ detailsCours.getUniqueKey() + ": "
-									+ coordinator);
-
-						}
-					}
-				}
+                    		    if (detailsCours.hasCoordonnateur()) {
+                    			coordinator =
+                    				detailsCours.getCoordonnateur().getEmplId();
+                    			courseOfferingId = getCourseOfferingId(detailsCours);
+                    			cmAdmin.addOrUpdateCourseOfferingMembership(
+                    				coordinator, COORDONNATEUR_ROLE,
+                    				courseOfferingId, ACTIVE_STATUS);
+                    			if (actualCoordinatorMemberships.containsValue(coordinator+courseOfferingId ))
+                    			    actualCoordinatorMemberships.remove(coordinator
+                    				    + courseOfferingId);
+                    		    }
+                    		}
+                    
 			}
 		}
 	}
 
-	/* load the 'charge de formation' and assigns them to their courses */
-	private void assignChargeFormation() {
-		DetailChargeFormationMapEntry chargeFormationEntry = null;
-		String matricule = "";
-		Vector<DetailCoursMapEntry> cours;
-		Iterator<DetailChargeFormationMapEntry> chargeFormation =
-				chargeFormationMap.values().iterator();
-		String courseOfferingId = null;
-
-		while (chargeFormation.hasNext()) {
-			chargeFormationEntry =
-					(DetailChargeFormationMapEntry) chargeFormation.next();
-			matricule = chargeFormationEntry.getEmplId();
-			cours = chargeFormationEntry.getCours();
-			for (DetailCoursMapEntry detailsCours : cours) {
-
-				courseOfferingId = getCourseOfferingId(detailsCours);
-				cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
-						CHARGE_FORMATION_ROLE, courseOfferingId, ACTIVE_STATUS);
-				actualCoordinatorMemberships.remove(matricule + courseOfferingId);
-				log.info("Charge de Formation for "
-						+ detailsCours.getUniqueKey() + ": " + matricule);
-
-			}
-
-		}
-	}
 
 	/** {@inheritDoc} */
 	public void loadCourses() {
@@ -420,12 +370,15 @@ OsylCMJob {
 						}
 
 						// Add section for sharable site
-						createOrUpdateSpecialCourseSection(coursEntry);
+						//@deprecated
+						//createOrUpdateSpecialCourseSection(coursEntry);
 
 						// create course section
 						category = coursEntry.getAcadOrg();
 						courseSectionId = getCourseSectionId(coursEntry);
 						Section newSection = null;
+						// We add section to title
+						title = title + " (" + coursEntry.getClassSection() + ")";
 						if (!cmService.isSectionDefined(courseSectionId)) {
 
 							newSection =
@@ -456,9 +409,10 @@ OsylCMJob {
 
 							if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
 								try {
+								   //////////Awa: change title to the section
 									enrollmentSet =
 											cmAdmin.createEnrollmentSet(
-													enrollmentSetId, title,
+													enrollmentSetId, coursEntry.getClassSection(),
 													description, courseSetId,
 													CREDITS, courseOfferingId,
 													new HashSet<String>());
@@ -468,6 +422,7 @@ OsylCMJob {
 							} else
 								enrollmentSet =
 								cmService.getEnrollmentSet(enrollmentSetId);
+							enrollmentSet.setTitle(coursEntry.getClassSection());
 							newSection.setEnrollmentSet(enrollmentSet);
 							cmAdmin.updateSection(newSection);
 						}
@@ -479,19 +434,21 @@ OsylCMJob {
 					courseOfferingId = getCourseOfferingId(coursEntry);
 					courseSectionId = getCourseSectionId(coursEntry);
 					try {
-						Section section = cmService.getSection(courseSectionId);
-						String siteId = getSiteName(section);
-						boolean siteExist = osylSiteService.siteExists(siteId);
-						if (siteExist) {
-							Site site = siteService.getSite(siteId);
-							if (osylSiteService.hasBeenPublished(siteId)) {
-								osylPublishService.unpublish(siteId, webappDir);
-							}
-							if (site.getProviderGroupId() != null
-									&& !"".equals(site.getProviderGroupId())) {
-								osylManagerService.dissociateFromCM(siteId);
-							}
-						}
+					    	if (cmService.isSectionDefined(courseSectionId)){
+        						Section section = cmService.getSection(courseSectionId);
+        						String siteId = getSiteName(section);
+        						boolean siteExist = osylSiteService.siteExists(siteId);
+        						if (siteExist) {
+        							Site site = siteService.getSite(siteId);
+        							if (osylSiteService.hasBeenPublished(siteId)) {
+        								osylPublishService.unpublish(siteId, webappDir);
+        							}
+        							if (site.getProviderGroupId() != null
+        									&& !"".equals(site.getProviderGroupId())) {
+        								osylManagerService.dissociateFromCM(siteId);
+        							}
+        						}
+					    	}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -609,49 +566,6 @@ OsylCMJob {
 		return sessionName;
 	}
 
-	/*
-	 * Creates or updates the special section used for the sharable sites
-	 * Sharable sites should not have enrollment set so students and everything
-	 * section and group aware should not be associated to it.
-	 * @param courseSetId
-	 * @param title
-	 * @param description
-	 * @param category
-	 * @param courseOfferingId
-	 * @param lang
-	 * @return
-	 */
-	private Section createOrUpdateSpecialCourseSection(
-			DetailCoursMapEntry coursEntry) {
-
-		String courseOfferingId = getCourseOfferingId(coursEntry);
-		Section newSection = null;
-		String courseSectionId = courseOfferingId + SHARABLE_SECTION;
-		String title = coursEntry.getCourseTitleLong();
-		String description = coursEntry.getCourseTitleLong();
-		String category = coursEntry.getAcadOrg();
-		String lang = coursEntry.getLangue();
-
-		if (!cmService.isSectionDefined(courseSectionId)) {
-
-			log.info("Info: " + courseSectionId + ", " + title + ", " + description
-					+ ", " + category + ", " + courseOfferingId + ", " + lang);
-			newSection =
-					cmAdmin.createSection(courseSectionId, title, description,
-							category, null, courseOfferingId, null, lang);
-
-		} else {
-			// We update
-			newSection = cmService.getSection(courseSectionId);
-			newSection.setCategory(category);
-			newSection.setDescription(description);
-			newSection.setTitle(title);
-			newSection.setLang(lang);
-			cmAdmin.updateSection(newSection);
-		}
-
-		return newSection;
-	}
 
 	/**
 	 * Method used to create academic careers.
@@ -777,13 +691,12 @@ OsylCMJob {
 		File profFile = new File(directory, PROF_FILE);
 		File servensFile = new File(directory, SERV_ENS_FILE);
 		File progEtudFile = new File(directory, PROG_ETUD_FILE);
-		File chargeFormFile = new File(directory, CHARGE_FORMATION);
 		File requirementsFile = new File(directory, REQUIREMENTS);
 
 		if (sessionFile.exists() && coursFile.exists() && etudiantFile.exists()
 				&& horairesFile.exists() && profFile.exists()
 				&& servensFile.exists() && progEtudFile.exists()
-				&& chargeFormFile.exists() && requirementsFile.exists()) {
+				&& requirementsFile.exists()) {
 			return true;
 		}
 
@@ -882,15 +795,6 @@ OsylCMJob {
 					GenericProgrammeEtudesMapFactory.buildMap(directory
 							+ File.separator + PROG_ETUD_FILE);
 
-			chargeFormationMap =
-					GenericDetailChargeFormationMapFactory
-					.getInstance(directory + File.separator
-							+ CHARGE_FORMATION);
-			chargeFormationMap =
-					GenericDetailChargeFormationMapFactory
-					.buildMap(directory + File.separator
-							+ CHARGE_FORMATION, detailCoursMap);
-
 			requirementsCoursMap =
 					GenericRequirementsCoursMapFactory.getInstance(directory
 							+ File.separator + REQUIREMENTS);
@@ -902,6 +806,7 @@ OsylCMJob {
 			log.info("Finished reading extracts. Now updating the Course Management");
 			// time period as the extracts
 
+			
 			retrieveCurrentCMContent();
 
 			// We load academic careers
@@ -921,8 +826,8 @@ OsylCMJob {
 			log.info("CourseSets updated successfully");
 
 			// We load courses
-			loadCourses();
-			log.info("Courses updated successfully");
+//			loadCourses();
+//			log.info("Courses updated successfully");
 
 			// We assign teachers and the secretaries
 			loadMembership();
@@ -952,124 +857,142 @@ OsylCMJob {
 		log.info("Synchronization completed in " + minutes + " minutes");
 	}
 
-	/*
-	 * We retrieve the content of the course management for the same period as
-	 * the extracts we are synchronizing (period read in the session.dat file)
-	 */
-	private void retrieveCurrentCMContent() {
-
-		// We retrieve informations for the same sessions as the ones in the
-		// extract
-		DetailSessionsMapEntry sessionEntry = null;
-		String sessionId = "";
-		String student = "";
-		List<AcademicSession> academicSessions =
-				new ArrayList<AcademicSession>();
-		AcademicSession academicSession;
-
-		Iterator<DetailSessionsMapEntry> sessions =
-				detailSessionMap.values().iterator();
-
-		while (sessions.hasNext()) {
-			sessionEntry = sessions.next();
-			sessionId = sessionEntry.getUniqueKey();
-			if (cmService.isAcademicSessionDefined(sessionId)) {
-				academicSession = cmService.getAcademicSession(sessionId);
-				academicSessions.add(academicSession);
-			}
-		}
-
-		// Retrieve the course offerings we will update
-		// Retrieve the students (enrollment ) we will update
-
-		String enrollmentSetId = "", courseOfferingId = "";
-		Set<CourseSet> courseSets = cmService.getCourseSets();
-		String courseSetId = null;
-		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
-		Set<CourseOffering> courseOff = null;
-
-		Set<EnrollmentSet> enrollmentSets = new HashSet<EnrollmentSet>();
-		Set<EnrollmentSet> enrollmentS = null;
-
-		Set<Section> sections = null;
-		String sectionId = null;
-		Set<Membership> memberships = null;
-
-		actualStudents = new HashMap<String, Enrollment>();
-		actualEnrollmentSets = new HashSet<EnrollmentSet>();
-		actualCoordinatorMemberships = new HashMap<String, Membership>();
-		actualSecretaryMembership = new HashMap<String, Membership>();
-		actualCoursesSection = new HashSet<Section>();
-		Set<Enrollment> enrollments = null;
-
-		for (CourseSet courseSet : courseSets) {
-			courseSetId = courseSet.getEid();
-			for (AcademicSession session : academicSessions) {
-				sessionId = session.getEid();
-				courseOff =
-						cmService.findCourseOfferings(courseSetId, sessionId);
-				courseOfferings.addAll(courseOff);
-
-				for (CourseOffering course : courseOff) {
-					courseOfferingId = course.getEid();
-
-					// We retrieve memberships to the course offerings
-					memberships =
-							cmService
-							.getCourseOfferingMemberships(courseOfferingId);
-					for (Membership member : memberships) {
-						//Retrieve secretaries
-						if (member.getRole().equals(SECRETARY_ROLE))
-							actualSecretaryMembership.put(member.getUserId()
-									+ sectionId, member);
-
-						//Retrieve coordinators
-						if (member.getRole().equals(COORDONNATEUR_ROLE))
-							actualCoordinatorMemberships.put(member.getUserId()
-									+ sectionId, member);
-
-					}
-
-					// We retrieve the sections and the memberships in the
-					// sections
-					sections = cmService.getSections(courseOfferingId);
-					for (Section section : sections) {
-						sectionId = section.getEid();
-						actualCoursesSection.add(section);
-
-						memberships =
-								cmService.getSectionMemberships(sectionId);
-						for (Membership member : memberships) {
-
-							if (member.getRole().equals(COORDONNATEUR_ROLE)
-									&& sectionId.equals(SHARABLE_SECTION))
-								actualCoordinatorMemberships.put(member.getUserId()
-										+ sectionId, member);
-						}
-					}
-					// We retrieve the enrollments sets and enrollments
-					enrollmentS = cmService.getEnrollmentSets(courseOfferingId);
-					enrollmentSets.addAll(enrollmentS);
-					actualEnrollmentSets.addAll(enrollmentSets);
-
-					for (EnrollmentSet es : enrollmentS) {
-						enrollmentSetId = es.getEid();
-						enrollments = cmService.getEnrollments(enrollmentSetId);
-						for (Enrollment e : enrollments) {
-							student = e.getUserId() + enrollmentSetId;
-							// We only consider students enrolled
-							// if removed they stay in database with dropped =
-							// true
-							if (!e.isDropped())
-								actualStudents.put(student, e);
-						}
-					}
-				}
-
-			}
-		}
-
-	}
+            /*
+             * We retrieve the content of the course management for the same period as
+             * the extracts we are synchronizing (period read in the session.dat file)
+             */
+            private void retrieveCurrentCMContent() {
+        
+        	// We retrieve informations for the same sessions as the ones in the
+        	// extract
+        	DetailSessionsMapEntry sessionEntry = null;
+        	String sessionId = "";
+        	String student = "";
+        	List<AcademicSession> academicSessions =
+        		new ArrayList<AcademicSession>();
+        	AcademicSession academicSession;
+        
+        	Iterator<DetailSessionsMapEntry> sessions =
+        		detailSessionMap.values().iterator();
+        	try {
+        
+        	    while (sessions.hasNext()) {
+        		sessionEntry = sessions.next();
+        		sessionId = sessionEntry.getUniqueKey();
+        		if (actualStartDate == null)
+        		    actualStartDate =
+        			    DateFormat.getDateInstance().parse(
+        				    sessionEntry.getBeginDate());
+        		if (cmService.isAcademicSessionDefined(sessionId)) {
+        		    academicSession = cmService.getAcademicSession(sessionId);
+        		    academicSessions.add(academicSession);
+        		}
+        
+        		if (!sessions.hasNext())
+        		    actualEndIntervalDate =
+        			    DateFormat.getDateInstance().parse(
+        				    sessionEntry.getEndDate());
+        	    }
+        
+        	} catch (ParseException e) {
+        	    e.printStackTrace();
+        	}
+        
+        	// Retrieve the course offerings we will update
+        	// Retrieve the students (enrollment ) we will update
+        
+        	String enrollmentSetId = "", courseOfferingId = "";
+        	Set<CourseSet> courseSets = cmService.getCourseSets();
+        	String courseSetId = null;
+        	Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
+        	Set<CourseOffering> courseOff = null;
+        
+        	Set<EnrollmentSet> enrollmentSets = new HashSet<EnrollmentSet>();
+        	Set<EnrollmentSet> enrollmentS = null;
+        
+        	Set<Section> sections = null;
+        	String sectionId = null;
+        	Set<Membership> memberships = null;
+        
+        	actualStudents = new HashMap<String, Enrollment>();
+        	actualEnrollmentSets = new HashSet<EnrollmentSet>();
+        	actualCoordinatorMemberships = new HashMap<String, Membership>();
+        	actualSecretaryMembership = new HashMap<String, Membership>();
+        	actualCoursesSection = new HashSet<Section>();
+        	Set<Enrollment> enrollments = null;
+        
+        	for (CourseSet courseSet : courseSets) {
+        	    courseSetId = courseSet.getEid();
+        	    for (AcademicSession session : academicSessions) {
+        		sessionId = session.getEid();
+        		if ((session.getStartDate()).after(actualStartDate)
+        			&& (session.getEndDate()).before(actualEndIntervalDate)) {
+        		    courseOff =
+        			    cmService.findCourseOfferings(courseSetId,
+        				    sessionId);
+        		    courseOfferings.addAll(courseOff);
+        
+        		    for (CourseOffering course : courseOff) {
+        			courseOfferingId = course.getEid();
+        
+        			// We retrieve memberships to the course offerings
+        			memberships =
+        				cmService
+        					.getCourseOfferingMemberships(courseOfferingId);
+        			for (Membership member : memberships) {
+         
+        			    // Retrieve coordinators
+        			    if (member.getRole().equals(COORDONNATEUR_ROLE))
+        				actualCoordinatorMemberships.put(
+        					member.getUserId() + sectionId, member);
+        
+        			}
+        
+        			// We retrieve the sections and the memberships in the
+        			// sections
+        			sections = cmService.getSections(courseOfferingId);
+        			for (Section section : sections) {
+        			    sectionId = section.getEid();
+        			    actualCoursesSection.add(section);
+        
+        			    memberships =
+        				    cmService.getSectionMemberships(sectionId);
+//        			    for (Membership member : memberships) {
+//        
+//        				if (member.getRole().equals(COORDONNATEUR_ROLE)
+//        					&& sectionId.equals(SHARABLE_SECTION))
+//        				    actualCoordinatorMemberships.put(
+//        					    member.getUserId() + sectionId,
+//        					    member);
+//        			    }
+        			}
+        			// We retrieve the enrollments sets and enrollments
+        			enrollmentS =
+        				cmService.getEnrollmentSets(courseOfferingId);
+        			enrollmentSets.addAll(enrollmentS);
+        			actualEnrollmentSets.addAll(enrollmentSets);
+        
+        			for (EnrollmentSet es : enrollmentS) {
+        			    enrollmentSetId = es.getEid();
+        			    enrollments =
+        				    cmService.getEnrollments(enrollmentSetId);
+        			    for (Enrollment e : enrollments) {
+        				student = e.getUserId() + enrollmentSetId;
+        				// We only consider students enrolled
+        				// if removed they stay in database with dropped
+        				// =
+        				// true
+        				if (!e.isDropped())
+        				    actualStudents.put(student, e);
+        			    }
+        			}
+        		    }
+        
+        		}
+        	    }
+        	}
+        
+            }
 
 	/**
 	 * This method is used to assign students to their given course section
@@ -1217,9 +1140,8 @@ OsylCMJob {
 	 * to;
 	 */
 	public void loadMembership() {
-		assignChargeFormation();
 		assignTeachers();
-		syncCmExceptions();
+		//syncCmExceptions();
 	}
 
 	/**
@@ -1303,12 +1225,12 @@ OsylCMJob {
 			log.info("Adding Secretaries for [" + course + "]: "
 					+ secretaries.toString());
 
-			for (String secretary : secretaries) {
-				cmAdmin.addOrUpdateCourseOfferingMembership(secretary,
-						SECRETARY_ROLE, courseOfferingId, ACTIVE_STATUS);
-				actualCoordinatorMemberships.remove(secretary + courseOfferingId);
-
-			}
+//			for (String secretary : secretaries) {
+//				cmAdmin.addOrUpdateCourseOfferingMembership(secretary,
+//						SECRETARY_ROLE, courseOfferingId, ACTIVE_STATUS);
+//				actualCoordinatorMemberships.remove(secretary + courseOfferingId);
+//
+//			}
 		}
 
 	}

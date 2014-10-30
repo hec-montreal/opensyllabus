@@ -64,7 +64,8 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 
     		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
 
-    		List<AcademicSession> allSessions = cmService.getAcademicSessions();
+    		//Retrieve active sessions
+    		List<AcademicSession> allSessions = cmService.getCurrentAcademicSessions();
 
     		List<String> courses = adminConfigService.getCourses();
 
@@ -264,16 +265,16 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 					.siteExists(getSharableSiteName(courseOff));
 		    } catch (Exception e) {
 		    }
-		    if (!sharableExist) {
-			sharableName = createShareable(courseOff);
-			compteur++;
-			createSharable = true;
-		    }
+//		    if (!sharableExist) {
+//			sharableName = createShareable(courseOff);
+//			compteur++;
+//			createSharable = true;
+//		    }
 		}
 		if (sections != null) {
 		    String sectionId = null;
-		    String sharableSectionId =
-			    courseOff.getEid() + OsylCMJob.SHARABLE_SECTION;
+//		    String sharableSectionId =
+//			    courseOff.getEid() + OsylCMJob.SHARABLE_SECTION;
 		    List<String> dfSections = new ArrayList<String>();
 		    String firstSection = null;
 		    // create 'normal section'
@@ -284,7 +285,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 			if (!isDfSection(sectionId)) {
 
 			    // We do not create site associated to section 00
-			    if (!sectionId.equalsIgnoreCase(sharableSectionId)) {
+			   // if (!sectionId.equalsIgnoreCase(sharableSectionId)) {
 				boolean siteExist = false;
 				try {
 				    siteExist =
@@ -306,53 +307,53 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 					if (siteName.compareTo(firstSection) < 0)
 					    firstSection = siteName;
 				    }
-				} else {
-				    if (createSharable) {
-					// send mail
-					try {
-					    List<EmailAddress> toRecipients =
-						    new ArrayList<EmailAddress>();
-					    for (String eid : section
-						    .getEnrollmentSet()
-						    .getOfficialInstructors()) {
-						toRecipients
-							.add(new EmailAddress(
-								userDirectoryService
-									.getUserByEid(
-										eid)
-									.getEmail()));
-					    }
-					    EmailMessage message =
-						    new EmailMessage();
-					    message.setSubject("Création du partageable "
-						    + sharableName);
-					    message.setContentType(ContentType.TEXT_HTML);
-					    message.setBody("Bonjour,<br>suite à l'ajout d'une section au cours "
-						    + sharableName
-						    + " un partageable a été crée et le cours "
-						    + getSiteName(section)
-						    + " automatiquement rattaché à celui-ci.<br>Si vous ne souhaitez pas utiliser le contenu du partageable, vous pouvez vous détacher de celui-ci à l'aide du gestionnaire de plan de cours");
-					    message.setFrom(getZoneCours2EMail());
-					    List<EmailAddress> ccRecipients =
-						    new ArrayList<EmailAddress>();
-					    ccRecipients.add(new EmailAddress(
-						    getZoneCours2EMail()));
-					    message.setRecipients(
-						    RecipientType.CC,
-						    ccRecipients);
-					    message.setRecipients(
-						    RecipientType.TO,
-						    toRecipients);
-					    emailService.send(message);
-					} catch (Exception e) {
-					    log.error("Could not send email to shareable owners:"
-						    + e);
-					    e.printStackTrace();
-					}
+//				} else {
+//				    if (createSharable) {
+//					// send mail
+//					try {
+//					    List<EmailAddress> toRecipients =
+//						    new ArrayList<EmailAddress>();
+//					    for (String eid : section
+//						    .getEnrollmentSet()
+//						    .getOfficialInstructors()) {
+//						toRecipients
+//							.add(new EmailAddress(
+//								userDirectoryService
+//									.getUserByEid(
+//										eid)
+//									.getEmail()));
+//					    }
+//					    EmailMessage message =
+//						    new EmailMessage();
+//					    message.setSubject("Création du partageable "
+//						    + sharableName);
+//					    message.setContentType(ContentType.TEXT_HTML);
+//					    message.setBody("Bonjour,<br>suite à l'ajout d'une section au cours "
+//						    + sharableName
+//						    + " un partageable a été crée et le cours "
+//						    + getSiteName(section)
+//						    + " automatiquement rattaché à celui-ci.<br>Si vous ne souhaitez pas utiliser le contenu du partageable, vous pouvez vous détacher de celui-ci à l'aide du gestionnaire de plan de cours");
+//					    message.setFrom(getZoneCours2EMail());
+//					    List<EmailAddress> ccRecipients =
+//						    new ArrayList<EmailAddress>();
+//					    ccRecipients.add(new EmailAddress(
+//						    getZoneCours2EMail()));
+//					    message.setRecipients(
+//						    RecipientType.CC,
+//						    ccRecipients);
+//					    message.setRecipients(
+//						    RecipientType.TO,
+//						    toRecipients);
+//					    emailService.send(message);
+//					} catch (Exception e) {
+//					    log.error("Could not send email to shareable owners:"
+//						    + e);
+//					    e.printStackTrace();
+//					}
+//
+//				    }
 
-				    }
-
-				}
+//				}
 			    }
 			} else {
 			    // we create site DF only if there is
@@ -426,8 +427,9 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	for (Section section : sections) {
 	    sectionId = section.getEid();
-	    if (!isDfSection(sectionId)
-		    && !sectionId.endsWith(OsylCMJob.SHARABLE_SECTION))
+	    if (!isDfSection(sectionId))
+		   
+		    //&& !sectionId.endsWith(OsylCMJob.SHARABLE_SECTION))
 		nbSections++;
 	}
 
@@ -450,48 +452,48 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	}
     }
 
-    private String createShareable(CourseOffering course) {
-	String siteName = getSharableSiteName(course);
-	String sharableSectionId = course.getEid() + OsylCMJob.SHARABLE_SECTION;
-	Section sharableSection = null;
-	String lang = null;
-	boolean justCreated = false;
-
-	log.info("Creating sharable site for " + siteName);
-
-	if (!cmService.isSectionDefined(sharableSectionId)) {
-	    log.info("There is no special section (" + sharableSectionId
-		    + ") for this sharable site.");
-	    lang = TEMPORARY_LANG;
-	} else {
-	    sharableSection = cmService.getSection(sharableSectionId);
-	    lang = sharableSection.getLang();
-
-	}
-
-	try {
-	    if (!osylSiteService.siteExists(siteName)) {
-		osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
-			lang);
-		justCreated = true;
-	    } else {
-		log.info("The site " + siteName + " already exist.");
-	    }
-
-	    if (justCreated)
-		try {
-		    osylManagerService.associateToCM(sharableSection.getEid(),
-			    siteName);
-		} catch (Exception e) {
-		    log.error("Could not associate site " + siteName
-			    + " with CM", e);
-		}
-	} catch (Exception e) {
-	    log.error(e.getMessage());
-	    return null;
-	}
-	return siteName;
-    }
+//    private String createShareable(CourseOffering course) {
+//	String siteName = getSharableSiteName(course);
+//	String sharableSectionId = course.getEid() + OsylCMJob.SHARABLE_SECTION;
+//	Section sharableSection = null;
+//	String lang = null;
+//	boolean justCreated = false;
+//
+//	log.info("Creating sharable site for " + siteName);
+//
+//	if (!cmService.isSectionDefined(sharableSectionId)) {
+//	    log.info("There is no special section (" + sharableSectionId
+//		    + ") for this sharable site.");
+//	    lang = TEMPORARY_LANG;
+//	} else {
+//	    sharableSection = cmService.getSection(sharableSectionId);
+//	    lang = sharableSection.getLang();
+//
+//	}
+//
+//	try {
+//	    if (!osylSiteService.siteExists(siteName)) {
+//		osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
+//			lang);
+//		justCreated = true;
+//	    } else {
+//		log.info("The site " + siteName + " already exist.");
+//	    }
+//
+//	    if (justCreated)
+//		try {
+//		    osylManagerService.associateToCM(sharableSection.getEid(),
+//			    siteName);
+//		} catch (Exception e) {
+//		    log.error("Could not associate site " + siteName
+//			    + " with CM", e);
+//		}
+//	} catch (Exception e) {
+//	    log.error(e.getMessage());
+//	    return null;
+//	}
+//	return siteName;
+//    }
 
     private List<AcademicSession> getSessions(Date startDate, Date endDate) {
 	List<AcademicSession> sessions = new ArrayList<AcademicSession>();
