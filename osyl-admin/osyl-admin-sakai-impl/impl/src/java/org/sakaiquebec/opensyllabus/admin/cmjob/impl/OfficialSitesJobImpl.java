@@ -46,9 +46,10 @@ import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 
+import ca.hec.commons.utils.FormatUtils;
 
 /**
- * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
+ * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>, <a href="mailto:curtis.van-osch@hec.ca">Curtis van Osch</a>
  * @version $Id: $
  */
 public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
@@ -516,91 +517,26 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	return sessions;
     }
 */
- 
-    	private String getSessionName(AcademicSession session) {
-    		String sessionName = null;
-    		String sessionId = session.getEid();
-    		Date startDate = session.getStartDate();
-    		String year = startDate.toString().substring(0, 4);
-
-    		if ((sessionId.charAt(3)) == '1')
-    			sessionName = WINTER + year;
-    		if ((sessionId.charAt(3)) == '2')
-    			sessionName = SUMMER + year;
-    		if ((sessionId.charAt(3)) == '3')
-    			sessionName = FALL + year;
-
-    		return sessionName;
-    	}
- 
     private String getSiteName(CourseOffering offering) {
-    	String siteName = null;
-    	String courseOffId = offering.getEid();
-    	String canCourseId = (offering.getCanonicalCourseEid()).trim();
     	AcademicSession session = offering.getAcademicSession();
     	String sessionId = session.getEid();
 
-    	String courseId = null;
-    	String courseIdFront = null;
-    	String courseIdMiddle = null;
-    	String courseIdBack = null;
-
     	String sessionTitle = null;
-    	String periode = null;
+    	String period = null;
 
-    	if (canCourseId.length() == 7) {
-    		courseIdFront = canCourseId.substring(0, 2);
-    		courseIdMiddle = canCourseId.substring(2, 5);
-    		courseIdBack = canCourseId.substring(5);
-    		courseId =
-    				courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-    	} else if (canCourseId.length() == 6) {
-    		courseIdFront = canCourseId.substring(0, 1);
-    		courseIdMiddle = canCourseId.substring(1, 4);
-    		courseIdBack = canCourseId.substring(4);
-    		courseId =
-    				courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-    	} else {
-    		courseId = canCourseId;
-    	}
-
-    	if (canCourseId.matches(".*[^0-9].*")) {
-    		if (canCourseId.endsWith("A") || canCourseId.endsWith("E")
-    				|| canCourseId.endsWith("R")) {
-    			if (canCourseId.length() == 8) {
-    				courseIdFront = canCourseId.substring(0, 2);
-    				courseIdMiddle = canCourseId.substring(2, 5);
-    				courseIdBack = canCourseId.substring(5);
-    				courseId =
-    						courseIdFront + "-" + courseIdMiddle + "-"
-    								+ courseIdBack;
-
-    			}
-    			if (canCourseId.length() == 7) {
-    				courseIdFront = canCourseId.substring(0, 1);
-    				courseIdMiddle = canCourseId.substring(1, 4);
-    				courseIdBack = canCourseId.substring(4);
-    				courseId =
-    						courseIdFront + "-" + courseIdMiddle + "-"
-    								+ courseIdBack;
-
-    			}
-    		} else
-    			courseId = canCourseId;
-    	}
-    	sessionTitle = getSessionName(session);
-
+    	String courseId = null;
+    	
+    	courseId = FormatUtils.formatCourseId(offering.getCanonicalCourseEid());
+    	sessionTitle = FormatUtils.getSessionName(sessionId);
+    	
     	if (sessionId.matches(".*[pP].*")) {
-    		periode = sessionId.substring(sessionId.length() - 2);
+    		period = sessionId.substring(sessionId.length() - 2);
     	}
 
-    	if (periode == null)
-    		siteName = courseId + "." + sessionTitle;
+    	if (period == null)
+    		return courseId + "." + sessionTitle;
     	else
-    		siteName =
-    		courseId + "." + sessionTitle + "." + periode;
-
-    	return siteName;
+    		return courseId + "." + sessionTitle + "." + period;
     }
 
     /**
@@ -609,10 +545,4 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
     protected void loginToSakai() {
     	super.loginToSakai("OfficialSitesJob");
     }
-
-    private String getZoneCours2EMail(){
-    	return ServerConfigurationService.getString("mail.zc2");
-    }
-
-
 }
