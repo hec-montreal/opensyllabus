@@ -106,7 +106,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private String description;
     private boolean courseManagement;
-    
+
     private boolean includingFrozenSites;
 
     private boolean includingDirSites;
@@ -303,7 +303,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     /**
      * Called when an observed object changes.
-     * 
+     *
      * @param ob
      * @param o
      */
@@ -713,7 +713,9 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 	Date convertedDate = null;
 	try {
-	    convertedDate = dateFormat.parse(date);
+		if (date != null) {
+			convertedDate = dateFormat.parse(date);
+		}
 	} catch (ParseException e) {
 	    e.printStackTrace();
 	}
@@ -809,7 +811,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    }
 	}
     }
-    
+
     private void setReplacedUsers(String replacedUsers) {
 	this.replacedUsers = new ArrayList<String>();
 	if (replacedUsers != null && replacedUsers.length() > 0) {
@@ -819,11 +821,11 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    }
 	}
     }
-    
+
 
     /**
      * Lookup and rerieve one dynamic configuration parameter
-     * 
+     *
      * @param Configuration XML
      * @param name Parameter name
      */
@@ -837,7 +839,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     /**
      * Get the text associated with this element
-     * 
+     *
      * @param root The root node of the text element
      * @return Text (trimmed of leading/trailing whitespace, null if none)
      */
@@ -870,7 +872,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     /**
      * "Normalize" XML text node content to create a simple string
-     * 
+     *
      * @param original Original text
      * @param update Text to add to the original string (a space separates the
      *            two)
@@ -892,7 +894,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     /**
      * Parse an XML resource
-     * 
+     *
      * @param filename The filename (or URI) to parse
      * @return DOM Document (null if parse fails)
      */
@@ -937,7 +939,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     public List<String> getServEns() {
 	return servEns;
     }
-    
+
     public List<String> getSessions() {
     	return sessions;
     }
