@@ -42,6 +42,8 @@ public interface ConfigurationService {
     public final static String STARTDATE = "startDate";
 
     public final static String ENDDATE = "endDate";
+    
+    public final static String SESSIONS = "sessions";
 
     public final static String PROGRAMS = "programs";
 
@@ -135,6 +137,8 @@ public interface ConfigurationService {
     public Date getEndDate();
 
     public Date getStartDate();
+    
+    public List<String> getSessions();
 
     public List<String> getCourses();
 

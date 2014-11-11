@@ -35,6 +35,7 @@ import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.Enrollment;
 import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.email.api.ContentType;
 import org.sakaiproject.email.api.EmailAddress;
 import org.sakaiproject.email.api.EmailAddress.RecipientType;
@@ -52,497 +53,241 @@ import ca.hec.commons.utils.FormatUtils;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>, <a href="mailto:curtis.van-osch@hec.ca">Curtis van Osch</a>
  * @version $Id: $
  */
-public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
-	OfficialSitesJob {
+public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl 
+	implements OfficialSitesJob {
 
-    private static Log log = LogFactory.getLog(OfficialSitesJobImpl.class);
+	private static Log log = LogFactory.getLog(OfficialSitesJobImpl.class);
 
-    	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-    	
-    		log.info("start OfficialSitesJob");
-    		
-    		loginToSakai();
+	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
-    		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
+		log.info("start OfficialSitesJob");
 
-    		//Retrieve active sessions
-    		List<AcademicSession> allSessions = cmService.getCurrentAcademicSessions();
+		loginToSakai();
 
-    		List<String> courses = adminConfigService.getCourses();
+		// If we have a list of courses, we will create only those one. If we
+		// don't we create any course defined in the given sessions
+		List<String> courses = adminConfigService.getCourses();
+		List<String> programs = adminConfigService.getPrograms();
+		List<String> departments = adminConfigService.getServEns();
+		List<String> sessions = adminConfigService.getSessions();
+		Date startDate = adminConfigService.getStartDate();
+		Date endDate = adminConfigService.getEndDate();
 
-    		log.info("Retrieve course offerings");
-    		// Associated to canonical courses
-    		if (courses != null && courses.size() > 0) {
-    			log.info("use defined courses: " + courses.toString());
-    			String coId = null;
-    			for (String courseId : courses) {
-    				for (AcademicSession session : allSessions) {
-    					coId = courseId + session.getEid();
-    					if (cmService.isCourseOfferingDefined(coId))
-    						courseOfferings.add(cmService.getCourseOffering(coId));
-    				}
+		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
 
-    			}
-    		} else {
-    			// Retrieve all the course sets
-    			Set<CourseSet> allCourseSets = cmService.getCourseSets();
-    			//Set<CourseOffering> courseOfferings = null;
-
-    			for (CourseSet courseSet : allCourseSets) {
-    				for (AcademicSession session : allSessions) {
-    					courseOfferings.addAll(
-    							cmService.findCourseOfferings(courseSet.getEid(),
-    									session.getEid()));
-    				}
-    			}
-    		}
-
-    		log.info("found " + courseOfferings.size() + " course offerings");
-
-    		for (CourseOffering co : courseOfferings) {
-    			String siteId = getSiteName(co);
-    			Set<Section> sections = cmService.getSections(co.getEid());
-
-    			if (siteService.siteExists(siteId)) {
-    				log.info(siteId + " already exists");
-    			} else if (sections == null || sections.size() < 1) {
-    				log.info(siteId + " has no sections");    				
-    			} else {
-    				log.info(siteId + " doesn't exists, create it and associate to CM CourseOffering");
-
-    				try {
-    					Site site = siteService.addSite(siteId, "course");
-    					site.setTitle(co.getTitle());
-    					site.setPublished(true);
-    					site.setJoinable(false);
-
-    					ResourcePropertiesEdit rp = site.getPropertiesEdit();
-    					rp.addProperty("term", co.getAcademicSession().getTitle());
-
-    					String providerGroupId = "";
-    					for (Section section : sections) {
-    						if (providerGroupId.length() > 0)
-    							providerGroupId += "+";
-    						providerGroupId += section.getEid();
-    				    }    		
-    					
-    					if (providerGroupId.length() > 0) 
-    						site.setProviderGroupId(providerGroupId);
-
-    					//add site info
-    					SitePage page = site.addPage();
-    					page.setTitle(toolManager.getTool("sakai.siteinfo").getTitle());
-    					page.setLayout(SitePage.LAYOUT_SINGLE_COL);
-    					page.addTool("sakai.siteinfo");
-    					
-    					siteService.save(site);
-    				} catch (Exception e) {
-    					e.printStackTrace();
-    				}
-
-    				break;
-    			}
-    		}
-    		logoutFromSakai();
-    		
-    		log.info("end OfficialSitesJob");
-    	}
-
- /*	
-    private Set<CourseSet> allCourseSets = null;
-
-    private Set<CourseOffering> courseOffs = null;
-
-    private Set<Section> sections = null;
-
-    private static Log log = LogFactory.getLog(OfficialSitesJobImpl.class);
-
-    public void execute(JobExecutionContext arg0) throws JobExecutionException {
-
-	loginToSakai();
-	courseOffs = new HashSet<CourseOffering>();
-	Date startDateInterval = adminConfigService.getStartDate();
-	Date endDateInterval = adminConfigService.getEndDate();
-	// If we have a list of courses, we will create only those one. If we
-	// don't we create
-	// any course defined in the given sessions
-	List<String> courses = adminConfigService.getCourses();
-	List<String> programs = adminConfigService.getPrograms();
-	List<String> servEns = adminConfigService.getServEns();
-
-	// If we have an interval of time, we take the courses defined in that
-	// period of time
-	// If we don't have any interval, we take the courses defined in the
-	// active sessions.
-	List<AcademicSession> allSessions =
-		getSessions(startDateInterval, endDateInterval);
-
-	// Associated to canonical courses
-	if (courses != null && courses.size() > 0) {
-	    String coId = null;
-	    for (String courseId : courses) {
-		for (AcademicSession session : allSessions) {
-		    coId = courseId + session.getEid();
-		    if (cmService.isCourseOfferingDefined(coId))
-			courseOffs.add(cmService.getCourseOffering(coId));
+		// If user specified some sessions, retrieve them
+		// If we have an interval of time, retrieve the sessions that fall within
+		// else, retrieve all active sessions
+		List<AcademicSession> academicSessions;
+		if (sessions != null && sessions.size() > 0) {
+			academicSessions = getSessions(sessions);
+		} else if (startDate != null && endDate != null) {
+			academicSessions = getSessions(startDate, endDate);
+		} else {
+			academicSessions = new ArrayList<AcademicSession>();
+			academicSessions.addAll(cmService.getCurrentAcademicSessions());
 		}
 
-	    }
-	}
-	// Associated to Acad_Career
-	else if (programs != null && programs.size() > 0) {
-	    Set<CourseOffering> courseOfferings = null;
-	    for (String program : programs) {
-		for (AcademicSession session : allSessions) {
-		    courseOfferings =
-			    cmService.findCourseOfferingsByAcadCareerAndAcademicSession(program,
-				    session.getEid());
-		    if (courseOfferings != null && courseOfferings.size() > 0)
-			courseOffs.addAll(courseOfferings);
-		    courseOfferings = new HashSet<CourseOffering>();
+		log.info("Retrieve course offerings");
+		if (courses != null && courses.size() > 0) {
+			courseOfferings = getSpecifiedCourseOfferings(courses, academicSessions);
+		}
+		else if (programs != null && programs.size() > 0) {
+			courseOfferings = getCourseOfferingsForPrograms(programs, academicSessions);
+		}
+		else if (departments != null && departments.size() > 0) {
+			courseOfferings = getCourseOfferingsForDepartments(departments, academicSessions);
+		}
+		else {
+			courseOfferings = getCourseOfferingsForSessions(academicSessions);
 		}
 
-	    }
+		log.info("found " + courseOfferings.size() + " course offerings");
 
-	}
-	// Associated to the category
-	else if (servEns != null && servEns.size() > 0) {
-	    Set<Section> allSections = new HashSet<Section>();
-	    String coffId = null;
-	    CourseOffering coff = null;
-	    for (String serviceEnseignement : servEns) {
-		allSections =
-			cmService.findSectionsByCategory(serviceEnseignement);
-		if (allSections != null) {
-		    for (AcademicSession session : allSessions) {
+		for (CourseOffering co : courseOfferings) {
+			String siteId = getSiteName(co);
+			Set<Section> sections = cmService.getSections(co.getEid());
 
-			for (Section section : allSections) {
-			    coffId = section.getCourseOfferingEid();
-			    coff = cmService.getCourseOffering(coffId);
-			    if (coffId != null
-				    && coff.getAcademicSession().getEid()
-					    .equals(session.getEid()))
-				courseOffs.add(cmService
-					.getCourseOffering(coffId));
-			}
-
-		    }
-		}
-	    }
-	} else {
-	    // Retrieve all the course sets
-	    allCourseSets = cmService.getCourseSets();
-	    Set<CourseOffering> fcourseOff = null;
-	    for (CourseSet courseSet : allCourseSets) {
-
-		for (AcademicSession session : allSessions) {
-		    fcourseOff =
-			    cmService.findCourseOfferings(courseSet.getEid(),
-				    session.getEid());
-		    courseOffs.addAll(fcourseOff);
-		}
-
-	    }
-	}
-
-	log.info(courseOffs.size() + " courses will be treated.");
-	int compteur = 0;
-
-	if (courseOffs != null) {
-	    for (CourseOffering courseOff : courseOffs) {
-
-		// Retrieve the sections to be created
-		sections = cmService.getSections(courseOff.getEid());
-
-		compteur += sections.size();
-		// Create sharable site if necessary
-		String sharableName = null;
-		boolean createSharable = false;
-		if (hasSharable(sections)) {
-		    boolean sharableExist = false;
-		    try {
-			sharableExist =
-				osylSiteService
-					.siteExists(getSharableSiteName(courseOff));
-		    } catch (Exception e) {
-		    }
-//		    if (!sharableExist) {
-//			sharableName = createShareable(courseOff);
-//			compteur++;
-//			createSharable = true;
-//		    }
-		}
-		if (sections != null) {
-		    String sectionId = null;
-//		    String sharableSectionId =
-//			    courseOff.getEid() + OsylCMJob.SHARABLE_SECTION;
-		    List<String> dfSections = new ArrayList<String>();
-		    String firstSection = null;
-		    // create 'normal section'
-		    for (Section section : sections) {
-			sectionId = section.getEid();
-
-			// We do not create sites associated to DF
-			if (!isDfSection(sectionId)) {
-
-			    // We do not create site associated to section 00
-			   // if (!sectionId.equalsIgnoreCase(sharableSectionId)) {
-				boolean siteExist = false;
-				try {
-				    siteExist =
-					    osylSiteService
-						    .siteExists(getSiteName(section));
-				} catch (Exception e) {
-				}
-				if (!siteExist) {
-				    createSite(section);
-				    String siteName = getSiteName(section);
-				    if (sharableName != null) {
-					associate(siteName, sharableName);
-					log.info("Associating " + sharableName
-						+ " to " + siteName);
-				    }
-				    if (firstSection == null) {
-					firstSection = siteName;
-				    } else {
-					if (siteName.compareTo(firstSection) < 0)
-					    firstSection = siteName;
-				    }
-//				} else {
-//				    if (createSharable) {
-//					// send mail
-//					try {
-//					    List<EmailAddress> toRecipients =
-//						    new ArrayList<EmailAddress>();
-//					    for (String eid : section
-//						    .getEnrollmentSet()
-//						    .getOfficialInstructors()) {
-//						toRecipients
-//							.add(new EmailAddress(
-//								userDirectoryService
-//									.getUserByEid(
-//										eid)
-//									.getEmail()));
-//					    }
-//					    EmailMessage message =
-//						    new EmailMessage();
-//					    message.setSubject("Création du partageable "
-//						    + sharableName);
-//					    message.setContentType(ContentType.TEXT_HTML);
-//					    message.setBody("Bonjour,<br>suite à l'ajout d'une section au cours "
-//						    + sharableName
-//						    + " un partageable a été crée et le cours "
-//						    + getSiteName(section)
-//						    + " automatiquement rattaché à celui-ci.<br>Si vous ne souhaitez pas utiliser le contenu du partageable, vous pouvez vous détacher de celui-ci à l'aide du gestionnaire de plan de cours");
-//					    message.setFrom(getZoneCours2EMail());
-//					    List<EmailAddress> ccRecipients =
-//						    new ArrayList<EmailAddress>();
-//					    ccRecipients.add(new EmailAddress(
-//						    getZoneCours2EMail()));
-//					    message.setRecipients(
-//						    RecipientType.CC,
-//						    ccRecipients);
-//					    message.setRecipients(
-//						    RecipientType.TO,
-//						    toRecipients);
-//					    emailService.send(message);
-//					} catch (Exception e) {
-//					    log.error("Could not send email to shareable owners:"
-//						    + e);
-//					    e.printStackTrace();
-//					}
-//
-//				    }
-
-//				}
-			    }
+			if (siteService.siteExists(siteId)) {
+				log.info(siteId + " already exists");
+			} else if (sections == null || sections.size() < 1) {
+				log.info(siteId + " has no sections");    				
 			} else {
-			    // we create site DF only if there is
-			    // students
-			    Set<Enrollment> enrollments =
-				    cmService.getEnrollments(section
-					    .getEnrollmentSet().getEid());
-			    if (enrollments.size() > 0) {
-				createSite(section);
-				dfSections.add(getSiteName(section));
-			    }
+				log.info(siteId + " doesn't exists, create it and associate to CM CourseOffering");
+
+				try {
+					Site site = siteService.addSite(siteId, "course");
+					site.setTitle(co.getTitle());
+					site.setPublished(true);
+					site.setJoinable(false);
+
+					ResourcePropertiesEdit rp = site.getPropertiesEdit();
+					rp.addProperty("term", co.getAcademicSession().getTitle());
+
+					String providerGroupId = "";
+					for (Section section : sections) {
+						if (providerGroupId.length() > 0)
+							providerGroupId += "+";
+						providerGroupId += section.getEid();
+					}    		
+
+					if (providerGroupId.length() > 0) 
+						site.setProviderGroupId(providerGroupId);
+
+					//add site info
+					SitePage page = site.addPage();
+					page.setTitle(toolManager.getTool("sakai.siteinfo").getTitle());
+					page.setLayout(SitePage.LAYOUT_SINGLE_COL);
+					page.addTool("sakai.siteinfo");
+
+					siteService.save(site);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				break;
 			}
-		    }
-
-		    // Removed because secretary will do it
-		    // associate df with 1st 'normal' course
-		    // for (String dfSite : dfSections) {
-		    // associate(dfSite, firstSection);
-		    // }
 		}
-	    }
+		logoutFromSakai();
 
-	    log.info(compteur
-		    + " sites has been processed (not necessarily created)");
-
-	}
-	logoutFromSakai();
-    } // execute
-    	private boolean createSite(CourseOffering offering) {
-    		String siteName = getSiteName(offering);
-    		String lang;
-    		boolean justCreated = false;
-//    		if (offering.getLang() == null)
-    			lang = TEMPORARY_LANG;
-//  		else
-
-//    			lang = section.getLang();
-
-
-    			
-    		// 2 try/catch distinct to make the difference between
-    		// a creation problem and an association problem
-    		try {
-    			if (!osylSiteService.siteExists(siteName)) {
-    				osylSiteService.createSite(siteName, OSYL_CO_CONFIG, lang);
-    				justCreated = true;
-    			}
-
-    		} catch (Exception e) {
-    			log.error("Could not create site " + siteName, e);
-    		}
-    		try {
-    			if (justCreated) {
-    				osylManagerService.associateToCM(section.getEid(), siteName);
-    				log.info("The site " + siteName
-    						+ " has been created and associated to the section "
-    						+ section.getEid() + " in the Course Management");
-    			}
-    			return true;
-    		} catch (Exception e) {
-    			log.error("Could not associate site " + siteName + " with CM", e);
-    		}
-    		log.debug("The site " + siteName + " has not been created");
-    		return false;
-    	}
-    
-
-    private boolean hasSharable(Set<Section> sections) {
-	int nbSections = 0;
-	String sectionId = null;
-
-	for (Section section : sections) {
-	    sectionId = section.getEid();
-	    if (!isDfSection(sectionId))
-		   
-		    //&& !sectionId.endsWith(OsylCMJob.SHARABLE_SECTION))
-		nbSections++;
+		log.info("end OfficialSitesJob");
 	}
 
-	if (nbSections > 1)
-	    return true;
-	else
-	    return false;
-    }
-
-    private boolean isDfSection(String sectionId) {
-	return sectionId.matches(".*[Dd][Ff][1-9]");
-    }
-
-    private void associate(String child, String parent) {
-	try {
-	    osylSiteService.associate(child, parent);
-	} catch (Exception e) {
-	    log.error("Could not associate site " + child + " with site "
-		    + parent, e);
-	}
-    }
-
-//    private String createShareable(CourseOffering course) {
-//	String siteName = getSharableSiteName(course);
-//	String sharableSectionId = course.getEid() + OsylCMJob.SHARABLE_SECTION;
-//	Section sharableSection = null;
-//	String lang = null;
-//	boolean justCreated = false;
-//
-//	log.info("Creating sharable site for " + siteName);
-//
-//	if (!cmService.isSectionDefined(sharableSectionId)) {
-//	    log.info("There is no special section (" + sharableSectionId
-//		    + ") for this sharable site.");
-//	    lang = TEMPORARY_LANG;
-//	} else {
-//	    sharableSection = cmService.getSection(sharableSectionId);
-//	    lang = sharableSection.getLang();
-//
-//	}
-//
-//	try {
-//	    if (!osylSiteService.siteExists(siteName)) {
-//		osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
-//			lang);
-//		justCreated = true;
-//	    } else {
-//		log.info("The site " + siteName + " already exist.");
-//	    }
-//
-//	    if (justCreated)
-//		try {
-//		    osylManagerService.associateToCM(sharableSection.getEid(),
-//			    siteName);
-//		} catch (Exception e) {
-//		    log.error("Could not associate site " + siteName
-//			    + " with CM", e);
-//		}
-//	} catch (Exception e) {
-//	    log.error(e.getMessage());
-//	    return null;
-//	}
-//	return siteName;
-//    }
-
-    private List<AcademicSession> getSessions(Date startDate, Date endDate) {
-	List<AcademicSession> sessions = new ArrayList<AcademicSession>();
-
-	if (startDate == null || endDate == null)
-	    sessions.addAll(cmService.getCurrentAcademicSessions());
-	else {
-	    // AcademicSession session = null;
-	    List<AcademicSession> allSessions = cmService.getAcademicSessions();
-	    Date sessionStartDate, sessionEndDate;
-	    for (AcademicSession session : allSessions) {
-		sessionStartDate = session.getStartDate();
-		sessionEndDate = session.getEndDate();
-		if (startDate.compareTo(sessionStartDate) <= 0
-			&& endDate.compareTo(sessionEndDate) >= 0)
-		    sessions.add(session);
-	    }
+	private Set<CourseOffering> getSpecifiedCourseOfferings(List<String> courses, List<AcademicSession> sessions) 
+	{
+		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
+		for (String courseId : courses) 
+		{
+			for (AcademicSession session : sessions) 
+			{
+				String coId = courseId + session.getEid();
+				if (cmService.isCourseOfferingDefined(coId))
+					courseOfferings.add(cmService.getCourseOffering(coId));
+			}
+		}
+		return courseOfferings;
 	}
 
-	return sessions;
-    }
-*/
-    private String getSiteName(CourseOffering offering) {
-    	AcademicSession session = offering.getAcademicSession();
-    	String sessionId = session.getEid();
+	private Set<CourseOffering> getCourseOfferingsForPrograms(List<String> programs, List<AcademicSession> sessions) 
+	{
+		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
 
-    	String sessionTitle = null;
-    	String period = null;
+		for (String program : programs) 
+		{
+			for (AcademicSession session : sessions) 
+			{
+				courseOfferings.addAll(
+						cmService.findCourseOfferingsByAcadCareerAndAcademicSession(
+								program,
+								session.getEid()));
+			}
+		}
+		return courseOfferings;
+	}
 
-    	String courseId = null;
-    	
-    	courseId = FormatUtils.formatCourseId(offering.getCanonicalCourseEid());
-    	sessionTitle = FormatUtils.getSessionName(sessionId);
-    	
-    	if (sessionId.matches(".*[pP].*")) {
-    		period = sessionId.substring(sessionId.length() - 2);
-    	}
+	private Set<CourseOffering> getCourseOfferingsForDepartments(List<String> departments, List<AcademicSession> sessions) 
+	{
+		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
 
-    	if (period == null)
-    		return courseId + "." + sessionTitle;
-    	else
-    		return courseId + "." + sessionTitle + "." + period;
-    }
+		Set<Section> allSections = new HashSet<Section>();
+		String coffId = null;
 
-    /**
-     * Logs in the sakai environment
-     */
-    protected void loginToSakai() {
-    	super.loginToSakai("OfficialSitesJob");
-    }
+		for (String department : departments) {
+			allSections =
+					cmService.findSectionsByCategory(department);
+			if (allSections != null) {
+				for (AcademicSession session : sessions) {
+
+					for (Section section : allSections) {
+						coffId = section.getCourseOfferingEid();
+						CourseOffering coff = cmService.getCourseOffering(coffId);
+						if (coffId != null
+								&& coff.getAcademicSession().getEid()
+								.equals(session.getEid()))
+							courseOfferings.add(cmService
+									.getCourseOffering(coffId));
+					}
+				}
+			}
+		}
+
+		return courseOfferings;
+	}
+
+	private Set<CourseOffering> getCourseOfferingsForSessions(List<AcademicSession> sessions) 
+	{
+		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
+
+		// Retrieve all the course sets
+		Set<CourseSet> allCourseSets = cmService.getCourseSets();
+
+		for (CourseSet courseSet : allCourseSets) {
+
+			for (AcademicSession session : sessions) {
+				Set<CourseOffering> foundCourseOfferings =
+						cmService.findCourseOfferings(courseSet.getEid(),
+								session.getEid());
+				courseOfferings.addAll(foundCourseOfferings);
+			}
+		}
+
+		return courseOfferings;
+	}
+
+	private List<AcademicSession> getSessions(List<String> sessions) {
+		List<AcademicSession> academicSessions = cmService.getAcademicSessions();//new ArrayList<AcademicSession>();
+		
+		for (AcademicSession session : academicSessions) {
+			if (!sessions.contains(session.getTitle())) {
+				academicSessions.remove(session);
+			}
+		}
+	
+		return academicSessions;
+	}
+
+	private List<AcademicSession> getSessions(Date startDate, Date endDate) {
+		List<AcademicSession> sessions = new ArrayList<AcademicSession>();
+
+		List<AcademicSession> allSessions = cmService.getAcademicSessions();
+		Date sessionStartDate, sessionEndDate;
+		for (AcademicSession session : allSessions) {
+			sessionStartDate = session.getStartDate();
+			sessionEndDate = session.getEndDate();
+			if (startDate.compareTo(sessionStartDate) <= 0
+					&& endDate.compareTo(sessionEndDate) >= 0)
+				sessions.add(session);
+		}
+
+		return sessions;
+	}
+
+	private String getSiteName(CourseOffering offering) {
+		AcademicSession session = offering.getAcademicSession();
+		String sessionId = session.getEid();
+
+		String sessionTitle = null;
+		String period = null;
+
+		String courseId = null;
+
+		courseId = FormatUtils.formatCourseId(offering.getCanonicalCourseEid());
+		sessionTitle = FormatUtils.getSessionName(sessionId);
+
+		if (sessionId.matches(".*[pP].*")) {
+			period = sessionId.substring(sessionId.length() - 2);
+		}
+
+		if (period == null)
+			return courseId + "." + sessionTitle;
+		else
+			return courseId + "." + sessionTitle + "." + period;
+	}
+
+	/**
+	 * Logs in the sakai environment
+	 */
+	protected void loginToSakai() {
+		super.loginToSakai("OfficialSitesJob");
+	}
 }

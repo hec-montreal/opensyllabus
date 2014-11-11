@@ -74,6 +74,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private List<String> servEns = null;
 
+    private List<String> sessions = null;
+
     private List<String> allowedFunctions = null;
 
     private List<String> disallowedFunctions = null;
@@ -230,6 +232,16 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    String[] servEnsTable = servEns.split(LIST_DELIMITER);
 	    for (int i = 0; i < servEnsTable.length; i++) {
 		this.servEns.add(servEnsTable[i].trim());
+	    }
+	}
+    }
+
+    private void setSessions(String sessions) {
+	this.sessions = new ArrayList<String>();
+	if (sessions != null && sessions.length() > 0) {
+	    String[] sessionsArray = sessions.split(LIST_DELIMITER);
+	    for (int i = 0; i < sessionsArray.length; i++) {
+		this.sessions.add(sessionsArray[i].trim());
 	    }
 	}
     }
@@ -569,12 +581,14 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		String courses = retrieveParameter(document, COURSES);
 		String endDate = retrieveParameter(document, ENDDATE);
 		String startDate = retrieveParameter(document, STARTDATE);
+		String sessions = retrieveParameter(document, SESSIONS);
 		String programs = retrieveParameter(document, PROGRAMS);
 		String servEns = retrieveParameter(document, SERVENS);
 
 		setCourses(courses);
 		setStartDate(startDate);
 		setEndDate(endDate);
+		setSessions(sessions);
 		setPrograms(programs);
 		setServEns(servEns);
 	    }
@@ -922,6 +936,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     public List<String> getServEns() {
 	return servEns;
+    }
+    
+    public List<String> getSessions() {
+    	return sessions;
     }
 
     public List<String> getPrograms() {
