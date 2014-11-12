@@ -105,7 +105,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 		log.info("found " + courseOfferings.size() + " course offerings");
 
 		for (CourseOffering co : courseOfferings) {
-			String siteId = getSiteName(co);
+			String siteId = getSiteId(co);
 			Set<Section> sections = cmService.getSections(co.getEid());
 
 			if (siteService.siteExists(siteId)) {
@@ -117,7 +117,8 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 
 				try {
 					Site site = siteService.addSite(siteId, "course");
-					site.setTitle(co.getTitle());
+					site.setTitle(co.getTitle() +
+							" (" + FormatUtils.formatCourseId(co.getCanonicalCourseEid()) + ")");
 					site.setPublished(true);
 					site.setJoinable(false);
 
@@ -263,7 +264,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 		return sessions;
 	}
 
-	private String getSiteName(CourseOffering offering) {
+	private String getSiteId(CourseOffering offering) {
 		AcademicSession session = offering.getAcademicSession();
 		String sessionId = session.getEid();
 
