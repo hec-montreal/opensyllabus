@@ -145,8 +145,6 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
-				break;
 			}
 		}
 		logoutFromSakai();
