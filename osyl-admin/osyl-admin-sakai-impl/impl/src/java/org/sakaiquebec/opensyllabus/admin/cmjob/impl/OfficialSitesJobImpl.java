@@ -53,7 +53,7 @@ import ca.hec.commons.utils.FormatUtils;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>, <a href="mailto:curtis.van-osch@hec.ca">Curtis van Osch</a>
  * @version $Id: $
  */
-public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl 
+public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 	implements OfficialSitesJob {
 
 	private static Log log = LogFactory.getLog(OfficialSitesJobImpl.class);
@@ -111,7 +111,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 			if (siteService.siteExists(siteId)) {
 				log.info(siteId + " already exists");
 			} else if (sections == null || sections.size() < 1) {
-				log.info(siteId + " has no sections");    				
+				log.info(siteId + " has no sections");
 			} else {
 				log.info(siteId + " doesn't exists, create it and associate to CM CourseOffering");
 
@@ -129,9 +129,9 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 						if (providerGroupId.length() > 0)
 							providerGroupId += "+";
 						providerGroupId += section.getEid();
-					}    		
+					}
 
-					if (providerGroupId.length() > 0) 
+					if (providerGroupId.length() > 0)
 						site.setProviderGroupId(providerGroupId);
 
 					//add site info
@@ -153,12 +153,12 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 		log.info("end OfficialSitesJob");
 	}
 
-	private Set<CourseOffering> getSpecifiedCourseOfferings(List<String> courses, List<AcademicSession> sessions) 
+	private Set<CourseOffering> getSpecifiedCourseOfferings(List<String> courses, List<AcademicSession> sessions)
 	{
 		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
-		for (String courseId : courses) 
+		for (String courseId : courses)
 		{
-			for (AcademicSession session : sessions) 
+			for (AcademicSession session : sessions)
 			{
 				String coId = courseId + session.getEid();
 				if (cmService.isCourseOfferingDefined(coId))
@@ -168,13 +168,13 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 		return courseOfferings;
 	}
 
-	private Set<CourseOffering> getCourseOfferingsForPrograms(List<String> programs, List<AcademicSession> sessions) 
+	private Set<CourseOffering> getCourseOfferingsForPrograms(List<String> programs, List<AcademicSession> sessions)
 	{
 		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
 
-		for (String program : programs) 
+		for (String program : programs)
 		{
-			for (AcademicSession session : sessions) 
+			for (AcademicSession session : sessions)
 			{
 				courseOfferings.addAll(
 						cmService.findCourseOfferingsByAcadCareerAndAcademicSession(
@@ -185,7 +185,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 		return courseOfferings;
 	}
 
-	private Set<CourseOffering> getCourseOfferingsForDepartments(List<String> departments, List<AcademicSession> sessions) 
+	private Set<CourseOffering> getCourseOfferingsForDepartments(List<String> departments, List<AcademicSession> sessions)
 	{
 		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
 
@@ -214,7 +214,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 		return courseOfferings;
 	}
 
-	private Set<CourseOffering> getCourseOfferingsForSessions(List<AcademicSession> sessions) 
+	private Set<CourseOffering> getCourseOfferingsForSessions(List<AcademicSession> sessions)
 	{
 		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
 
@@ -235,14 +235,15 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 	}
 
 	private List<AcademicSession> getSessions(List<String> sessions) {
-		List<AcademicSession> academicSessions = cmService.getAcademicSessions();//new ArrayList<AcademicSession>();
-		
-		for (AcademicSession session : academicSessions) {
-			if (!sessions.contains(session.getTitle())) {
-				academicSessions.remove(session);
+		List<AcademicSession> allAcademicSessions = cmService.getAcademicSessions();
+		List<AcademicSession> academicSessions = new ArrayList<AcademicSession>();
+
+		for (AcademicSession session : allAcademicSessions) {
+			if (sessions.contains(session.getTitle())) {
+				academicSessions.add(session);
 			}
 		}
-	
+
 		return academicSessions;
 	}
 
