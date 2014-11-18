@@ -149,9 +149,11 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 					site.setTitle(co.getTitle() +
 							" (" + FormatUtils.formatCourseId(co.getCanonicalCourseEid()) + ")");
 					site.setJoinable(false);
+					site.setPublished(false);
 
 					ResourcePropertiesEdit rp = site.getPropertiesEdit();
 					rp.addProperty("term", co.getAcademicSession().getTitle());
+					rp.addProperty("term_eid", co.getAcademicSession().getEid());
 
 					String providerGroupId = "";
 					for (Section section : sections) {
