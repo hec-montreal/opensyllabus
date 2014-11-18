@@ -122,18 +122,18 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 
 					Site site = null;
 
-					if (template != null) {
-						String lang = null;
-						if (co.getLang() == null) {
-							lang = "fr";
-						}
-						else if (co.getLang().length() > 2) {
-							lang = co.getLang().substring(0, 2);
-						}
-						else {
-							lang = co.getLang();
-						}
+					String lang = null;
+					if (co.getLang() == null) {
+						lang = "fr";
+					}
+					else if (co.getLang().length() > 2) {
+						lang = co.getLang().substring(0, 2);
+					}
+					else {
+						lang = co.getLang();
+					}
 
+					if (template != null && siteService.siteExists(template + lang)) {
 					    site =
 						    siteService.addSite(siteId,
 							    siteService.getSite(template + lang));
