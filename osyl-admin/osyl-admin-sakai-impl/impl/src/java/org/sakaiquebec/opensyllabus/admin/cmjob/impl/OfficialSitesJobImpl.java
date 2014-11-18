@@ -116,10 +116,38 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 				log.info(siteId + " doesn't exists, create it and associate to CM CourseOffering");
 
 				try {
-					Site site = siteService.addSite(siteId, "course");
+					String template =
+							ServerConfigurationService.getString(
+								"opensyllabus.course.template.prefix", null);
+
+					Site site = null;
+
+					if (template != null) {
+						String lang = null;
+						if (co.getLang() == null) {
+							lang = "fr";
+						}
+						else if (co.getLang().length() > 2) {
+							lang = co.getLang().substring(0, 2);
+						}
+						else {
+							lang = co.getLang();
+						}
+
+					    site =
+						    siteService.addSite(siteId,
+							    siteService.getSite(template + lang));
+					} else {
+						site = siteService.addSite(siteId, "course");
+						//add site info
+						SitePage page = site.addPage();
+						page.setTitle(toolManager.getTool("sakai.siteinfo").getTitle());
+						page.setLayout(SitePage.LAYOUT_SINGLE_COL);
+						page.addTool("sakai.siteinfo");
+					}
+
 					site.setTitle(co.getTitle() +
 							" (" + FormatUtils.formatCourseId(co.getCanonicalCourseEid()) + ")");
-					site.setPublished(true);
 					site.setJoinable(false);
 
 					ResourcePropertiesEdit rp = site.getPropertiesEdit();
@@ -134,12 +162,6 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 
 					if (providerGroupId.length() > 0)
 						site.setProviderGroupId(providerGroupId);
-
-					//add site info
-					SitePage page = site.addPage();
-					page.setTitle(toolManager.getTool("sakai.siteinfo").getTitle());
-					page.setLayout(SitePage.LAYOUT_SINGLE_COL);
-					page.addTool("sakai.siteinfo");
 
 					siteService.save(site);
 				} catch (Exception e) {
@@ -188,7 +210,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 	{
 		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
 
-		Set<Section> allSections = new HashSet<Section>();
+		Set<Section> allSections = null;
 		String coffId = null;
 
 		for (String department : departments) {
