@@ -148,8 +148,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 						page.addTool("sakai.siteinfo");
 					}
 
-					site.setTitle(co.getTitle() +
-							" (" + FormatUtils.formatCourseId(co.getCanonicalCourseEid()) + ")");
+					site.setTitle(co.getTitle() + "(" + siteId + ")");
 					site.setJoinable(false);
 					site.setPublished(false);
 
