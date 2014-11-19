@@ -122,7 +122,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 
 					Site site = null;
 
-					String lang = null;
+					String lang = "";
 					if (co.getLang() == null) {
 						lang = "fr";
 					}
@@ -137,6 +137,8 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 					    site =
 						    siteService.addSite(siteId,
 							    siteService.getSite(template + lang));
+					    // make sure new site is not a template also
+					    site.getPropertiesEdit().removeProperty("template");
 					} else {
 						site = siteService.addSite(siteId, "course");
 						//add site info
