@@ -154,8 +154,8 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl
 					site.setPublished(false);
 
 					ResourcePropertiesEdit rp = site.getPropertiesEdit();
-					rp.addProperty("term", co.getAcademicSession().getTitle());
-					rp.addProperty("term_eid", co.getAcademicSession().getEid());
+					rp.addProperty(Site.PROP_SITE_TERM, co.getAcademicSession().getTitle());
+					rp.addProperty(site.PROP_SITE_TERM_EID, co.getAcademicSession().getEid());
 
 					String providerGroupId = "";
 					for (Section section : sections) {
