@@ -43,7 +43,6 @@ public interface OsylCMJob extends OsylAbstractQuartzJob {
 
     public final static String PROF_FILE = "prof_cours3.dat";
 
-
     public final static String SERV_ENS_FILE = "service_enseignement.dat";
 
     public final static String PROG_ETUD_FILE = "programme_etudes.dat";
@@ -53,8 +52,6 @@ public interface OsylCMJob extends OsylAbstractQuartzJob {
 
     public final static String EXTRACTS_PATH_CONFIG_KEY =
 	    "coursemanagement.extract.files.path";
-
-   // public final static String SECRETARY_ROLE = "SEC";
 
     public final static String ACTIVE_STATUS = "active";
 
