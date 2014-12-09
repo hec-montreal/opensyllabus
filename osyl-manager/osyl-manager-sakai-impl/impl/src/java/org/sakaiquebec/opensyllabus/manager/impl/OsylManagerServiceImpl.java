@@ -150,6 +150,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /** the news tool **/
     private final static String NEWS_TOOL_ID = "sakai.news";
 
+    private final static String SCHEDULE_TOOL_ID = "sakai.schedule";
+    
+    private final static String CALENDAR_TOOL_ID = "sakai.summary.calendar";
+    
+    private final static String RESOURCES_TOOL_ID = "sakai.resources";
+
     private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
 
     public final static String SHARABLE_SECTION = "00";
@@ -2284,7 +2290,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	// import other tools then
 	for (int i = 0; i < toolIds.size(); i++) {
 	    String toolId = (String) toolIds.get(i);
-	    if (!toolId.equalsIgnoreCase("sakai.resources")) {
+		if (!toolId.equalsIgnoreCase(RESOURCES_TOOL_ID)
+				&& !toolId.equalsIgnoreCase(SCHEDULE_TOOL_ID)
+				&& !toolId.equalsIgnoreCase(CALENDAR_TOOL_ID)) {
 		String fromSiteId = oldSite.getId();
 		String toSiteId = newSite.getId();
 		transferCopyEntitiesMigrate(toolId, fromSiteId, toSiteId);
