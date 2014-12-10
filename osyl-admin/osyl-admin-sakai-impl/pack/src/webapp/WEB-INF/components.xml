@@ -304,6 +304,13 @@
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl"
 		parent="osylAbstractQuartzJob">
 	</bean>
+	
+		<bean id="resetCodeOfConductJob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ResetCodeOfConductJobImpl"
+		parent="osylAbstractQuartzJob">
+			<property name="dataSource" ref="javax.sql.DataSource" />
+	</bean>
+	
 
 	<bean id="roleSynchrojob"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RolesSynchronizationJobImpl"
@@ -453,6 +460,23 @@
 
 		<property name="jobName">
 			<value>Official Sites Creation Job</value>
+		</property>
+
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.resetCodeOfConductJob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		init-method="init">
+
+		<property name="beanId">
+			<value>resetCodeOfConductJob</value>
+		</property>
+
+		<property name="jobName">
+			<value>Reset/Delete all the entries in the Code Of Conduct table job</value>
 		</property>
 
 		<property name="schedulerManager">
