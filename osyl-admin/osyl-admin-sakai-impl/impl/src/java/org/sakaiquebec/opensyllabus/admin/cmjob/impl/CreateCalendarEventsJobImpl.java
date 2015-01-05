@@ -144,9 +144,9 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     		// only attempt event creation if the calendar was found
     		if (courseOffering != null && calendarFound) {
 
-    			// don't bother adding the events if this is an MBA site (ZCII-1495)
+    			// don't bother adding the events if this is an MBA site (ZCII-1495) or DF (ZCII-1665)
         		// and the event is not a final or mid-term (intratrimestriel) exam
-        		if (!courseOffering.getAcademicCareer().equals(CAREER_MBA) ||
+        		if ((!courseOffering.getAcademicCareer().equals(CAREER_MBA) && !siteId.contains("DF")) ||
         				event.getExamType().equals(PSFT_EXAM_TYPE_INTRA) ||
         				event.getExamType().equals(PSFT_EXAM_TYPE_FINAL)) {
 
@@ -160,7 +160,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     						event.getDescription());
         		} else {
         			log.debug("Skipping event creation: " + getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()) +
-        					" for site " + siteId + " (course is MBA and event is not an exam)");
+        					" for site " + siteId + " (course is MBA or DF and event is not an exam)");
         		}
     		}
 
@@ -225,9 +225,9 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
     		if (courseOffering != null && calendarFound) {
 
-    			// don't bother modifying the events if this is an MBA site (ZCII-1495)
+    			// don't bother adding the events if this is an MBA site (ZCII-1495) or DF (ZCII-1665)
         		// and the event is not a final or mid-term (intratrimestriel) exam
-        		if (!courseOffering.getAcademicCareer().equals(CAREER_MBA) ||
+        		if ((!courseOffering.getAcademicCareer().equals(CAREER_MBA) && !siteId.contains("DF")) ||
         				event.getExamType().equals(PSFT_EXAM_TYPE_INTRA) ||
         				event.getExamType().equals(PSFT_EXAM_TYPE_FINAL)) {
 
@@ -241,7 +241,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     						event.getDescription());
         		} else {
         			log.debug("Skipping event update: " + getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()) +
-        					" for site " + siteId + " (course is MBA and event is not an exam)");
+        					" for site " + siteId + " (course is MBA or DF and event is not an exam)");
         		}
     		}
 
@@ -387,17 +387,17 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     }
 
 	private String getEventTitle(String siteId, String type, Integer seq_num) {
-		
+
 		Site site = null;
 		String courseSiteTittle = "";
-		
+
 		try{
 			site = siteService.getSite(siteId);
 			courseSiteTittle = site.getProperties().getPropertyFormatted("title");
 		}catch (IdUnusedException e){
 			log.error("The site " + siteId + "does not exist");
 		}
-		
+
 
 		if (type.equals(" ")){
 			if (courseSiteTittle != "")
@@ -423,14 +423,14 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 			else
 				rb.getFormattedMessage("calendar.event-title.test", new Object[] { siteId });
 		}
-	
+
 		else{
 			if (courseSiteTittle != "")
 				return (courseSiteTittle + " (" + rb.getFormattedMessage("calendar.event-title.other", new Object[] { type, siteId }) + ")");
 		}
 
 		return rb.getFormattedMessage("calendar.event-title.other", new Object[] { type, siteId });
-	
+
 	}
 
 	private String getType(String exam_type) {
