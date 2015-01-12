@@ -90,8 +90,8 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 		//rulesPanel.setWidth("100%");
 		rulesPanel.setStylePrimaryName("Osyl-UnitView-ResPanel");
 		
-		Label plagiarism_label, calculator_label;
-		HTML plagiarism_content,  calculator_content;
+		Label plagiarism_label, calculator_label, mutual_aid_label;
+		HTML plagiarism_content,  calculator_content, mutual_aid_content;
 		
 		plagiarism_label = new Label(getCoMessages().getMessage("plagiarism"));
 		plagiarism_label.setStylePrimaryName("Osyl-UnitView-Title Osyl-Title3 Osyl-RubricTitle");
@@ -105,12 +105,18 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 		calculator_content = new HTML(getCoMessages().getMessage("calculator_content"));
 		calculator_content.setStylePrimaryName("Osyl-ASMStructure-description");
 		
+		mutual_aid_label = new Label(getCoMessages().getMessage("mutual_aid_label"));
+		mutual_aid_label.setStylePrimaryName("Osyl-UnitView-Title Osyl-Title3 Osyl-RubricTitle");
+		
+		mutual_aid_content = new HTML(getCoMessages().getMessage("mutual_aid_content"));
+		mutual_aid_content.setStylePrimaryName("Osyl-ASMStructure-description");
+		
 		rulesPanel.add(plagiarism_label);
 		rulesPanel.add(plagiarism_content);
 		rulesPanel.add(calculator_label);
 		rulesPanel.add(calculator_content);
-		
-		
+		rulesPanel.add(mutual_aid_label);
+		rulesPanel.add(mutual_aid_content);
 		
 		getMainPanel().add(rulesPanel);
 	
