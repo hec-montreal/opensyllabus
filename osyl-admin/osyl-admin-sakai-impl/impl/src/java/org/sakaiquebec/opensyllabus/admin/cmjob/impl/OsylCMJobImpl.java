@@ -35,6 +35,8 @@ import org.sakaiproject.coursemanagement.api.Membership;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.coursemanagement.api.exception.IdExistsException;
 import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
+import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
@@ -252,7 +254,7 @@ OsylCMJob {
 							log.info("Coordinators for "
 									+ detailsCours.getUniqueKey() + ": "
 									+ coordinator);
-						} 
+						}
 					}
 				}
 			}
@@ -262,7 +264,7 @@ OsylCMJob {
 
 	/** {@inheritDoc} */
         public void loadCourses() {
-    
+
     	DetailCoursMapEntry coursEntry = null;
     	String canonicalCourseId = "", courseOfferingId = "", courseSectionId =
     		"", courseSetId = "";
@@ -276,13 +278,13 @@ OsylCMJob {
     	String category;
     	Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
     	CanonicalCourse canCourse = null;
-    
+
     	Iterator<DetailCoursMapEntry> cours =
     		detailCoursMap.values().iterator();
-    
+
     	while (cours.hasNext()) {
     	    coursEntry = (DetailCoursMapEntry) cours.next();
-    
+
     	    // we do not make any processing for ZC1 courses
     	    if (!"ZC1".equals(coursEntry.getClassSection())) {
     		if (!DetailCoursMapEntry.CLASS_STATUS_CANCELLED
@@ -291,13 +293,10 @@ OsylCMJob {
     		    title = coursEntry.getCourseTitleLong();
     		    description = coursEntry.getCourseTitleLong();
     		    courseSetId = coursEntry.getAcadOrg();
-    
+
     		    // create the canonical course
     		    cc = createOrUpdateCanonicalCourse(canonicalCourseId, title, description, cc);
-    		    
-    		    // Check wether there is a directory site
-    		    // hasDirectorySite(canCourse);
-    
+
     		    if (cmService.isCourseSetDefined(courseSetId)) {
     			cmAdmin.removeCanonicalCourseFromCourseSet(courseSetId,
     				canonicalCourseId);
@@ -329,12 +328,12 @@ OsylCMJob {
      			    requirements = null;
     			}
     			career = programmeEtudesMapEntry.getAcadCareer();
-    
+
     			courseOff = createOrUpdateCourseOffering(session,
     				canonicalCourseId, courseOfferingId, title,
     				description, lang, career, credits,
     				requirements);
-    
+
     			//Update courseSet
     			if (cmService.isCourseSetDefined(courseSetId)) {
     			    cmAdmin.removeCourseOfferingFromCourseSet(
@@ -342,18 +341,18 @@ OsylCMJob {
     			    cmAdmin.addCourseOfferingToCourseSet(courseSetId,
     				    courseOfferingId);
     			}
-    
+
     			// create course section
     			category = coursEntry.getAcadOrg();
     			courseSectionId = getCourseSectionId(coursEntry);
-    			
+
     			title = coursEntry.getClassSection();
-    			
+
     			Section newSection =
     				createOrUpdateSection(courseOfferingId,
     					courseSectionId, title, description,
     					category, lang);
-    
+
     			// INFO: Create the enrollment set as soon as the
     			// section
     			// exists so the students
@@ -366,17 +365,19 @@ OsylCMJob {
     				courseOfferingId, enrollmentSetId, title,
     				description);
     		    }
-    
+
     		} else {
     		    // section de cours annulée
      		    courseSectionId = getCourseSectionId(coursEntry);
-    		    removeSection(courseSectionId);
+     		    if (cmService.isSectionDefined(courseSectionId)) {
+     		    	removeSection(courseSectionId);
+     		    }
     		}
     	    }
     	}
-    
+
         }
-	
+
         private Set<CanonicalCourse> createOrUpdateCanonicalCourse(String canonicalCourseId, String title, String description, Set<CanonicalCourse> cc) {
     	CanonicalCourse canCourse = null;
     	if (!cmService.isCanonicalCourseDefined(canonicalCourseId)) {
@@ -385,17 +386,17 @@ OsylCMJob {
     			    description);
     	    cc.add(canCourse);
     	    cmAdmin.setEquivalentCanonicalCourses(cc);
-    
+
     	} else {
     	    // we update
     	    canCourse = cmService.getCanonicalCourse(canonicalCourseId);
     	    canCourse.setDescription(description);
     	    canCourse.setTitle(title);
     	}
-    
+
     	return cc;
         }
-    
+
         private Section createOrUpdateSection(String courseOfferingId,
     	    String courseSectionId, String title, String description,
     	    String category, String lang) {
@@ -413,39 +414,83 @@ OsylCMJob {
     	    newSection.setLang(lang);
     	    cmAdmin.updateSection(newSection);
     	}
-    
+
+    	// add the section to site (if it exists)
+    	String siteId = getSiteName(newSection);
+    	if (siteService.siteExists(siteId)) {
+    		try {
+    			Site site = siteService.getSite(siteId);
+        		String providerGroupId = site.getProviderGroupId();
+
+        		if (providerGroupId != null &&
+        				!providerGroupId.contains(newSection.getEid())) {
+
+        			if (providerGroupId.length() > 0) {
+        				providerGroupId += "+";
+        			}
+
+        			providerGroupId += newSection.getEid();
+        		}
+
+        		site.setProviderGroupId(providerGroupId);
+        		siteService.save(site);
+
+    		} catch (IdUnusedException e) {
+        		log.error("Site " + siteId + " does not exist");
+    		} catch (PermissionException e) {
+        		log.error("Permission denied while saving site " + siteId);
+    		}
+    	}
+
     	return newSection;
         }
-    
+
         private void removeSection(String courseSectionId) {
-    	try {
-    	    Section section = cmService.getSection(courseSectionId);
-    	    String siteId = getSiteName(section);
-    	    boolean siteExist = osylSiteService.siteExists(siteId);
-    	    if (siteExist) {
-    		Site site = siteService.getSite(siteId);
-    		if (osylSiteService.hasBeenPublished(siteId)) {
-    		    osylPublishService.unpublish(siteId, webappDir);
-    		}
-    		if (site.getProviderGroupId() != null
-    			&& !"".equals(site.getProviderGroupId())) {
-    		    osylManagerService.dissociateFromCM(siteId);
-    		}
-    	    }
-    	} catch (Exception e) {
-    	   log.warn ("You are trying to destroy a section that does not exist " + courseSectionId);
-    	}
-    
+        	try {
+        		Section section = cmService.getSection(courseSectionId);
+        		String siteId = getSiteName(section);
+
+        		//remove section from CourseManagement
+            	cmAdmin.removeSection(courseSectionId);
+
+        		if (siteService.siteExists(siteId)) {
+        			Site site = siteService.getSite(siteId);
+        			String providerGroupId = site.getProviderGroupId();
+
+        			if (providerGroupId != null
+        				&& !providerGroupId.isEmpty()
+        				&& providerGroupId.contains(courseSectionId)) {
+
+        				// remove first instance of "+<courseSectionId>" or "<courseSectionId>+" or "<courseSectionId>"
+        				providerGroupId = providerGroupId.replaceFirst("\\+"+courseSectionId+"|"+courseSectionId+"\\+|"+courseSectionId, "");
+
+            			site.setProviderGroupId(providerGroupId);
+            			siteService.save(site);
+        			}
+
+        			// delete realm
+        			Set<String> realms = authzGroupService.getAuthzGroupIds(courseSectionId);
+        			for (String id : realms) {
+        				authzGroupService.removeAuthzGroup(id);
+        			}
+        		}
+        	} catch (AuthzPermissionException e) {
+        		log.error("You don't have permission to delete the realm " + courseSectionId);
+        	} catch (PermissionException e) {
+        		log.error("You don't have permission to update site provider to remove section " + courseSectionId);
+        	} catch (IdUnusedException e) {
+        		log.warn("You are trying to destroy a section that does not exist " + courseSectionId);
+        	}
         }
-    
+
         private EnrollmentSet createOrUpdateEnrollmentSet(Section newSection,
     	    String courseSetId, String courseOfferingId,
     	    String enrollmentSetId, String title, String description) {
     	// Create the enrollment set
     	EnrollmentSet enrollmentSet = null;
-    
+
     	if (newSection.getEnrollmentSet() == null) {
-    
+
     	    if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
     		try {
     		    enrollmentSet =
@@ -459,10 +504,10 @@ OsylCMJob {
     		enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
     	    newSection.setEnrollmentSet(enrollmentSet);
     	    cmAdmin.updateSection(newSection);
-    
+
     	}
     	return enrollmentSet;
-    
+
         }
 
 	private CourseOffering createOrUpdateCourseOffering (AcademicSession session, String canonicalCourseId, String courseOfferingId, String title, String description, String lang, String career, String credits, String requirements){
@@ -491,10 +536,10 @@ OsylCMJob {
 			courseOff.setRequirements(requirements);
 			cmAdmin.updateCourseOffering(courseOff);
 		}
-		
+
 		return courseOff;
 	}
-	
+
 
 	private String getSiteName(Section section) {
 		String siteName = null;
@@ -560,14 +605,11 @@ OsylCMJob {
 			periode = sessionId.substring(sessionId.length() - 2);
 		}
 
-		groupe = sectionId.substring(courseOffId.length());
-
 		if (periode == null)
-			siteName = courseId + "." + sessionTitle + "." + groupe;
+			siteName = courseId + "." + sessionTitle;
 		else
 			siteName =
-			courseId + "." + sessionTitle + "." + periode + "."
-					+ groupe;
+			courseId + "." + sessionTitle + "." + periode;
 
 		return siteName;
 	}
@@ -1149,7 +1191,7 @@ OsylCMJob {
 
 	/**
 	 * This method is used to load teachers, interns .... For now
-	 * it is used just for coordinators. 
+	 * it is used just for coordinators.
 	 */
 	public void loadMembership() {
 		assignTeachers();
