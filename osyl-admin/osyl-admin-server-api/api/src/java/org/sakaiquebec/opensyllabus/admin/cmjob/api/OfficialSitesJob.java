@@ -31,17 +31,11 @@ public interface OfficialSitesJob extends OsylAbstractQuartzJob {
     public final static String TEMPORARY_LANG = "fr_CA";
 
     public final static String OSYL_CO_CONFIG = "default";
-    
-    public final static String SUMMER = "E";
-    
-    public final static String WINTER = "H";
-    
-    public final static String FALL = "A";
-    
+
     public final static String MEMBERS_ROLE_IN_SHARABLE = "Instructor";
-    
+
     //FIXME: SAKAI-1550
     public final static String NOTIFICATION_MESSAGE_HEADER = "Avertissement";
-    
+
 }
 

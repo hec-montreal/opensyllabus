@@ -22,7 +22,6 @@
 package org.sakaiquebec.opensyllabus.admin.server;
 
 import org.sakaiquebec.opensyllabus.admin.api.*;
-import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
 
 /**
  * A bean that acts as a concentrator for OSYL admin services, to be used in JSP

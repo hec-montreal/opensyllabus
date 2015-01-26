@@ -294,12 +294,6 @@
 	<!-- enable the configuration of transactional behavior based on annotations -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
-	<bean id="osylcmjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImpl"
-		parent="osylAbstractQuartzJob">
-		<property name="courseEventSynchroJob" ref="courseEventSynchroJob"/>
-	</bean>
-
 	<bean id="offSitesjob"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl"
 		parent="osylAbstractQuartzJob">
@@ -419,23 +413,6 @@
 		<property name="jobName">
 			<value>Update existing sites to add Section title if related to the
 				CM</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>osylcmjob</value>
-		</property>
-
-		<property name="jobName">
-			<value>OpenSyllabus Course Management Job Synchronizer</value>
 		</property>
 
 		<property name="schedulerManager">

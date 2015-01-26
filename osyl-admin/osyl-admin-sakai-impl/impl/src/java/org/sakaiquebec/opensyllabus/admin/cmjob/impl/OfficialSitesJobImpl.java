@@ -44,7 +44,6 @@ import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
-import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 
 import ca.hec.commons.utils.FormatUtils;
