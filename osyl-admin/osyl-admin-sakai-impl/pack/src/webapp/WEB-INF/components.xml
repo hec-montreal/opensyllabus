@@ -281,11 +281,6 @@
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
 	</bean>
 
-	<bean id="courseEventSynchroJob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CourseEventSynchroJobImpl">
-		<property name="dataSource" ref="javax.sql.DataSource" />
-	</bean>
-
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="javax.sql.DataSource" />
