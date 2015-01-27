@@ -289,11 +289,6 @@
 	<!-- enable the configuration of transactional behavior based on annotations -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
-	<bean id="offSitesjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl"
-		parent="osylAbstractQuartzJob">
-	</bean>
-
 	<bean id="roleSynchrojob"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RolesSynchronizationJobImpl"
 		parent="osylAbstractQuartzJob">
@@ -407,24 +402,6 @@
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.offSitesjob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>offSitesjob</value>
-		</property>
-
-		<property name="jobName">
-			<value>Official Sites Creation Job</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
 
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.roleSynchrojob"
