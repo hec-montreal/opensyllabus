@@ -371,13 +371,6 @@
 		<property name="entityManager" ref="org.sakaiproject.entity.api.EntityManager" />
 	</bean>
 
-	<bean id="createCalendarEventsJob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreateCalendarEventsJobImpl"
-		parent="osylAbstractQuartzJob">
-		<property name="calendarService" ref="org.sakaiproject.calendar.api.CalendarService" />
-		<property name="dataSource" ref="javax.sql.DataSource" />
-	</bean>
-
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osyltransferjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
@@ -664,23 +657,6 @@
 
 		<property name="jobName">
 			<value>Remove users from zc2 course management</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.createCalendarEventsJob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>createCalendarEventsJob</value>
-		</property>
-
-		<property name="jobName">
-			<value>Create Calendar Events Job</value>
 		</property>
 
 		<property name="schedulerManager">
