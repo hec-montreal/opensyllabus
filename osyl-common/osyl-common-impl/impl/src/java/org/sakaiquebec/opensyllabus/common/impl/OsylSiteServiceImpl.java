@@ -755,6 +755,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    log.info("Added assignment page");
 		    addTool(site, "sakai.resources");
 		    log.info("Added resources page");
+		    addTool(site, "sakai.site.roster2");
+		    log.info("Added roster tool");
 		    addTool(site, "sakai.siteinfo");
 		    log.info("Added site info page");
 		}
