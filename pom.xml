@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <artifactId>base</artifactId>
     <groupId>org.sakaiproject</groupId>
-    <version>2.9.1</version>
+    <version>10.4</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
   <artifactId>osyl</artifactId>
-  <version>2.9.1</version>
+  <version>10.4</version>
   <packaging>pom</packaging>
 
   <name>Sakai Quebec OpenSyllabus</name>
@@ -71,7 +71,7 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-  </repositories>
+ </repositories>
 
   <dependencyManagement>
     <dependencies>
@@ -377,7 +377,7 @@
 
      -->
       <plugins>
-          <!-- Maven -->
+          <!-- Maven
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
@@ -405,12 +405,12 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
           <version>2.2.0</version>
-        </plugin>
-        <plugin>
+        </plugin> -->
+       <!--  <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
           <version>2.5</version>
-        </plugin>
+        </plugin> 
         <plugin>
           <groupId>org.apache.maven.plugins
           </groupId>
@@ -429,12 +429,12 @@
             </rules>
           </configuration>
         </plugin>
-        <plugin>
+         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-install-plugin</artifactId>
           <version>2.3.1</version>
-        </plugin>
-        <plugin>
+        </plugin> -->
+        <!-- <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>2.5</version>
@@ -447,8 +447,8 @@
               <link>http://junit.sourceforge.net/javadoc/</link>
             </links>
           </configuration>
-        </plugin>
-        <plugin>
+        </plugin> -->
+        <!-- <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jxr-plugin</artifactId>
           <version>2.2</version>
@@ -463,7 +463,7 @@
           <configuration>
             <encoding>${project.build.sourceEncoding}</encoding>
           </configuration>
-        </plugin>
+        </plugin> 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
@@ -483,11 +483,11 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.8.1</version>
         </plugin>
-        <plugin>
+         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
           <version>2.1.1</version>
-        </plugin>
+        </plugin> -->
 
         <!-- Misc -->
         <plugin>
@@ -495,11 +495,7 @@
           <artifactId>maven-jetty-plugin</artifactId>
           <version>6.1.15</version>
         </plugin>
-        <plugin>
-          <groupId>org.sakaiproject.maven.plugins</groupId>
-          <artifactId>sakai</artifactId>
-          <version>1.2.0</version>
-        </plugin>
+        
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>gwt-maven-plugin</artifactId>
@@ -524,9 +520,9 @@
       </plugins>
     </pluginManagement>
 
-      <!-- ordered alphabetically by owner -->
+      <!-- ordered alphabetically by owner 
     <plugins>
-        <!-- Maven -->
+         Maven 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-eclipse-plugin</artifactId>
@@ -542,7 +538,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -551,12 +547,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
       </plugin>
-    </plugins>
+    </plugins>-->
   </build>
 
   <reporting>
     <plugins>
-      <!--  Ensure JDK level 1.5+ for generics support and other worries -->
+      <!--  Ensure JDK level 1.5+ for generics support and other worries
       <plugin>
 	     <groupId>org.apache.maven.plugins</groupId>
 		 <artifactId>maven-compiler-plugin</artifactId>
@@ -580,8 +576,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
         <version>2.8.1</version>
-        <configuration>
-        	<!-- see http://www.nabble.com/surefire-forkMode-setting-td22863160.html -->
+        <configuration> -->
+        	<!-- see http://www.nabble.com/surefire-forkMode-setting-td22863160.html 
            	<forkMode>once</forkMode>
         </configuration>
       </plugin>
@@ -594,7 +590,7 @@
 	    <groupId>org.apache.maven.plugins</groupId>
 	    <artifactId>maven-project-info-reports-plugin</artifactId>
 	    <version>2.3.1</version>
-	  </plugin>
+	  </plugin>-->
 	</plugins>
   </reporting>
 </project>

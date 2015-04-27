@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.sakaiquebec.opensyllabus</groupId>
 		<artifactId>osyl</artifactId>
-		<version>2.9.1</version>
+		<version>10.4</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -45,11 +45,12 @@
 			<artifactId>gwt-user</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
-			<scope>provided</scope>
-		</dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${kernel.spring.version}</version>
+        <scope>provided</scope>
+      </dependency>
 		<dependency>
 			<groupId>org.sakaiquebec.opensyllabus</groupId>
 			<artifactId>osyl-manager-server-api</artifactId>

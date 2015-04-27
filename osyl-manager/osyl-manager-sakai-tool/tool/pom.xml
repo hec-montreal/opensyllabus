@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.sakaiquebec.opensyllabus</groupId>
 		<artifactId>osyl-manager</artifactId>
-		<version>2.9.1</version>
+		<version>10.4</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -99,7 +99,7 @@
 
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
+			<artifactId>spring-core</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		
