@@ -11,7 +11,7 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylSecurityServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init"  singleton="true">
 
 		<!-- Sakai dependencies -->
 		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
@@ -31,7 +31,7 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylConfigService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylConfigServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init"  singleton="true">
 
 		<property name="configDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
@@ -66,7 +66,7 @@
 	
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylContentService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylContentServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init" singleton="true">
 
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
@@ -114,7 +114,7 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSiteService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylSiteServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init"  singleton="true">
 
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
@@ -160,7 +160,7 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylDirectoryServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init"  singleton="true">
 
 		<!-- Sakai dependencies -->
 		<property name="siteService" 

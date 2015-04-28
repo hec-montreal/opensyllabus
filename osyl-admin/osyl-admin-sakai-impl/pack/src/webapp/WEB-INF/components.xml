@@ -233,7 +233,7 @@
 		for the Citations Helper -->
 	<bean id="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService"
 		class="org.sakaiquebec.opensyllabus.admin.impl.ConfigurationServiceImpl"
-		init-method="init" destroy-method="destroy">
+		init-method="init" >
 
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
