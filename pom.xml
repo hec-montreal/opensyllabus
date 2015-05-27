@@ -187,6 +187,18 @@
 			<artifactId>sakai-announcement-api</artifactId>
 			<version>${sakai.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject.hierarchy</groupId>
+			<artifactId>hierarchy-api</artifactId>
+			<version>${sakai.hierarchy.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject.evaluation</groupId>
+			<artifactId>sakai-evaluation-api</artifactId>
+			<version>${sakai.evaluation.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
       <!-- spring and hibernate -->
       <dependency>

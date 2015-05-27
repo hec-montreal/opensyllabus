@@ -33,7 +33,7 @@
       <groupId>org.sakaiquebec.opensyllabus</groupId>
       <artifactId>osyl-admin-server-api</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
       <artifactId>osyl-common-impl</artifactId>
@@ -56,6 +56,14 @@
       <groupId>org.sakaiproject.calendar</groupId>
       <artifactId>sakai-calendar-api</artifactId>
      </dependency>
+    <dependency>
+      <groupId>org.sakaiproject.hierarchy</groupId>
+      <artifactId>hierarchy-api</artifactId>
+    </dependency>
+    <dependency>
+       <groupId>org.sakaiproject.evaluation</groupId>
+       <artifactId>sakai-evaluation-api</artifactId>
+    </dependency>
 
      <!-- spring and hibernate -->
     <dependency>

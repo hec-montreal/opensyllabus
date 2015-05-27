@@ -304,13 +304,13 @@
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl"
 		parent="osylAbstractQuartzJob">
 	</bean>
-	
+
 		<bean id="resetCodeOfConductJob"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ResetCodeOfConductJobImpl"
 		parent="osylAbstractQuartzJob">
 			<property name="dataSource" ref="javax.sql.DataSource" />
 	</bean>
-	
+
 
 	<bean id="roleSynchrojob"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RolesSynchronizationJobImpl"
@@ -394,6 +394,14 @@
 		parent="osylAbstractQuartzJob">
 		<property name="calendarService" ref="org.sakaiproject.calendar.api.CalendarService" />
 		<property name="dataSource" ref="javax.sql.DataSource" />
+	</bean>
+
+	<bean id="evaluationSiteHierarchyJob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.EvaluationSiteHierarchyJob">
+		<property name="hierarchyService" ref="org.sakaiproject.hierarchy.HierarchyService" />
+		<property name="courseManagementService" ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="evalHierarchyLogic"
+			ref="org.sakaiproject.evaluation.logic.externals.ExternalHierarchyLogic" />
 	</bean>
 
 	<bean
@@ -733,6 +741,23 @@
 
 		<property name="jobName">
 			<value>Create Calendar Events Job</value>
+		</property>
+
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.evaluationSiteHierarchyJob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		init-method="init">
+
+		<property name="beanId">
+			<value>evaluationSiteHierarchyJob</value>
+		</property>
+
+		<property name="jobName">
+			<value>Evaluation Site Hierarchy Job</value>
 		</property>
 
 		<property name="schedulerManager">
