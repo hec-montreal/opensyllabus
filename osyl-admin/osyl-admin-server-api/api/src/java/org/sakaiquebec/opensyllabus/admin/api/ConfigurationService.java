@@ -131,6 +131,12 @@ public interface ConfigurationService {
     public final static String CM_EXCEPTIONS_PROGRAM= "program";
     
     
+    /*
+     * Parameters used for evalsys
+     * */
+    public final static String EVALSYS_TERMS_FILE = "evalsysTerm.properties";
+    
+    
     // Parameters used in the official sites synchronisation job
     public Date getEndDate();
 
