@@ -1,5 +1,6 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +28,6 @@ import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
-
 import org.sakaiproject.evaluation.logic.externals.ExternalHierarchyLogic;
 import org.sakaiproject.evaluation.logic.model.EvalHierarchyNode;
 
@@ -39,7 +39,7 @@ import org.sakaiproject.evaluation.logic.model.EvalHierarchyNode;
  */
 public class EvaluationSiteHierarchyJob implements Job{
 
-    private static Log log = LogFactory
+	private static Log log = LogFactory
     	    .getLog(EvaluationSiteHierarchyJob.class);
 
     @Getter @Setter
@@ -53,8 +53,7 @@ public class EvaluationSiteHierarchyJob implements Job{
 
 	private static boolean semaphore = false;
 
-	// for testing
-	private static String term = "A2014";
+    private static final int NUM_SESSIONS_TO_PROCESS = 3;
 
 	public void init() {
 
@@ -71,56 +70,37 @@ public class EvaluationSiteHierarchyJob implements Job{
 		try{
 			log.info("EvaluationSiteHierarchyJob started");
 
-			EvalHierarchyNode rootNode = evalHierarchyLogic.getRootLevelNode();
+			List<AcademicSession> sessions = courseManagementService.getAcademicSessions();
+			Collections.reverse(sessions);
+			String previousSessionTitle = null;
+			int processedSessionCount = 0;
 
-		    Map<String, String> siteProps = new HashMap<String, String>();
-		    siteProps.put("term", term);
+			for (AcademicSession session : sessions) {
+				if (processedSessionCount == NUM_SESSIONS_TO_PROCESS) {
+					break;
+				}
 
-		    //get one page of results for test
-		    List<Site> sites = siteService.getSites(SelectionType.NON_USER, "course", null, siteProps,
-		    		SortType.CREATED_ON_DESC,
-		    		new PagingPosition(1, 10000));
-
-		    Map<String, Set<String>> nodeMap = new HashMap<String, Set<String>>();
-
-			for (Site site : sites) {
-				String providerGroup = site.getProviderGroupId();
-				// skip if provider group id is null or ends in 00 (means it's a shareable site)
-				if (providerGroup == null || providerGroup.substring(providerGroup.length()-2).equals("00")) {
+				if (previousSessionTitle != null &&
+						previousSessionTitle.equals(session.getTitle())) {
+					// we've already handled this session title
 					continue;
 				}
 
-				try {
-					// section specifies department (in category field), evaluation template, and language
-					Section section = courseManagementService.getSection(providerGroup);
-					// course offering specifies program (in academic career)
-					CourseOffering courseOffering = courseManagementService.getCourseOffering(section.getCourseOfferingEid());
+			    Map<String, String> siteProps = new HashMap<String, String>();
+			    siteProps.put("term", session.getTitle());
 
-					//session
-					String nodeTmp = courseOffering.getAcademicSession().getTitle();
-					//language
-					nodeTmp += "|" + section.getLang();
-					// program
-					nodeTmp += "|" + courseOffering.getAcademicCareer();
-					//format
-//					nodeTmp += "|" +
+			    //get one page of results for test
+			    List<Site> sites = siteService.getSites(SelectionType.NON_USER, "course", null, siteProps,
+			    		SortType.CREATED_ON_DESC, new PagingPosition(1, 10000));
 
-					if (nodeMap.containsKey(nodeTmp)) {
-						Set<String> siteRefs = nodeMap.get(nodeTmp);
-						siteRefs.add(site.getReference());
-					}
-					else {
-						Set<String> siteRefs = new HashSet<String>();
-						siteRefs.add(site.getReference());
-						nodeMap.put(nodeTmp, siteRefs);
-					}
-				}
-				catch (IdNotFoundException e) {
-					log.debug("Section or CourseOffering not found for "+site.getId());
-				}
+			    Map<String, Set<String>> nodeMap = createNodeMapForSites(sites);
+
+				createHierarchyNodesAndAssignGroups(nodeMap);
+
+			    previousSessionTitle = session.getTitle();
+			    processedSessionCount++;
 			}
 
-			createNodesAndAssignGroups(nodeMap, rootNode);
 		}
 		finally {
 			log.info("EvaluationSiteHierarchyJob end");
@@ -128,11 +108,68 @@ public class EvaluationSiteHierarchyJob implements Job{
 		}
 	}
 
-	private void createNodesAndAssignGroups(Map<String, Set<String>> nodeMap, EvalHierarchyNode rootNode) {
+	/*
+	 *
+	 */
+	private Map<String, Set<String>> createNodeMapForSites(List<Site> sites) {
+		Map<String, Set<String>> nodeMap = new HashMap<String, Set<String>>();
+
+		if (sites == null || sites.isEmpty())  {
+			return nodeMap;
+		}
+
+		for (Site site : sites) {
+			String providerGroup = site.getProviderGroupId();
+			// skip if provider group id is null or ends in 00 (means it's a shareable site)
+			if (providerGroup == null || providerGroup.substring(providerGroup.length()-2).equals("00")) {
+				continue;
+			}
+
+			try {
+				// section specifies department (in category field), evaluation template, and language
+				Section section = courseManagementService.getSection(providerGroup);
+				// course offering specifies program (in academic career)
+				CourseOffering courseOffering = courseManagementService.getCourseOffering(section.getCourseOfferingEid());
+
+				//session
+				String nodeKey = courseOffering.getAcademicSession().getTitle();
+				//language
+				nodeKey += "|" + section.getLang();
+				// program
+				nodeKey += "|" + courseOffering.getAcademicCareer();
+				//format
+//				nodeKey += "|" + section.getTypeEvaluation();
+
+				if (nodeMap.containsKey(nodeKey)) {
+					Set<String> siteRefs = nodeMap.get(nodeKey);
+					siteRefs.add(site.getReference());
+				}
+				else {
+					Set<String> siteRefs = new HashSet<String>();
+					siteRefs.add(site.getReference());
+					nodeMap.put(nodeKey, siteRefs);
+				}
+			}
+			catch (IdNotFoundException e) {
+				log.debug("Section or CourseOffering not found for "+site.getId());
+			}
+		}
+		return nodeMap;
+	}
+
+	/*
+	 * Create hierarchy nodes (in hierarchy tables) if they don't exist and assign group ids to the appropriate nodes.
+	 *
+	 * Note: Assigned group ids will be overridden!
+	 */
+	private void createHierarchyNodesAndAssignGroups(Map<String, Set<String>> nodeMap) {
+		if (nodeMap == null || nodeMap.isEmpty()) {
+			return;
+		}
 		for(String nodeKey : nodeMap.keySet()) {
 			String[] splitNodeKey = nodeKey.split("\\|");
 
-			EvalHierarchyNode parentNode = evalHierarchyLogic.getRootLevelNode();//rootNode;
+			EvalHierarchyNode parentNode = evalHierarchyLogic.getRootLevelNode();
 			for (int i = 0; i < splitNodeKey.length; i++) {
 				boolean nodeExists = false;
 				Set<EvalHierarchyNode> children = evalHierarchyLogic.getChildNodes(parentNode.id, true);
