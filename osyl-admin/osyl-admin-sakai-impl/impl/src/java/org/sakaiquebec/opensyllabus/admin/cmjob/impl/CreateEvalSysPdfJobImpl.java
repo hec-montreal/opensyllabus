@@ -196,14 +196,14 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 
 		    // Get le Service d'enseignement and create folder
 		    seFolderName = getSE(groupIds[0]);
-		    seFolderId = evalsysReportsFolder + seFolderName + "/";
+		    seFolderId = evalsysReportsFolder + SERV_ENS_FOLDER_NAME + "/"+seFolderName + "/";
 		    seFolderCollection =
 			    createOrGetContentCollection(seFolderId,
 				    seFolderName);
 
 		    // Get le programme and create folder
 		    progFolderName = getProgramme(groupIds[0]);
-		    progFolderId = evalsysReportsFolder + progFolderName + "/";
+		    progFolderId = evalsysReportsFolder + PROG_FORLDER_NAME +"/"+ progFolderName + "/";
 		    progFolderCollection =
 			    createOrGetContentCollection(progFolderId,
 				    progFolderName);
@@ -331,7 +331,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 
     }
 
-    public ContentCollection createOrGetContentCollection(String seFolderId,
+    private ContentCollection createOrGetContentCollection(String seFolderId,
 	    String seFolderName) throws Exception {
 	ContentCollection seFolderCollection = null;
 	ResourcePropertiesEdit resourceProperties = null;
@@ -375,6 +375,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	} catch (ServerOverloadException e) {
 	    e.printStackTrace();
 	} catch (IOException e) {
+	    log.error("The file with the id " + resource.getId() + " does not exist");
 	    e.printStackTrace();
 	}
 
