@@ -321,6 +321,7 @@ OsylCMJob {
 		String description = "";
 		String title = "";
 		String lang = "";
+		String typeEvaluation = "";
 		String career = "";
 		String credits = "";
 		String requirements = "";
@@ -375,6 +376,7 @@ OsylCMJob {
 					if (cmService.isAcademicSessionDefined(coursEntry.getStrmId())) {
 						courseOfferingId = getCourseOfferingId(coursEntry);
 						lang = coursEntry.getLangue();
+						typeEvaluation = coursEntry.getTypeEvaluation();
 						credits = coursEntry.getUnitsMinimum();
 						ProgrammeEtudesMapEntry programmeEtudesMapEntry =
 								programmeEtudesMap.get(coursEntry.getAcadCareer());
@@ -435,7 +437,7 @@ OsylCMJob {
 							newSection =
 									cmAdmin.createSection(courseSectionId, title,
 											description, category, null,
-											courseOfferingId, null, lang);
+											courseOfferingId, null, lang, typeEvaluation);
 
 						} else {
 							// We update
@@ -444,6 +446,7 @@ OsylCMJob {
 							newSection.setDescription(description);
 							newSection.setTitle(title);
 							newSection.setLang(lang);
+							newSection.setTypeEvaluation(typeEvaluation);
 							cmAdmin.updateSection(newSection);
 						}
 
@@ -635,6 +638,7 @@ OsylCMJob {
 		String description = coursEntry.getCourseTitleLong();
 		String category = coursEntry.getAcadOrg();
 		String lang = coursEntry.getLangue();
+		String typeEvaluation = coursEntry.getTypeEvaluation();
 
 		if (!cmService.isSectionDefined(courseSectionId)) {
 
@@ -642,7 +646,7 @@ OsylCMJob {
 					+ ", " + category + ", " + courseOfferingId + ", " + lang);
 			newSection =
 					cmAdmin.createSection(courseSectionId, title, description,
-							category, null, courseOfferingId, null, lang);
+							category, null, courseOfferingId, null, lang, typeEvaluation);
 
 		} else {
 			// We update

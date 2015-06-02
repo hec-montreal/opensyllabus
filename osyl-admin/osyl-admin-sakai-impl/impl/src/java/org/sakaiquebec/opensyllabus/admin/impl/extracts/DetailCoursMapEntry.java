@@ -27,6 +27,7 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     private String courseTitleLong;
     private String strmId;
     private String lang;
+    private String typeEvaluation;
     private String acadCareer;
     private String classStat;
     private String unitsMinimum ;
@@ -203,6 +204,14 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 	}
     }
 
+
+    public String getTypeEvaluation() {
+        return typeEvaluation;
+    }
+
+    public void setTypeEvaluation(String typeEvaluation) {
+        this.typeEvaluation = typeEvaluation;
+    }
 
     public String getLangue() {
 	return lang;

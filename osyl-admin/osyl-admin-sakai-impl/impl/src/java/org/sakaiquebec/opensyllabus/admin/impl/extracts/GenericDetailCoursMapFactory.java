@@ -78,6 +78,12 @@ public class GenericDetailCoursMapFactory {
 	    entry.setAcaCareer(tokens[i++]);
 	    entry.setClassStat(tokens[i++]);
 	    entry.setUnitsMinimum(tokens[i++]); 
+	    try {
+		entry.setTypeEvaluation(tokens[i++]);
+	    } catch (ArrayIndexOutOfBoundsException e) {
+		//on met null si pas de valeur associée au type d'évaluation
+		entry.setTypeEvaluation(null);
+	    }
 
 	    map.put(entry);
 	}
