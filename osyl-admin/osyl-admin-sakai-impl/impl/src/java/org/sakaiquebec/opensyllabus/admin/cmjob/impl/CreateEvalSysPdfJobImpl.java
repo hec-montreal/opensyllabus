@@ -219,7 +219,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 		    // Save pdf to service enseignement folder
 		    reportPdfId =
 			    seFolderCollection.getId() + eval.getTitle() + "_"
-				    + ((EvalGroup) evalGs.get(j)).title;
+				    + ((EvalGroup) evalGs.get(j)).title + ".pdf";
 
 		    contentHostingService.addResource(reportPdfId,
 			    "application/pdf", new ByteArrayInputStream(
@@ -229,7 +229,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 		    // Save pdf to programme folder
 		    reportPdfId =
 			    progFolderCollection.getId() + eval.getTitle()
-				    + "_" + ((EvalGroup) evalGs.get(j)).title;
+				    + "_" + ((EvalGroup) evalGs.get(j)).title + ".pdf";
 
 		    contentHostingService.addResource(reportPdfId,
 			    "application/pdf", new ByteArrayInputStream(

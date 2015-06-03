@@ -178,6 +178,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	}
     }
 
+    
+   
     public List<String> getDisallowedFunctions() {
 	return disallowedFunctions;
     }
@@ -457,6 +459,9 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    setDisallowedFunctions(null);
 
 		}
+		
+
+
 		log.info("There is no " + fileName + " has been removed ");
 	    } catch (TypeException e) {
 		log.info("The resource requested has the wrong type");
