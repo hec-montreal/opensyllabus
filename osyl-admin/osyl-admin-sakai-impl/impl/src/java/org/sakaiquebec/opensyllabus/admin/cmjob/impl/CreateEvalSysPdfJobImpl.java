@@ -23,6 +23,7 @@ import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.coursemanagement.api.AcademicCareer;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.Section;
@@ -144,10 +145,11 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	List<EvalGroup> evalGs;
 	Long[] evalIds;
 	String[] groupIds;
+	ContentResourceEdit resourceEdit = null;
 	ByteArrayOutputStream byteOutputStream;
-	String seFolderName = null;
-	String seFolderId = null;
-	ContentCollection seFolderCollection = null;
+	String departmentFolderName = null;
+	String departmentFolderId = null;
+	ContentCollection departmentFolderCollection = null;
 
 	String progFolderName = null;
 	String progFolderId = null;
@@ -170,7 +172,9 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	    bundle = getResouceBundle(resource);
 	    // TODO: get a list from the bundle
 	    termEid = bundle.getString(BUNDLE_KEY);
+	    
 
+	    
 	    selectedEval = evaluationService.getEvaluationsByTermId(termEid);
 	    evalIds = new Long[selectedEval.size()];
 	    for (int i = 0; i < selectedEval.size(); i++) {
@@ -194,12 +198,13 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 			    (ByteArrayOutputStream) buildPDFReport(eval,
 				    ((EvalGroup) evalGs.get(j)), lang);
 
-		    // Get le Service d'enseignement and create folder
-		    seFolderName = getSE(groupIds[0]);
-		    seFolderId = evalsysReportsFolder + SERV_ENS_FOLDER_NAME + "/"+seFolderName + "/";
-		    seFolderCollection =
-			    createOrGetContentCollection(seFolderId,
-				    seFolderName);
+		    // Get the department and create folder
+		    departmentFolderName = getDepartment(groupIds[0]);
+		    departmentFolderName = removeAccents(departmentFolderName);
+		    departmentFolderId = evalsysReportsFolder + DEPARTMENT_FOLDER_NAME + "/"+departmentFolderName + "/";
+		    departmentFolderCollection =
+			    createOrGetContentCollection(departmentFolderId,
+				    departmentFolderName);
 
 		    // Get le programme and create folder
 		    progFolderName = getProgramme(groupIds[0]);
@@ -213,23 +218,26 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 			    contentHostingService.newResourceProperties();
 		    resourceProperties.addProperty(
 			    ResourceProperties.PROP_DISPLAY_NAME,
-			    eval.getTitle() + "_"
-				    + ((EvalGroup) evalGs.get(j)).title);
+			    ((EvalGroup) evalGs.get(j)).title
+			    + "_" + eval.getTitle()  + ".pdf");
 
-		    // Save pdf to service enseignement folder
+		    // Save pdf to department folder
 		    reportPdfId =
-			    seFolderCollection.getId() + eval.getTitle() + "_"
-				    + ((EvalGroup) evalGs.get(j)).title + ".pdf";
+			    departmentFolderCollection.getId()
+				    + ((EvalGroup) evalGs.get(j)).title
+				    + "_" + eval.getTitle()  + ".pdf";
 
-		    contentHostingService.addResource(reportPdfId,
+		    resourceEdit = (ContentResourceEdit) contentHostingService.addResource(reportPdfId,
 			    "application/pdf", new ByteArrayInputStream(
 				    byteOutputStream.toByteArray()),
 			    resourceProperties, 0);
-
+		   // contentHostingService.commitResource(resourceEdit);
+		    
 		    // Save pdf to programme folder
 		    reportPdfId =
-			    progFolderCollection.getId() + eval.getTitle()
-				    + "_" + ((EvalGroup) evalGs.get(j)).title + ".pdf";
+			    progFolderCollection.getId()
+				    + ((EvalGroup) evalGs.get(j)).title
+				    + "_" + eval.getTitle() + ".pdf"  ;
 
 		    contentHostingService.addResource(reportPdfId,
 			    "application/pdf", new ByteArrayInputStream(
@@ -262,17 +270,34 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 
 	logoutFromSakai();
     }
+     
+     private String removeAccents (String name){
+	 String cleanName = "";
+	 String chars= "àâäéèêëîïôöùûüç";
+         String replace= "aaaeeeeiioouuuc";
+         int position = -2;
+         
+         for (char letter: name.toCharArray()){
+            position = chars.indexOf(letter);
+            if (position > -1)
+        	cleanName = cleanName.concat(replace.charAt(position)+ "");
+            else
+        	cleanName = cleanName.concat(letter+"");
+         }
+	 
+	 return cleanName;
+     }
 
     // TODO: Une fois que les plans de cours seront section aware il faudra
     // modifier
     // ce code pour gérer toute la liste de provider ids
     /**
-     * Get the service d'enseignement from the providerId associated to the Realm
+     * Get the department from the providerId associated to the Realm
      * @param realmId
      * @return
      */
-    private String getSE(String realmId) {
-	String servEns = null;
+    private String getDepartment(String realmId) {
+	String department = null;
 	String category = null;
 	Set<String> providerIds;
 	Section section = null;
@@ -281,14 +306,14 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	for (String providerId : providerIds) {
 	    section = cmService.getSection(providerId);
 	    category = section.getCategory();
-	    servEns = cmService.getSectionCategoryDescription(category);
+	    department = cmService.getSectionCategoryDescription(category);
 	}
-	return servEns;
+	return department;
 
     }
 
     /**
-     * Get the service d'enseignement from the providerId associated to the Realm
+     * Get the language from the providerId associated to the Realm
      * @param realmId
      * @return
      */
@@ -331,31 +356,31 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 
     }
 
-    private ContentCollection createOrGetContentCollection(String seFolderId,
-	    String seFolderName) throws Exception {
-	ContentCollection seFolderCollection = null;
+    private ContentCollection createOrGetContentCollection(String departmentFolderId,
+	    String departmentFolderName) throws Exception {
+	ContentCollection departmentFolderCollection = null;
 	ResourcePropertiesEdit resourceProperties = null;
 
 	try {
-	    seFolderCollection =
-		    contentHostingService.getCollection(seFolderId);
+	    departmentFolderCollection =
+		    contentHostingService.getCollection(departmentFolderId);
 	} catch (IdUnusedException e) {
-	    seFolderCollection =
-		    contentHostingService.addCollection(seFolderId);
+	    departmentFolderCollection =
+		    contentHostingService.addCollection(departmentFolderId);
 	    resourceProperties =
-		    (ResourcePropertiesEdit) seFolderCollection.getProperties();
+		    (ResourcePropertiesEdit) departmentFolderCollection.getProperties();
 	    resourceProperties.addProperty(
-		    ResourceProperties.PROP_DISPLAY_NAME, seFolderName);
+		    ResourceProperties.PROP_DISPLAY_NAME, departmentFolderName);
 
 	    contentHostingService
-		    .commitCollection((ContentCollectionEdit) seFolderCollection);
+		    .commitCollection((ContentCollectionEdit) departmentFolderCollection);
 	} catch (TypeException e) {
 	    e.printStackTrace();
 	} catch (PermissionException e) {
 	    e.printStackTrace();
 	}
 
-	return seFolderCollection;
+	return departmentFolderCollection;
     }
 
     /**
