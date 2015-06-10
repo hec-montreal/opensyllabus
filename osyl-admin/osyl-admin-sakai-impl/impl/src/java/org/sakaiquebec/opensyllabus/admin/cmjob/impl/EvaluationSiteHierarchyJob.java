@@ -87,19 +87,19 @@ public class EvaluationSiteHierarchyJob implements Job{
 					continue;
 				}
 
-			    Map<String, String> siteProps = new HashMap<String, String>();
-			    siteProps.put("term", session.getTitle());
+				Map<String, String> siteProps = new HashMap<String, String>();
+				siteProps.put("term", session.getTitle());
 
-			    //get one page of results for test
-			    List<Site> sites = siteService.getSites(SelectionType.NON_USER, "course", null, siteProps,
-			    		SortType.CREATED_ON_DESC, new PagingPosition(1, 10000));
+				List<Site> sites = siteService.getSites(SelectionType.NON_USER, "course", null, siteProps,
+						SortType.CREATED_ON_DESC, null);
+				//new PagingPosition(1, 10000)); comme dernier parametre, pour limiter
 
-			    Map<String, Set<String>> nodeMap = createNodeMapForSites(sites);
+				Map<String, Set<String>> nodeMap = createNodeMapForSites(sites);
 
 				createHierarchyNodesAndAssignGroups(nodeMap);
 
-			    previousSessionTitle = session.getTitle();
-			    processedSessionCount++;
+				previousSessionTitle = session.getTitle();
+				processedSessionCount++;
 			}
 
 		}
