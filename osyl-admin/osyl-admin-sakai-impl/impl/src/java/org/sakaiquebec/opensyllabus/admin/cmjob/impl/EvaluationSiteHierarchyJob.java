@@ -138,8 +138,9 @@ public class EvaluationSiteHierarchyJob implements Job{
 				nodeKey += "|" + section.getLang();
 				// program
 				nodeKey += "|" + courseOffering.getAcademicCareer();
-				//format
-//				nodeKey += "|" + section.getTypeEvaluation();
+				//evaluation type
+				String evalType = section.getTypeEvaluation();
+				nodeKey += "|" + (evalType != null ? evalType : "par défaut");
 
 				if (nodeMap.containsKey(nodeKey)) {
 					Set<String> siteRefs = nodeMap.get(nodeKey);
