@@ -22,6 +22,7 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.SiteService.SelectionType;
 import org.sakaiproject.site.api.SiteService.SortType;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
@@ -53,8 +54,6 @@ public class EvaluationSiteHierarchyJob implements Job{
 
 	private static boolean semaphore = false;
 
-    private static final int NUM_SESSIONS_TO_PROCESS = 3;
-
 	public void init() {
 
 	}
@@ -70,13 +69,15 @@ public class EvaluationSiteHierarchyJob implements Job{
 		try{
 			log.info("EvaluationSiteHierarchyJob started");
 
+			int numberOfSessionsToProcess = ServerConfigurationService.getInt("evaluation.hierarchy.numberOfSessionsToProcess", 3);
+
 			List<AcademicSession> sessions = courseManagementService.getAcademicSessions();
 			Collections.reverse(sessions);
 			String previousSessionTitle = null;
 			int processedSessionCount = 0;
 
 			for (AcademicSession session : sessions) {
-				if (processedSessionCount == NUM_SESSIONS_TO_PROCESS) {
+				if (processedSessionCount == numberOfSessionsToProcess) {
 					break;
 				}
 
