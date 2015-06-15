@@ -317,19 +317,19 @@
 			ref="org.sakaiproject.evaluation.logic.EvalEvaluationService" />
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
-		<property name="entityManager" 
+		<property name="entityManager"
 			ref="org.sakaiproject.entity.api.EntityManager" />
 		<property name="commonLogic"
             ref="org.sakaiproject.evaluation.logic.EvalCommonLogic" />
         <property name="settings"
         	ref="org.sakaiproject.evaluation.logic.EvalSettings" />
         <property name="deliveryService"
-            ref="org.sakaiproject.evaluation.logic.EvalDeliveryService" />        
+            ref="org.sakaiproject.evaluation.logic.EvalDeliveryService" />
         <property name="authoringService"
             ref="org.sakaiproject.evaluation.logic.EvalAuthoringService" />
         <property name="hierarchyLogic"
             ref="org.sakaiproject.evaluation.logic.externals.ExternalHierarchyLogic" />
-		
+
 	</bean>
 
 
@@ -418,7 +418,6 @@
 	</bean>
 
 	<bean id="evaluationSiteHierarchyJob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.EvaluationSiteHierarchyJob">
-		<property name="hierarchyService" ref="org.sakaiproject.hierarchy.HierarchyService" />
 		<property name="courseManagementService" ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
 		<property name="evalHierarchyLogic"

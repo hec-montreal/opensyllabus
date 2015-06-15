@@ -15,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.hierarchy.HierarchyService;
 import org.sakaiproject.hierarchy.model.HierarchyNode;
 import org.sakaiproject.javax.PagingPosition;
 import org.sakaiproject.site.api.Site;
@@ -43,8 +42,6 @@ public class EvaluationSiteHierarchyJob implements Job{
 	private static Log log = LogFactory
     	    .getLog(EvaluationSiteHierarchyJob.class);
 
-    @Getter @Setter
-	private HierarchyService hierarchyService;
     @Getter @Setter
     private ExternalHierarchyLogic evalHierarchyLogic;
     @Getter @Setter
@@ -87,6 +84,8 @@ public class EvaluationSiteHierarchyJob implements Job{
 					continue;
 				}
 
+				clearGroupAssignmentsForSession(session.getTitle());
+
 				Map<String, String> siteProps = new HashMap<String, String>();
 				siteProps.put("term", session.getTitle());
 
@@ -106,6 +105,31 @@ public class EvaluationSiteHierarchyJob implements Job{
 		finally {
 			log.info("EvaluationSiteHierarchyJob end");
 			semaphore = false;
+		}
+	}
+
+	private void clearGroupAssignmentsForSession(String sessionTitle) {
+		EvalHierarchyNode rootNode = evalHierarchyLogic.getRootLevelNode();
+		Set<EvalHierarchyNode> children = evalHierarchyLogic.getChildNodes(rootNode.id, true);
+		EvalHierarchyNode sessionNode = null;
+
+		for (EvalHierarchyNode child : children) {
+			if (child.title.equals(sessionTitle)) {
+				sessionNode = child;
+				break;
+			}
+		}
+
+		if (sessionNode == null) {
+			return;
+		}
+
+		children = evalHierarchyLogic.getChildNodes(sessionNode.id, false);
+		for (EvalHierarchyNode child : children) {
+			// nodes with no children are leaves (and may have eval groups assigned to them)
+			if (child.childNodeIds == null || child.childNodeIds.isEmpty()) {
+				evalHierarchyLogic.setEvalGroupsForNode(child.id, null);
+			}
 		}
 	}
 
@@ -162,7 +186,7 @@ public class EvaluationSiteHierarchyJob implements Job{
 	/*
 	 * Create hierarchy nodes (in hierarchy tables) if they don't exist and assign group ids to the appropriate nodes.
 	 *
-	 * Note: Assigned group ids will be overridden!
+	 * Note: Assigned group ids will be overridden for existing nodes!
 	 */
 	private void createHierarchyNodesAndAssignGroups(Map<String, Set<String>> nodeMap) {
 		if (nodeMap == null || nodeMap.isEmpty()) {
