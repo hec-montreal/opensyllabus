@@ -132,7 +132,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
     public void execute(JobExecutionContext context)
 	    throws JobExecutionException {
 
-	 
+
 	 // Get folder where reports will be saved
 	evalsysReportsFolder =
 		"/group/" + ServerConfigurationService.getString(REPORTS_SITE)
@@ -156,12 +156,12 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	ContentCollection progFolderCollection = null;
 
 	String lang = null;
-	
+
 	loginToSakai();
 
 	try {
 
-	    
+
 	    // Check if property file exists and retrieve it
 	    Reference reference =
 		    entityManager
@@ -172,9 +172,9 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	    bundle = getResouceBundle(resource);
 	    // TODO: get a list from the bundle
 	    termEid = bundle.getString(BUNDLE_KEY);
-	    
 
-	    
+
+
 	    selectedEval = evaluationService.getEvaluationsByTermId(termEid);
 	    evalIds = new Long[selectedEval.size()];
 	    for (int i = 0; i < selectedEval.size(); i++) {
@@ -190,10 +190,10 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 		groupIds = new String[1];
 		for (int j = 0; j < evalGs.size(); j++) {
 		    groupIds[0] = ((EvalGroup) evalGs.get(j)).evalGroupId;
-		    
+
 		    //Get the language of the section
 		    lang = getLang(groupIds[0]);
-		    
+
 		    byteOutputStream =
 			    (ByteArrayOutputStream) buildPDFReport(eval,
 				    ((EvalGroup) evalGs.get(j)), lang);
@@ -232,7 +232,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 				    byteOutputStream.toByteArray()),
 			    resourceProperties, 0);
 		   // contentHostingService.commitResource(resourceEdit);
-		    
+
 		    // Save pdf to programme folder
 		    reportPdfId =
 			    progFolderCollection.getId()
@@ -270,13 +270,13 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 
 	logoutFromSakai();
     }
-     
+
      private String removeAccents (String name){
 	 String cleanName = "";
 	 String chars= "àâäéèêëîïôöùûüç";
          String replace= "aaaeeeeiioouuuc";
          int position = -2;
-         
+
          for (char letter: name.toCharArray()){
             position = chars.indexOf(letter);
             if (position > -1)
@@ -284,7 +284,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
             else
         	cleanName = cleanName.concat(letter+"");
          }
-	 
+
 	 return cleanName;
      }
 
@@ -462,6 +462,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	evalPDFReportBuilder.addTitlePage(
 		evaluation.getTitle(),
 		evalGroup.title,
+		rb.getString("reporting.pdf.resultstitle"),
 		rb.getString("reporting.pdf.startdatetime")
 			+ df.format(evaluation.getStartDate()),
 		rb.getString("reporting.pdf.enddatetime")
@@ -551,7 +552,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 
     /**
      * Renders a single question given the DataTemplateItem.
-     * 
+     *
      * @param evalPDFReportBuilder
      * @param dti the data template item
      */
