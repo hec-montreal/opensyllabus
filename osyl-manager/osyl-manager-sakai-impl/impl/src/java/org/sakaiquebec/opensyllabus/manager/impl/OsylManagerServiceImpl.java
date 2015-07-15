@@ -152,6 +152,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     private final static String SCHEDULE_TOOL_ID = "sakai.schedule";
     
+    private final static String VIA_TOOL_ID = "sakai.via";
+    
     private final static String CALENDAR_TOOL_ID = "sakai.summary.calendar";
     
     private final static String RESOURCES_TOOL_ID = "sakai.resources";
@@ -2291,6 +2293,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	for (int i = 0; i < toolIds.size(); i++) {
 	    String toolId = (String) toolIds.get(i);
 		if (!toolId.equalsIgnoreCase(RESOURCES_TOOL_ID)
+				&& !toolId.equalsIgnoreCase(VIA_TOOL_ID)
 				&& !toolId.equalsIgnoreCase(SCHEDULE_TOOL_ID)
 				&& !toolId.equalsIgnoreCase(CALENDAR_TOOL_ID)) {
 		String fromSiteId = oldSite.getId();
