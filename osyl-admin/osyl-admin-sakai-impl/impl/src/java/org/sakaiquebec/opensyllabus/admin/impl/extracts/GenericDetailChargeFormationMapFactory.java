@@ -49,6 +49,9 @@ public class GenericDetailChargeFormationMapFactory {
 	    sessionCode = token[4];
 	    classSection = token[5];
 
+	    if (catalogNbr != null)
+		catalogNbr = catalogNbr.trim();
+
 	    if (map.containsKey(emplId)) {
 		entry = map.get(emplId);
 	    } else {

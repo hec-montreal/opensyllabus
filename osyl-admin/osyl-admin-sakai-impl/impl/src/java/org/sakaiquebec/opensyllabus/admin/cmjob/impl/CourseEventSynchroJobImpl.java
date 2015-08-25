@@ -86,7 +86,7 @@ public class CourseEventSynchroJobImpl implements CourseEventSynchroJob {
 									throws SQLException {
 								String[] columnValues = extractLines.get(i);
 								ps.setString(1, columnValues[columnNames
-										.indexOf("CATALOG_NBR")]);
+										.indexOf("CATALOG_NBR")].trim());
 								ps.setString(2, columnValues[columnNames
 										.indexOf("STRM")]);
 								ps.setString(3, columnValues[columnNames

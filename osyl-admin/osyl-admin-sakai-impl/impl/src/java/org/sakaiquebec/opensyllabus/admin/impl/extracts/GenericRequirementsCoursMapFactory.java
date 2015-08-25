@@ -78,6 +78,8 @@ public class GenericRequirementsCoursMapFactory {
 	    // Remove empty spaces
 	    if (courseId != null)
 		courseId = courseId.trim();
+	    if (catalogNbr != null)
+	    catalogNbr = catalogNbr.trim();
 
 	    // on reprend l'entree existante
 	    if (map.containsKey(courseId)) {
@@ -87,7 +89,7 @@ public class GenericRequirementsCoursMapFactory {
 		entry.setCourseId(courseId);
 		entry.setCatalogNbr(catalogNbr);
 		entry.setEffDate(effDate);
-		
+
 		entry.setDescriptionAng(StringEscapeUtils.unescapeJava(descrAng));
 		entry.setDescriptionFra(StringEscapeUtils.unescapeJava(descrFr));
 	    }
