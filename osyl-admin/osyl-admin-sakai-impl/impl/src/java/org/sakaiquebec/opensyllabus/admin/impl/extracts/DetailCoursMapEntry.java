@@ -15,7 +15,7 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     // Pour assurer la compatibilite des instances serialisees meme
     // quand on change la classe...
     public static final long serialVersionUID = -5942666321016168578l;
-    
+
     public static final String CLASS_STATUS_CANCELLED = "X";
 
     private String strm;
@@ -31,12 +31,10 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     private String acadCareer;
     private String classStat;
     private String unitsMinimum ;
-    private ProfCoursMapEntry coordonnateur;
-    private Vector<ProfCoursMapEntry> professeurs;
     private Vector<String> etudiants;
     private Vector<MatriculeNomMapEntry> stagiaires;
     private Vector<ExamenMapEntry> examens;
-    
+
 
     private static Log log = LogFactory.getLog(DetailCoursMapEntry.class);
 
@@ -44,7 +42,6 @@ public class DetailCoursMapEntry implements java.io.Serializable {
      * Empty constructor.
      */
     public DetailCoursMapEntry() {
-	professeurs = new Vector<ProfCoursMapEntry>();
 	etudiants = new Vector<String>();
 	stagiaires = new Vector<MatriculeNomMapEntry>();
 	examens = new Vector<ExamenMapEntry>();
@@ -66,12 +63,12 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     public String getAcadCareer() {
 	return acadCareer;
     }
-    
+
     /**
      * Retourne vrai si le cours est au MBA.<br>
      * <br>
      * Ceci equivaut a tester que <code>getProgramme()</code> retourne "MBA".
-     * 
+     *
      * @return <code>true</code> si le cours est donne au MBA,
      *         <code>false</code> sinon.
      */
@@ -79,15 +76,15 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 	return "MBA".equals(getAcadOrg());
     }
 
-    
+
     public boolean isInCertificat(){
 	return "CERT".equals(getAcadCareer());
     }
-    
+
     public boolean isQualiteComm(){
 	return "QUAL.COMM.".equals(getAcadOrg());
     }
-    
+
     public String getCourseId() {
 	return courseId;
     }
@@ -107,14 +104,6 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 
     public String getClassSection() {
 	return classSection;
-    }
-
-    public ProfCoursMapEntry getCoordonnateur() {
-	return coordonnateur;
-    }
-
-    public void setCoordonnateur(ProfCoursMapEntry coordonnateur) {
-	this.coordonnateur = coordonnateur;
     }
 
     public String getUniqueKey() {
@@ -156,7 +145,7 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     public void setSection(String classSection) {
 	this.classSection = classSection;
     }
-    
+
     public void setClassStat(String classStat) {
 	this.classStat = classStat;
     }
@@ -215,49 +204,6 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 
     public String getLangue() {
 	return lang;
-    }
-
-    // ------ Gestion des professeurs ------
-    //
-
-    /**
-     * Supprime tous les profs de ce cours.<br>
-     * <br>
-     * Note: ne pas faire de modification a la liste des profs d'un cours sans
-     * faire l'equivalent dans la liste des cours d'un prof!
-     */
-    public void removeAllProfs() {
-	getProfesseursVector().removeAllElements();
-    }
-
-    /**
-     * Ajoute un prof a ce cours.<br>
-     * <br>
-     * Note: ne pas faire de modification a la liste des profs d'un cours sans
-     * faire l'equivalent dans la liste des cours d'un prof!
-     */
-    public void addProfesseur(ProfCoursMapEntry prof) {
-	if (prof == null) {
-	    throw new NullPointerException();
-	} else {
-	    getProfesseursVector().add(prof);
-	}
-    }
-
-    private Vector<ProfCoursMapEntry> getProfesseursVector() {
-	return professeurs;
-    }
-
-    public Iterator<ProfCoursMapEntry> getProfesseurs() {
-	return getProfesseursVector().iterator();
-    }
-
-    public ProfCoursMapEntry getProfesseur(int i) {
-	return (ProfCoursMapEntry) getProfesseursVector().get(i);
-    }
-
-    public boolean containsProfesseur(ProfCoursMapEntry prof) {
-	return getProfesseursVector().contains(prof);
     }
 
     // ------ Gestion des stagiaires ------
@@ -388,12 +334,12 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 		+ getCatalogNbr()
 		+ "_"
 		+ getClassSection()
-		+ " profs: "
-		+ getProfesseursVector()
+//		+ " profs: "
+//		+ getProfesseursVector()
 		+ " trim: "
-		+ getStrm()
-		+ (null == getCoordonnateur() ? "" : " coord: "
-			+ getCoordonnateur());
+		+ getStrm();
+//		+ (null == getCoordonnateur() ? "" : " coord: "
+//			+ getCoordonnateur());
     }
 
     public static String getUniqueKey(String catalogNbr, String strmId,
