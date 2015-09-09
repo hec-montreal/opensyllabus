@@ -33,6 +33,45 @@ public class DetailCoursMap extends HashMap<String, DetailCoursMapEntry> {
 	remove(entry.getUniqueKey());
     }
 
+    /**
+     * Retourne les differents cours qui sont des groupe-cours du cours
+     * specifie, <b>et coordonnes par le meme coordonnateur</b>.
+     */
+    public Iterator<DetailCoursMapEntry> getAllGroupeCours(
+	    DetailCoursMapEntry cours) {
+	return getAllGroupeCours(cours.getCatalogNbr(), cours
+		.getCoordonnateur());
+    }
+
+    /**
+     * Retourne les differents cours qui sont des groupe-cours du cours dont le
+     * numero de repertoire est specifie, <b>et coordonnes par le professeur
+     * specifie</b>, independamment de la session.
+     */
+    // TODO: verifier que le fait que ce soit independant de la session est ok
+    // (remarque du 2005-08-05)
+    public Iterator<DetailCoursMapEntry> getAllGroupeCours(String catalogNbr,
+	    ProfCoursMapEntry coordonnateur) {
+	Vector<DetailCoursMapEntry> v = new Vector<DetailCoursMapEntry>();
+
+	// Si le coordonnateur est nul, on retourne un Iterator vide
+	if (null == coordonnateur) {
+	    return v.iterator();
+	}
+
+	Iterator<DetailCoursMapEntry> values = values().iterator();
+	while (values.hasNext()) {
+	    DetailCoursMapEntry cours = (DetailCoursMapEntry) values.next();
+	    if (catalogNbr.equals(cours.getCatalogNbr())
+		    && coordonnateur == cours.getCoordonnateur()) {
+		v.add(cours);
+	    }
+	}
+
+	return v.iterator();
+    } // getAllGroupeCours
+    
+    
     public List<DetailCoursMapEntry> getAllGroupeCours(String catalogNbr) {
 	List<DetailCoursMapEntry> v = new ArrayList<DetailCoursMapEntry>();
 
@@ -109,7 +148,7 @@ public class DetailCoursMap extends HashMap<String, DetailCoursMapEntry> {
 
     /**
      * Liste des cours selon le programme.
-     *
+     * 
      * @param acadCareer
      * @return
      */
@@ -129,7 +168,7 @@ public class DetailCoursMap extends HashMap<String, DetailCoursMapEntry> {
 
     /**
      * Liste des cours selon le service d'enseignment
-     *
+     * 
      * @param acadOrg
      * @return
      */
@@ -146,10 +185,10 @@ public class DetailCoursMap extends HashMap<String, DetailCoursMapEntry> {
 
 	return cours;
     }
-
+    
     /**
      * Liste des cours selon le service d'enseignment
-     *
+     * 
      * @param acadOrg
      * @return
      */
@@ -170,7 +209,7 @@ public class DetailCoursMap extends HashMap<String, DetailCoursMapEntry> {
     /**
      * Liste des cours selon le service d'enseignment. On exclue les cours du
      * certificat
-     *
+     * 
      * @param acadOrg
      * @return
      */
@@ -189,6 +228,6 @@ public class DetailCoursMap extends HashMap<String, DetailCoursMapEntry> {
 
 	return cours;
     }
-
+   
 
 }
