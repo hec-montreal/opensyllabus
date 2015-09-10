@@ -2,7 +2,7 @@
  * $Id: $
  ******************************************************************************
  *
- * Copyright (c) 2011 The Sakai Foundation, The Sakai Quebec Team.
+ * Copyright (c) 2015 The Sakai Foundation, The Sakai Quebec Team.
  *
  * Licensed under the Educational Community License, Version 1.0
  * (the "License"); you may not use this file except in compliance with the
@@ -19,25 +19,18 @@
  *
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
-
-import java.util.PropertyResourceBundle;
-
-import org.quartz.Job;
-import org.sakaiproject.content.api.ContentResource;
-
 /**
  *
- * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
+ * This job override users role in site if there is a conflict between his site role and cm role.
+ * 
+ * 
+ * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public interface OsylAbstractQuartzJob extends Job{
+public interface CMOverrideSiteUsers extends OsylAbstractQuartzJob {
     
-    final static String PROP_SITE_ISFROZEN = "isfrozen";
     
-    public final static String COURSE_SITE = "course";
-    
-    public final static String DIRECTORY_SITE = "directory";
-    
-    public PropertyResourceBundle getResouceBundle(ContentResource resource);
+
+    public final static String TERM_KEY = "sessions";
 }
 

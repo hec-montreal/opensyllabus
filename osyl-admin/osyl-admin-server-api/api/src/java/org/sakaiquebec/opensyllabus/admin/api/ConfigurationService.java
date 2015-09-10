@@ -137,6 +137,12 @@ public interface ConfigurationService {
     public final static String EVALSYS_TERMS_FILE = "evalsysTerm.properties";
     
     
+    /*
+     * Parameters used for overriding site users with cm users
+     * */
+    public final static String OVERRIDESIREUSERS_CONFIG_FILE_NAME = "overrideSiteUsers.properties";
+    
+    
     // Parameters used in the official sites synchronisation job
     public Date getEndDate();
 

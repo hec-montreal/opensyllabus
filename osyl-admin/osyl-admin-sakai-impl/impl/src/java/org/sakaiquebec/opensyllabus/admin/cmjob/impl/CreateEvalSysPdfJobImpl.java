@@ -390,23 +390,6 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	super.loginToSakai("CreateEvalSysPdfJob");
     }
 
-    private PropertyResourceBundle getResouceBundle(ContentResource resource) {
-	PropertyResourceBundle bundle = null;
-	InputStream stream = null;
-	try {
-	    stream = resource.streamContent();
-	    bundle = new PropertyResourceBundle(stream);
-
-	} catch (ServerOverloadException e) {
-	    e.printStackTrace();
-	} catch (IOException e) {
-	    log.error("The file with the id " + resource.getId() + " does not exist");
-	    e.printStackTrace();
-	}
-
-	return bundle;
-
-    }
 
     private OutputStream buildPDFReport(EvalEvaluation evaluation,
 	    EvalGroup evalGroup, String lang) {

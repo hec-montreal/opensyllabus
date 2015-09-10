@@ -20,6 +20,10 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.PropertyResourceBundle;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
@@ -27,12 +31,14 @@ import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentHostingService;
+import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.UsageSessionService;
+import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
@@ -206,6 +212,24 @@ public abstract class OsylAbstractQuartzJobImpl implements
     }
     
 
+
+    public PropertyResourceBundle getResouceBundle(ContentResource resource) {
+	PropertyResourceBundle bundle = null;
+	InputStream stream = null;
+	try {
+	    stream = resource.streamContent();
+	    bundle = new PropertyResourceBundle(stream);
+
+	} catch (ServerOverloadException e) {
+	    e.printStackTrace();
+	} catch (IOException e) {
+	    log.error("The file with the id " + resource.getId() + " does not exist");
+	    e.printStackTrace();
+	}
+
+	return bundle;
+
+    }
 
     protected boolean getFrozenValue(Site site) {
 	ResourcePropertiesEdit rp = site.getPropertiesEdit();
