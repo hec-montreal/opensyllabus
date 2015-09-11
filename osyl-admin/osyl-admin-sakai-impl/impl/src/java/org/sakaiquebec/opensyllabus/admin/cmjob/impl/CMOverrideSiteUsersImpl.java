@@ -96,6 +96,7 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 	Set<Membership> sectionMemberships = null;
 	Set<Membership> courseOffMemberships = null;
 	AuthzGroup azGroup = null;
+	boolean save = false;
 
 	for (int i = 0; i < terms.size(); i++) {
 
@@ -111,7 +112,7 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 		    authzGroupIds = authzGroupService.getAuthzGroupIds(providerId);
 
 		    for (String authzGroupId : authzGroupIds) {
-
+			save = false;
 			try {
 			    azGroup = authzGroupService.getAuthzGroup(authzGroupId);
 			    if (!providerId.endsWith("00")) {
@@ -123,10 +124,11 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 					userRole = authzGroupService.getUserRole(userDirectoryService.getUserId(instructorEid),	authzGroupId);
 
 					if (!"Instructor".equalsIgnoreCase(userRole)) {
-					    azGroup.removeMember(instructorEid);
-					    authzGroupService.save(azGroup);
+					    azGroup.removeMember(userDirectoryService.getUserId(instructorEid));
+					    save = true;
 					    changedEntries.add(providerId + userRole + instructorEid);
 					}
+					
 
 				
 				}
@@ -136,8 +138,8 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 				for (Membership sectionMember : sectionMemberships) {
 				    userRole = authzGroupService.getUserRole(userDirectoryService.getUserId(sectionMember.getUserId()), authzGroupId);
 				    if (!"Coordinator".equalsIgnoreCase(userRole)) {
-					    azGroup.removeMember(sectionMember.getUserId());
-					    authzGroupService.save(azGroup);
+					    azGroup.removeMember(userDirectoryService.getUserId(sectionMember.getUserId()));
+					    save = true;
 					    changedEntries.add(providerId + userRole + sectionMember.getUserId());
 				    }
 				}
@@ -148,8 +150,8 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 				for (Membership courseOffMember : courseOffMemberships) {
 				    userRole = authzGroupService.getUserRole(userDirectoryService.getUserId(courseOffMember.getUserId()), authzGroupId);
 				    if (!"Coordinator".equalsIgnoreCase(userRole)) {
-					    azGroup.removeMember(courseOffMember.getUserId());
-					    authzGroupService.save(azGroup);
+					    azGroup.removeMember(userDirectoryService.getUserId(courseOffMember.getUserId()));
+					    save = true;
 					    changedEntries.add(providerId + userRole +courseOffMember.getUserId());
 				    }
 				}
@@ -159,16 +161,19 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 			    e1.printStackTrace();
 			} catch (UserNotDefinedException e) {
 			    e.printStackTrace();
-			} catch (AuthzPermissionException e) {
+			} 
+		    }
+
+		    if (save)
+			try {
+			    siteService.saveGroupMembership(site);
+			} catch (IdUnusedException e) {
+			    e.printStackTrace();
+			} catch (PermissionException e) {
 			    e.printStackTrace();
 			}
 
-		    }
-
-		} else {
-		    // unjoin site
 		}
-
 	    }
 
 	}
