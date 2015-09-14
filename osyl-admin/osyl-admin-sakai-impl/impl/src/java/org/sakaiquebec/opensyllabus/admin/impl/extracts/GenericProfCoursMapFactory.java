@@ -10,10 +10,10 @@ public class GenericProfCoursMapFactory {
 
 	private static Log log = LogFactory.getLog(GenericProfCoursMapFactory.class);
 
-	public static Map<String, List<ProfCoursMapEntry>> buildMap(String completeFileName)
+	public static Map<String, ProfCoursMapEntry> buildMap(String completeFileName)
 			throws java.io.IOException {
 
-		Map<String, List<ProfCoursMapEntry>> map = new HashMap<String, List<ProfCoursMapEntry>>();
+		Map<String, ProfCoursMapEntry> map = new HashMap<String, ProfCoursMapEntry>();
 
 		BufferedReader breader =
 				new BufferedReader(new InputStreamReader(new FileInputStream(
@@ -39,23 +39,28 @@ public class GenericProfCoursMapFactory {
 			String role = token[6];
 //			String strmId = token[7];
 
-			// terrible hack because the number of columns per line is not consistent
-			if (!"Enseignant".equals(role))
-				role = "Coordonnateur";
-
 			if (catalogNbr != null) {
 				catalogNbr = catalogNbr.trim();
 			}
 
-			List<ProfCoursMapEntry> listProfs;
 			String key = catalogNbr + strm + sessionCode + classSection;
+
+			ProfCoursMapEntry entry;
 			if (map.containsKey(key)) {
-				listProfs = map.get(key);
+				entry = map.get(key);
 			} else {
-				listProfs = new ArrayList<ProfCoursMapEntry>();
-				map.put(key, listProfs);
+				entry = new ProfCoursMapEntry();
+				map.put(key, entry);
 			}
-			listProfs.add(new ProfCoursMapEntry(emplId, catalogNbr, strm, sessionCode, classSection, null, role, null));
+
+			// On ne peut pas se fier a la colonne qui contient le role dans l'extract
+			// alors on reconnait juste enseignant
+			if ("Enseignant".equals(role)) {
+				entry.getInstructors().add(emplId);
+			}
+			else {
+				entry.getCoordinators().add(emplId);
+			}
 		}
 
 		breader.close();
