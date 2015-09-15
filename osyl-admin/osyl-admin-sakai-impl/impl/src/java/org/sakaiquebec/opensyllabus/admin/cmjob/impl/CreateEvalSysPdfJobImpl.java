@@ -3,7 +3,6 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -128,12 +127,11 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	this.deliveryService = deliveryService;
     }
 
-     @Override
+    @Override
     public void execute(JobExecutionContext context)
 	    throws JobExecutionException {
 
-
-	 // Get folder where reports will be saved
+	// Get folder where reports will be saved
 	evalsysReportsFolder =
 		"/group/" + ServerConfigurationService.getString(REPORTS_SITE)
 			+ "/";
@@ -154,13 +152,15 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	String progFolderName = null;
 	String progFolderId = null;
 	ContentCollection progFolderCollection = null;
+	String fileTitle = null;
 
 	String lang = null;
+
+	int fileCount = 0;
 
 	loginToSakai();
 
 	try {
-
 
 	    // Check if property file exists and retrieve it
 	    Reference reference =
@@ -172,8 +172,6 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	    bundle = getResouceBundle(resource);
 	    // TODO: get a list from the bundle
 	    termEid = bundle.getString(BUNDLE_KEY);
-
-
 
 	    selectedEval = evaluationService.getEvaluationsByTermId(termEid);
 	    evalIds = new Long[selectedEval.size()];
@@ -191,7 +189,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 		for (int j = 0; j < evalGs.size(); j++) {
 		    groupIds[0] = ((EvalGroup) evalGs.get(j)).evalGroupId;
 
-		    //Get the language of the section
+		    // Get the language of the section
 		    lang = getLang(groupIds[0]);
 
 		    byteOutputStream =
@@ -201,44 +199,67 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 		    // Get the department and create folder
 		    departmentFolderName = getDepartment(groupIds[0]);
 		    departmentFolderName = removeAccents(departmentFolderName);
-		    departmentFolderId = evalsysReportsFolder + DEPARTMENT_FOLDER_NAME + "/"+departmentFolderName + "/";
+		    departmentFolderId =
+			    evalsysReportsFolder + DEPARTMENT_FOLDER_NAME + "/"
+				    + departmentFolderName + "/";
 		    departmentFolderCollection =
 			    createOrGetContentCollection(departmentFolderId,
 				    departmentFolderName);
 
 		    // Get le programme and create folder
 		    progFolderName = getProgramme(groupIds[0]);
-		    progFolderId = evalsysReportsFolder + PROG_FORLDER_NAME +"/"+ progFolderName + "/";
+		    progFolderId =
+			    evalsysReportsFolder + PROG_FORLDER_NAME + "/"
+				    + progFolderName + "/";
 		    progFolderCollection =
 			    createOrGetContentCollection(progFolderId,
 				    progFolderName);
+
+		    fileTitle = ((EvalGroup) evalGs.get(j)).title;
 
 		    // add name to file
 		    resourceProperties =
 			    contentHostingService.newResourceProperties();
 		    resourceProperties.addProperty(
-			    ResourceProperties.PROP_DISPLAY_NAME,
-			    ((EvalGroup) evalGs.get(j)).title
-			    + "_" + eval.getTitle()  + ".pdf");
+			    ResourceProperties.PROP_DISPLAY_NAME, fileTitle
+				    + ".pdf");
 
 		    // Save pdf to department folder
 		    reportPdfId =
-			    departmentFolderCollection.getId()
-				    + ((EvalGroup) evalGs.get(j)).title
-				    + "_" + eval.getTitle()  + ".pdf";
+			    departmentFolderCollection.getId() + fileTitle
+				    + ".pdf";
 
-		    resourceEdit = (ContentResourceEdit) contentHostingService.addResource(reportPdfId,
-			    "application/pdf", new ByteArrayInputStream(
-				    byteOutputStream.toByteArray()),
-			    resourceProperties, 0);
-		   // contentHostingService.commitResource(resourceEdit);
+		    // Check if file already exists
+		    if (resourceExists(reportPdfId)) {
+			fileCount += 1;
+			 resourceProperties.addProperty(
+				    ResourceProperties.PROP_DISPLAY_NAME, fileTitle
+				    + "_" + fileCount + ".pdf");
+			reportPdfId =
+				departmentFolderCollection.getId() + fileTitle
+					+ "_" + fileCount + ".pdf";
+		    }
+		    resourceEdit =
+			    (ContentResourceEdit) contentHostingService
+				    .addResource(
+					    reportPdfId,
+					    "application/pdf",
+					    new ByteArrayInputStream(
+						    byteOutputStream
+							    .toByteArray()),
+					    resourceProperties, 0);
+		    // contentHostingService.commitResource(resourceEdit);
 
 		    // Save pdf to programme folder
 		    reportPdfId =
-			    progFolderCollection.getId()
-				    + ((EvalGroup) evalGs.get(j)).title
-				    + "_" + eval.getTitle() + ".pdf"  ;
+			    progFolderCollection.getId() + fileTitle + ".pdf";
 
+		    // Check if file already exists
+		    if (resourceExists(reportPdfId)) {
+			reportPdfId =
+				progFolderCollection.getId() + fileTitle + "_"
+					+ fileCount + ".pdf";
+		    }
 		    contentHostingService.addResource(reportPdfId,
 			    "application/pdf", new ByteArrayInputStream(
 				    byteOutputStream.toByteArray()),
@@ -271,28 +292,38 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	logoutFromSakai();
     }
 
-     private String removeAccents (String name){
-	 String cleanName = "";
-	 String chars= "àâäéèêëîïôöùûüç";
-         String replace= "aaaeeeeiioouuuc";
-         int position = -2;
+    private boolean resourceExists(String resourceId) {
+	try {
+	    contentHostingService.getResource(resourceId);
+	    return true;
+	} catch (Exception e) {
+	    return false;
+	}
+    }
 
-         for (char letter: name.toCharArray()){
-            position = chars.indexOf(letter);
-            if (position > -1)
-        	cleanName = cleanName.concat(replace.charAt(position)+ "");
-            else
-        	cleanName = cleanName.concat(letter+"");
-         }
+    private String removeAccents(String name) {
+	String cleanName = "";
+	String chars = "àâäéèêëîïôöùûüç";
+	String replace = "aaaeeeeiioouuuc";
+	int position = -2;
 
-	 return cleanName;
-     }
+	for (char letter : name.toCharArray()) {
+	    position = chars.indexOf(letter);
+	    if (position > -1)
+		cleanName = cleanName.concat(replace.charAt(position) + "");
+	    else
+		cleanName = cleanName.concat(letter + "");
+	}
+
+	return cleanName;
+    }
 
     // TODO: Une fois que les plans de cours seront section aware il faudra
     // modifier
     // ce code pour gérer toute la liste de provider ids
     /**
      * Get the department from the providerId associated to the Realm
+     * 
      * @param realmId
      * @return
      */
@@ -314,6 +345,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 
     /**
      * Get the language from the providerId associated to the Realm
+     * 
      * @param realmId
      * @return
      */
@@ -333,6 +365,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 
     /**
      * Get program from course management associated to providerId in Realm
+     * 
      * @param realmId
      * @return
      */
@@ -356,8 +389,9 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 
     }
 
-    private ContentCollection createOrGetContentCollection(String departmentFolderId,
-	    String departmentFolderName) throws Exception {
+    private ContentCollection createOrGetContentCollection(
+	    String departmentFolderId, String departmentFolderName)
+	    throws Exception {
 	ContentCollection departmentFolderCollection = null;
 	ResourcePropertiesEdit resourceProperties = null;
 
@@ -368,7 +402,8 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 	    departmentFolderCollection =
 		    contentHostingService.addCollection(departmentFolderId);
 	    resourceProperties =
-		    (ResourcePropertiesEdit) departmentFolderCollection.getProperties();
+		    (ResourcePropertiesEdit) departmentFolderCollection
+			    .getProperties();
 	    resourceProperties.addProperty(
 		    ResourceProperties.PROP_DISPLAY_NAME, departmentFolderName);
 
@@ -389,7 +424,6 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
     protected void loginToSakai() {
 	super.loginToSakai("CreateEvalSysPdfJob");
     }
-
 
     private OutputStream buildPDFReport(EvalEvaluation evaluation,
 	    EvalGroup evalGroup, String lang) {
@@ -540,7 +574,8 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
      * @param dti the data template item
      */
     private void renderDataTemplateItem(
-	    EvalPDFReportBuilder evalPDFReportBuilder, DataTemplateItem dti, ResourceLoader rb) {
+	    EvalPDFReportBuilder evalPDFReportBuilder, DataTemplateItem dti,
+	    ResourceLoader rb) {
 	EvalTemplateItem templateItem = dti.templateItem;
 	EvalItem item = templateItem.getItem();
 	String questionText =
