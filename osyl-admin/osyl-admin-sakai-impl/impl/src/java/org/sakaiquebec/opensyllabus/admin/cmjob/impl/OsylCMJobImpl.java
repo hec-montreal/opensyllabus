@@ -187,7 +187,9 @@ OsylCMJob {
 	/* load the instructors and assigns them to their courses */
 	private void assignTeachers() {
 
-//		Map<String, Set<String>> actualCoordinators = new HashMap<String, Set<String>>();
+		// tenir compte des coordonnateurs actuel dans les sites pour savoir lesquels aller supprimer
+		Map<String, Set<String>> actualCoordinators = new HashMap<String, Set<String>>();
+
 		for (String enrollmentSetId : profCoursMap.keySet()) {
 
 			ProfCoursMapEntry profCoursEntry = profCoursMap.get(enrollmentSetId);
@@ -201,14 +203,47 @@ OsylCMJob {
 			Section section = cmService.getSection(enrollmentSetId);
 			CourseOffering offering = cmService.getCourseOffering(section.getCourseOfferingEid());
 
+			// retrieve coordinators for current course offering or section
+			Set<String> coordinatorSet = null;
+			Set<Membership> memberships = null;
+			if ("CERT".equals(offering.getAcademicCareer()) ||
+					"QUAL.COMM.".equals(section.getCategory())) {
 
+				if (!actualCoordinators.containsKey(offering.getEid())) {
+					coordinatorSet = new HashSet<String>();
+					actualCoordinators.put(offering.getEid(), coordinatorSet);
+					memberships = cmService.getCourseOfferingMemberships(offering.getEid());
+				} else {
+					coordinatorSet = actualCoordinators.get(offering.getEid());
+				}
+			} else {
+				if (!actualCoordinators.containsKey(offering.getEid() + SHARABLE_SECTION)) {
+					coordinatorSet =  new HashSet<String>();
+					actualCoordinators.put(offering.getEid() + SHARABLE_SECTION, coordinatorSet);
+					memberships = cmService.getSectionMemberships(offering.getEid() + SHARABLE_SECTION);
+				} else {
+					coordinatorSet = actualCoordinators.get(offering.getEid() + SHARABLE_SECTION);
+				}
+			}
+
+			// add the coordinators to the map
+			if (memberships != null) {
+				for (Membership m : memberships) {
+					if (m.getRole().equals(COORDONNATEUR_ROLE)) {
+						coordinatorSet.add(m.getUserId());
+					}
+				}
+			}
+
+			// add the coordinators to the course offering or shareable section membership
 			for (String coordinator : profCoursEntry.getCoordinators()) {
 				if ("CERT".equals(offering.getAcademicCareer()) ||
 						"QUAL.COMM.".equals(section.getCategory())) {
 
 					cmAdmin.addOrUpdateCourseOfferingMembership(
 							coordinator, COORDONNATEUR_ROLE, offering.getEid(), ACTIVE_STATUS);
-					log.info("Coordinators added to CourseOffering for " + enrollmentSetId + ": " + coordinator);
+					coordinatorSet.remove(coordinator);
+					log.info("Coordinator added to CourseOffering for " + enrollmentSetId + ": " + coordinator);
 
 				}
 				else {
@@ -216,12 +251,35 @@ OsylCMJob {
 					// Add coordinator to sharable site for other courses
 					cmAdmin.addOrUpdateSectionMembership(
 							coordinator, COORDONNATEUR_ROLE, offering.getEid() + SHARABLE_SECTION, ACTIVE_STATUS);
-
-					log.info("Coordinator added to shareable section for "
+					coordinatorSet.remove(coordinator);
+					log.info("Coordinator added to shareable Section for "
 							+ offering.getEid() + SHARABLE_SECTION + ": "
 							+ coordinator);
 				}
 			}
+		}
+
+		// Remove coordinators that are still in the actualCoordinators map
+		for (Map.Entry<String, Set<String>> entry : actualCoordinators.entrySet()) {
+			String key = entry.getKey();
+			Set<String> coordinatorsToRemove = entry.getValue();
+
+			if (coordinatorsToRemove.size() > 0) {
+				if (key.endsWith("00")) {
+					for(String coordinator : coordinatorsToRemove) {
+						cmAdmin.removeSectionMembership(coordinator, key);
+						log.info("Coordinator removed from shareable Section for "
+								+ key + ": " + coordinator);
+					}
+				} else {
+					for(String coordinator : coordinatorsToRemove) {
+						cmAdmin.removeCourseOfferingMembership(coordinator, key);
+						log.info("Coordinator removed from CourseOffering for "
+								+ key + ": " + coordinator);
+					}
+				}
+			}
+
 		}
 	}
 
