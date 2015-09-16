@@ -149,11 +149,6 @@ OsylCMJob {
 	private Map<String, Enrollment> actualStudents;
 
 	/**
-	 * Set of students currently registered as enrolled in the system
-	 */
-	private HashSet<EnrollmentSet> actualEnrollmentSets;
-
-	/**
 	 * Classes sections actually registered in the system
 	 */
 	private Set<Section> actualCoursesSection;
@@ -971,21 +966,19 @@ OsylCMJob {
 		Set<CourseOffering> courseOfferings = new HashSet<CourseOffering>();
 		Set<CourseOffering> courseOff = null;
 
-		Set<EnrollmentSet> enrollmentSets = new HashSet<EnrollmentSet>();
 		Set<EnrollmentSet> enrollmentS = null;
 
-		Set<Section> sections = null;
-		String sectionId = null;
-		Set<Membership> memberships = null;
-
 		actualStudents = new HashMap<String, Enrollment>();
-		actualEnrollmentSets = new HashSet<EnrollmentSet>();
 		actualCoursesSection = new HashSet<Section>();
 		Set<Enrollment> enrollments = null;
 
 		for (CourseSet courseSet : courseSets) {
 			courseSetId = courseSet.getEid();
 			for (AcademicSession session : academicSessions) {
+				if (session.getStartDate().after(new Date(2015, 01, 01))) {
+					//seulement traiter les
+					continue;
+				}
 				sessionId = session.getEid();
 				courseOff =
 						cmService.findCourseOfferings(courseSetId, sessionId);
@@ -996,8 +989,6 @@ OsylCMJob {
 
 					// We retrieve the enrollments sets and enrollments
 					enrollmentS = cmService.getEnrollmentSets(courseOfferingId);
-					enrollmentSets.addAll(enrollmentS);
-					actualEnrollmentSets.addAll(enrollmentSets);
 
 					for (EnrollmentSet es : enrollmentS) {
 						enrollmentSetId = es.getEid();
