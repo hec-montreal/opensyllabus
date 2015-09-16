@@ -40,8 +40,6 @@ import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CourseEventSynchroJob;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailChargeFormationMap;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailChargeFormationMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailCoursMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailCoursMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailSessionsMap;
@@ -142,11 +140,6 @@ OsylCMJob {
 	 * Map used to store information about the exam dates
 	 */
 	private GenericExamensMapFactory examenMap = null;
-
-	/**
-	 * Map used to store information about the charge de formation
-	 */
-	private DetailChargeFormationMap chargeFormationMap = null;
 
 	private RequirementsCoursMap requirementsCoursMap;
 
@@ -289,34 +282,6 @@ OsylCMJob {
 								+ key + ": " + coordinator);
 					}
 				}
-			}
-
-		}
-	}
-
-	/* load the 'charge de formation' and assigns them to their courses */
-	private void assignChargeFormation() {
-		DetailChargeFormationMapEntry chargeFormationEntry = null;
-		String matricule = "";
-		Vector<DetailCoursMapEntry> cours;
-		Iterator<DetailChargeFormationMapEntry> chargeFormation =
-				chargeFormationMap.values().iterator();
-		String courseOfferingId = null;
-
-		while (chargeFormation.hasNext()) {
-			chargeFormationEntry =
-					(DetailChargeFormationMapEntry) chargeFormation.next();
-			matricule = chargeFormationEntry.getEmplId();
-			cours = chargeFormationEntry.getCours();
-			for (DetailCoursMapEntry detailsCours : cours) {
-
-				courseOfferingId = getCourseOfferingId(detailsCours);
-				cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
-						CHARGE_FORMATION_ROLE, courseOfferingId, ACTIVE_STATUS);
-
-				log.info("Charge de Formation for "
-						+ detailsCours.getUniqueKey() + ": " + matricule);
-
 			}
 
 		}
@@ -795,13 +760,12 @@ OsylCMJob {
 		File profFile = new File(directory, PROF_FILE);
 		File servensFile = new File(directory, SERV_ENS_FILE);
 		File progEtudFile = new File(directory, PROG_ETUD_FILE);
-		File chargeFormFile = new File(directory, CHARGE_FORMATION);
 		File requirementsFile = new File(directory, REQUIREMENTS);
 
 		if (sessionFile.exists() && coursFile.exists() && etudiantFile.exists()
 				&& horairesFile.exists() && profFile.exists()
 				&& servensFile.exists() && progEtudFile.exists()
-				&& chargeFormFile.exists() && requirementsFile.exists()) {
+				&& requirementsFile.exists()) {
 			return true;
 		}
 
@@ -896,15 +860,6 @@ OsylCMJob {
 					GenericProgrammeEtudesMapFactory.buildMap(directory
 							+ File.separator + PROG_ETUD_FILE);
 
-			chargeFormationMap =
-					GenericDetailChargeFormationMapFactory
-					.getInstance(directory + File.separator
-							+ CHARGE_FORMATION);
-			chargeFormationMap =
-					GenericDetailChargeFormationMapFactory
-					.buildMap(directory + File.separator
-							+ CHARGE_FORMATION, detailCoursMap);
-
 			requirementsCoursMap =
 					GenericRequirementsCoursMapFactory.getInstance(directory
 							+ File.separator + REQUIREMENTS);
@@ -938,7 +893,7 @@ OsylCMJob {
 			loadCourses();
 			log.info("Courses updated successfully");
 
-			// We assign teachers and the secretaries
+			// We assign teachers
 			loadMembership();
 			log.info("Membership updated successfully");
 
@@ -1204,12 +1159,9 @@ OsylCMJob {
 
 	/**
 	 * This method is used to load teachers, interns .... For now
-	 * it is used just for teachers and secretaries. Each secretary will be
-	 * automatically added to all the courses of the service she is associated
-	 * to;
+	 * it is used just for teachers
 	 */
 	public void loadMembership() {
-		assignChargeFormation();
 		assignTeachers();
 		syncCmExceptions();
 	}
@@ -1282,26 +1234,6 @@ OsylCMJob {
 			}
 
 		}
-	}
-
-	// Add secretary directly to the course offering
-	private void addSecretariesToMembership(List<String> secretaries,
-			List<DetailCoursMapEntry> courses) {
-		String courseOfferingId = null;
-
-		for (DetailCoursMapEntry course : courses) {
-			courseOfferingId = getCourseOfferingId(course);
-
-			log.info("Adding Secretaries for [" + course + "]: "
-					+ secretaries.toString());
-
-			for (String secretary : secretaries) {
-				cmAdmin.addOrUpdateCourseOfferingMembership(secretary,
-						SECRETARY_ROLE, courseOfferingId, ACTIVE_STATUS);
-
-			}
-		}
-
 	}
 
 	private void syncCmExceptions() {
