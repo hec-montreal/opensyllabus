@@ -198,75 +198,75 @@ OsylCMJob {
 				Section section = cmService.getSection(enrollmentSetId);
 				CourseOffering offering = cmService.getCourseOffering(section.getCourseOfferingEid());
 				EnrollmentSet enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
+
+				// add official instructors
+				enrollmentSet.setOfficialInstructors(profCoursEntry.getInstructors());
+				cmAdmin.updateEnrollmentSet(enrollmentSet);
+
+				log.info("Set instructors for " + enrollmentSetId + ": " + enrollmentSet.getOfficialInstructors());
+
+				// retrieve coordinators for current course offering or section
+				Set<String> coordinatorSet = null;
+				Set<Membership> memberships = null;
+				try {
+					if ("CERT".equals(offering.getAcademicCareer()) ||
+							"QUAL.COMM.".equals(section.getCategory())) {
+
+						if (!actualCoordinators.containsKey(offering.getEid())) {
+							coordinatorSet = new HashSet<String>();
+							actualCoordinators.put(offering.getEid(), coordinatorSet);
+							memberships = cmService.getCourseOfferingMemberships(offering.getEid());
+						} else {
+							coordinatorSet = actualCoordinators.get(offering.getEid());
+						}
+					} else {
+						if (!actualCoordinators.containsKey(offering.getEid() + SHARABLE_SECTION)) {
+							coordinatorSet =  new HashSet<String>();
+							actualCoordinators.put(offering.getEid() + SHARABLE_SECTION, coordinatorSet);
+							memberships = cmService.getSectionMemberships(offering.getEid() + SHARABLE_SECTION);
+						} else {
+							coordinatorSet = actualCoordinators.get(offering.getEid() + SHARABLE_SECTION);
+						}
+					}
+				}
+				catch (IdNotFoundException infe) {
+					log.error("CourseManagement memberships not found: " + infe.getMessage());
+				}
+
+				// add the coordinators to the map
+				if (memberships != null) {
+					for (Membership m : memberships) {
+						if (m.getRole().equals(COORDONNATEUR_ROLE)) {
+							coordinatorSet.add(m.getUserId());
+						}
+					}
+				}
+
+				// add the coordinators to the course offering or shareable section membership
+				for (String coordinator : profCoursEntry.getCoordinators()) {
+					if ("CERT".equals(offering.getAcademicCareer()) ||
+							"QUAL.COMM.".equals(section.getCategory())) {
+
+						cmAdmin.addOrUpdateCourseOfferingMembership(
+								coordinator, COORDONNATEUR_ROLE, offering.getEid(), ACTIVE_STATUS);
+						coordinatorSet.remove(coordinator);
+						log.info("Coordinator added to CourseOffering for " + enrollmentSetId + ": " + coordinator);
+
+					}
+					else {
+
+						// Add coordinator to sharable site for other courses
+						cmAdmin.addOrUpdateSectionMembership(
+								coordinator, COORDONNATEUR_ROLE, offering.getEid() + SHARABLE_SECTION, ACTIVE_STATUS);
+						coordinatorSet.remove(coordinator);
+						log.info("Coordinator added to shareable Section for "
+								+ offering.getEid() + SHARABLE_SECTION + ": "
+								+ coordinator);
+					}
+				}
 			} catch (IdNotFoundException infe) {
 				log.error("Id Not Found: " + infe.getMessage());
 				continue;
-			}
-
-			// add official instructors
-			enrollmentSet.setOfficialInstructors(profCoursEntry.getInstructors());
-			cmAdmin.updateEnrollmentSet(enrollmentSet);
-
-			log.info("Set instructors for " + enrollmentSetId + ": " + enrollmentSet.getOfficialInstructors());
-
-			// retrieve coordinators for current course offering or section
-			Set<String> coordinatorSet = null;
-			Set<Membership> memberships = null;
-			try {
-				if ("CERT".equals(offering.getAcademicCareer()) ||
-						"QUAL.COMM.".equals(section.getCategory())) {
-
-					if (!actualCoordinators.containsKey(offering.getEid())) {
-						coordinatorSet = new HashSet<String>();
-						actualCoordinators.put(offering.getEid(), coordinatorSet);
-						memberships = cmService.getCourseOfferingMemberships(offering.getEid());
-					} else {
-						coordinatorSet = actualCoordinators.get(offering.getEid());
-					}
-				} else {
-					if (!actualCoordinators.containsKey(offering.getEid() + SHARABLE_SECTION)) {
-						coordinatorSet =  new HashSet<String>();
-						actualCoordinators.put(offering.getEid() + SHARABLE_SECTION, coordinatorSet);
-						memberships = cmService.getSectionMemberships(offering.getEid() + SHARABLE_SECTION);
-					} else {
-						coordinatorSet = actualCoordinators.get(offering.getEid() + SHARABLE_SECTION);
-					}
-				}
-			}
-			catch (IdNotFoundException infe) {
-				log.error("CourseManagement memberships not found: " + infe.getMessage());
-			}
-
-			// add the coordinators to the map
-			if (memberships != null) {
-				for (Membership m : memberships) {
-					if (m.getRole().equals(COORDONNATEUR_ROLE)) {
-						coordinatorSet.add(m.getUserId());
-					}
-				}
-			}
-
-			// add the coordinators to the course offering or shareable section membership
-			for (String coordinator : profCoursEntry.getCoordinators()) {
-				if ("CERT".equals(offering.getAcademicCareer()) ||
-						"QUAL.COMM.".equals(section.getCategory())) {
-
-					cmAdmin.addOrUpdateCourseOfferingMembership(
-							coordinator, COORDONNATEUR_ROLE, offering.getEid(), ACTIVE_STATUS);
-					coordinatorSet.remove(coordinator);
-					log.info("Coordinator added to CourseOffering for " + enrollmentSetId + ": " + coordinator);
-
-				}
-				else {
-
-					// Add coordinator to sharable site for other courses
-					cmAdmin.addOrUpdateSectionMembership(
-							coordinator, COORDONNATEUR_ROLE, offering.getEid() + SHARABLE_SECTION, ACTIVE_STATUS);
-					coordinatorSet.remove(coordinator);
-					log.info("Coordinator added to shareable Section for "
-							+ offering.getEid() + SHARABLE_SECTION + ": "
-							+ coordinator);
-				}
 			}
 		}
 
