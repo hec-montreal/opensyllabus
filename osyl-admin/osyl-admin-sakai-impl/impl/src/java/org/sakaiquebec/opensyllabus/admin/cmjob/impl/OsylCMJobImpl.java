@@ -194,36 +194,47 @@ OsylCMJob {
 
 			ProfCoursMapEntry profCoursEntry = profCoursMap.get(enrollmentSetId);
 
-			EnrollmentSet enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
+			try {
+				Section section = cmService.getSection(enrollmentSetId);
+				CourseOffering offering = cmService.getCourseOffering(section.getCourseOfferingEid());
+				EnrollmentSet enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
+			} catch (IdNotFoundException infe) {
+				log.error("Id Not Found: " + infe.getMessage());
+				continue;
+			}
+
+			// add official instructors
 			enrollmentSet.setOfficialInstructors(profCoursEntry.getInstructors());
 			cmAdmin.updateEnrollmentSet(enrollmentSet);
 
 			log.info("Set instructors for " + enrollmentSetId + ": " + enrollmentSet.getOfficialInstructors());
 
-			Section section = cmService.getSection(enrollmentSetId);
-			CourseOffering offering = cmService.getCourseOffering(section.getCourseOfferingEid());
-
 			// retrieve coordinators for current course offering or section
 			Set<String> coordinatorSet = null;
 			Set<Membership> memberships = null;
-			if ("CERT".equals(offering.getAcademicCareer()) ||
-					"QUAL.COMM.".equals(section.getCategory())) {
+			try {
+				if ("CERT".equals(offering.getAcademicCareer()) ||
+						"QUAL.COMM.".equals(section.getCategory())) {
 
-				if (!actualCoordinators.containsKey(offering.getEid())) {
-					coordinatorSet = new HashSet<String>();
-					actualCoordinators.put(offering.getEid(), coordinatorSet);
-					memberships = cmService.getCourseOfferingMemberships(offering.getEid());
+					if (!actualCoordinators.containsKey(offering.getEid())) {
+						coordinatorSet = new HashSet<String>();
+						actualCoordinators.put(offering.getEid(), coordinatorSet);
+						memberships = cmService.getCourseOfferingMemberships(offering.getEid());
+					} else {
+						coordinatorSet = actualCoordinators.get(offering.getEid());
+					}
 				} else {
-					coordinatorSet = actualCoordinators.get(offering.getEid());
+					if (!actualCoordinators.containsKey(offering.getEid() + SHARABLE_SECTION)) {
+						coordinatorSet =  new HashSet<String>();
+						actualCoordinators.put(offering.getEid() + SHARABLE_SECTION, coordinatorSet);
+						memberships = cmService.getSectionMemberships(offering.getEid() + SHARABLE_SECTION);
+					} else {
+						coordinatorSet = actualCoordinators.get(offering.getEid() + SHARABLE_SECTION);
+					}
 				}
-			} else {
-				if (!actualCoordinators.containsKey(offering.getEid() + SHARABLE_SECTION)) {
-					coordinatorSet =  new HashSet<String>();
-					actualCoordinators.put(offering.getEid() + SHARABLE_SECTION, coordinatorSet);
-					memberships = cmService.getSectionMemberships(offering.getEid() + SHARABLE_SECTION);
-				} else {
-					coordinatorSet = actualCoordinators.get(offering.getEid() + SHARABLE_SECTION);
-				}
+			}
+			catch (IdNotFoundException infe) {
+				log.error("CourseManagement memberships not found: " + infe.getMessage());
 			}
 
 			// add the coordinators to the map
