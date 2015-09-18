@@ -973,10 +973,6 @@ OsylCMJob {
 		for (CourseSet courseSet : courseSets) {
 			courseSetId = courseSet.getEid();
 			for (AcademicSession session : academicSessions) {
-				if (!session.getStartDate().after(new Date(2015, 01, 01))) {
-					//seulement traiter les sessions qui debutent apres le premier janvier 2015
-					continue;
-				}
 				sessionId = session.getEid();
 				courseOff =
 						cmService.findCourseOfferings(courseSetId, sessionId);
