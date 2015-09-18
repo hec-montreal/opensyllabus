@@ -46,7 +46,6 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailSessionsMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailSessionsMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.EtudiantCoursMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.EtudiantCoursMapEntry;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericDetailChargeFormationMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericDetailCoursMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericDetailSessionsMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericEtudiantCoursMapFactory;
@@ -55,7 +54,6 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericProfCoursMapFacto
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericProgrammeEtudesMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericRequirementsCoursMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericServiceEnseignementMapFactory;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProgrammeEtudesMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProgrammeEtudesMapEntry;
@@ -975,8 +973,8 @@ OsylCMJob {
 		for (CourseSet courseSet : courseSets) {
 			courseSetId = courseSet.getEid();
 			for (AcademicSession session : academicSessions) {
-				if (session.getStartDate().after(new Date(2015, 01, 01))) {
-					//seulement traiter les
+				if (!session.getStartDate().after(new Date(2015, 01, 01))) {
+					//seulement traiter les sessions qui debutent apres le premier janvier 2015
 					continue;
 				}
 				sessionId = session.getEid();
