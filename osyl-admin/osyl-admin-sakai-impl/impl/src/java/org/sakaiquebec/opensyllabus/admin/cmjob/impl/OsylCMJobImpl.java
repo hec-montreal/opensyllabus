@@ -242,7 +242,7 @@ OsylCMJob {
 						addedCoordinators.add(offering.getEid()+coordinator);
 						coordinatorSet.remove(coordinator);
 
-						log.info("Coordinator added to CourseOffering for " + enrollmentSetId + ": " + coordinator);
+						log.info("Coordinator added to CourseOffering " + offering.getEid() + ": " + coordinator);
 
 					}
 					else if (!addedCoordinators.contains(offering.getEid()+SHARABLE_SECTION+coordinator)){
@@ -255,7 +255,7 @@ OsylCMJob {
 						addedCoordinators.add(offering.getEid()+SHARABLE_SECTION+coordinator);
 						coordinatorSet.remove(coordinator);
 
-						log.info("Coordinator added to shareable Section for "
+						log.info("Coordinator added to shareable Section "
 								+ offering.getEid() + SHARABLE_SECTION + ": "
 								+ coordinator);
 					}
