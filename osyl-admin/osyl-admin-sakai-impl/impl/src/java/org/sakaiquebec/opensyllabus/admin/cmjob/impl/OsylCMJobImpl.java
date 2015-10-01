@@ -23,6 +23,7 @@ import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
+import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.coursemanagement.api.AcademicCareer;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
@@ -192,7 +193,7 @@ OsylCMJob {
 
 				log.info("Set instructors for " + enrollmentSetId + ": " + enrollmentSet.getOfficialInstructors());
 
-				// retrieve coordinators for current course offering or section
+				// retrieve coordinators for current course offering or section (if we haven't yet)
 				Set<String> coordinatorSet = null;
 				Set<Membership> memberships = null;
 				try {
@@ -231,18 +232,37 @@ OsylCMJob {
 
 				// add the coordinators to the course offering or shareable section membership
 				for (String coordinator : profCoursEntry.getCoordinators()) {
-					if (!addedCoordinators.contains(offering.getEid()+coordinator) &&
-							("CERT".equals(offering.getAcademicCareer()) ||
-							"QUAL.COMM.".equals(section.getCategory()))) {
+					if (("CERT".equals(offering.getAcademicCareer()) || "QUAL.COMM.".equals(section.getCategory()))) {
 
-						cmAdmin.addOrUpdateCourseOfferingMembership(
-								coordinator, COORDONNATEUR_ROLE, offering.getEid(), ACTIVE_STATUS);
+						// if we haven't yet added this coordinator to the CM, do it now
+						if (!addedCoordinators.contains(offering.getEid()+coordinator)) {
+							cmAdmin.addOrUpdateCourseOfferingMembership(
+									coordinator, COORDONNATEUR_ROLE, offering.getEid(), ACTIVE_STATUS);
 
-						//record that we've added this coordinator so we don't do it again
-						addedCoordinators.add(offering.getEid()+coordinator);
-						coordinatorSet.remove(coordinator);
+							//record that we've added this coordinator so we don't do it again
+							addedCoordinators.add(offering.getEid()+coordinator);
+							coordinatorSet.remove(coordinator);
 
-						log.info("Coordinator added to CourseOffering " + offering.getEid() + ": " + coordinator);
+							log.info("Coordinator added to CourseOffering " + offering.getEid() + ": " + coordinator);
+						}
+
+						// if this coordinator is also an instructor in the course, refresh the authz group
+						if (profCoursEntry.getInstructors().contains(coordinator)) {
+							Set<String> realmIds = AuthzGroupService.getAuthzGroupIds(enrollmentSetId);
+							for(String realmId : realmIds) {
+								try {
+									AuthzGroup realm = AuthzGroupService.getAuthzGroup(realmId);
+									AuthzGroupService.save(realm);
+								}
+								catch (GroupNotDefinedException e) {
+									log.info("Error refreshing AuthzGroup (group does not exist): " + realmId);
+								}
+								catch (AuthzPermissionException e) {
+									log.error("Error refreshing AuthzGroup (user doesn't have permission): " + realmId);
+								}
+							}
+						}
+
 
 					}
 					else if (!addedCoordinators.contains(offering.getEid()+SHARABLE_SECTION+coordinator)){
