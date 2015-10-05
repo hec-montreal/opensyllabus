@@ -289,28 +289,6 @@ OsylCMJob {
 				}
 			}
 		}
-
-		// il faut faire un refresh des realms, surtout quand on ajout/supprime un instructor ou coordinator qui a/avait les deux roles (sinon il conserve son
-		// ancien role dans les realms)
-		// en fait, si on ne le fait pas pour les nouveau instructors, ils ne s'affiche pas tant qu'il n'y a pas de refresh.  L'ajout d'un usager avec un autre role
-		// provoque un refresh (voir addParticipantsFromMemberships dans SiteParticipantHelper).  Pour une raison inconnu l'ajout du prof ne le fait pas.
-		log.info("Start refreshing realms");
-		for (String enrollmentSetId : profCoursMap.keySet()) {
-			Set<String> realmIds = AuthzGroupService.getAuthzGroupIds(enrollmentSetId);
-			for(String realmId : realmIds) {
-				try {
-					AuthzGroup realm = AuthzGroupService.getAuthzGroup(realmId);
-					AuthzGroupService.save(realm);
-				}
-				catch (GroupNotDefinedException e) {
-					log.info("Error refreshing AuthzGroup (group does not exist): " + realmId);
-				}
-				catch (AuthzPermissionException e) {
-					log.error("Error refreshing AuthzGroup (user doesn't have permission): " + realmId);
-				}
-			}
-		}
-		log.info("Finished refreshing realms");
 	}
 
 	/** {@inheritDoc} */
