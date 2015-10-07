@@ -178,7 +178,7 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 
 	}
 
-	log.info(changedEntries.size() + " entries has been changed");
+	log.info(changedEntries.toString() + " entries has been changed");
 	logoutFromSakai();
     }
 
