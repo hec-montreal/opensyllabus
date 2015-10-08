@@ -28,7 +28,7 @@ DECLARE
   access VARCHAR(50 CHAR);
   uri VARCHAR(700 CHAR);
   title VARCHAR(500 CHAR);
-  comment VARCHAR2(4001 CHAR);
+  comment VARCHAR2(5000 CHAR);
   resourceType VARCHAR(700 CHAR);
   copyright VARCHAR(100 CHAR);
   important VARCHAR(10 CHAR);
@@ -70,7 +70,11 @@ BEGIN
           --faut utiliser la procedure, qui n'est pas limité à 4000 chars
           comment := xslprocessor.valueOf(asmContext, 'comment');
         EXCEPTION WHEN OTHERS THEN
-          comment := 'erreur: commentaire trop long';
+          IF SQLCODE = -24331 THEN
+            comment := 'erreur: commentaire trop long';
+          ELSE
+            comment := 'erreur: ' || SQLCODE || ' - ' || SQLERRM(SQLCODE);
+          END IF;
         END;
         title := xslprocessor.valueOf(asmContext, 'label');
         asmResource := xslprocessor.selectSingleNode(asmContext, 'asmResource');
@@ -81,7 +85,6 @@ BEGIN
         dbms_output.put('"' || site_id || '",'); 
         dbms_output.put('"' || department || '",');
         dbms_output.put('"' || program || '",');
---        dbms_output.put('"' || REPLACE(SUBSTR(site_id, 0, INSTR(site_id, '.') - 1), '-', NULL) || '",'); 
         -- nom du fichier sans le path
         dbms_output.put('"' || SUBSTR(uri, INSTR(uri,'/', -1, 1)+1) || '",');
         dbms_output.put('"' || replace(title, '"', '') || '",'); 
