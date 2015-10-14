@@ -36,7 +36,7 @@ DECLARE
 BEGIN
 
   -- headers
-  dbms_output.put_line('Cours,Departement,Cheminement academique,Nom de fichier,Titre,Type,Statut de droits d''auteur,Niveau de diffusion,Niveau d''exigence,Importance,Commentaire');
+  dbms_output.put_line('Cours,Departement,Cheminement academique,Nom de fichier,URI,Titre,Type,Statut de droits d''auteur,Niveau de diffusion,Niveau d''exigence,Importance,Commentaire');
 
   OPEN course_outline_cur;
 
@@ -87,6 +87,8 @@ BEGIN
         dbms_output.put('"' || program || '",');
         -- nom du fichier sans le path
         dbms_output.put('"' || SUBSTR(uri, INSTR(uri,'/', -1, 1)+1) || '",');
+        -- pour générer https://zonecours2.hec.ca/access/content/{uri} dans excel
+        dbms_output.put('"' || uri || '",');
         dbms_output.put('"' || replace(title, '"', '') || '",'); 
         dbms_output.put('"' || resourceType || '",');
         dbms_output.put('"' || copyright || '",');
