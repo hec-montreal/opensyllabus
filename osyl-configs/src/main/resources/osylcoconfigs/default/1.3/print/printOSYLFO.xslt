@@ -606,7 +606,7 @@
 					<xsl:text>Please consult the </xsl:text>
 					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
 						<fo:basic-link>
-							<xsl:attribute name="external-destination">http://www.hec.ca/en/current_student/technologies/calculators.html</xsl:attribute><xsl:text>calculator usage policy</xsl:text>
+							<xsl:attribute name="external-destination">http://www.hec.ca/en/current_student/technologies/authorized_calculators/calculators.html</xsl:attribute><xsl:text>calculator usage policy</xsl:text>
 						</fo:basic-link>
 					</fo:inline>
 					<xsl:text> during exams when applicable.</xsl:text>
