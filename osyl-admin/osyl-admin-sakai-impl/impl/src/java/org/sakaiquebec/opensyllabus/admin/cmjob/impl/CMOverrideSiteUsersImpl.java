@@ -96,7 +96,7 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 	Set<Membership> sectionMemberships = null;
 	Set<Membership> courseOffMemberships = null;
 	AuthzGroup azGroup = null;
-	boolean save = false;
+	
 
 	for (int i = 0; i < terms.size(); i++) {
 
@@ -112,7 +112,6 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 		    authzGroupIds = authzGroupService.getAuthzGroupIds(providerId);
 
 		    for (String authzGroupId : authzGroupIds) {
-			save = false;
 			try {
 			    azGroup = authzGroupService.getAuthzGroup(authzGroupId);
 			    if (!providerId.endsWith("00")) {
@@ -125,7 +124,7 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 
 					if (!"Instructor".equalsIgnoreCase(userRole)) {
 					    azGroup.removeMember(userDirectoryService.getUserId(instructorEid));
-					    save = true;
+					    authzGroupService.save(azGroup);
 					    changedEntries.add(providerId + userRole + instructorEid);
 					}
 					
@@ -139,7 +138,7 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 				    userRole = authzGroupService.getUserRole(userDirectoryService.getUserId(sectionMember.getUserId()), authzGroupId);
 				    if (!"Coordinator".equalsIgnoreCase(userRole)) {
 					    azGroup.removeMember(userDirectoryService.getUserId(sectionMember.getUserId()));
-					    save = true;
+					    authzGroupService.save(azGroup);
 					    changedEntries.add(providerId + userRole + sectionMember.getUserId());
 				    }
 				}
@@ -151,7 +150,7 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 				    userRole = authzGroupService.getUserRole(userDirectoryService.getUserId(courseOffMember.getUserId()), authzGroupId);
 				    if (!"Coordinator".equalsIgnoreCase(userRole)) {
 					    azGroup.removeMember(userDirectoryService.getUserId(courseOffMember.getUserId()));
-					    save = true;
+					    authzGroupService.save(azGroup);
 					    changedEntries.add(providerId + userRole +courseOffMember.getUserId());
 				    }
 				}
@@ -161,18 +160,12 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 			    e1.printStackTrace();
 			} catch (UserNotDefinedException e) {
 			    e.printStackTrace();
+			} catch (AuthzPermissionException e) {
+			    e.printStackTrace();
 			} 
 		    }
 
-		    if (save)
-			try {
-			    siteService.saveGroupMembership(site);
-			} catch (IdUnusedException e) {
-			    e.printStackTrace();
-			} catch (PermissionException e) {
-			    e.printStackTrace();
-			}
-
+		   
 		}
 	    }
 
