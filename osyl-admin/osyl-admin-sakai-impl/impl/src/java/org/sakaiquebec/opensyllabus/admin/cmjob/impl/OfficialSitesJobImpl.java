@@ -439,7 +439,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	String canCourseId = (courseOff.getCanonicalCourseEid()).trim();
 	AcademicSession session = courseOff.getAcademicSession();
 	String sessionId = session.getEid();
-
+	
 	String courseId = null;
 	String courseIdFront = null;
 	String courseIdMiddle = null;
@@ -538,7 +538,8 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	}
 
 	if (canCourseId.matches(".*[^0-9].*")) {
-	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")) {
+	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")
+		    || canCourseId.endsWith("R") || canCourseId.endsWith("W")) {
 		if (canCourseId.length() == 8) {
 		    courseIdFront = canCourseId.substring(0, 2);
 		    courseIdMiddle = canCourseId.substring(2, 5);

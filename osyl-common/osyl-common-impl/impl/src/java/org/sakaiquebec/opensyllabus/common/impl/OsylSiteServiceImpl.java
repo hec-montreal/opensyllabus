@@ -1937,7 +1937,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
 
 	if (canCourseId.matches(".*[^0-9].*")) {
-	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")) {
+	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")
+		    || canCourseId.endsWith("R") || canCourseId.endsWith("W")) {
 		if (canCourseId.length() == 8) {
 		    courseIdFront = canCourseId.substring(0, 2);
 		    courseIdMiddle = canCourseId.substring(2, 5);
