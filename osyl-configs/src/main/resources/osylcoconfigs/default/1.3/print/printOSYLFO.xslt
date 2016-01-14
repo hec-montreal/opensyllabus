@@ -1013,7 +1013,7 @@
 				<xsl:call-template name="BiblioResource_link">
 					<xsl:with-param name="img">bookstore_link</xsl:with-param>
 					<xsl:with-param name="link_text">bookstore_link_text</xsl:with-param>
-					<xsl:with-param name="identifier">http://www.coophec.com/product_livre.aspx?isbn=<xsl:value-of select="identifier[@type='isn']"/></xsl:with-param>
+					<xsl:with-param name="identifier">http://www.coophec.com/product_detail.aspx?isbn=<xsl:value-of select="identifier[@type='isn']"/></xsl:with-param>
 				</xsl:call-template>
 			</xsl:when>
 		</xsl:choose>
