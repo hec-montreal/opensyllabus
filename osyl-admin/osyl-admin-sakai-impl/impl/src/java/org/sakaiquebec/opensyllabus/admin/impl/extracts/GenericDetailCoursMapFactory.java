@@ -49,6 +49,8 @@ public class GenericDetailCoursMapFactory {
 	    // Remove empty spaces
 	    if (courseId != null)
 		courseId = courseId.trim();
+	    if (catalogNbr != null)
+	    catalogNbr = catalogNbr.trim();
 
 	    key =
 		    DetailCoursMapEntry.getUniqueKey(catalogNbr,
@@ -77,7 +79,7 @@ public class GenericDetailCoursMapFactory {
 
 	    entry.setAcaCareer(tokens[i++]);
 	    entry.setClassStat(tokens[i++]);
-	    entry.setUnitsMinimum(tokens[i++]); 
+	    entry.setUnitsMinimum(tokens[i++]);
 	    try {
 		entry.setTypeEvaluation(tokens[i++]);
 	    } catch (ArrayIndexOutOfBoundsException e) {
