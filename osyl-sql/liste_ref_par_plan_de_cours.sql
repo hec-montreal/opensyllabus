@@ -1,9 +1,16 @@
+-- instructions pour rouler ce script dans SQL PLUS:
+-- set serveroutput on size unlimited;
+-- set linesize 15000;
+-- set trimspool on;
+-- spool <nom de fichier output>;
+-- @<path du fichier>
+-- spool off;
 DECLARE
   CURSOR course_outline_cur is
     SELECT site_id, content FROM osyl_co
     WHERE "ACCESS" = 'attendee' 
     AND published = '1'
-    AND site_id LIKE '%10-400-11.A2012.P41%'
+    AND site_id LIKE '%H2016.%'
     ORDER BY site_id;
 
   -- xml parser variables  
@@ -29,6 +36,7 @@ DECLARE
   level VARCHAR(700 CHAR);
   
 BEGIN
+  dbms_output.enable(NULL);
 
   -- headers
   dbms_output.put_line('sigle,id,type de référence,niveau exigence,référence,isn,url');

@@ -34,6 +34,7 @@ DECLARE
   important VARCHAR(10 CHAR);
   level VARCHAR(700 CHAR);
 BEGIN
+  dbms_output.enable(NULL);
 
   -- headers
   dbms_output.put_line('Cours,Departement,Cheminement academique,Nom de fichier,URI,Titre,Type,Statut de droits d''auteur,Niveau de diffusion,Niveau d''exigence,Importance,Commentaire');

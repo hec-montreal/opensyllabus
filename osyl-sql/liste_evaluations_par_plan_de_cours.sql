@@ -10,7 +10,7 @@ DECLARE
     SELECT site_id, content FROM osyl_co
     WHERE "ACCESS" = 'attendee' 
     AND published = '1'
-    AND site_id LIKE '%A2013%'
+    AND site_id LIKE '%A2013.%'
     ORDER BY site_id;
 
   -- xml parser variables  
@@ -34,6 +34,7 @@ DECLARE
   submission_type VARCHAR(150 CHAR);
   
 BEGIN
+  dbms_output.enable(NULL);
 
   -- headers
   dbms_output.put_line('Sigle;Id du site;Numéro;Nom;Type d''évaluation;Pondération;Mode de travail;Date de l''évaluation;Localisation;Modalité;Mode de remise');
