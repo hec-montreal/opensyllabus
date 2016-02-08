@@ -38,6 +38,7 @@ import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Membership;
 import org.sakaiproject.coursemanagement.api.Section;
@@ -172,35 +173,42 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 	}
 
 	log.info(changedEntries.toString() + " entries has been changed");
+	log.info("The terms " + terms.toString() + " have been treated.");
 	logoutFromSakai();
     }
 
+    
+    /**
+     * Look for the session closest to the end of the current session.
+     * Logically it is always the next, done like this because the next
+     * session ( or period) can start the next day or next week.
+     * @return a list of session titles
+     */
     public List<String> getTerms() {
 	List<String> terms = new ArrayList<String>();
-	String termsString = null;
-	// Check if property file exists and retrieve it
-	Reference reference =
-		entityManager
-			.newReference(ConfigurationService.CONFIG_FOLDER
-				+ ConfigurationService.OVERRIDESIREUSERS_CONFIG_FILE_NAME);
-	ContentResource resource;
-	try {
-	    resource = contentHostingService.getResource(reference.getId());
 
-	    bundle = getResouceBundle(resource);
-	    termsString = bundle.getString(TERM_KEY);
+	//From the logic implemented in OsylCMJob the list always contains one element
+	List<AcademicSession> currentSessions = cmService.getCurrentAcademicSessions();
+	AcademicSession currentSession = currentSessions.get(0);
+	terms.add(currentSession.getTitle());
 
-	    terms = Arrays.asList(termsString.split(","));
+	long interval = -1;
+	List<AcademicSession> allSessions = cmService.getAcademicSessions();
 
-	} catch (PermissionException e) {
-	    e.printStackTrace();
-	} catch (IdUnusedException e) {
-	    e.printStackTrace();
-	} catch (TypeException e) {
-	    e.printStackTrace();
+	AcademicSession nextAS = allSessions.get(0);
+
+	for (AcademicSession as: allSessions){
+	    interval = Math.abs(as.getStartDate().getTime() - currentSession.getEndDate().getTime());
+	    if ( (interval< Math.abs((nextAS.getStartDate().getTime()-currentSession.getEndDate().getTime()))))
+		nextAS = as;
 	}
-
+	
+	if (nextAS != null)
+	    terms.add(nextAS.getTitle());
+	log.info(terms);
 	return terms;
     }
+    
+  
 
 }
