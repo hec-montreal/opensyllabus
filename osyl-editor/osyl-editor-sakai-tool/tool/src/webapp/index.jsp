@@ -149,5 +149,7 @@
 		</script>
 	</head>
 
-	<body onload="myLoad()"></body>
+	<body onload="myLoad()">
+		<div id="osyl-editor-root"></div>
+	</body>
 </html>

@@ -11,9 +11,9 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylSecurityServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init" destroy-method="destroy" >
 
-		<!-- Sakai dependencies -->
+ 		<!-- Sakai dependencies -->
 		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 
 		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
@@ -31,7 +31,7 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylConfigService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylConfigServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init" destroy-method="destroy" >
 
 		<property name="configDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
@@ -43,7 +43,7 @@
 	<bean
 		id="org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO"
 		class="org.sakaiquebec.opensyllabus.common.impl.portal.OsylTransformToZCCOImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init" destroy-method="destroy" >
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
 
@@ -59,14 +59,14 @@
 	<bean
 		id="org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherService"
 		class="org.sakaiquebec.opensyllabus.common.impl.portal.publish3.ZCPublisherServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init" destroy-method="destroy" >
 	</bean>
 	-->
 	<!-- END HEC ONLY SAKAI-2723 -->
 	
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylContentService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylContentServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init" >
 
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
@@ -75,7 +75,7 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylPublishService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylPublishServiceImpl"
-		init-method="init" singleton="true">
+		init-method="init" >
 
 		<!-- Osyl dependencies -->
 		<property name="osylSiteService"
@@ -89,8 +89,8 @@
 		<property name="coRelationDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 
-		<property name="hecCourseArchiveService"
-			ref="ca.hec.archive.api.HecCourseArchiveService" />
+<!-- 		<property name="hecCourseArchiveService" -->
+<!-- 			ref="ca.hec.archive.api.HecCourseArchiveService" /> -->
 
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
@@ -114,7 +114,7 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSiteService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylSiteServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init" destroy-method="destroy" >
 
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
@@ -160,7 +160,7 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylDirectoryServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
+		init-method="init" >
 
 		<!-- Sakai dependencies -->
 		<property name="siteService" 

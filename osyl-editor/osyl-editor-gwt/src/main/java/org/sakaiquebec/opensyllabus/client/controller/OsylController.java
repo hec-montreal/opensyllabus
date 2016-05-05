@@ -511,7 +511,7 @@ public class OsylController implements SavePushButtonEventHandler,
     public void noPublishedCourseOutline() {
 	RootPanel rootPanel = OsylEditorEntryPoint.getInstance().getRootPanel();
 	if (rootPanel == null)
-	    rootPanel = RootPanel.get();
+	    rootPanel = RootPanel.get("osyl-editor-root");
 	HTML html = new HTML();
 	html.setHTML(uiMessages.getMessage("noPublishedVersion"));
 	rootPanel.add(html);

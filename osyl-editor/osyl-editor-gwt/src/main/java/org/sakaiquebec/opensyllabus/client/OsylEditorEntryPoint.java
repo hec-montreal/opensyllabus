@@ -200,9 +200,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
     private void initView() {
 	// We initialize the controller
 	OsylController osylController = OsylController.getInstance();
-	// We get hold of our slot in the html/jsp page. We now use the body
-	// itself (that is we do not specify an element ID):
-	rootPanel = RootPanel.get();
+	// We get hold of our slot in the html/jsp page.
+	rootPanel = RootPanel.get("osyl-editor-root");
 	osylController.setCOSerialized(getSerializedCourseOutline());
 
 	// We create our main view
@@ -288,7 +287,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	if (isInSakai()) {
 	    Element col1 = getElementById("col1");
 	    Element portlet =
-		    getElementsByClass("portletMainWrap", col1, "DIV")[0];
+		    getElementsByClass("Mrphs-container", col1, "DIV")[0];
 	    DOM.setStyleAttribute(col1, "paddingRight", "0");
 	    DOM.setStyleAttribute(portlet, "width", "100%");
 	    setSakaiScrollBar("auto");
@@ -333,7 +332,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @return the Sakai footer element.
      */
     public static native Element getSakaiLeftMenu() /*-{
-						    return $wnd.parent.document.getElementById("toolMenuWrap");
+						    return $wnd.parent.document.getElementById("toolMenu");
 						    }-*/;
 
     /**

@@ -15,6 +15,7 @@
 }
 .Osyl-MainPanel-Title-TD {height:30px}
 .Osyl-MainPanel-ToolBar-TD {height:21px}
+.Osyl-MainPanel-Content-TD {height:100%}
 /*MenuBar -----------------------------------------------------------------------------------------------*/
 .Osyl-MenuBar {
 	position:relative;
@@ -1374,7 +1375,7 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 .Osyl-PublishView-genericButton {
 	font:bold 12px Arial, Verdana, sans-serif;
 	white-space:nowrap;
-	color:#444;
+	color:#444 !important;
 	background: transparent url(images/ui/button_bg.gif) repeat-x 0 -60px;
 	border:1px solid #CCC;
 	margin:0 5px;
@@ -1406,6 +1407,7 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 .Osyl-PublishView-genericButton:hover {
 	background-position:0 -30px;
 	border:1px solid #BBB;
+	background: transparent url(images/ui/button_bg.gif) repeat-x 0 -60px;
 }
 
 .Osyl-Button:active,

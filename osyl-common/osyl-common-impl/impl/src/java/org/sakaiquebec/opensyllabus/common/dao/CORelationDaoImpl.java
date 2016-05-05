@@ -64,7 +64,7 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 	List<CORelation> children = null;
 	try {
 	    children =
-		    getHibernateTemplate().find(
+	    		(List<CORelation>) getHibernateTemplate().find(
 			    "from CORelation where parent= ? ",
 			    new Object[] { coId });
 	} catch (Exception e) {
@@ -83,7 +83,7 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 	List<CORelation> parents = null;
 	try {
 	    parents =
-		    getHibernateTemplate().find(
+		    (List<CORelation>)getHibernateTemplate().find(
 			    "from CORelation where child= ? ",
 			    new Object[] { coId });
 	} catch (Exception e) {
@@ -106,7 +106,7 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 
 	try {
 	    results =
-		    getHibernateTemplate().find(
+		    (List<CORelation>) getHibernateTemplate().find(
 			    "from CORelation where child= ? and parent= ?",
 			    new Object[] { childId, parentId });
 	} catch (Exception e) {
@@ -152,7 +152,7 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 	    throw new IllegalArgumentException();
 	try {
 	    List<CORelation> childs =
-		    getHibernateTemplate().find(
+		    (List<CORelation>) getHibernateTemplate().find(
 			    "from CORelation where parent= ? ",
 			    new Object[] { coId });
 	    if (childs != null) {
@@ -176,7 +176,7 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 	    throw new IllegalArgumentException();
 	try {
 	    List<CORelation> parents =
-		    getHibernateTemplate().find(
+		    (List<CORelation>) getHibernateTemplate().find(
 			    "from CORelation where child= ? ",
 			    new Object[] { coId });
 	    if (parents != null) {

@@ -3,7 +3,7 @@
 .gwt-Button {
 	font:bold 12px Arial, Verdana, sans-serif;
 	white-space:nowrap;
-	color:#444;
+	color:#444 !important;
 	background-color:#F7F7F7;
 	border:1px solid #999;
 	margin:5px 0;
@@ -17,7 +17,8 @@
 }
 .gwt-Button::-moz-focus-inner {border:none}
 .gwt-Button:hover {
-	background-color:#FFF;
+	/*background-color:#FFF;*/
+  background: transparent url(images/ui/button_bg.gif) repeat-x 0 -60px;
 }
 .gwt-Button:active {
 	padding:4px 3px 2px;

@@ -49,7 +49,7 @@ public class OsylManagerEntryPoint implements EntryPoint {
     /**
      * The base panel of Osyl Manager GUI
      */
-    private RootPanel rootPanel = RootPanel.get();
+    private RootPanel rootPanel = RootPanel.get("osyl-manager-editor");
 
     /**
      * The base abstract view of Osyl Manager GUI

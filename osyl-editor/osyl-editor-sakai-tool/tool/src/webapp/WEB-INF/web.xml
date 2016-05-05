@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <web-app id="WebApp_9" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<display-name>sakai-opensyllabus-tool</display-name>
 	<description>sakai-opensyllabus-tool</description>
 
@@ -53,7 +53,7 @@
 		<listener-class>org.sakaiproject.util.ToolListener</listener-class>
 	</listener>
 	<listener>
-		<listener-class>org.sakaiproject.util.ContextLoaderListener</listener-class>
+		<listener-class>org.sakaiproject.util.SakaiContextLoaderListener</listener-class>
 	</listener>
 	
 </web-app>

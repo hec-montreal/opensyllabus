@@ -84,7 +84,7 @@ public class OsylWindowPanel extends WindowPanel {
 	    if (!isActive()) {
 		toFront();
 	    }
-	    final Widget boundaryPanel = RootPanel.get();
+	    final Widget boundaryPanel = RootPanel.get("osyl-editor-root");
 	    if (oldState != WindowState.MINIMIZED) {
 		restoredWidth = getContentWidth();
 		restoredHeight = getContentHeight();
@@ -107,7 +107,7 @@ public class OsylWindowPanel extends WindowPanel {
      * @param oldState
      */
     protected void restore(WindowState oldState) {
-	final Widget boundaryPanel = RootPanel.get();
+	final Widget boundaryPanel = RootPanel.get("osyl-editor-root");
 	final int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());
 	if (isResizable() && oldState == WindowState.MAXIMIZED) {
 	    int maxLeft =

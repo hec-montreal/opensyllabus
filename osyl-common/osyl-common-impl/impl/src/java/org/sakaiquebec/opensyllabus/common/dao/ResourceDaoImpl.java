@@ -86,7 +86,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw new IllegalArgumentException();
 	try {
 	    results =
-		    getHibernateTemplate()
+		    (List<COSerialized>)getHibernateTemplate()
 			    .find("from COSerialized where siteId= ? and published=0",
 				    new Object[] { siteId });
 	} catch (Exception e) {
@@ -136,7 +136,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw new IllegalArgumentException();
 	try {
 	    results =
-		    getHibernateTemplate().find(
+		    (List<COSerialized>)getHibernateTemplate().find(
 			    "from COSerialized where siteId= ? ",
 			    new Object[] { siteId });
 	} catch (Exception e) {
@@ -200,12 +200,12 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    if ("oracle".equalsIgnoreCase(sqlService.getVendor())
 		    && access.equals("")) {
 		results =
-			singleRowHT
+			(List<COSerialized>)singleRowHT
 				.find("from COSerialized where siteId= ? and published= ? and access is null",
 					new Object[] { siteId, published });
 	    } else {
 		results =
-			getHibernateTemplate()
+			(List<COSerialized>)getHibernateTemplate()
 				.find("from COSerialized where siteId= ? and access= ? and published= ?",
 					new Object[] { siteId, access,
 						published });
@@ -259,12 +259,12 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	try {
 	    if ("oracle".equalsIgnoreCase(sqlService.getVendor())) {
 		results =
-			getHibernateTemplate()
+			(List<COSerialized>) getHibernateTemplate()
 				.find("from COSerialized where siteId= ? and published=1 and access is not null",
 					new Object[] { siteId });
 	    } else {
 		results =
-			getHibernateTemplate()
+			(List<COSerialized>)getHibernateTemplate()
 				.find("from COSerialized where siteId= ? and published=1 and not access=''",
 					new Object[] { siteId });
 	    }
@@ -288,7 +288,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	else {
 	    try {
 		results =
-			getHibernateTemplate()
+			(List<COSerialized>)getHibernateTemplate()
 				.find("from COSerialized where siteId= ? and published=0",
 					new Object[] { siteId });
 	    } catch (Exception e) {
@@ -309,7 +309,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 
 	try {
 	    results =
-		    getHibernateTemplate()
+		    (List<COSerialized>)getHibernateTemplate()
 			    .find("from COSerialized where siteId= ? and access = ? ",
 				    new Object[] { siteId, access });
 	} catch (Exception e) {
@@ -334,12 +334,12 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	try {
 	    if ("oracle".equalsIgnoreCase(sqlService.getVendor())) {
 		results =
-			getHibernateTemplate()
+			(List<COSerialized>)getHibernateTemplate()
 				.find("from COSerialized where siteId= ? and published=1 and access is null",
 					new Object[] { siteId });
 	    } else {
 		results =
-			getHibernateTemplate()
+			(List<COSerialized>) getHibernateTemplate()
 				.find("from COSerialized where siteId= ? and published=1 and access= ?",
 					new Object[] { siteId, "" });
 	    }
@@ -365,7 +365,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw new IllegalArgumentException();
 	try {
 	    results =
-		    getHibernateTemplate().find(
+		    (List<COSerialized>)getHibernateTemplate().find(
 			    "from COSerialized where siteId= ? and access= ?",
 			    new Object[] { siteId, access });
 	} catch (Exception e) {
@@ -421,7 +421,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw new IllegalArgumentException();
 	try {
 	    results =
-		    getHibernateTemplate()
+		    (List<Date>)getHibernateTemplate()
 			    .find("select modificationDate from COSerialized where siteId= ? and published=0",
 				    new Object[] { siteId });
 	} catch (Exception e) {
@@ -445,7 +445,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw new IllegalArgumentException();
 	try {
 	    results =
-		    getHibernateTemplate()
+		    (List<Date>)getHibernateTemplate()
 			    .find("select publicationDate from COSerialized where siteId= ? and published=0",
 				    new Object[] { siteId });
 	} catch (Exception e) {
@@ -468,7 +468,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw new IllegalArgumentException();
 	try {
 	    results =
-		    getHibernateTemplate().find(
+		    (List<COSerialized>) getHibernateTemplate().find(
 			    "from COSerialized where siteId= ? ",
 			    new Object[] { siteId });
 	} catch (Exception e) {
@@ -489,7 +489,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw new IllegalArgumentException();
 	try {
 	    results =
-		    getHibernateTemplate().find(
+		    (List<COSerialized>)getHibernateTemplate().find(
 			    "from COSerialized where siteId= ?",
 			    new Object[] { siteId });
 	} catch (Exception e) {
@@ -506,7 +506,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw new IllegalArgumentException();
 	try {
 	    results =
-		    getHibernateTemplate()
+		    (List<COSerialized>)getHibernateTemplate()
 			    .find("from COSerialized where siteId= ? and published=1",
 				    new Object[] { siteId });
 	} catch (Exception e) {
@@ -526,7 +526,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	List<String> results = new ArrayList<String>();
 	try {
 	    temp =
-		    getHibernateTemplate()
+		    (List<COSerialized>)getHibernateTemplate()
 			    .find("from COSerialized where published=1 and access='public'");
 	} catch (Exception e) {
 	    log.error("Unable to retrieve site Id list", e);

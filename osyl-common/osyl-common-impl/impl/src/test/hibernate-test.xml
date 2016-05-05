@@ -25,7 +25,7 @@
 
     <bean id="org.sakaiproject.db.api.SqlService"
 			class="org.sakaiquebec.opensyllabus.common.dao.MockSqlService"
-			init-method="init" destroy-method="destroy" singleton="true">
+			init-method="init" destroy-method="destroy" >
 			
 		<!-- HSQLDB configuration -->
 		<property name="vendor">

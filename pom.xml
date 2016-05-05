@@ -3,15 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>base</artifactId>
     <groupId>org.sakaiproject</groupId>
-    <version>2.9.1</version>
-    <relativePath>../pom.xml</relativePath>
+    <artifactId>master</artifactId>
+    <version>11-SNAPSHOT</version>
+    <relativePath>../master/pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
   <artifactId>osyl</artifactId>
-  <version>2.9.1</version>
+  <version>11-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Sakai Quebec OpenSyllabus</name>
@@ -21,9 +21,6 @@
     <url>http://www.sakaiquebec.org/</url>
   </organization>
 
-  <prerequisites>
-    <maven>2.0.8</maven>
-  </prerequisites>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,7 +38,8 @@
     <module>osyl-common</module>
     <module>osyl-editor</module>
     <module>osyl-manager</module><!-- HEC ONLY SAKAI-2723 -->
-    <module>osyl-admin</module><!-- HEC ONLY SAKAI-2723 -->
+    <!-- temp comment
+    <module>osyl-admin</module> --><!-- HEC ONLY SAKAI-2723 -->
   </modules>
 
   <pluginRepositories>
@@ -161,9 +159,10 @@
         <version>0.10-K1</version>
       </dependency>
       <dependency>
-        <groupId>org.sakaiproject</groupId>
+         <groupId>org.sakaiproject.genericdao</groupId>
         <artifactId>generic-dao</artifactId>
-        <version>0.9.1</version>
+        <version>${sakai.genericdao.version}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
       	<groupId>org.sakaiproject.edu-services.course-management</groupId>
@@ -187,18 +186,19 @@
 			<artifactId>sakai-announcement-api</artifactId>
 			<version>${sakai.version}</version>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.sakaiproject.hierarchy</groupId>
 			<artifactId>hierarchy-api</artifactId>
 			<version>${sakai.hierarchy.version}</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> 
 		<dependency>
 			<groupId>org.sakaiproject.evaluation</groupId>
 			<artifactId>sakai-evaluation-api</artifactId>
 			<version>${sakai.evaluation.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		-->
 
       <!-- spring and hibernate -->
       <dependency>
@@ -266,11 +266,13 @@
         <artifactId>jta</artifactId>
         <version>h2.1.8</version>
       </dependency>
+      <!-- 
       <dependency>
         <groupId>cglib</groupId>
         <artifactId>cglib-nodep</artifactId>
         <version>2.1_3</version>
       </dependency>
+       -->
       <dependency>
         <groupId>commons-codec</groupId>
         <artifactId>commons-codec</artifactId>
@@ -508,14 +510,9 @@
           <version>6.1.15</version>
         </plugin>
         <plugin>
-          <groupId>org.sakaiproject.maven.plugins</groupId>
-          <artifactId>sakai</artifactId>
-          <version>1.2.0</version>
-        </plugin>
-        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>gwt-maven-plugin</artifactId>
-          <version>2.2.0</version>
+          <version>${gwtVersion}</version>
           <dependencies>
 	          <dependency>
 	            <groupId>com.google.gwt</groupId>

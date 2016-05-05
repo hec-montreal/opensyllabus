@@ -57,8 +57,8 @@
 </script>
 </head>
 <body onload="myLoad()">
-<!--  <div class="portletBody">
+  <div id="osyl-manager-editor">
 </div>
--->
+
 </body>
 </html>

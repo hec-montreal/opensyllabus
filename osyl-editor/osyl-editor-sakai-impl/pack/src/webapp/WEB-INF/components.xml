@@ -5,7 +5,7 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.api.OsylService"
 		class="org.sakaiquebec.opensyllabus.impl.OsylServiceImpl"
-		init-method="init" singleton="true">
+		init-method="init" >
 		
 		<!-- Sakai dependencies -->
 		<property name="siteService"
@@ -28,9 +28,9 @@
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
-		<property name="CORelationDao"
+		<property name="coRelationDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
-		<property name="COConfigDao"
+		<property name="coConfigDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
 		<property name="osylContentService" 
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />

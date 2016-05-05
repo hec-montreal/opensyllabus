@@ -91,7 +91,7 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 
 	    try {
 		results =
-		    getHibernateTemplate().find(
+		    (List<COConfigSerialized>)getHibernateTemplate().find(
 			    "from COConfigSerialized where configId= ? ",
 			    new String[] { configId });
 	    } catch (Exception e) {
@@ -171,7 +171,7 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 
 	try {
 	    results =
-		    getHibernateTemplate().find(
+		    (List<COConfigSerialized>)getHibernateTemplate().find(
 			    "from COConfigSerialized where configRef= ? ",
 			    new Object[] { configRef });
 	} catch (Exception e) {

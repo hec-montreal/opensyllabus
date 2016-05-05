@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.sakaiquebec.opensyllabus</groupId>
 		<artifactId>osyl-common</artifactId>
-		<version>2.9.1</version>
+		<version>11-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -21,6 +21,12 @@
 			<groupId>org.sakaiquebec.opensyllabus</groupId>
 			<artifactId>osyl-common-api</artifactId>
 		</dependency>
+      <dependency>
+         <groupId>org.sakaiproject.genericdao</groupId>
+        <artifactId>generic-dao</artifactId>
+        <version>${sakai.genericdao.version}</version>
+        <scope>provided</scope>
+      </dependency>
 		<dependency>
 			<groupId>org.sakaiquebec.opensyllabus</groupId>
 			<artifactId>osyl-common-shared</artifactId>
@@ -59,11 +65,10 @@
 		</dependency>
 
 		<!-- spring and hibernate -->
-		<dependency>
-			<groupId>${sakai.spring.groupId}</groupId>
-			<artifactId>${sakai.spring.artifactId}</artifactId>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>${sakai.hibernate.groupId}</groupId>
 			<artifactId>${sakai.hibernate.artifactId}</artifactId>

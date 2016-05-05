@@ -151,6 +151,8 @@ public class OsylMainView extends OsylViewableComposite implements
 	horizontalSplitPanel
 		.setStylePrimaryName("Osyl-MainView-HorizontalSplitPanel");
 	getMainPanel().setWidget(row, 0, osylHorizontalSplitPanel);
+	getMainPanel().getCellFormatter().setStylePrimaryName(row, 0,
+		"Osyl-MainPanel-Content-TD");
 	row++;
 
 	// Create and set the OpenSyllabus TreeView
@@ -386,7 +388,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	// TODO Find a way to compute offsetHeight of the top and bottom
 	// decorativePanel (doesn't work use 56 instead).
 	int innerHeight =
-		toolHeight - osylHorizontalSplitPanel.getAbsoluteTop() - 56;
+		toolHeight - osylHorizontalSplitPanel.getAbsoluteTop() +60;
 	DOM.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "height",
 		innerHeight + "px");
 	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "height",

@@ -752,10 +752,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    ResourceProperties.PROP_COPYRIGHT_CHOICE,
 			    coResProxy.getResource().getProperty(
 				    COPropertiesType.LICENSE));
-		    newResource.getPropertiesEdit().addProperty(
+	/*
+	 * SAKAI 11: check for 	    ResourceProperties.PROP_TYPE_RESOURCE
+	 * 
+	 * newResource.getPropertiesEdit().addProperty(
 			    ResourceProperties.PROP_TYPE_RESOURCE,
 			    coResProxy.getResource().getProperty(
-				    COPropertiesType.ASM_RESOURCE_TYPE));
+				    COPropertiesType.ASM_RESOURCE_TYPE));*/
 
 		    contentHostingService.commitResource(newResource,
 			    NotificationService.NOTI_NONE);

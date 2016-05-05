@@ -201,7 +201,7 @@ public class OsylServiceImpl implements OsylService {
      *
      * @param coRelationDAO
      */
-    public void setCORelationDao(CORelationDao coRelationDao) {
+    public void setCoRelationDao(CORelationDao coRelationDao) {
 	this.coRelationDao = coRelationDao;
     }
 
@@ -212,7 +212,7 @@ public class OsylServiceImpl implements OsylService {
      *
      * @param coConfigDAO
      */
-    public void setCOConfigDao(COConfigDao coConfigDao) {
+    public void setCoConfigDao(COConfigDao coConfigDao) {
 	this.coConfigDao = coConfigDao;
     }
 

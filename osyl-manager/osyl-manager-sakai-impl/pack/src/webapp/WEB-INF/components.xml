@@ -6,7 +6,7 @@
 	<bean
 		id="org.sakaiquebec.opensyllabus.manager.api.OsylManagerService"
 		class="org.sakaiquebec.opensyllabus.manager.impl.OsylManagerServiceImpl"
-		init-method="init" singleton="true">
+		init-method="init" >
 		<property name="osylManagerSiteName">
 			<value>opensyllabusManager</value>
 		</property>

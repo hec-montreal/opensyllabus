@@ -5,7 +5,7 @@
    <parent>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
       <artifactId>osyl-manager</artifactId>
-      <version>2.9.1</version>
+      <version>11-SNAPSHOT</version>
       <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -36,10 +36,11 @@
 	  <groupId>org.sakaiproject.kernel</groupId>
 	  <artifactId>sakai-kernel-api</artifactId>
 	</dependency>
-    <dependency>
-      <groupId>org.sakaiproject</groupId>
-      <artifactId>generic-dao</artifactId>
-      <scope>provided</scope>
-    </dependency>
+      <dependency>
+         <groupId>org.sakaiproject.genericdao</groupId>
+        <artifactId>generic-dao</artifactId>
+        <version>${sakai.genericdao.version}</version>
+        <scope>provided</scope>
+      </dependency>
   </dependencies>
 </project>

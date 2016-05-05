@@ -12,7 +12,7 @@
 		<property name="target">
 			<bean
 				class="org.sakaiquebec.opensyllabus.common.dao.ResourceDaoImpl"
-				singleton="true" init-method="init">
+				 init-method="init">
 
 				<property name="sessionFactory">
 					<ref
@@ -36,7 +36,7 @@
 		<property name="target">
 			<bean
 				class="org.sakaiquebec.opensyllabus.common.dao.COConfigDaoImpl"
-				singleton="true" init-method="init">
+				 init-method="init">
 
 				<property name="sessionFactory">
 					<ref
@@ -59,11 +59,10 @@
 		<property name="target">
 			<bean
 				class="org.sakaiquebec.opensyllabus.common.dao.CORelationDaoImpl"
-				singleton="true" init-method="init">
+				 init-method="init">
 
 				<property name="sessionFactory">
-					<ref
-						bean="org.sakaiproject.springframework.orm.hibernate.GlobalSessionFactory" />
+					<ref bean="org.sakaiproject.springframework.orm.hibernate.GlobalSessionFactory" />
 				</property>
 			</bean>
 		</property>

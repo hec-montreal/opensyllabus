@@ -2,7 +2,7 @@
 .gwt-Button {
 	font:bold 12px Arial, Verdana, sans-serif;
 	white-space:nowrap;
-	color:#444;
+	color:#444 !important;
 	background: transparent url(images/ui/button_bg.gif) repeat-x 0 -60px;
 	border:1px solid #CCC;
 	margin:1px 5px;
@@ -24,6 +24,7 @@
 .gwt-Button:hover {
 	background-position:0 -30px;
 	border:1px solid #BBB;
+   background: transparent url(images/ui/button_bg.gif) repeat-x 0 -60px;
 }
 
 .gwt-Button:active {
