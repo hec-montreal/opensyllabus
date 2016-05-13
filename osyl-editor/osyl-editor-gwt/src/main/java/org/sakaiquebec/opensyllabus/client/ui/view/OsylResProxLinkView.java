@@ -168,7 +168,7 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	    // Otherwise we have to prepend Sakai stuff in the URI
 	    OsylController controller = getController();
 	    String url = GWT.getModuleBaseURL();
-	    String serverId = url.split("\\s*/portal/tool/\\s*")[0];
+	    String serverId = url.split("\\s*/portal/site/\\s*")[0];
 	    String siteId = controller.getSiteId();
 	    String docFolder = controller.getDocFolderName();
 

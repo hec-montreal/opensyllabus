@@ -1091,7 +1091,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    return "";
 	} else {
 	    String uri = GWT.getModuleBaseURL();
-	    String serverId = uri.split("\\s*/portal/tool/\\s*")[0];
+	    String serverId = uri.split("\\s*/portal/site/\\s*")[0];
 	    String resourcesPath = serverId + "/sdata/ci/group/";
 	    resourcesPath =
 		    OsylAbstractBrowserComposite

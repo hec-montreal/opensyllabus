@@ -701,7 +701,7 @@ public class OsylTextToolbar extends Composite {
 
     private void openDownloadPrintPublishedVersionLink(String access) {
 	String url = GWT.getModuleBaseURL();
-	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
+	String serverId = url.split("\\s*/portal/site/\\s*")[0];
 	String siteId = OsylController.getInstance().getSiteId();
 	String siteTitle =
 		OsylController.getInstance().getCOSerialized().getTitle();
@@ -727,7 +727,7 @@ public class OsylTextToolbar extends Composite {
 
     private void openDownloadPrintEditionVersionLink() {
 	String url = GWT.getModuleBaseURL();
-	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
+	String serverId = url.split("\\s*/portal/site/\\s*")[0];
 	String siteId = OsylController.getInstance().getSiteId();
 	String siteTitle =
 		OsylController.getInstance().getCOSerialized().getTitle();

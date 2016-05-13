@@ -53,7 +53,7 @@ public class OsylDirectoryRemoteServiceJsonImpl implements
 
     public OsylDirectoryRemoteServiceJsonImpl() {
 	super();
-	serverId = GWT.getModuleBaseURL().split("\\s*/portal/tool/\\s*")[0];
+	serverId = GWT.getModuleBaseURL().split("\\s*/portal/site/\\s*")[0];
 	initRemoteUri();
     }
 
