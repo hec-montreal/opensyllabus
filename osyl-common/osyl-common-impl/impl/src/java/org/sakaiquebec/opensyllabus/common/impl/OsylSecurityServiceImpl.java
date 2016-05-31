@@ -196,7 +196,7 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 			contentHostingService.editCollection(resourceId);
 		if (!edit.getId().equals(
 			contentHostingService.getSiteCollection(siteId))) {
-		    if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
+		    if (SecurityInterface.ACCESS_PUBLIC.equals(permission) && !contentHostingService.isInheritingPubView(resourceId)) {
 			edit.setPublicAccess();
 		    }
 		} else {
@@ -212,7 +212,7 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 			contentHostingService.editResource(resourceId);
 		if (!resourceId.contains(contentHostingService
 			.getSiteCollection(siteId))) {
-		    if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
+		    if (SecurityInterface.ACCESS_PUBLIC.equals(permission) && !contentHostingService.isInheritingPubView(resourceId)) {
 			edit.setPublicAccess();
 		    }
 		} else {
