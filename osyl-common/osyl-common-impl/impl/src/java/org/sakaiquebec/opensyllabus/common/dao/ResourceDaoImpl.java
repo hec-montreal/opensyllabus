@@ -150,6 +150,12 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw new Exception("No course outline with site id= " + siteId);
     }
 
+    private String cleanIE11Xml (String content){
+    	String cleanedContent = null;
+    	
+    	cleanedContent = content.replaceAll("xmlns:NS[0-9]*=\\D\\D\\DNS[0-9]*:", "");
+    	return cleanedContent;
+    }
     /**
      * {@inheritDoc}
      * 
@@ -179,6 +185,12 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	getHibernateTemplate().evict(cos);
 
 	try {
+		/////
+		String content = courseOutline.getContent();
+		courseOutline.setContent(cleanIE11Xml(content));
+		
+		
+		
 	    courseOutline.setModificationDate(new java.util.Date(System
 		    .currentTimeMillis()));
 	    getHibernateTemplate().saveOrUpdate(courseOutline);

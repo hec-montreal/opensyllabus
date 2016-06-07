@@ -220,11 +220,19 @@ public class COModeled extends COSerialized {
 	this.schemaVersion = schemaVersion;
     }
 
+    private String cleanIE11Xml (String content){
+    	String cleanedContent = null;
+    	
+    	cleanedContent = content.replaceAll("xmlns:NS[0-9]*=\\D\\D\\DNS[0-9]*:", "");
+    	return cleanedContent;
+    }
+
     private String rmNonValidChars(String str) {
 
 	if (str == null)
 	    return null;
-
+	//Remove namespaces xmlns:ns 
+	str = cleanIE11Xml(str);
 	StringBuffer s = new StringBuffer();
 
 	for (char c : str.toCharArray()) {
@@ -289,7 +297,7 @@ public class COModeled extends COSerialized {
 
 	    elem.setType(map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME) == null ? null
 		    : map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME).getNodeValue());
-
+	    
 	    if (elem instanceof COElementAbstract) {
 		COElementAbstract coElementAbstract = (COElementAbstract) elem;
 		coElementAbstract.setIdParent(map
@@ -558,8 +566,8 @@ public class COModeled extends COSerialized {
 		}
 	    }
 	} catch (Exception e) {
-	    Window.alert("An error has been detected in createCOContentUnitPOJO "
-		    + e);
+	    Window.alert("An error has been detected in createCOContentUnitPOJO " + node.getNodeName() + " // "
+		    + node.getNodeValue()+ e);
 	}
 	return coContentUnit;
     }
@@ -775,11 +783,14 @@ public class COModeled extends COSerialized {
     }
 
     public void model2XML(boolean saveParentInfos) {
-	Document document = XMLParser.createDocument();
+	Document document = XMLParser.createDocument();	
 	createRootElement(document, getModeledContent(), saveParentInfos);
-	setContent("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		+ document.toString());
-    }
+
+	//Remove namespaces xmlns:ns 
+	String stringDoc = cleanIE11Xml(document.toString());
+ 	setContent("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+		+ stringDoc);
+  }
 
     private void setCommonAttributesAndProperties(Element element,
 	    COModelInterface modelInterface, Document document) {
@@ -793,6 +804,7 @@ public class COModeled extends COSerialized {
 		element.setAttribute(XSI_TYPE_ATTRIBUTE_NAME,
 			modelInterface.getType());
 	    }
+	    
 	    if (modelInterface instanceof COElementAbstract) {
 		COElementAbstract coElementAbstract =
 			(COElementAbstract) modelInterface;
@@ -886,7 +898,6 @@ public class COModeled extends COSerialized {
 		}
 		parent.appendChild(element);
 	    }
-
 	} catch (Exception e) {
 	    Window.alert("An error has been detected in createChildElement "
 		    + e.toString());
