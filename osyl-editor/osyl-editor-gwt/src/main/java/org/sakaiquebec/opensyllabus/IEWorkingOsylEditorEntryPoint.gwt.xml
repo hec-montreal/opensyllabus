@@ -6,6 +6,6 @@
 	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint" />
 
 	<extend-property name="locale" values="fr_CA" />
-	<set-property name="user.agent" value="ie6"/>
+	<set-property name="user.agent" value="ie9"/>
 
 </module>
