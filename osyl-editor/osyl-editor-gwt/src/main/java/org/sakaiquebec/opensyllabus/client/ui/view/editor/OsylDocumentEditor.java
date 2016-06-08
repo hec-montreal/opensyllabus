@@ -1,5 +1,4 @@
 /*******************************************************************************
- * $Id: $
  *******************************************************************************
  *
  * Copyright (c) 2009 The Sakai Foundation, The Sakai Quebec Team.
@@ -641,7 +640,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		new DisclosurePanel(getOsylImageBundle().expand(),
 			getOsylImageBundle().collapse(),
 			getView().getUiMessage(
-				"DocumentEditor.document.details"));
+				"DocumentEditor.document.details") );
 	metaInfoDiscPanel.setAnimationEnabled(true);
 	metaInfoDiscPanel.setStylePrimaryName("DetailsPanel");
 	HorizontalPanel metaInfoPanel = new HorizontalPanel();

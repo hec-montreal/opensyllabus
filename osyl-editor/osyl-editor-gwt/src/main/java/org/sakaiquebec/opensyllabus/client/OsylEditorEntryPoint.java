@@ -795,6 +795,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	    serializedCO = new COSerialized();
 	}
 	serializedCO.setContent(modeledCo.getContent());
+
     }
 
     public static String getExecMode() {

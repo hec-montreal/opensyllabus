@@ -456,8 +456,12 @@ public class COModeledServer {
 		: Boolean.valueOf(map.getNamedItem(EDITABLE_ATTRIBUTE_NAME)
 			.getNodeValue()));
 
-	elem.setType(map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME) == null ? null
-		: map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME).getNodeValue());
+	if (map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME) != null)
+		elem.setType( map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME).getNodeValue());
+	else if (map.getNamedItem("NS7:xsi:type") != null)
+		elem.setType( map.getNamedItem("NS7:xsi:type").getNodeValue());
+	else
+		elem.setType(null);
 
 	if (elem instanceof COElementAbstract) {
 	    COElementAbstract coElementAbstract = (COElementAbstract) elem;
@@ -568,7 +572,7 @@ public class COModeledServer {
 	setCommonAttributes(coUnit, node);
 
 	coUnit.setParent(parent);
-
+	
 	// Retrieve children: can be COUnitStructure or COUnitContent
 	NodeList unitChildren = node.getChildNodes();
 	for (int i = 0; i < unitChildren.getLength(); i++) {
