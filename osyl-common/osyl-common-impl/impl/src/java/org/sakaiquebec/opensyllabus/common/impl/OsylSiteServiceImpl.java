@@ -757,7 +757,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    log.info("Added resources page");
 		    addTool(site, "sakai.site.roster2");
 		    log.info("Added roster tool");
-		    addTool(site, "sakai.siteinfo");
+		    addTool(site, "sakai.siteinfo", true);
 		    log.info("Added site info page");
 		}
 		site.setTitle(siteTitle);
@@ -1367,19 +1367,32 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     private ToolConfiguration addTool(Site site, String toolId) {
+    	return addTool(site, toolId, false);
+    }
+    
+    private ToolConfiguration addTool(Site site, String toolId, boolean hideFromStudents)
 	SitePage page = site.addPage();
 	page.setTitle(toolManager.getTool(toolId).getTitle());
 	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
 
-	return addTool(site, page, toolId);
+	return addTool(site, page, toolId, hideFromStudents);
     }
 
     private ToolConfiguration addTool(Site site, SitePage page, String toolId) {
-	return addTool(site, page, toolId, null);
+    	return addTool(site, page, toolId, false);
+    }
+
+    private ToolConfiguration addTool(Site site, SitePage page, String toolId, boolean hideFromStudents) {
+	return addTool(site, page, toolId, null, hideFromStudents);
     }
 
     private ToolConfiguration addTool(Site site, SitePage page, String toolId,
 	    String specifiedTitle) {
+    	return addTool(site, page, toolId, specifiedTitle, false);
+    }
+
+    private ToolConfiguration addTool(Site site, SitePage page, String toolId,
+	    String specifiedTitle, boolean hideFromStudents) {
 
 	Tool tool = toolManager.getTool(toolId);
 	ToolConfiguration toolConf = page.addTool(tool);
@@ -1389,6 +1402,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    toolConf.setTitle(tool.getTitle());
 	}
 	toolConf.setLayoutHints("0,0");
+	
+	if (hideFromStudents) {
+		toolConf.getPlacementConfig().setProperty("sakai-portal:visible", "false");
+	}
+	
 	log.info("*** addTool SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");
 
 	/*
