@@ -566,7 +566,6 @@ public class COModeled extends COSerialized {
 		}
 	    }
 	} catch (Exception e) {
-		Window.alert(getContent());
 	    Window.alert("An error has been detected in createCOContentUnitPOJO " + node.getNodeName() + " // "
 		    + node.getNodeValue()+ e);
 	}
