@@ -1370,7 +1370,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     	return addTool(site, toolId, false);
     }
     
-    private ToolConfiguration addTool(Site site, String toolId, boolean hideFromStudents)
+    private ToolConfiguration addTool(Site site, String toolId, boolean hideFromStudents) {
 	SitePage page = site.addPage();
 	page.setTitle(toolManager.getTool(toolId).getTitle());
 	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
