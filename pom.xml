@@ -38,8 +38,7 @@
     <module>osyl-common</module>
     <module>osyl-editor</module>
     <module>osyl-manager</module><!-- HEC ONLY SAKAI-2723 -->
-    <!-- temp comment
-    <module>osyl-admin</module> --><!-- HEC ONLY SAKAI-2723 -->
+    <module>osyl-admin</module><!-- HEC ONLY SAKAI-2723 -->
   </modules>
 
   <pluginRepositories>
@@ -186,19 +185,24 @@
 			<artifactId>sakai-announcement-api</artifactId>
 			<version>${sakai.version}</version>
 		</dependency>
-		<!--<dependency>
+		<dependency>
 			<groupId>org.sakaiproject.hierarchy</groupId>
 			<artifactId>hierarchy-api</artifactId>
-			<version>${sakai.hierarchy.version}</version>
+			<version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency> 
 		<dependency>
 			<groupId>org.sakaiproject.evaluation</groupId>
 			<artifactId>sakai-evaluation-api</artifactId>
-			<version>${sakai.evaluation.version}</version>
+			<version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		-->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.sakaiproject.evaluation</groupId> -->
+<!-- 			<artifactId>sakai-evaluation-tool</artifactId> -->
+<!-- 			<version>${sakai.version}</version> -->
+<!-- 			<scope>provided</scope> -->
+<!-- 		</dependency> -->
 
       <!-- spring and hibernate -->
       <dependency>
