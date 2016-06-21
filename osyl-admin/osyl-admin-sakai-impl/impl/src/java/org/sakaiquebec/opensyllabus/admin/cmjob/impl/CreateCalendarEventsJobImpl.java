@@ -34,6 +34,7 @@ import lombok.Setter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.sakaiproject.calendar.api.Calendar;
 import org.sakaiproject.calendar.api.CalendarEvent;
 import org.sakaiproject.calendar.api.CalendarEventEdit;
@@ -49,8 +50,10 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.util.ResourceLoader;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CreateCalendarEventsJob;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import ca.hec.commons.utils.FormatUtils;
 
@@ -75,16 +78,15 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
     @Setter
     private CalendarService calendarService;
-
-	private JdbcTemplate jdbcTemplate;
+    @Setter
+    private JdbcTemplate jdbcTemplate;
 
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
-
-
-	public void execute(JobExecutionContext arg0) {
+	@Transactional
+	public void execute(JobExecutionContext arg0) throws JobExecutionException {
     	log.info("starting CreateCalendarEventsJob");
     	int addcount = 0, updatecount = 0, deletecount = 0;
 
@@ -165,14 +167,17 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     		}
 
     		// clear the state in HEC_EVENT regardless
-    		clearHecEventState(
+    		if (!clearHecEventState(
     				eventId,
     				event.getCatalogNbr(),
     				event.getSessionId(),
     				event.getSessionCode(),
     				event.getSection(),
     				event.getExamType(),
-    				event.getSequenceNumber());
+    				event.getSequenceNumber())) {
+    			
+    			throw new JobExecutionException();
+    		}
 
     		if (eventId != null) {
     			addcount++;
@@ -246,26 +251,30 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     		}
 
     		if (event.getState().equals("M")) {
-    			clearHecEventState(
+    			if (!clearHecEventState(
     					event.getEventId(),
     					event.getCatalogNbr(),
     					event.getSessionId(),
     					event.getSessionCode(),
     					event.getSection(),
     					event.getExamType(),
-    					event.getSequenceNumber());
+    					event.getSequenceNumber())) {
+    				throw new JobExecutionException();
+    			}
 
     			if (updateSuccess)
     				updatecount++;
     		}
     		else if (event.getState().equals("D")) {
-    			deleteHecEvent(
+    			if (!deleteHecEvent(
     					event.getCatalogNbr(),
     					event.getSessionId(),
     					event.getSessionCode(),
     					event.getSection(),
     					event.getExamType(),
-    					event.getSequenceNumber());
+    					event.getSequenceNumber())) {
+    				throw new JobExecutionException();
+    			}
 
     			if (updateSuccess)
     				deletecount++;
@@ -278,21 +287,44 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     	log.info("added: " + addcount + " updated: " + updatecount + " deleted: " + deletecount);
     } // execute
 
-	private void clearHecEventState(String event_id, String catalog_nbr, String session_id, String session_code, String section,
+	private boolean clearHecEventState(String event_id, String catalog_nbr, String session_id, String session_code, String section,
 			String exam_type, Integer sequence_num) {
-
-		jdbcTemplate.update("update HEC_EVENT set STATE = null, EVENT_ID = ? where CATALOG_NBR = ? and STRM = ? and " +
-				"SESSION_CODE = ? and CLASS_SECTION = ? and CLASS_EXAM_TYPE = ? and SEQ = ?",
-				new Object[] {event_id, catalog_nbr, session_id, session_code, section, exam_type, sequence_num});
+		
+		try {
+			int affectedRows = jdbcTemplate.update("update HEC_EVENT set STATE = null, EVENT_ID = ? where CATALOG_NBR = ? and STRM = ? and " +
+					"SESSION_CODE = ? and CLASS_SECTION = ? and CLASS_EXAM_TYPE = ? and SEQ = ?",
+					new Object[] {event_id, catalog_nbr, session_id, session_code, section, exam_type, sequence_num});
+			
+			if (affectedRows != 1) {
+				return false;
+			} else {
+				return true;
+			}
+			
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	private void deleteHecEvent(String catalog_nbr, String session_id, String session_code, String section,
+	private boolean deleteHecEvent(String catalog_nbr, String session_id, String session_code, String section,
 			String exam_type, Integer sequence_num) {
 
-		jdbcTemplate.update("delete from HEC_EVENT where CATALOG_NBR = ? and STRM = ? and SESSION_CODE = ? and CLASS_SECTION = ? " +
+		try {
+			int affectedRows = jdbcTemplate.update("delete from HEC_EVENT where CATALOG_NBR = ? and STRM = ? and SESSION_CODE = ? and CLASS_SECTION = ? " +
 				"and CLASS_EXAM_TYPE = ? and SEQ = ?",
 				new Object[] {catalog_nbr, session_id, session_code, section, exam_type, sequence_num });
-
+			
+			if (affectedRows != 1) {
+				return false;
+			} else {
+				return true;
+			}
+			
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	private String createCalendarEvent(Calendar calendar, Date startTime, Date endTime, String title, String type, String location, String description)

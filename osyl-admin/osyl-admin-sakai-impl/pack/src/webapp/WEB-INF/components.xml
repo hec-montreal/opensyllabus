@@ -425,7 +425,14 @@
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreateCalendarEventsJobImpl"
 		parent="osylAbstractQuartzJob">
 		<property name="calendarService" ref="org.sakaiproject.calendar.api.CalendarService" />
-		<property name="dataSource" ref="javax.sql.DataSource" />
+		<property name="jdbcTemplate">
+			<bean class="org.springframework.jdbc.core.JdbcTemplate">
+				<constructor-arg type="javax.sql.DataSource">
+					<ref bean="javax.sql.DataSource" />
+				</constructor-arg>
+				<property name="ignoreWarnings" value="false" />
+			</bean>
+		</property>
 	</bean>
 
 	<bean id="evaluationSiteHierarchyJob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.EvaluationSiteHierarchyJob">
