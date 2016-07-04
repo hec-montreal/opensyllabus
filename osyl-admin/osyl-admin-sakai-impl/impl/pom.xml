@@ -64,11 +64,6 @@
        <groupId>org.sakaiproject.evaluation</groupId>
        <artifactId>sakai-evaluation-api</artifactId>
     </dependency>
-<!--     <dependency> -->
-<!--     	<groupId>org.sakaiproject.evaluation</groupId> -->
-<!--     	<artifactId>sakai-evaluation-tool</artifactId> -->
-<!--     </dependency> -->
-
      <!-- spring and hibernate -->
     <dependency>
       <groupId>${sakai.spring.groupId}</groupId>
