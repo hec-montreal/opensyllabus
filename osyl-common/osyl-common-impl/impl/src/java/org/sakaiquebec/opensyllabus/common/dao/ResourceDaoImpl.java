@@ -152,8 +152,8 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 
     private String cleanIE11Xml (String content){
     	String cleanedContent = null;
-    	
-    	cleanedContent = content.replaceAll("xmlns:NS[0-9]*=\\D\\D\\DNS[0-9]*:", "");
+    	if (content != null)
+    		cleanedContent = content.replaceAll("xmlns:NS[0-9]*=\\D\\D\\DNS[0-9]*:", "");
     	return cleanedContent;
     }
     /**
