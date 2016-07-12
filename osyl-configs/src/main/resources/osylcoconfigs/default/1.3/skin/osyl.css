@@ -1571,12 +1571,12 @@ a.Osyl-collapseButton.collapse.down {background-position: -40px 0}
 .Osyl-newElement .Osyl-UnitView-Content, .Osyl-UnitView-LvlReq.Osyl-newElement .Osyl-UnitView-Content, .Osyl-UnitView-Important.Osyl-newElement .Osyl-UnitView-Content {background-color:#FFFF66}
 
 /* Patch Sakai 11 */
-/*.Osyl-TreeView-Tree .gwt-TreeItem .Osyl-TreeLabel {
-	overflow: visible;
-}*/
-
 .Osyl-TreeLabel {
 	width: 100%!important;
+}
+
+.Mrphs-toolTitleNav__button_container, .Mrphs-directUrl__dropDown {
+	z-index: 999!important;
 }
 
 .Osyl-PublishView-PopupPanel {
