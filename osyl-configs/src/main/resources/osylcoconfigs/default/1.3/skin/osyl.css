@@ -1575,15 +1575,19 @@ a.Osyl-collapseButton.collapse.down {background-position: -40px 0}
 	width: 100%!important;
 }
 
-.Mrphs-toolTitleNav__button_container, .Mrphs-directUrl__dropDown {
-	z-index: 999!important;
-}
-
 .Osyl-PublishView-PopupPanel {
-	z-index: 999;
+	z-index: 10;
 	width: 500px;
 }
 
 .Osyl-PublishView-PopupPanel > div > table {
 	width: 100%!important;
+}
+
+.Mrphs-toolTitleNav__button_container, .Mrphs-directUrl__dropDown {
+	z-index: 10!important;
+}
+
+.Mrphs-userNav__popup {
+	margin-left: 0;
 }
