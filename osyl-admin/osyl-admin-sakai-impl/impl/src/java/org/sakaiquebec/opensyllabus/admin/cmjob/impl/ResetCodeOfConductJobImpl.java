@@ -8,6 +8,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.ResetCodeOfConductJob;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 public class ResetCodeOfConductJobImpl extends OsylAbstractQuartzJobImpl implements ResetCodeOfConductJob {
 
@@ -20,6 +21,7 @@ public class ResetCodeOfConductJobImpl extends OsylAbstractQuartzJobImpl impleme
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
+	@Transactional
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		int nbAcceptedCC = 0;
