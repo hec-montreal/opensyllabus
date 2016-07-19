@@ -364,8 +364,8 @@ OsylCMJob {
 						try {
 							requirements = requirementsCoursMapEntry.getDescription(lang);
 						} catch (NullPointerException e) {
-							log.warn("requirementsCoursMapEntry is null for course"
-									+ canonicalCourseId);
+//							log.warn("requirementsCoursMapEntry is null for course"
+//									+ canonicalCourseId);
 							requirements = null;
 						}
 						career = programmeEtudesMapEntry.getAcadCareer();
@@ -1159,7 +1159,7 @@ OsylCMJob {
 	 */
 	public void loadMembership() {
 		assignTeachers();
-		syncCmExceptions();
+		//syncCmExceptions(); NOT NEEDED ANYMORE SAKAI 11
 	}
 
 	/**
