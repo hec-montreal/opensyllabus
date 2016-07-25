@@ -194,7 +194,7 @@
 		<dependency>
 			<groupId>org.sakaiproject.evaluation</groupId>
 			<artifactId>sakai-evaluation-api</artifactId>
-			<version>${sakai.version}</version>
+			<version>11-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 <!-- 		<dependency> -->
