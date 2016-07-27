@@ -721,6 +721,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		+ "] creates site [" + siteTitle + "]");
 	long start = System.currentTimeMillis();
 	Site site = null;
+	siteTitle = siteTitle.replaceAll(" ", "");
 	if (!siteService.siteExists(siteTitle)) {
 
 	    SecurityAdvisor advisor = new SecurityAdvisor() {
@@ -852,6 +853,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public String createSharableSite(String siteTitle, String configRef,
 	    String lang) throws Exception {
 	Site site = null;
+	siteTitle = siteTitle.replaceAll(" ", "");
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] creates site [" + siteTitle + "]");
 	if (!siteService.siteExists(siteTitle)) {
