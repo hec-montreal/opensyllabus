@@ -94,6 +94,8 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEn
 public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 OsylCMJob {
 
+	private static boolean isRunning = false;
+	
 	String webappDir = null;
 
 	/**
@@ -781,148 +783,159 @@ OsylCMJob {
 
 	/** {@inheritDoc} */
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		long start = System.currentTimeMillis();
 
-		log.info("Start synchronizing PeopleSoft extracts to the"
-				+ " course management");
-
-		loginToSakai();
-
-		webappDir =
-				System.getProperty("catalina.home") + File.separator
-				+ "webapps" + File.separator + "osyl-admin-sakai-tool";// Ugly
-		// but
-		// don't
-		// know
-		// cleaner
-		// method.
-
-		String directory =
-				ServerConfigurationService.getString(EXTRACTS_PATH_CONFIG_KEY,
-						null);
-
-		if (directory == null || "".equalsIgnoreCase(directory)) {
-			log.warn(this, new IllegalStateException("The property '"
-					+ EXTRACTS_PATH_CONFIG_KEY
-					+ "' is not defined in the sakai.properties file"));
+		if (isRunning) {
+			log.warn("Exiting OsylCMJobImpl as it's already running");
 			return;
 		}
-
-		if (!filesExist(directory)) {
-			String message =
-					"The synchronization did not take place because"
-							+ " one of the extract files is missing";
-			emailService.send(getAdminZoneCours2EMail(),
-					getAdminZoneCours2EMail(),
-					"Synchronization with PeopleSoft failed", message, null,
-					null, null);
-			return;
-		}
+		isRunning = true;
 
 		try {
+			long start = System.currentTimeMillis();
 
-			detailSessionMap =
-					GenericDetailSessionsMapFactory.getInstance(directory
-							+ File.separator + SESSION_FILE);
-			detailSessionMap =
-					GenericDetailSessionsMapFactory.buildMap(directory
-							+ File.separator + SESSION_FILE);
-			servEnsMap =
-					GenericServiceEnseignementMapFactory.buildMap(directory
-							+ File.separator + SERV_ENS_FILE);
+			log.info("Start synchronizing PeopleSoft extracts to the"
+					+ " course management");
 
-			seMap =
-					GenericServiceEnseignementMapFactory.getInstance(directory
-							+ File.separator + SERV_ENS_FILE);
-			seMap =
-					GenericServiceEnseignementMapFactory.buildMap(directory
-							+ File.separator + SERV_ENS_FILE);
+			loginToSakai();
 
-			detailCoursMap =
-					GenericDetailCoursMapFactory.getInstance(directory
-							+ File.separator + COURS_FILE);
-			detailCoursMap =
-					GenericDetailCoursMapFactory.buildMap(directory
-							+ File.separator + COURS_FILE);
+			webappDir =
+					System.getProperty("catalina.home") + File.separator
+					+ "webapps" + File.separator + "osyl-admin-sakai-tool";// Ugly
+			// but
+			// don't
+			// know
+			// cleaner
+			// method.
 
-			profCoursMap =
-					GenericProfCoursMapFactory.buildMap(directory
-							+ File.separator + PROF_FILE);
+			String directory =
+					ServerConfigurationService.getString(EXTRACTS_PATH_CONFIG_KEY,
+							null);
 
-			etudCoursMap =
-					GenericEtudiantCoursMapFactory.getInstance(directory
-							+ File.separator + ETUDIANT_FILE);
-			etudCoursMap =
-					GenericEtudiantCoursMapFactory.buildMap(directory
-							+ File.separator + ETUDIANT_FILE, detailCoursMap,
-							detailSessionMap);
+			if (directory == null || "".equalsIgnoreCase(directory)) {
+				log.warn(this, new IllegalStateException("The property '"
+						+ EXTRACTS_PATH_CONFIG_KEY
+						+ "' is not defined in the sakai.properties file"));
+				return;
+			}
 
-			programmeEtudesMap =
-					GenericProgrammeEtudesMapFactory.getInstance(directory
-							+ File.separator + PROG_ETUD_FILE);
-			programmeEtudesMap =
-					GenericProgrammeEtudesMapFactory.buildMap(directory
-							+ File.separator + PROG_ETUD_FILE);
+			if (!filesExist(directory)) {
+				String message =
+						"The synchronization did not take place because"
+								+ " one of the extract files is missing";
+				emailService.send(getAdminZoneCours2EMail(),
+						getAdminZoneCours2EMail(),
+						"Synchronization with PeopleSoft failed", message, null,
+						null, null);
+				return;
+			}
 
-			requirementsCoursMap =
-					GenericRequirementsCoursMapFactory.getInstance(directory
-							+ File.separator + REQUIREMENTS);
-			requirementsCoursMap =
-					GenericRequirementsCoursMapFactory.buildMap(directory
-							+ File.separator + REQUIREMENTS);
+			try {
 
-			// We first retrieve the current values in the system for the same
-			log.info("Finished reading extracts. Now updating the Course Management");
-			// time period as the extracts
+				detailSessionMap =
+						GenericDetailSessionsMapFactory.getInstance(directory
+								+ File.separator + SESSION_FILE);
+				detailSessionMap =
+						GenericDetailSessionsMapFactory.buildMap(directory
+								+ File.separator + SESSION_FILE);
+				servEnsMap =
+						GenericServiceEnseignementMapFactory.buildMap(directory
+								+ File.separator + SERV_ENS_FILE);
 
-			retrieveCurrentCMContent();
+				seMap =
+						GenericServiceEnseignementMapFactory.getInstance(directory
+								+ File.separator + SERV_ENS_FILE);
+				seMap =
+						GenericServiceEnseignementMapFactory.buildMap(directory
+								+ File.separator + SERV_ENS_FILE);
 
-			// We load academic careers
-			loadAcademicCareers();
-			log.info("Academic Careers updated successfully");
+				detailCoursMap =
+						GenericDetailCoursMapFactory.getInstance(directory
+								+ File.separator + COURS_FILE);
+				detailCoursMap =
+						GenericDetailCoursMapFactory.buildMap(directory
+								+ File.separator + COURS_FILE);
 
-			// We load sessions
-			loadSessions();
-			log.info("Sessions updated successfully");
+				profCoursMap =
+						GenericProfCoursMapFactory.buildMap(directory
+								+ File.separator + PROF_FILE);
 
-			// We add a category
-			loadCategory();
-			log.info("Categories updated successfully");
+				etudCoursMap =
+						GenericEtudiantCoursMapFactory.getInstance(directory
+								+ File.separator + ETUDIANT_FILE);
+				etudCoursMap =
+						GenericEtudiantCoursMapFactory.buildMap(directory
+								+ File.separator + ETUDIANT_FILE, detailCoursMap,
+								detailSessionMap);
 
-			// We add a courseSet
-			loadCourseSets();
-			log.info("CourseSets updated successfully");
+				programmeEtudesMap =
+						GenericProgrammeEtudesMapFactory.getInstance(directory
+								+ File.separator + PROG_ETUD_FILE);
+				programmeEtudesMap =
+						GenericProgrammeEtudesMapFactory.buildMap(directory
+								+ File.separator + PROG_ETUD_FILE);
 
-			// We load courses
-			loadCourses();
-			log.info("Courses updated successfully");
+				requirementsCoursMap =
+						GenericRequirementsCoursMapFactory.getInstance(directory
+								+ File.separator + REQUIREMENTS);
+				requirementsCoursMap =
+						GenericRequirementsCoursMapFactory.buildMap(directory
+								+ File.separator + REQUIREMENTS);
 
-			// We assign teachers
-			loadMembership();
-			log.info("Membership updated successfully");
+				// We first retrieve the current values in the system for the same
+				log.info("Finished reading extracts. Now updating the Course Management");
+				// time period as the extracts
 
-			// We synchronize students to their classes
-			syncEnrollments();
-			log.info("Enrollments updated successfully");
+				retrieveCurrentCMContent();
 
-			// course events synch
-			courseEventSynchroJob.execute(directory + File.separator
-					+ HORAIRES_FILE);
+				// We load academic careers
+				loadAcademicCareers();
+				log.info("Academic Careers updated successfully");
 
-		} catch (Exception e) {
-			String message =
-					"Synchronization with PeopleSoft failed cause :\n"
-							+ e.toString();
-			emailService.send(getAdminZoneCours2EMail(),
-					getAdminZoneCours2EMail(),
-					"Synchronization with PeopleSoft failed", message, null,
-					null, null);
-			e.printStackTrace();
+				// We load sessions
+				loadSessions();
+				log.info("Sessions updated successfully");
+
+				// We add a category
+				loadCategory();
+				log.info("Categories updated successfully");
+
+				// We add a courseSet
+				loadCourseSets();
+				log.info("CourseSets updated successfully");
+
+				// We load courses
+				loadCourses();
+				log.info("Courses updated successfully");
+
+				// We assign teachers
+				loadMembership();
+				log.info("Membership updated successfully");
+
+				// We synchronize students to their classes
+				syncEnrollments();
+				log.info("Enrollments updated successfully");
+
+				// course events synch
+				courseEventSynchroJob.execute(directory + File.separator
+						+ HORAIRES_FILE);
+
+			} catch (Exception e) {
+				String message =
+						"Synchronization with PeopleSoft failed cause :\n"
+								+ e.toString();
+				emailService.send(getAdminZoneCours2EMail(),
+						getAdminZoneCours2EMail(),
+						"Synchronization with PeopleSoft failed", message, null,
+						null, null);
+				e.printStackTrace();
+			}
+
+			logoutFromSakai();
+			int minutes = (int) ((System.currentTimeMillis() - start) / 60000);
+			log.info("Synchronization completed in " + minutes + " minutes");
+		} finally {
+			isRunning = false;
 		}
-
-		logoutFromSakai();
-		int minutes = (int) ((System.currentTimeMillis() - start) / 60000);
-		log.info("Synchronization completed in " + minutes + " minutes");
 	}
 
 	/*
