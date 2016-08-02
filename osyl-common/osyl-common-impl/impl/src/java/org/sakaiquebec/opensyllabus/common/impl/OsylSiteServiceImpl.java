@@ -881,8 +881,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    // we add the tools
 		    addTool(site, "sakai.announcements");
 		    addTool(site, "sakai.opensyllabus.tool");
-		    addTool(site, "sakai.resources");
-		    addTool(site, "sakai.siteinfo");
+		    addTool(site, "sakai.resources", true);
+		    addTool(site, "sakai.siteinfo", true);
 		}
 		site.setTitle(siteTitle);
 		site.setPublished(true);
