@@ -39,6 +39,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
@@ -387,8 +388,8 @@ public class OsylMainView extends OsylViewableComposite implements
 
 	// TODO Find a way to compute offsetHeight of the top and bottom
 	// decorativePanel (doesn't work use 56 instead).
-	int innerHeight =
-		toolHeight - osylHorizontalSplitPanel.getAbsoluteTop() +60;
+	// 60 = Math.max(treeHeaderLabel.getOffsetHeight(), osylWorkspaceTitleView.getOffsetHeight()) + 10 pour padding
+	int innerHeight = osylHorizontalSplitPanel.getOffsetHeight() - 60;
 	DOM.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "height",
 		innerHeight + "px");
 	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "height",
