@@ -213,14 +213,12 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	rootPanel.add((Widget) this.getView());
 
 	setBrowserEvents(this);
-	Timer t = new Timer() {
-	    public void run() {
-		setToolSize();
-		setSakaiEnvironment();
-	    }
-	};
+	
+	//Timer removed
+	setToolSize();
+	setSakaiEnvironment();
 	setSakaiScrollBar(isInSakai() ? "hidden" : "auto");
-	t.scheduleRepeating(500);
+
 	if (OsylController.getInstance().isInHostedMode()) {
 	    DOM.setStyleAttribute(getRootPanel().getElement(), "fontSize",
 		    "12px");
@@ -256,6 +254,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     		break;
     	}
 	}
+
 	int h = Math.max(Math.round(getDesiredToolHeight()),
 				Math.max(treeViewHeight, workspaceViewMainPanelHeight) + 144);
 	int sc = 0;
@@ -273,7 +272,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	    editorMainView.resize(true);
 	}
 	setToolWidth();
-    }
+   }
 
 //    public static native int getWorkspaceViewMainPanelHeight() /*-{
 //    	return $wnd.document.querySelector(".Osyl-WorkspaceView-MainPanel").offsetHeight;
@@ -295,7 +294,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     }
 
     /**
-     * set the display type for the scrollbars of the iframe containing the
+     * set the display type for the scrollbars of the 6 containing the
      * tool.
      *
      * @params the css type of display for the scrollbars.

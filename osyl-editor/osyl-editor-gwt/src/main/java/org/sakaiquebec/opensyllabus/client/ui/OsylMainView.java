@@ -147,6 +147,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	osylHorizontalSplitPanel = new OsylHorizontalSplitPanel(this);
 	HorizontalSplitPanel horizontalSplitPanel =
 		osylHorizontalSplitPanel.getSplitPanel();
+	//Window.alert(" osylHorizontalSplitPanel.getOffsetHeight() " + osylHorizontalSplitPanel.getOffsetHeight());
 
 	// horizontalSplitPanel = new HorizontalSplitPanel();
 	horizontalSplitPanel
