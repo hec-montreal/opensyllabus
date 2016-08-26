@@ -1,6 +1,7 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,7 +23,6 @@ import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
-import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.coursemanagement.api.AcademicCareer;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
@@ -166,6 +165,11 @@ OsylCMJob {
 	 */
 	private static Log log = LogFactory.getLog(OsylCMJobImpl.class);
 
+	/**
+	 * Max title byte length
+	 */
+	private static final int MAX_TITLE_BYTE_LENGTH = 100;
+	
 	public void setCourseEventSynchroJob(
 			CourseEventSynchroJob courseEventSynchroJob) {
 		this.courseEventSynchroJob = courseEventSynchroJob;
@@ -274,7 +278,7 @@ OsylCMJob {
 
 			if (coordinatorsToRemove.size() > 0) {
 				if (courseId.endsWith("00")) {
-					for(String coordinator : coordinatorsToRemove) {
+					for(String coordinator : coordinatorsToRemove) { 
 						cmAdmin.removeSectionMembership(coordinator, courseId);
 						log.info("Coordinator removed from shareable Section for "
 								+ courseId + ": " + coordinator);
@@ -312,10 +316,13 @@ OsylCMJob {
 
 		Iterator<DetailCoursMapEntry> cours =
 				detailCoursMap.values().iterator();
-
+		
 		while (cours.hasNext()) {
 			coursEntry = (DetailCoursMapEntry) cours.next();
 
+			// Truncate title to 100 bytes max
+			coursEntry.setCourseTitleLong(truncateStringBytes(coursEntry.getCourseTitleLong(), MAX_TITLE_BYTE_LENGTH, Charset.forName("utf-8")));
+			
 			//we do not make any processing for ZC1 courses
 			if (!"ZC1".equals(coursEntry.getClassSection())) {
 				if (!DetailCoursMapEntry.CLASS_STATUS_CANCELLED.equals(coursEntry
@@ -1401,5 +1408,27 @@ OsylCMJob {
 		return ServerConfigurationService.getString("mail.admin.zc2");
 	}
 
+	/**
+	 * Truncate a string to a specified length in bytes
+	 * @param str
+	 * @param length
+	 * @return
+	 */
+	private String truncateStringBytes(String str, int length, Charset encoding) {
+		if (str == null) {
+			return null;
+		}
 
+		byte[] bytes = str.getBytes(encoding);
+
+		if (bytes.length < length) {
+			return str;
+		}
+
+		byte[] ret = new byte[length];
+
+		System.arraycopy(bytes, 0, ret, 0, length - 1);
+
+		return new String(ret, encoding);
+	}
 }

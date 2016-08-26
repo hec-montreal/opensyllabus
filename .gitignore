@@ -1,0 +1,7 @@
+.project
+.settings
+target
+.classpath
+osyl-admin/osyl-admin-gwt/war
+osyl-editor/osyl-editor-gwt/war
+osyl-manager/osyl-manager-gwt/war
