@@ -323,14 +323,13 @@ OsylCMJob {
 			coursEntry = (DetailCoursMapEntry) cours.next();
 
 			// Truncate title to 100 bytes max
-			coursEntry.setCourseTitleLong(truncateStringBytes(coursEntry.getCourseTitleLong(), MAX_TITLE_BYTE_LENGTH, Charset.forName("utf-8")));
-			
+
 			//we do not make any processing for ZC1 courses
 			if (!"ZC1".equals(coursEntry.getClassSection())) {
 				if (!DetailCoursMapEntry.CLASS_STATUS_CANCELLED.equals(coursEntry
 						.getClassStat())) {
 					canonicalCourseId = getCanonicalCourseId(coursEntry);
-					title = coursEntry.getCourseTitleLong();
+					title = truncateStringBytes(coursEntry.getCourseTitleLong(), MAX_TITLE_BYTE_LENGTH, Charset.forName("utf-8"));
 					description = coursEntry.getCourseTitleLong();
 					courseSetId = coursEntry.getAcadOrg();
 
@@ -622,7 +621,7 @@ OsylCMJob {
 		String courseOfferingId = getCourseOfferingId(coursEntry);
 		Section newSection = null;
 		String courseSectionId = courseOfferingId + SHARABLE_SECTION;
-		String title = coursEntry.getCourseTitleLong();
+		String title = truncateStringBytes(coursEntry.getCourseTitleLong(), MAX_TITLE_BYTE_LENGTH, Charset.forName("utf-8"));
 		String description = coursEntry.getCourseTitleLong();
 		String category = coursEntry.getAcadOrg();
 		String lang = coursEntry.getLangue();
