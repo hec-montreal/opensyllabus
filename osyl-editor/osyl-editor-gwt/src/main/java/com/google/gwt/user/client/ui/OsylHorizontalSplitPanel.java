@@ -137,14 +137,14 @@ public class OsylHorizontalSplitPanel extends Composite {
 						- getAbsoluteLeft() - diffSplitPosition);
 				setSplitPosition(getComputedSplitPosition());
 				OsylController.getInstance().getMainView().resize();
-				if (!isResizable() && oldResizable != isResizable()) {
-					Timer t = new Timer() {
-						public void run() {
-							setSplitPosition(getComputedSplitPosition());
-						}
-		    		};
-		    		t.schedule(21);
-				}			
+//				if (!isResizable() && oldResizable != isResizable()) {
+//					Timer t = new Timer() {
+//						public void run() {
+//							setSplitPosition(getComputedSplitPosition());
+//						}
+//		    		};
+//		    		t.schedule(21);
+//				}			
 			}
 			break;
 		}
@@ -217,14 +217,14 @@ public class OsylHorizontalSplitPanel extends Composite {
 		if (isResizable()) {		
 			Boolean oldResizable = isResizable();		
 			OsylController.getInstance().getMainView().resize();
-			if (oldResizable != isResizable()) {
-				Timer t = new Timer() {
-					public void run() {
-						setSplitPosition(getComputedSplitPosition());
-					}
-	    		};
-	    		t.schedule(21);
-			}
+//			if (oldResizable != isResizable()) {
+//				Timer t = new Timer() {
+//					public void run() {
+//						setSplitPosition(getComputedSplitPosition());
+//					}
+//	    		};
+//	    		t.schedule(21);
+//			}
 		}
 	}
 	

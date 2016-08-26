@@ -43,6 +43,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 
@@ -328,6 +329,8 @@ public class OsylTreeView extends OsylViewableComposite implements
 	    getController().getViewContext().setContextModel(
 		    treeItemView.getModel());
 	}
+	OsylEditorEntryPoint.getInstance().refreshView();
+	
     }
 
     public void onBrowserEvent(Event event) {

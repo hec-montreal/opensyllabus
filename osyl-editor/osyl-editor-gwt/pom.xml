@@ -261,7 +261,7 @@
 										<artifactItem>
 											<groupId>org.sakaiquebec.opensyllabus</groupId>
 											<artifactId>osyl-configs</artifactId>
-											<version>${sakai.version}</version>
+											<version>11-SNAPSHOT</version>
 											<type>jar</type>
 											<outputDirectory>war</outputDirectory>
 											<excludes>META-INF/**</excludes>

@@ -141,7 +141,7 @@ public class OsylDirectoryServiceImpl implements OsylDirectoryService{
 		+ "] creates site [" + siteTitle + "]");
 	long start = System.currentTimeMillis();
 	Site site = null;
-
+	siteTitle = siteTitle.replaceAll(" ", "");
 	if (!siteService.siteExists(siteTitle)) {
 
 	    SecurityAdvisor advisor = new SecurityAdvisor() {

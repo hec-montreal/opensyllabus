@@ -721,6 +721,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		+ "] creates site [" + siteTitle + "]");
 	long start = System.currentTimeMillis();
 	Site site = null;
+	siteTitle = siteTitle.replaceAll(" ", "");
 	if (!siteService.siteExists(siteTitle)) {
 
 	    SecurityAdvisor advisor = new SecurityAdvisor() {
@@ -753,7 +754,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    log.info("Added opensyllabus page");
 		    addTool(site, "sakai.assignment.grades");
 		    log.info("Added assignment page");
-		    addTool(site, "sakai.resources");
+		    addTool(site, "sakai.resources", true);
 		    log.info("Added resources page");
 		    addTool(site, "sakai.site.roster2");
 		    log.info("Added roster tool");
@@ -852,6 +853,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public String createSharableSite(String siteTitle, String configRef,
 	    String lang) throws Exception {
 	Site site = null;
+	siteTitle = siteTitle.replaceAll(" ", "");
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] creates site [" + siteTitle + "]");
 	if (!siteService.siteExists(siteTitle)) {
@@ -879,8 +881,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    // we add the tools
 		    addTool(site, "sakai.announcements");
 		    addTool(site, "sakai.opensyllabus.tool");
-		    addTool(site, "sakai.resources");
-		    addTool(site, "sakai.siteinfo");
+		    addTool(site, "sakai.resources", true);
+		    addTool(site, "sakai.siteinfo", true);
 		}
 		site.setTitle(siteTitle);
 		site.setPublished(true);
