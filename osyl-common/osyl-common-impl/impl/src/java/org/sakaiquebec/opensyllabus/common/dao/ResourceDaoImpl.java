@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.sakaiproject.db.api.SqlService;
+import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -388,7 +389,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    courseOutline = (COSerialized) results.get(0);
 	    return courseOutline;
 	} else
-	    throw new Exception("No course outline with site id= " + siteId
+	    throw new IdUnusedException("No course outline with site id= " + siteId
 		    + " and access=" + access);
     }
 

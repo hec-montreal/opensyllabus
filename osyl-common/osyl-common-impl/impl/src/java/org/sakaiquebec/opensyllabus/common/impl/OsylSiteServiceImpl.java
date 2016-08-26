@@ -1127,6 +1127,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		model.model2XML();
 		thisCo.setContent(model.getSerializedContent());
 
+	} catch (IdUnusedException e) {
+		// No published course outline for this site and access
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by siteId", e);
 	} finally {
@@ -1210,6 +1212,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		model.model2XML();
 		publicCO.setContent(model.getSerializedContent());
 
+	} catch (IdUnusedException e) {
+		// No published course outline for this site and access
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by siteId", e);
 	} finally {
