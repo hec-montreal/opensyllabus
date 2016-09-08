@@ -391,11 +391,11 @@
 	<bean id="cmoverridesiteusers"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CMOverrideSiteUsersImpl"
 		parent="osylAbstractQuartzJob">
-		<property name="entityManager"
-			ref="org.sakaiproject.entity.api.EntityManager" />		
-		<property name="contentHostingService"
-			ref="org.sakaiproject.content.api.ContentHostingService" />
-		
+	</bean>
+
+	<bean id="cmoverridestudentusers"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CMOverrideStudentUsersImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
 	<bean id="removeUsersFromSitejob"
@@ -546,6 +546,23 @@
 
 		<property name="jobName">
 			<value>Synchronize and override if necessary site users role from Course Management</value>
+		</property>
+
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.cmoverridestudentusers"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		init-method="init">
+
+		<property name="beanId">
+			<value>cmoverridestudentusers</value>
+		</property>
+
+		<property name="jobName">
+			<value>Synchronize and override if necessary students added in sites as guest</value>
 		</property>
 
 		<property name="schedulerManager">

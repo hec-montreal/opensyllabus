@@ -22,6 +22,8 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.PropertyResourceBundle;
 
 import org.apache.commons.logging.Log;
@@ -32,6 +34,7 @@ import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.email.api.EmailService;
@@ -241,5 +244,37 @@ public abstract class OsylAbstractQuartzJobImpl implements
 	    }
 	}
 	return coIsFrozen;
+    }
+    
+    /**
+     * Look for the session closest to the end of the current session.
+     * Logically it is always the next, done like this because the next
+     * session ( or period) can start the next day or next week.
+     * @return a list of session titles
+     */
+    public List<String> getActiveTerms(){
+    	List<String> terms = new ArrayList<String>();
+
+    	//From the logic implemented in OsylCMJob the list always contains one element
+    	List<AcademicSession> currentSessions = cmService.getCurrentAcademicSessions();
+    	AcademicSession currentSession = currentSessions.get(0);
+    	terms.add(currentSession.getTitle());
+
+    	long interval = -1;
+    	List<AcademicSession> allSessions = cmService.getAcademicSessions();
+
+    	AcademicSession nextAS = allSessions.get(0);
+
+    	for (AcademicSession as: allSessions){
+    	    interval = Math.abs(as.getStartDate().getTime() - currentSession.getEndDate().getTime());
+    	    if ( (interval< Math.abs((nextAS.getStartDate().getTime()-currentSession.getEndDate().getTime()))))
+    		nextAS = as;
+    	}
+    	
+    	if (nextAS != null)
+    	    terms.add(nextAS.getTitle());
+    	log.info(terms);
+    	return terms;
+
     }
 }
