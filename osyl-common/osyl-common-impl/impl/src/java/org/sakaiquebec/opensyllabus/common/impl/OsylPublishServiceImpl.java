@@ -631,6 +631,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    } catch (InUseException e1) {
 		e1.printStackTrace();
 	    }
+	 finally {
+	    securityService.popAdvisor();
+	}
 
 	    ContentResourceEdit newResource;
 	    try {
@@ -668,11 +671,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    log.warn("This is not a valid siteId: " + siteId, e);
 	} catch (Exception e1) {
 	    e1.printStackTrace();
-	} finally {
-	    securityService.popAdvisor();
-	}
     }
-
+    }
     protected File createPrintVersion(COSerialized coSerialized,
 	    String webappdir) throws Exception {
 	try {
