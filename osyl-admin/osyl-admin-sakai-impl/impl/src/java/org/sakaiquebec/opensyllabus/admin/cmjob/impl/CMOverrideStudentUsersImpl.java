@@ -104,7 +104,10 @@ public class CMOverrideStudentUsersImpl extends OsylAbstractQuartzJobImpl
 							userMatricule = userDirectoryService.getUserEid(userId);
 							cmSection = cmService.getSection(providerId);
 							es = cmSection.getEnrollmentSet();
-							isProvided = cmService.isEnrolled(userMatricule, es.getEid());
+							if (es == null)
+								isProvided = false;
+							else
+								isProvided = cmService.isEnrolled(userMatricule, es.getEid());
 				    		
 				    		if (isProvided){
 				    			authzGroupIds = authzGroupService.getAuthzGroupIds(providerId);
