@@ -62,11 +62,11 @@ public class CMOverrideStudentUsersImpl extends OsylAbstractQuartzJobImpl
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
-    	if (isRunning) {
-			log.warn("Stopping job since it's already running");
-			return;
-		}
-		isRunning = true;
+//    	if (isRunning) {
+//			log.warn("Stopping job since it's already running");
+//			return;
+//		}
+//		isRunning = true;
 
 		loginToSakai("CMOverrideStudentUsers");
 
