@@ -42,3 +42,12 @@ table {
 	border:none;
 	border-collapse:collapse;
 }
+
+.Osyl-MainPanel blockquote:before {
+	content: ""!important;
+}
+
+.Osyl-MainPanel blockquote {
+	background: rgba(1, 1, 1, 0);
+	font: normal 1em Arial, Verdana, sans-serif;
+}
