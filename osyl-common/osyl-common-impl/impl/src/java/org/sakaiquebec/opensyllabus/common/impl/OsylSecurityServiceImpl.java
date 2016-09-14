@@ -212,8 +212,8 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 			contentHostingService.editResource(resourceId);
 		if (!resourceId.contains(contentHostingService
 			.getSiteCollection(siteId))) {
-		    if (SecurityInterface.ACCESS_PUBLIC.equals(permission) && !contentHostingService.isInheritingPubView(resourceId)) {
-			edit.setPublicAccess();
+		    if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
+		    	contentHostingService.setPubView(resourceId, true);
 		    }
 		} else {
 		    // resource is in work directory, no public is allowed

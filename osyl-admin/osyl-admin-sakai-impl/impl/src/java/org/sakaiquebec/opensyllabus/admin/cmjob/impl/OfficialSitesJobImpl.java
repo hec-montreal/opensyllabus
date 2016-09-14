@@ -42,6 +42,9 @@ import org.sakaiproject.email.api.EmailMessage;
 import org.sakaiproject.site.api.Site;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
+
+import ca.hec.commons.utils.FormatUtils;
+
 import org.sakaiproject.component.cover.ServerConfigurationService;
 
 
@@ -440,56 +443,10 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	AcademicSession session = courseOff.getAcademicSession();
 	String sessionId = session.getEid();
 	
-	String courseId = null;
-	String courseIdFront = null;
-	String courseIdMiddle = null;
-	String courseIdBack = null;
-
-	String sessionTitle = null;
+	String courseId = FormatUtils.formatCourseId(canCourseId);
+	String sessionTitle = getSessionName(session);
 	String periode = null;
 	String groupe = null;
-
-	if (canCourseId.length() == 7) {
-	    courseIdFront = canCourseId.substring(0, 2);
-	    courseIdMiddle = canCourseId.substring(2, 5);
-	    courseIdBack = canCourseId.substring(5);
-	    courseId =
-		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-	} else if (canCourseId.length() == 6) {
-	    courseIdFront = canCourseId.substring(0, 1);
-	    courseIdMiddle = canCourseId.substring(1, 4);
-	    courseIdBack = canCourseId.substring(4);
-	    courseId =
-		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-	} else {
-	    courseId = canCourseId;
-	}
-
-	if (canCourseId.matches(".*[^0-9].*")) {
-	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")
-		    || canCourseId.endsWith("R") || canCourseId.endsWith("W")) {
-		if (canCourseId.length() == 8) {
-		    courseIdFront = canCourseId.substring(0, 2);
-		    courseIdMiddle = canCourseId.substring(2, 5);
-		    courseIdBack = canCourseId.substring(5);
-		    courseId =
-			    courseIdFront + "-" + courseIdMiddle + "-"
-				    + courseIdBack;
-
-		}
-		if (canCourseId.length() == 7) {
-		    courseIdFront = canCourseId.substring(0, 1);
-		    courseIdMiddle = canCourseId.substring(1, 4);
-		    courseIdBack = canCourseId.substring(4);
-		    courseId =
-			    courseIdFront + "-" + courseIdMiddle + "-"
-				    + courseIdBack;
-
-		}
-	    } else
-		courseId = canCourseId;
-	}
-	sessionTitle = getSessionName(session);
 
 	if (sessionId.matches(".*[pP].*")) {
 	    periode = sessionId.substring(sessionId.length() - 2);
@@ -513,56 +470,9 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	AcademicSession session = courseOff.getAcademicSession();
 	String sessionId = session.getEid();
 
-	String courseId = null;
-	String courseIdFront = null;
-	String courseIdMiddle = null;
-	String courseIdBack = null;
-
-	String sessionTitle = null;
+	String courseId = FormatUtils.formatCourseId(canCourseId);
+	String sessionTitle = getSessionName(session);
 	String periode = null;
-
-	if (canCourseId.length() == 7) {
-	    courseIdFront = canCourseId.substring(0, 2);
-	    courseIdMiddle = canCourseId.substring(2, 5);
-	    courseIdBack = canCourseId.substring(5);
-	    courseId =
-		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-	} else if (canCourseId.length() == 6) {
-	    courseIdFront = canCourseId.substring(0, 1);
-	    courseIdMiddle = canCourseId.substring(1, 4);
-	    courseIdBack = canCourseId.substring(4);
-	    courseId =
-		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-	} else {
-	    courseId = canCourseId;
-	}
-
-	if (canCourseId.matches(".*[^0-9].*")) {
-	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")
-		    || canCourseId.endsWith("R") || canCourseId.endsWith("W")) {
-		if (canCourseId.length() == 8) {
-		    courseIdFront = canCourseId.substring(0, 2);
-		    courseIdMiddle = canCourseId.substring(2, 5);
-		    courseIdBack = canCourseId.substring(5);
-		    courseId =
-			    courseIdFront + "-" + courseIdMiddle + "-"
-				    + courseIdBack;
-
-		}
-		if (canCourseId.length() == 7) {
-		    courseIdFront = canCourseId.substring(0, 1);
-		    courseIdMiddle = canCourseId.substring(1, 4);
-		    courseIdBack = canCourseId.substring(4);
-		    courseId =
-			    courseIdFront + "-" + courseIdMiddle + "-"
-				    + courseIdBack;
-
-		}
-	    } else
-		courseId = canCourseId;
-	}
-
-	sessionTitle = getSessionName(session);
 
 	if (sessionId.matches(".*[pP].*")) {
 	    periode = sessionId.substring(sessionId.length() - 2);

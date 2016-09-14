@@ -20,13 +20,10 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.PropertyResourceBundle;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -37,21 +34,13 @@ import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.content.api.ContentHostingService;
-import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Membership;
 import org.sakaiproject.coursemanagement.api.Section;
-import org.sakaiproject.entity.api.EntityManager;
-import org.sakaiproject.entity.api.Reference;
-import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.PermissionException;
-import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.SiteService.SelectionType;
 import org.sakaiproject.user.api.UserNotDefinedException;
-import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CMOverrideSiteUsers;
 
 /**
@@ -61,33 +50,27 @@ import org.sakaiquebec.opensyllabus.admin.cmjob.api.CMOverrideSiteUsers;
 public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 	implements CMOverrideSiteUsers {
 
-    private PropertyResourceBundle bundle = null;
-
     private static Log log = LogFactory.getLog(CMOverrideSiteUsersImpl.class);
+
+    private static boolean isRunning = false;
 
     private Set<String> changedEntries = null;
 
-    private EntityManager entityManager;
-
-    public void setEntityManager(EntityManager entityManager) {
-	this.entityManager = entityManager;
-    }
-
-    protected ContentHostingService contentHostingService = null;
-
-    public void setContentHostingService(ContentHostingService service) {
-	contentHostingService = service;
-    }
-
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
-	loginToSakai("CMOverrideSiteUsers");
+		if (isRunning) {
+			log.warn("Stopping job since it's already running");
+			return;
+		}
+		isRunning = true;
+
+		loginToSakai("CMOverrideSiteUsers");
 
 	changedEntries = new HashSet<String>();
 
 	List<Site> sites = null;
 
-	List<String> terms = getTerms();
+	List<String> terms = getActiveTerms();
 	Map<String, String> criteria = null;
 	String providerId = null;
 	EnrollmentSet es = null;
@@ -178,37 +161,6 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
     }
 
     
-    /**
-     * Look for the session closest to the end of the current session.
-     * Logically it is always the next, done like this because the next
-     * session ( or period) can start the next day or next week.
-     * @return a list of session titles
-     */
-    public List<String> getTerms() {
-	List<String> terms = new ArrayList<String>();
-
-	//From the logic implemented in OsylCMJob the list always contains one element
-	List<AcademicSession> currentSessions = cmService.getCurrentAcademicSessions();
-	AcademicSession currentSession = currentSessions.get(0);
-	terms.add(currentSession.getTitle());
-
-	long interval = -1;
-	List<AcademicSession> allSessions = cmService.getAcademicSessions();
-
-	AcademicSession nextAS = allSessions.get(0);
-
-	for (AcademicSession as: allSessions){
-	    interval = Math.abs(as.getStartDate().getTime() - currentSession.getEndDate().getTime());
-	    if ( (interval< Math.abs((nextAS.getStartDate().getTime()-currentSession.getEndDate().getTime()))))
-		nextAS = as;
-	}
-	
-	if (nextAS != null)
-	    terms.add(nextAS.getTitle());
-	log.info(terms);
-	return terms;
-    }
     
-  
 
 }

@@ -21,7 +21,7 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 /**
  *
- * This job override users role in site if there is a conflict between his site role and cm role.
+ * This job override users (instructors, coordinators) role in site if there is a conflict between his site role and cm role.
  * 
  * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
