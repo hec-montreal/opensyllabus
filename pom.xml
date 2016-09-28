@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.sakaiproject</groupId>
     <artifactId>master</artifactId>
-    <version>11.1</version>
+    <version>11.2</version>
     <relativePath>../master/pom.xml</relativePath>
   </parent>
 
@@ -37,8 +37,8 @@
     <module>osyl-configs</module>
     <module>osyl-common</module>
     <module>osyl-editor</module>
-    <module>osyl-manager</module><!-- HEC ONLY SAKAI-2723 -->
-    <module>osyl-admin</module><!-- HEC ONLY SAKAI-2723 -->
+    <!--<module>osyl-manager</module> HEC ONLY SAKAI-2723 -->
+    <!--<module>osyl-admin</module> HEC ONLY SAKAI-2723 -->
   </modules>
 
   <pluginRepositories>
