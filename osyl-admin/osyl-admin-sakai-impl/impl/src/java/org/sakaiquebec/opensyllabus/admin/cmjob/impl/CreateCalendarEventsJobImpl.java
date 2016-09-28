@@ -145,13 +145,28 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
     		// only attempt event creation if the calendar was found
     		if (courseOffering != null && calendarFound) {
+    			boolean createEvent = true;
+    			
+    			if (event.getStartTime().getYear() != event.getEndTime().getYear() ||
+    					event.getStartTime().getMonth() != event.getEndTime().getMonth() ||
+    					event.getStartTime().getDate() != event.getEndTime().getDate()) {
+    				
+    				createEvent = false;
+        			log.debug("Skipping event creation: " + getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()) +
+        					" for site " + siteId + " (end date is after start date)");
+    			}
 
     			// don't bother adding the events if this is an MBA site (ZCII-1495) or DF (ZCII-1665)
         		// and the event is not a final or mid-term (intratrimestriel) exam
-        		if ((!courseOffering.getAcademicCareer().equals(CAREER_MBA) && !siteId.contains("DF")) ||
-        				event.getExamType().equals(PSFT_EXAM_TYPE_INTRA) ||
-        				event.getExamType().equals(PSFT_EXAM_TYPE_FINAL)) {
-
+        		if ((courseOffering.getAcademicCareer().equals(CAREER_MBA) || siteId.contains("DF")) &&
+        				!event.getExamType().equals(PSFT_EXAM_TYPE_INTRA) &&
+        				!event.getExamType().equals(PSFT_EXAM_TYPE_FINAL)) {
+        			createEvent = false;
+        			log.debug("Skipping event creation: " + getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()) +
+        					" for site " + siteId + " (course is MBA or DF and event is not an exam)");
+        		}
+        		
+        		if (createEvent) {
         			eventId = createCalendarEvent(
     						calendar,
     						event.getStartTime(),
@@ -160,9 +175,6 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     						getType(event.getExamType()),
     						event.getLocation(),
     						event.getDescription());
-        		} else {
-        			log.debug("Skipping event creation: " + getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()) +
-        					" for site " + siteId + " (course is MBA or DF and event is not an exam)");
         		}
     		}
 
