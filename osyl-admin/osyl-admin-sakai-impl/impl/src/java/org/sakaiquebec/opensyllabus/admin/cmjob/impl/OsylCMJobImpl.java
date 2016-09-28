@@ -1441,6 +1441,12 @@ OsylCMJob {
 
 		System.arraycopy(bytes, 0, ret, 0, length - 1);
 
-		return new String(ret, encoding);
+		String sret = new String(ret, encoding);
+
+		if (sret.length() - 2 < 0) {
+			return sret;
+		}
+
+		return sret.substring(0, sret.length() - 2);
 	}
 }
