@@ -53,8 +53,10 @@ public class CourseEventSynchroJobImpl implements CourseEventSynchroJob {
 
 		// On vérifie que la job de traitement des événements est bien passée en
 		// s'assurant que la colonne state est nulle pour toutes les lignes
-		if (jdbcTemplate
-				.queryForInt("select count(*) from HEC_EVENT where STATE is not null") != 0) {
+		Object activeHecEvent_obj = jdbcTemplate.queryForObject("select count(*) from HEC_EVENT where STATE is not null", Integer.class);
+		
+		int activeHecEvent = (activeHecEvent_obj != null ? Integer.parseInt((String) activeHecEvent_obj): 0);
+		if (activeHecEvent != 0) {
 			throw new InvalidStateException(
 					"Des événements n'ont pas été traités par la job de propagation vers l'outil calendrier, "
 							+ "la job ne peut rouler tant que la colonne STATE de la table HEC_EVENT n'est pas nulle pour toutes les lignes.");
