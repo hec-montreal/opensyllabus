@@ -12,6 +12,9 @@ DECLARE
     AND published = '1'
     AND site_id LIKE '%H2016.%'
     ORDER BY site_id;
+    
+  -- Retrieve citations modified since this date, inclusive.  Can be null
+  since_date CONSTANT DATE := null; --TO_DATE('2014-09-01', 'YYYY-MM-DD');
 
   -- xml parser variables  
   parser xmlparser.Parser;
@@ -34,6 +37,7 @@ DECLARE
   library_url VARCHAR(700 CHAR);
   resourceType VARCHAR(700 CHAR);
   level VARCHAR(700 CHAR);
+  modifiedDate VARCHAR(100 CHAR);
   
 BEGIN
   dbms_output.enable(NULL);
@@ -75,34 +79,36 @@ BEGIN
         library_url := xslprocessor.valueOf(asmResource, 'identifier[@type="library"]');
         isn := xslprocessor.valueOf(asmResource, 'identifier[@type="isn"]');
         resourceType := xslprocessor.valueOf(asmResource, 'resourceType');
+        modifiedDate := xslprocessor.valueOf(asmResource, 'modified');
 
-        dbms_output.put('"' || REPLACE(SUBSTR(site_id, 0, INSTR(site_id, '.') - 1), '-', NULL) || '",'); 
-        dbms_output.put('"' || site_id || '",');
-        dbms_output.put('"' || resourceType || '",');
-        dbms_output.put('"' || level || '",');
+        if (since_date is null or since_date <= TO_DATE(SUBSTR(modifiedDate, 1, 10), 'YYYY-MM-DD')) then 
+          dbms_output.put('"' || REPLACE(SUBSTR(site_id, 0, INSTR(site_id, '.') - 1), '-', NULL) || '",'); 
+          dbms_output.put('"' || site_id || '",');
+          dbms_output.put('"' || resourceType || '",');
+          dbms_output.put('"' || level || '",');
         
-        dbms_output.put('"');
-        if author is not NULL then
-          dbms_output.put(author || ' ');
-        end if;
-        if year is not NULL then
-          dbms_output.put('(' || year || ')');
-        end if;
-        if author is not NULL or year is not NULL then
-          dbms_output.put('. ');
-        end if;
-        dbms_output.put(title);
-		if journal is not NULL then 
-			dbms_output.put(', ' || journal);
-		end if;
-        if volume is not NULL then
-          dbms_output.put(', vol. ' || volume);
-        end if;
-        if issue is not NULL then
-          dbms_output.put(', iss. ' || issue);
-        end if;
-        dbms_output.put_line('","' || isn || '","' || library_url || '"');
-
+          dbms_output.put('"');
+          if author is not NULL then
+            dbms_output.put(author || ' ');
+          end if;
+          if year is not NULL then
+            dbms_output.put('(' || year || ')');
+          end if;
+          if author is not NULL or year is not NULL then
+            dbms_output.put('. ');
+          end if;
+          dbms_output.put(title);
+		      if journal is not NULL then 
+			      dbms_output.put(', ' || journal);
+		      end if;
+          if volume is not NULL then
+            dbms_output.put(', vol. ' || volume);
+          end if;
+          if issue is not NULL then
+            dbms_output.put(', iss. ' || issue);
+          end if;
+          dbms_output.put_line('","' || isn || '","' || library_url || '"');
+        end if; --check the date
       END LOOP;
       END IF;
       
