@@ -10,7 +10,7 @@ DECLARE
     SELECT site_id, content FROM osyl_co
     WHERE "ACCESS" = 'attendee' 
     AND published = '1'
-    AND site_id LIKE '%H2016.%'
+    AND site_id LIKE '%H2017.%'
     ORDER BY site_id;
     
   -- Retrieve citations modified since this date, inclusive.  Can be null
@@ -23,10 +23,12 @@ DECLARE
   asmContextList xmldom.DOMNodeList;
   asmContext xmldom.DOMNode;
   asmResource xmldom.DOMNode;
+  asmUnit xmldom.DOMNode;
   
   plancours_clob CLOB;
   site_id VARCHAR(25 CHAR);
   title VARCHAR(700 CHAR);
+  asmUnitLabel VARCHAR(700 CHAR);
   author VARCHAR(700 CHAR);
   year VARCHAR(700 CHAR);
   journal VARCHAR(700 CHAR);
@@ -35,6 +37,7 @@ DECLARE
   output VARCHAR(4000 CHAR);
   isn VARCHAR(200 CHAR);
   library_url VARCHAR(700 CHAR);
+  other_url VARCHAR(700 CHAR);
   resourceType VARCHAR(700 CHAR);
   level VARCHAR(700 CHAR);
   modifiedDate VARCHAR(100 CHAR);
@@ -43,7 +46,7 @@ BEGIN
   dbms_output.enable(NULL);
 
   -- headers
-  dbms_output.put_line('sigle,id,type de référence,niveau exigence,référence,isn,url');
+  dbms_output.put_line('sigle,id,titre de la page,type de référence,niveau exigence,référence,isn,url,url manuel');
 
   OPEN course_outline_cur;
 
@@ -70,6 +73,8 @@ BEGIN
         asmContext := xmldom.item(asmContextList, j-1);
         level := xslprocessor.valueOf(asmContext, 'level');
         asmResource := xslprocessor.selectSingleNode(asmContext, 'asmResource');
+        asmUnit :=  xslprocessor.selectSingleNode(asmContext, '../../..');
+        asmUnitLabel := xslprocessor.valueOf(asmUnit, 'label');
         author := xslprocessor.valueOf(asmResource, 'author');
         title := replace(replace(xslprocessor.valueOf(asmResource, 'title'),chr(10),''),chr(13),'');
         year := xslprocessor.valueOf(asmResource, 'year');
@@ -77,6 +82,7 @@ BEGIN
         volume := xslprocessor.valueOf(asmResource, 'volume');
         issue := xslprocessor.valueOf(asmResource, 'issue');
         library_url := xslprocessor.valueOf(asmResource, 'identifier[@type="library"]');
+        other_url := xslprocessor.valueOf(asmResource, 'identifier[@type="other_link"]');
         isn := xslprocessor.valueOf(asmResource, 'identifier[@type="isn"]');
         resourceType := xslprocessor.valueOf(asmResource, 'resourceType');
         modifiedDate := xslprocessor.valueOf(asmResource, 'modified');
@@ -84,6 +90,7 @@ BEGIN
         if (since_date is null or since_date <= TO_DATE(SUBSTR(modifiedDate, 1, 10), 'YYYY-MM-DD')) then 
           dbms_output.put('"' || REPLACE(SUBSTR(site_id, 0, INSTR(site_id, '.') - 1), '-', NULL) || '",'); 
           dbms_output.put('"' || site_id || '",');
+          dbms_output.put('"' || asmUnitLabel || '",');
           dbms_output.put('"' || resourceType || '",');
           dbms_output.put('"' || level || '",');
         
@@ -97,7 +104,7 @@ BEGIN
           if author is not NULL or year is not NULL then
             dbms_output.put('. ');
           end if;
-          dbms_output.put(title);
+          dbms_output.put(REPLACE(title, '"'));
 		      if journal is not NULL then 
 			      dbms_output.put(', ' || journal);
 		      end if;
@@ -107,7 +114,7 @@ BEGIN
           if issue is not NULL then
             dbms_output.put(', iss. ' || issue);
           end if;
-          dbms_output.put_line('","' || isn || '","' || library_url || '"');
+          dbms_output.put_line('","' || isn || '","' || library_url || '","' || other_url || '"');
         end if; --check the date
       END LOOP;
       END IF;
