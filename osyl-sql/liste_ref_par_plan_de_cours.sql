@@ -10,7 +10,7 @@ DECLARE
     SELECT site_id, content FROM osyl_co
     WHERE "ACCESS" = 'attendee' 
     AND published = '1'
-    AND site_id LIKE '%H2017.%'
+    AND site_id LIKE '%._201_.%'
     ORDER BY site_id;
     
   -- Retrieve citations modified since this date, inclusive.  Can be null
@@ -26,7 +26,7 @@ DECLARE
   asmUnit xmldom.DOMNode;
   
   plancours_clob CLOB;
-  site_id VARCHAR(25 CHAR);
+  site_id VARCHAR(50 CHAR);
   title VARCHAR(700 CHAR);
   asmUnitLabel VARCHAR(700 CHAR);
   author VARCHAR(700 CHAR);
@@ -36,8 +36,8 @@ DECLARE
   issue VARCHAR(100);
   output VARCHAR(4000 CHAR);
   isn VARCHAR(200 CHAR);
-  library_url VARCHAR(700 CHAR);
-  other_url VARCHAR(700 CHAR);
+  library_url VARCHAR(4000 CHAR);
+  other_url VARCHAR(4000 CHAR);
   resourceType VARCHAR(700 CHAR);
   level VARCHAR(700 CHAR);
   modifiedDate VARCHAR(100 CHAR);
