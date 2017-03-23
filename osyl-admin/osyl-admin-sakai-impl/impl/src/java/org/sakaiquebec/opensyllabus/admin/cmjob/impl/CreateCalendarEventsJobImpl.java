@@ -104,7 +104,6 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     	Calendar calendar = null;
     	String previousSiteId = "";
     	boolean calendarFound = false;
-		CourseOffering courseOffering = null;
 
     	log.info("loop and add " + eventsAdd.size() + " events");
     	for (HecEvent event : eventsAdd) {
@@ -120,19 +119,11 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     		{
     			// this is a new site id, calendar not found yet
 				calendarFound = false;
-				courseOffering = null;
 
 				try {
     				calendar = getCalendar(siteId);
 					calendarFound = true;
 
-					// retrieve course offering to see if the course is MBA
-					Site site = siteService.getSite(siteId);
-					Section section = cmService.getSection(site.getProviderGroupId());
-	        		courseOffering = cmService.getCourseOffering(section.getCourseOfferingEid());
-
-				} catch (IdNotFoundException e) {
-					log.debug("Site " + siteId + " not associated to course management");
 				} catch (IdUnusedException e) {
     				log.debug("Site or Calendar for " + siteId + " does not exist");
 				} catch (PermissionException e) {
@@ -144,7 +135,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     		}
 
     		// only attempt event creation if the calendar was found
-    		if (courseOffering != null && calendarFound) {
+    		if (calendarFound) {
     			boolean createEvent = true;
     			
     			if (event.getStartTime().getYear() != event.getEndTime().getYear() ||
@@ -158,7 +149,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
     			// don't bother adding the events if this is an MBA site (ZCII-1495) or DF (ZCII-1665)
         		// and the event is not a final or mid-term (intratrimestriel) exam
-        		if ((courseOffering.getAcademicCareer().equals(CAREER_MBA) || siteId.contains("DF")) &&
+        		if (siteId.contains("DF") &&
         				!event.getExamType().equals(PSFT_EXAM_TYPE_INTRA) &&
         				!event.getExamType().equals(PSFT_EXAM_TYPE_FINAL)) {
         			createEvent = false;
@@ -217,19 +208,11 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     		{
     			// new site, calendar not yet found
     			calendarFound = false;
-    			courseOffering = null;
 
     			try {
     				calendar = getCalendar(siteId);
 					calendarFound = true;
 
-					// retrieve course offering to see if the course is MBA
-					Site site = siteService.getSite(siteId);
-					Section section = cmService.getSection(site.getProviderGroupId());
-	        		courseOffering = cmService.getCourseOffering(section.getCourseOfferingEid());
-
-				} catch (IdNotFoundException e) {
-					log.debug("Site " + siteId + " not associated to course management");
     			} catch (IdUnusedException e) {
     				log.debug("Site or Calendar for " + siteId + " does not exist.");
     			} catch (PermissionException e) {
@@ -240,11 +223,11 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
     			}
     		}
 
-    		if (courseOffering != null && calendarFound) {
+    		if (calendarFound) {
 
     			// don't bother adding the events if this is an MBA site (ZCII-1495) or DF (ZCII-1665)
         		// and the event is not a final or mid-term (intratrimestriel) exam
-        		if ((!courseOffering.getAcademicCareer().equals(CAREER_MBA) && !siteId.contains("DF")) ||
+        		if (!siteId.contains("DF") ||
         				event.getExamType().equals(PSFT_EXAM_TYPE_INTRA) ||
         				event.getExamType().equals(PSFT_EXAM_TYPE_FINAL)) {
 
