@@ -20,20 +20,6 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.impl;
 
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,6 +41,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -77,6 +70,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private List<String> allowedFunctions = null;
 
     private List<String> disallowedFunctions = null;
+
+    private List <String> piloteE2017 = null;
 
     private String removedRole = null;
 
@@ -235,6 +230,23 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    }
 	}
     }
+
+    private void setPiloteE2017 (String piloteE2017){
+    	this.piloteE2017 = new ArrayList<String>();
+     	if (piloteE2017 != null && !piloteE2017.isEmpty()){
+			this.piloteE2017 = new ArrayList<String>();
+			Collections.addAll(this.piloteE2017, piloteE2017.split(","));
+		}
+	}
+
+	public boolean inE2017Pilote (String courseOfferingId, List<String> piloteE2017){
+		for (String exception: piloteE2017){
+			exception = exception + "2172";
+			if (courseOfferingId.startsWith(exception ))
+				return true;
+		}
+		return false;
+	}
 
     private void setEndDate(String endDate) {
 	this.endDate = endDate;
@@ -449,6 +461,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    setEndDate(null);
 		    setPrograms(null);
 		    setServEns(null);
+		    setPiloteE2017(null);
 
 		}
 		if (fileName.contains(FUNCTIONSSCONFIGFILE)) {
@@ -576,12 +589,14 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		String startDate = retrieveParameter(document, STARTDATE);
 		String programs = retrieveParameter(document, PROGRAMS);
 		String servEns = retrieveParameter(document, SERVENS);
+		String piloteE2017 = retrieveParameter(document, PILOTE_E2017);
 
 		setCourses(courses);
 		setStartDate(startDate);
 		setEndDate(endDate);
 		setPrograms(programs);
 		setServEns(servEns);
+		setPiloteE2017(piloteE2017);
 	    }
 
 	    if (configurationXml.contains(ROLE_FOLDER)) {
@@ -928,6 +943,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     public List<String> getServEns() {
 	return servEns;
     }
+
+    public List<String> getPiloteE2017(){ return piloteE2017; }
 
     public List<String> getPrograms() {
 	return programs;

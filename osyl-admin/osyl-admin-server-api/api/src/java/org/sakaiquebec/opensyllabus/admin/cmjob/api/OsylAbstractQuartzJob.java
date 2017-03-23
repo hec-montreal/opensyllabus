@@ -20,11 +20,11 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import java.util.List;
-import java.util.PropertyResourceBundle;
-
 import org.quartz.Job;
 import org.sakaiproject.content.api.ContentResource;
+
+import java.util.List;
+import java.util.PropertyResourceBundle;
 
 /**
  *
@@ -39,6 +39,8 @@ public interface OsylAbstractQuartzJob extends Job{
     
     public final static String DIRECTORY_SITE = "directory";
     
+    public static final int FINAL_DATE = 2173;
+
     public PropertyResourceBundle getResouceBundle(ContentResource resource);
     
     public List<String> getActiveTerms(); 

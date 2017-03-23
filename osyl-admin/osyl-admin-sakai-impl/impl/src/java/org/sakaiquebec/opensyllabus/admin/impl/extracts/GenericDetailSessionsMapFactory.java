@@ -1,9 +1,10 @@
 package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
-import java.io.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylAbstractQuartzJobImpl;
+
+import java.io.*;
 
 public class GenericDetailSessionsMapFactory {
 
@@ -49,6 +50,8 @@ public class GenericDetailSessionsMapFactory {
 	    entry.setSessionCode(token[8]);
 	    entry.setStrmId(token[9]);
 
+		//ZCII-2783: Do not sync data during and after A2017
+		if (OsylAbstractQuartzJobImpl.isAfterA2017Limite(Integer.parseInt(entry.getStrm())))
 	    map.put(entry);
 	}
 

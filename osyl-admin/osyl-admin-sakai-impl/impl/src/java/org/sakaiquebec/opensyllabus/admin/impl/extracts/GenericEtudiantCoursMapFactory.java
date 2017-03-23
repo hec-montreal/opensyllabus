@@ -1,18 +1,19 @@
 package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
-import java.util.*;
-import java.io.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylAbstractQuartzJobImpl;
 
+import java.io.*;
+import java.util.Iterator;
 public class GenericEtudiantCoursMapFactory {
 
     private static Log log = LogFactory
 	    .getLog(GenericEtudiantCoursMapFactory.class);
 
     public static EtudiantCoursMap buildMap(String completeFileName,
-	    DetailCoursMap detailCoursMap, DetailSessionsMap detailSessionsMap)
+	    DetailCoursMap detailCoursMap, DetailSessionsMap detailSessionsMap, String [] debugCourses)
 	    throws java.io.IOException {
 
 	// Pour faire reference aux cours de chaque etudiant, on a besoin du
@@ -63,13 +64,23 @@ public class GenericEtudiantCoursMapFactory {
 	    String status = token[i++];
 	    String strmId = strm + sessionCode;
 
-	    if (catalogNbr != null)
+	    if (catalogNbr != null){
 		catalogNbr = catalogNbr.trim();
+			//-----------------------------------------------------------------------
+			//DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG
+			if (debugCourses != null && debugCourses.length > 0)
+				if (!OsylAbstractQuartzJobImpl.isCourseInDebug(debugCourses, catalogNbr))
+					continue;
+			//END DEBUG MODE-END DEBUG MODE-END DEBUG MODE-END DEBUG MODE-END DEBUG MODE
+			//--------------------------------------------------------------------------
+		}
 
 	    if (map.containsKey(emplId)) {
 		entry = map.get(emplId);
 	    } else {
 		entry = new EtudiantCoursMapEntry(emplId);
+			//ZCII-2783: Do not sync data during and after A2017
+			if (OsylAbstractQuartzJobImpl.isAfterA2017Limite(Integer.parseInt(strm)))
 		map.put(entry);
 	    }
 

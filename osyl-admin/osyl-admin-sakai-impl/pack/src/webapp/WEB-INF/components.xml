@@ -494,7 +494,7 @@
 		</property>
 
 		<property name="jobName">
-			<value>Official Sites Creation Job</value>
+			<value>Official Sites Creation Job - with OpenSyllabus</value>
 		</property>
 
 		<property name="schedulerManager">

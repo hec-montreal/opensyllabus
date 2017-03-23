@@ -47,6 +47,8 @@ public interface ConfigurationService {
 
     public final static String SERVENS = "servEns";
 
+    public final static String PILOTE_E2017= "pilote-e2017";
+
     // For updating all courses sites to frozen sites
     public final static String FROZENPERMISSIONS = "permissions";
 
@@ -185,4 +187,8 @@ public interface ConfigurationService {
     public Map<String, String> getPrintVersionJobParams();
     
     public Map<String,Map<String,String>> getCmExceptions();
+
+    public List<String> getPiloteE2017();
+
+    public boolean inE2017Pilote (String courseId, List<String> piloteE2017);
 }

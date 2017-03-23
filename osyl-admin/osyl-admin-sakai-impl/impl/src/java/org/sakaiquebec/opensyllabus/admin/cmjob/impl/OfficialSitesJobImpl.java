@@ -47,6 +47,8 @@ import ca.hec.commons.utils.FormatUtils;
 
 import org.sakaiproject.component.cover.ServerConfigurationService;
 
+import static org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob.WINTER;
+
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -75,6 +77,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	List<String> courses = adminConfigService.getCourses();
 	List<String> programs = adminConfigService.getPrograms();
 	List<String> servEns = adminConfigService.getServEns();
+	List<String> piloteE2017 = adminConfigService.getPiloteE2017();
 
 	// If we have an interval of time, we take the courses defined in that
 	// period of time
@@ -156,6 +159,11 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	if (courseOffs != null) {
 	    for (CourseOffering courseOff : courseOffs) {
+
+	    	//Continue if course is to be in E2017 pilote
+			if (adminConfigService.inE2017Pilote(courseOff.getEid(), piloteE2017))
+				continue;
+
 
 		// Retrieve the sections to be created
 		sections = cmService.getSections(courseOff.getEid());

@@ -1,16 +1,17 @@
 package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
-import java.io.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylAbstractQuartzJobImpl;
+
+import java.io.*;
 
 public class GenericDetailCoursMapFactory {
 
     private static Log log = LogFactory
 	    .getLog(GenericDetailCoursMapFactory.class);
 
-    public static DetailCoursMap buildMap(String completeFileName)
+    public static DetailCoursMap buildMap(String completeFileName, String [] debugCourses)
 	    throws java.io.IOException {
 
 	DetailCoursMap map;
@@ -87,6 +88,15 @@ public class GenericDetailCoursMapFactory {
 		entry.setTypeEvaluation(null);
 	    }
 
+	    //-----------------------------------------------------------------------
+		//DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG
+		if (debugCourses != null && debugCourses.length > 0)
+			if (!OsylAbstractQuartzJobImpl.isCourseInDebug(debugCourses, entry.getCatalogNbr()))
+				continue;
+		//END DEBUG MODE-END DEBUG MODE-END DEBUG MODE-END DEBUG MODE-END DEBUG MODE
+		//--------------------------------------------------------------------------
+		//ZCII-2783: Do not sync data during and after A2017
+		if (OsylAbstractQuartzJobImpl.isAfterA2017Limite(Integer.parseInt(entry.getStrm())))
 	    map.put(entry);
 	}
 

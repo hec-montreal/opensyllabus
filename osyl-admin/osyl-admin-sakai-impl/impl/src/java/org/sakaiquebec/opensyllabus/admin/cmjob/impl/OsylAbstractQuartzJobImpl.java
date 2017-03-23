@@ -20,12 +20,6 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PropertyResourceBundle;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
@@ -57,6 +51,13 @@ import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PropertyResourceBundle;
+
 
 /**
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
@@ -276,5 +277,35 @@ public abstract class OsylAbstractQuartzJobImpl implements
     	log.info(terms);
     	return terms;
 
+    }
+    String [] debug_courses = null;
+
+    public String [] getDebugCourses (){
+        return debug_courses;
+    }
+
+    public boolean isSynchroOnDebug(){
+        String debugCourses = org.sakaiproject.component.cover.ServerConfigurationService.getString("coursemanagement.debug.courses", null);
+
+        if (debugCourses != null && !debugCourses.isEmpty()){
+            debug_courses = debugCourses.split(",");
+            return true;
+        }
+
+
+        return false;
+
+    }
+
+    public static boolean isCourseInDebug (String [] debugCourses, String coEid){
+        for (String debugCourse: debugCourses ){
+            if (coEid.contains(debugCourse))
+                return true;
+        }
+        return false;
+    }
+
+    public static final boolean isAfterA2017Limite(int strm){
+        return  FINAL_DATE > strm;
     }
 }

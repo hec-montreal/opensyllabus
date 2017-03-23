@@ -20,16 +20,13 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylAbstractQuartzJobImpl;
 
+import java.io.*;
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
@@ -38,7 +35,7 @@ public class GenericRequirementsCoursMapFactory {
     private static Log log = LogFactory
 	    .getLog(GenericRequirementsCoursMapFactory.class);
 
-    public static RequirementsCoursMap buildMap(String completeFileName)
+    public static RequirementsCoursMap buildMap(String completeFileName, String [] debugCourses)
 	    throws java.io.IOException {
 
 	RequirementsCoursMap map;
@@ -78,8 +75,16 @@ public class GenericRequirementsCoursMapFactory {
 	    // Remove empty spaces
 	    if (courseId != null)
 		courseId = courseId.trim();
-	    if (catalogNbr != null)
+	    if (catalogNbr != null){
 	    catalogNbr = catalogNbr.trim();
+			//-----------------------------------------------------------------------
+			//DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG
+			if (debugCourses != null && debugCourses.length > 0)
+				if (!OsylAbstractQuartzJobImpl.isCourseInDebug(debugCourses, catalogNbr))
+					continue;
+			//END DEBUG MODE-END DEBUG MODE-END DEBUG MODE-END DEBUG MODE-END DEBUG MODE
+			//--------------------------------------------------------------------------
+		}
 
 	    // on reprend l'entree existante
 	    if (map.containsKey(courseId)) {

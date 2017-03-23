@@ -1,21 +1,5 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
-import java.io.File;
-import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
@@ -24,43 +8,26 @@ import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.sakaiproject.coursemanagement.api.AcademicCareer;
-import org.sakaiproject.coursemanagement.api.AcademicSession;
-import org.sakaiproject.coursemanagement.api.CanonicalCourse;
-import org.sakaiproject.coursemanagement.api.CourseOffering;
-import org.sakaiproject.coursemanagement.api.CourseSet;
-import org.sakaiproject.coursemanagement.api.Enrollment;
-import org.sakaiproject.coursemanagement.api.EnrollmentSet;
-import org.sakaiproject.coursemanagement.api.Membership;
-import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.coursemanagement.api.*;
 import org.sakaiproject.coursemanagement.api.exception.IdExistsException;
 import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.user.api.UserNotDefinedException;
-import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CourseEventSynchroJob;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailCoursMap;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailCoursMapEntry;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailSessionsMap;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailSessionsMapEntry;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.EtudiantCoursMap;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.EtudiantCoursMapEntry;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericDetailCoursMapFactory;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericDetailSessionsMapFactory;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericEtudiantCoursMapFactory;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericExamensMapFactory;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericProfCoursMapFactory;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericProgrammeEtudesMapFactory;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericRequirementsCoursMapFactory;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericServiceEnseignementMapFactory;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMapEntry;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProgrammeEtudesMap;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProgrammeEtudesMapEntry;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.RequirementsCoursMap;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.RequirementsCoursMapEntry;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMap;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEntry;
+import org.sakaiquebec.opensyllabus.admin.impl.extracts.*;
+
+import java.io.File;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static org.sakaiquebec.opensyllabus.admin.api.ConfigurationService.*;
+import static org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob.SUMMER;
+import static org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob.WINTER;
+import static org.sakaiquebec.opensyllabus.common.api.OsylSiteService.FALL;
 
 /******************************************************************************
  * $Id: $
@@ -90,8 +57,8 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEn
  * @version $Id: $
  */
 
-public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
-OsylCMJob {
+public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJob {
+
 
 	private static boolean isRunning = false;
 	
@@ -146,12 +113,13 @@ OsylCMJob {
 	/**
 	 * Students currently registered as enrolled in the system
 	 */
-	private Map<String, Enrollment> actualStudents;
+    private Map<String, Enrollment>  actualStudents = new HashMap<String, Enrollment>();
+
 
 	/**
 	 * Classes sections actually registered in the system
 	 */
-	private Set<Section> actualCoursesSection;
+    private Set<Section> actualCoursesSection = new HashSet<Section>();
 
 	private Date actualStartDate = null;
 
@@ -457,7 +425,7 @@ OsylCMJob {
 													CREDITS, courseOfferingId,
 													new HashSet<String>());
 								} catch (IdExistsException e) {
-									e.printStackTrace();
+                                    log.info(enrollmentSetId + " does not exist");
 								}
 							} else
 								enrollmentSet =
@@ -487,7 +455,7 @@ OsylCMJob {
 							}
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+                        log.info(courseSectionId + " does not exist");
 					}
 				}
 			}
@@ -578,11 +546,11 @@ OsylCMJob {
 		String year = startDate.toString().substring(0, 4);
 
 		if ((sessionId.charAt(3)) == '1')
-			sessionName = OfficialSitesJobImpl.WINTER + year;
+            sessionName = WINTER + year;
 		if ((sessionId.charAt(3)) == '2')
-			sessionName = OfficialSitesJobImpl.SUMMER + year;
+            sessionName = SUMMER + year;
 		if ((sessionId.charAt(3)) == '3')
-			sessionName = OfficialSitesJobImpl.FALL + year;
+            sessionName = FALL + year;
 
 		return sessionName;
 	}
@@ -594,11 +562,11 @@ OsylCMJob {
 		String year = Integer.toString(startCalendarDate.get(Calendar.YEAR));
 
 		if ((sessionId.charAt(3)) == '1')
-			sessionName = OfficialSitesJobImpl.WINTER + year;
+            sessionName = WINTER + year;
 		if ((sessionId.charAt(3)) == '2')
-			sessionName = OfficialSitesJobImpl.SUMMER + year;
+            sessionName = SUMMER + year;
 		if ((sessionId.charAt(3)) == '3')
-			sessionName = OfficialSitesJobImpl.FALL + year;
+            sessionName = FALL + year;
 
 		return sessionName;
 	}
@@ -711,7 +679,7 @@ OsylCMJob {
 						DateFormat.getDateInstance().parse(
 								sessionEntry.getEndDate());
 			} catch (ParseException e) {
-				e.printStackTrace();
+                log.info (sessionEntry + "does not contain valid dates");
 			}
 
 			if (!cmService.isAcademicSessionDefined(eid)) {
@@ -837,6 +805,9 @@ OsylCMJob {
 
 			try {
 
+                //If we are on debug mode, retrieve courses
+                isSynchroOnDebug();
+
 				detailSessionMap =
 						GenericDetailSessionsMapFactory.getInstance(directory
 								+ File.separator + SESSION_FILE);
@@ -859,11 +830,11 @@ OsylCMJob {
 								+ File.separator + COURS_FILE);
 				detailCoursMap =
 						GenericDetailCoursMapFactory.buildMap(directory
-								+ File.separator + COURS_FILE);
+                                + File.separator + COURS_FILE, getDebugCourses());
 
 				profCoursMap =
 						GenericProfCoursMapFactory.buildMap(directory
-								+ File.separator + PROF_FILE);
+                                + File.separator + PROF_FILE, getDebugCourses());
 
 				etudCoursMap =
 						GenericEtudiantCoursMapFactory.getInstance(directory
@@ -871,7 +842,7 @@ OsylCMJob {
 				etudCoursMap =
 						GenericEtudiantCoursMapFactory.buildMap(directory
 								+ File.separator + ETUDIANT_FILE, detailCoursMap,
-								detailSessionMap);
+                                detailSessionMap, getDebugCourses());
 
 				programmeEtudesMap =
 						GenericProgrammeEtudesMapFactory.getInstance(directory
@@ -885,12 +856,13 @@ OsylCMJob {
 								+ File.separator + REQUIREMENTS);
 				requirementsCoursMap =
 						GenericRequirementsCoursMapFactory.buildMap(directory
-								+ File.separator + REQUIREMENTS);
+                                + File.separator + REQUIREMENTS, getDebugCourses());
 
 				// We first retrieve the current values in the system for the same
 				log.info("Finished reading extracts. Now updating the Course Management");
 				// time period as the extracts
 
+                if (debug_courses == null || debug_courses.length == 0)
 				retrieveCurrentCMContent();
 
 				// We load academic careers
@@ -933,7 +905,7 @@ OsylCMJob {
 						getAdminZoneCours2EMail(),
 						"Synchronization with PeopleSoft failed", message, null,
 						null, null);
-				e.printStackTrace();
+                log.info(message);
 			}
 
 			logoutFromSakai();
@@ -982,7 +954,7 @@ OsylCMJob {
 
 			}
       	} catch (ParseException e) {
-    	    e.printStackTrace();
+            log.info (sessionEntry + " does not have valid dates");
     	}
 
 		// Retrieve the course offerings we will update
@@ -996,8 +968,7 @@ OsylCMJob {
 
 		Set<EnrollmentSet> enrollmentS = null;
 
-		actualStudents = new HashMap<String, Enrollment>();
-		actualCoursesSection = new HashSet<Section>();
+
 		Set<Enrollment> enrollments = null;
 
 		for (CourseSet courseSet : courseSets) {
@@ -1122,11 +1093,11 @@ OsylCMJob {
 									.getUserId(userId));
 							authzGroupService.save(group);
 						} catch (GroupNotDefinedException e) {
-							log.error(e.getMessage());
+                            log.info(groupId + " is not defined.");
 						} catch (UserNotDefinedException e) {
-							log.error(e.getMessage());
+                            log.error(userId + "is not defined");
 						} catch (AuthzPermissionException e) {
-							log.error(e.getMessage());
+                            log.error("You are not allowed to remove " + userId + " from " + groupId);
 						}
 					}
 				log.info("L'utilisateur " + userId + " du cours "
@@ -1261,15 +1232,15 @@ OsylCMJob {
 				log.info("Start processing exceptions from " + entry.getKey());
 				Map<String, String> props = entry.getValue();
 				String users =
-						props.get(ConfigurationService.CM_EXCEPTIONS_USERS);
+                        props.get(CM_EXCEPTIONS_USERS);
 				String courses =
-						props.get(ConfigurationService.CM_EXCEPTIONS_COURSES);
+                        props.get(CM_EXCEPTIONS_COURSES);
 				String category =
-						props.get(ConfigurationService.CM_EXCEPTIONS_CATEGORY);
+                        props.get(CM_EXCEPTIONS_CATEGORY);
 				String program =
-						props.get(ConfigurationService.CM_EXCEPTIONS_PROGRAM);
+                        props.get(CM_EXCEPTIONS_PROGRAM);
 				String role =
-						props.get(ConfigurationService.CM_EXCEPTIONS_ROLE);
+                        props.get(CM_EXCEPTIONS_ROLE);
 				List<String> matricules = Arrays.asList(users.split(","));
 				if (courses != null && !"".equals(courses)) {
 					for (String course : Arrays.asList(courses.split(","))) {
@@ -1335,7 +1306,6 @@ OsylCMJob {
 			} catch (Exception e) {
 				log.error("The directory site for " + siteTitle
 						+ " has not been created.");
-				e.printStackTrace();
 			}
 
 			// TODO: put a more visible message like sending mail
@@ -1411,7 +1381,6 @@ OsylCMJob {
 			return siteService.siteExists(siteTitle);
 		} catch (Exception e) {
 			log.error(e.getMessage());
-			e.printStackTrace();
 			return false;
 		}
 	}
@@ -1449,4 +1418,4 @@ OsylCMJob {
 
 		return sret.substring(0, sret.length() - 2);
 	}
-}
+        }
