@@ -20,17 +20,9 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-
-import javax.sql.DataSource;
-
+import ca.hec.commons.utils.FormatUtils;
 import lombok.Data;
 import lombok.Setter;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
@@ -46,7 +38,6 @@ import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
-
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.util.ResourceLoader;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CreateCalendarEventsJob;
@@ -55,7 +46,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.hec.commons.utils.FormatUtils;
+import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+
 
 /**
  * @author curtis.van-osch@hec.ca
@@ -63,23 +59,23 @@ import ca.hec.commons.utils.FormatUtils;
  */
 public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl implements CreateCalendarEventsJob {
 
-    private static Log log = LogFactory.getLog(CreateCalendarEventsJobImpl.class);
+	private static Log log = LogFactory.getLog(CreateCalendarEventsJobImpl.class);
 	private static ResourceLoader rb = new ResourceLoader("org.sakaiquebec.opensyllabus.admin.cmjob.impl.bundle.CMJobMessages");
 
-    private final String EVENT_TYPE_CLASS_SESSION = "Class session";
-    private final String EVENT_TYPE_EXAM = "Exam";
-    private final String EVENT_TYPE_QUIZ = "Quiz";
-    private final String EVENT_TYPE_SPECIAL = "Special event";
-    private final String PSFT_EXAM_TYPE_INTRA = "INTR";
-    private final String PSFT_EXAM_TYPE_FINAL = "FIN";
-    private final String PSFT_EXAM_TYPE_TEST = "TEST";
-    private final String PSFT_EXAM_TYPE_QUIZ = "QUIZ";
-    private final String CAREER_MBA = "MBA";
+	private final String EVENT_TYPE_CLASS_SESSION = "Class session";
+	private final String EVENT_TYPE_EXAM = "Exam";
+	private final String EVENT_TYPE_QUIZ = "Quiz";
+	private final String EVENT_TYPE_SPECIAL = "Special event";
+	private final String PSFT_EXAM_TYPE_INTRA = "INTR";
+	private final String PSFT_EXAM_TYPE_FINAL = "FIN";
+	private final String PSFT_EXAM_TYPE_TEST = "TEST";
+	private final String PSFT_EXAM_TYPE_QUIZ = "QUIZ";
 
-    @Setter
-    private CalendarService calendarService;
-    @Setter
-    private JdbcTemplate jdbcTemplate;
+	@Setter
+	private CalendarService calendarService;
+
+	@Setter
+	private JdbcTemplate jdbcTemplate;
 
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -87,215 +83,229 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
 	@Transactional
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-    	log.info("starting CreateCalendarEventsJob");
-    	int addcount = 0, updatecount = 0, deletecount = 0;
+		log.info("starting CreateCalendarEventsJob");
+		int addcount = 0, updatecount = 0, deletecount = 0;
 
-    	loginToSakai("CreateCalendarEventsJob");
+		loginToSakai("CreateCalendarEventsJob");
 
-    	String select_from = "select CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, CLASS_EXAM_TYPE, SEQ, DATE_HEURE_DEBUT, "
+		String select_from = "select CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, CLASS_EXAM_TYPE, SEQ, DATE_HEURE_DEBUT, "
 				+ "DATE_HEURE_FIN, DESCR_FACILITY, STATE, DESCR, EVENT_ID from HEC_EVENT ";
-    	String order_by = " order by CATALOG_NBR, STRM, CLASS_SECTION ";
+		String order_by = " order by CATALOG_NBR, STRM, CLASS_SECTION ";
 
-    	List<HecEvent> eventsAdd = jdbcTemplate.query(
-    			select_from + "where (EVENT_ID is null and (STATE is null or STATE <> 'D'))" + order_by,
-    			new HecEventRowMapper());
+		List<HecEvent> eventsAdd = jdbcTemplate.query(
+				select_from + "where (EVENT_ID is null and (STATE is null or STATE <> 'D'))" + order_by,
+				new HecEventRowMapper());
 
-    	// keep track of the last event's site id, calendar and courseOffering, so we can use the calendar if it was already found
-    	Calendar calendar = null;
-    	String previousSiteId = "";
-    	boolean calendarFound = false;
+		// keep track of the last event's site id, calendar and courseOffering, so we can use the calendar if it was already found
+		Calendar calendar = null;
+		String previousSiteId = "";
+		boolean calendarFound = false;
 
-    	log.info("loop and add " + eventsAdd.size() + " events");
-    	for (HecEvent event : eventsAdd) {
-    		String siteId = getSiteId(
-    				event.getCatalogNbr(),
-    				event.getSessionId(),
-    				event.getSessionCode(),
-    				event.getSection());
+		List<String> piloteE2017 = adminConfigService.getPiloteE2017();
 
-    		String eventId = null;
+		log.info("loop and add " + eventsAdd.size() + " events");
+		for (HecEvent event : eventsAdd) {
+			String siteId = getSiteId(
+					event.getCatalogNbr(),
+					event.getSessionId(),
+					event.getSessionCode(),
+					event.getSection());
 
-    		if (!siteId.equals(previousSiteId))
-    		{
-    			// this is a new site id, calendar not found yet
+			//Continue if course is to be in E2017 pilote
+			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017))
+				continue;
+
+			String eventId = null;
+
+			if (!siteId.equals(previousSiteId))
+			{
+				// this is a new site id, calendar not found yet
 				calendarFound = false;
 
 				try {
-    				calendar = getCalendar(siteId);
+					calendar = getCalendar(siteId);
 					calendarFound = true;
 
 				} catch (IdUnusedException e) {
-    				log.debug("Site or Calendar for " + siteId + " does not exist");
+					log.debug("Site or Calendar for " + siteId + " does not exist");
 				} catch (PermissionException e) {
-    				e.printStackTrace();
-    				return;
-       			} catch (Exception e) {
-    				e.printStackTrace();
-    			}
-    		}
+					e.printStackTrace();
+					return;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
-    		// only attempt event creation if the calendar was found
-    		if (calendarFound) {
-    			boolean createEvent = true;
-    			
-    			if (event.getStartTime().getYear() != event.getEndTime().getYear() ||
-    					event.getStartTime().getMonth() != event.getEndTime().getMonth() ||
-    					event.getStartTime().getDate() != event.getEndTime().getDate()) {
-    				
-    				createEvent = false;
-        			log.debug("Skipping event creation: " + getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()) +
-        					" for site " + siteId + " (end date is after start date)");
-    			}
+			// only attempt event creation if the calendar was found
+			if (calendarFound) {
+				boolean createEvent = true;
 
-    			// don't bother adding the events if this is an MBA site (ZCII-1495) or DF (ZCII-1665)
-        		// and the event is not a final or mid-term (intratrimestriel) exam
-        		if (siteId.contains("DF") &&
-        				!event.getExamType().equals(PSFT_EXAM_TYPE_INTRA) &&
-        				!event.getExamType().equals(PSFT_EXAM_TYPE_FINAL)) {
-        			createEvent = false;
-        			log.debug("Skipping event creation: " + getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()) +
-        					" for site " + siteId + " (course is MBA or DF and event is not an exam)");
-        		}
-        		
-        		if (createEvent) {
-        			eventId = createCalendarEvent(
-    						calendar,
-    						event.getStartTime(),
-    						event.getEndTime(),
-    						getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()),
-    						getType(event.getExamType()),
-    						event.getLocation(),
-    						event.getDescription());
-        		}
-    		}
+				if (event.getStartTime().getYear() != event.getEndTime().getYear() ||
+						event.getStartTime().getMonth() != event.getEndTime().getMonth() ||
+						event.getStartTime().getDate() != event.getEndTime().getDate()) {
 
-    		// clear the state in HEC_EVENT regardless
-    		if (!clearHecEventState(
-    				eventId,
-    				event.getCatalogNbr(),
-    				event.getSessionId(),
-    				event.getSessionCode(),
-    				event.getSection(),
-    				event.getExamType(),
-    				event.getSequenceNumber())) {
-    			
-    			throw new JobExecutionException();
-    		}
+					createEvent = false;
+					log.debug("Skipping event creation: " + getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()) +
+							" for site " + siteId + " (end date is after start date)");
+				}
 
-    		if (eventId != null) {
-    			addcount++;
-    		}
+				// don't bother adding the events if this is an MBA site (ZCII-1495) or DF (ZCII-1665)
+				// and the event is not a final or mid-term (intratrimestriel) exam
+				if (siteId.contains("DF") &&
+						!event.getExamType().equals(PSFT_EXAM_TYPE_INTRA) &&
+						!event.getExamType().equals(PSFT_EXAM_TYPE_FINAL)) {
+					createEvent = false;
+					log.debug("Skipping event creation: " + getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()) +
+							" for site " + siteId + " (course is MBA or DF and event is not an exam)");
+				}
 
-    		previousSiteId = siteId;
-    	}
+				if (createEvent) {
+					eventId = createCalendarEvent(
+							calendar,
+							event.getStartTime(),
+							event.getEndTime(),
+							getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()),
+							getType(event.getExamType()),
+							event.getLocation(),
+							event.getDescription());
+				}
+			}
 
-    	List<HecEvent> eventsUpdate = jdbcTemplate.query(
-    			select_from + "where (STATE = 'M' or STATE = 'D')" + order_by,
-    			new HecEventRowMapper());
+			// clear the state in HEC_EVENT regardless
+			if (!clearHecEventState(
+					eventId,
+					event.getCatalogNbr(),
+					event.getSessionId(),
+					event.getSessionCode(),
+					event.getSection(),
+					event.getExamType(),
+					event.getSequenceNumber())) {
 
-    	log.info("loop and update "+ eventsUpdate.size() + " events");
-    	for (HecEvent event : eventsUpdate) {
+				throw new JobExecutionException();
+			}
 
-    		String siteId = getSiteId(
-    				event.getCatalogNbr(),
-    				event.getSessionId(),
-    				event.getSessionCode(),
-    				event.getSection());
+			if (eventId != null) {
+				addcount++;
+			}
+
+			previousSiteId = siteId;
+		}
+
+		List<HecEvent> eventsUpdate = jdbcTemplate.query(
+				select_from + "where (STATE = 'M' or STATE = 'D')" + order_by,
+				new HecEventRowMapper());
+
+		log.info("loop and update "+ eventsUpdate.size() + " events");
+		for (HecEvent event : eventsUpdate) {
+
+			//Continue if course is to be in E2017 pilote
+			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017))
+				continue;
+
+			//ZCII-2821: Do not sync data during and after A2017
+			if (OsylAbstractQuartzJobImpl.isAfterA2017Limite(Integer.parseInt(event.getSessionId())))
+				continue;
+
+			String siteId = getSiteId(
+					event.getCatalogNbr(),
+					event.getSessionId(),
+					event.getSessionCode(),
+					event.getSection());
 
 			boolean updateSuccess = false;
 
-    		if (!siteId.equals(previousSiteId))
-    		{
-    			// new site, calendar not yet found
-    			calendarFound = false;
+			if (!siteId.equals(previousSiteId))
+			{
+				// new site, calendar not yet found
+				calendarFound = false;
 
-    			try {
-    				calendar = getCalendar(siteId);
+				try {
+					calendar = getCalendar(siteId);
 					calendarFound = true;
 
-    			} catch (IdUnusedException e) {
-    				log.debug("Site or Calendar for " + siteId + " does not exist.");
-    			} catch (PermissionException e) {
-    				e.printStackTrace();
-    				return;
-    			} catch (Exception e) {
-    				e.printStackTrace();
-    			}
-    		}
+				} catch (IdUnusedException e) {
+					log.debug("Site or Calendar for " + siteId + " does not exist.");
+				} catch (PermissionException e) {
+					e.printStackTrace();
+					return;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
-    		if (calendarFound) {
+			if (calendarFound) {
 
-    			// don't bother adding the events if this is an MBA site (ZCII-1495) or DF (ZCII-1665)
-        		// and the event is not a final or mid-term (intratrimestriel) exam
-        		if (!siteId.contains("DF") ||
-        				event.getExamType().equals(PSFT_EXAM_TYPE_INTRA) ||
-        				event.getExamType().equals(PSFT_EXAM_TYPE_FINAL)) {
+				// don't bother adding the events if this is an MBA site (ZCII-1495) or DF (ZCII-1665)
+				// and the event is not a final or mid-term (intratrimestriel) exam
+				if (!siteId.contains("DF") ||
+						event.getExamType().equals(PSFT_EXAM_TYPE_INTRA) ||
+						event.getExamType().equals(PSFT_EXAM_TYPE_FINAL)) {
 
-        			updateSuccess = updateCalendarEvent(
-    						calendar,
-    						event.getEventId(),
-    						event.getState(),
-    						event.getStartTime(),
-    						event.getEndTime(),
-    						event.getLocation(),
-    						event.getDescription());
-        		} else {
-        			log.debug("Skipping event update: " + getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()) +
-        					" for site " + siteId + " (course is MBA or DF and event is not an exam)");
-        		}
-    		}
+					updateSuccess = updateCalendarEvent(
+							calendar,
+							event.getEventId(),
+							event.getState(),
+							event.getStartTime(),
+							event.getEndTime(),
+							event.getLocation(),
+							event.getDescription());
+				} else {
+					log.debug("Skipping event update: " + getEventTitle(siteId, event.getExamType(), event.getSequenceNumber()) +
+							" for site " + siteId + " (course is MBA or DF and event is not an exam)");
+				}
+			}
 
-    		if (event.getState().equals("M")) {
-    			if (!clearHecEventState(
-    					event.getEventId(),
-    					event.getCatalogNbr(),
-    					event.getSessionId(),
-    					event.getSessionCode(),
-    					event.getSection(),
-    					event.getExamType(),
-    					event.getSequenceNumber())) {
-    				throw new JobExecutionException();
-    			}
+			if (event.getState().equals("M")) {
+				if (!clearHecEventState(
+						event.getEventId(),
+						event.getCatalogNbr(),
+						event.getSessionId(),
+						event.getSessionCode(),
+						event.getSection(),
+						event.getExamType(),
+						event.getSequenceNumber())) {
+					throw new JobExecutionException();
+				}
 
-    			if (updateSuccess)
-    				updatecount++;
-    		}
-    		else if (event.getState().equals("D")) {
-    			if (!deleteHecEvent(
-    					event.getCatalogNbr(),
-    					event.getSessionId(),
-    					event.getSessionCode(),
-    					event.getSection(),
-    					event.getExamType(),
-    					event.getSequenceNumber())) {
-    				throw new JobExecutionException();
-    			}
+				if (updateSuccess)
+					updatecount++;
+			}
+			else if (event.getState().equals("D")) {
+				if (!deleteHecEvent(
+						event.getCatalogNbr(),
+						event.getSessionId(),
+						event.getSessionCode(),
+						event.getSection(),
+						event.getExamType(),
+						event.getSequenceNumber())) {
+					throw new JobExecutionException();
+				}
 
-    			if (updateSuccess)
-    				deletecount++;
-    		}
+				if (updateSuccess)
+					deletecount++;
+			}
 
 			previousSiteId = siteId;
-    	}
+		}
 
-    	logoutFromSakai();
-    	log.info("added: " + addcount + " updated: " + updatecount + " deleted: " + deletecount);
-    } // execute
+		logoutFromSakai();
+		log.info("added: " + addcount + " updated: " + updatecount + " deleted: " + deletecount);
+	} // execute
 
 	private boolean clearHecEventState(String event_id, String catalog_nbr, String session_id, String session_code, String section,
-			String exam_type, Integer sequence_num) {
-		
+									   String exam_type, Integer sequence_num) {
+
 		try {
 			int affectedRows = jdbcTemplate.update("update HEC_EVENT set STATE = null, EVENT_ID = ? where CATALOG_NBR = ? and STRM = ? and " +
-					"SESSION_CODE = ? and CLASS_SECTION = ? and CLASS_EXAM_TYPE = ? and SEQ = ?",
+							"SESSION_CODE = ? and CLASS_SECTION = ? and CLASS_EXAM_TYPE = ? and SEQ = ?",
 					new Object[] {event_id, catalog_nbr, session_id, session_code, section, exam_type, sequence_num});
-			
+
 			if (affectedRows != 1) {
 				return false;
 			} else {
 				return true;
 			}
-			
+
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 			return false;
@@ -303,19 +313,19 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 	}
 
 	private boolean deleteHecEvent(String catalog_nbr, String session_id, String session_code, String section,
-			String exam_type, Integer sequence_num) {
+								   String exam_type, Integer sequence_num) {
 
 		try {
 			int affectedRows = jdbcTemplate.update("delete from HEC_EVENT where CATALOG_NBR = ? and STRM = ? and SESSION_CODE = ? and CLASS_SECTION = ? " +
-				"and CLASS_EXAM_TYPE = ? and SEQ = ?",
-				new Object[] {catalog_nbr, session_id, session_code, section, exam_type, sequence_num });
-			
+							"and CLASS_EXAM_TYPE = ? and SEQ = ?",
+					new Object[] {catalog_nbr, session_id, session_code, section, exam_type, sequence_num });
+
 			if (affectedRows != 1) {
 				return false;
 			} else {
 				return true;
 			}
-			
+
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 			return false;
@@ -345,73 +355,73 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		log.debug("created event: " + title + " in site " + calendar.getContext());
 
 		return event.getId();
-    }
+	}
 
-    private boolean updateCalendarEvent(Calendar calendar, String eventId, String state,
-    		Date newStartTime, Date newEndTime, String newLocation, String newDescription)
-    {
-    	if (eventId == null)
-    		return false;
+	private boolean updateCalendarEvent(Calendar calendar, String eventId, String state,
+										Date newStartTime, Date newEndTime, String newLocation, String newDescription)
+	{
+		if (eventId == null)
+			return false;
 
-    	CalendarEventEdit edit;
+		CalendarEventEdit edit;
 
-    	try {
-    		edit = calendar.getEditEvent(eventId, CalendarService.EVENT_MODIFY_CALENDAR);
-    	} catch (IdUnusedException e) {
-    		log.debug("Event " + eventId + " does not exist");
-    		return false;
-    	} catch (NullPointerException e) {
-    		log.debug("Event " + eventId + " does not exist");
-    		return false;
-    	} catch (Exception e) {
-    		log.error("Error retrieving event " + eventId);
-    		e.printStackTrace();
-    		return false;
+		try {
+			edit = calendar.getEditEvent(eventId, CalendarService.EVENT_MODIFY_CALENDAR);
+		} catch (IdUnusedException e) {
+			log.debug("Event " + eventId + " does not exist");
+			return false;
+		} catch (NullPointerException e) {
+			log.debug("Event " + eventId + " does not exist");
+			return false;
+		} catch (Exception e) {
+			log.error("Error retrieving event " + eventId);
+			e.printStackTrace();
+			return false;
 		}
 
-    	if (state.equals("M")) {
-    		if (newStartTime != null && newEndTime != null)
-    			edit.setRange(TimeService.newTimeRange(TimeService.newTime(newStartTime.getTime()), TimeService.newTime(newEndTime.getTime()), true, false));
-    		if (newLocation != null)
-    			edit.setLocation(newLocation);
-    		if (newDescription != null)
-    			edit.setDescription(newDescription);
-    	}
-    	else if (state.equals("D")) {
-    		try {
+		if (state.equals("M")) {
+			if (newStartTime != null && newEndTime != null)
+				edit.setRange(TimeService.newTimeRange(TimeService.newTime(newStartTime.getTime()), TimeService.newTime(newEndTime.getTime()), true, false));
+			if (newLocation != null)
+				edit.setLocation(newLocation);
+			if (newDescription != null)
+				edit.setDescription(newDescription);
+		}
+		else if (state.equals("D")) {
+			try {
 				calendar.removeEvent(edit);
 			} catch (PermissionException e) {
-	    		log.error("User doesn't have permission to delete event " + eventId);
-	    		return false;
+				log.error("User doesn't have permission to delete event " + eventId);
+				return false;
 			}
-    	}
+		}
 
-    	calendar.commitEvent(edit);
-    	log.debug("updated ("+state+") event: " + edit.getDisplayName() + " in site " + calendar.getContext());
+		calendar.commitEvent(edit);
+		log.debug("updated ("+state+") event: " + edit.getDisplayName() + " in site " + calendar.getContext());
 
-    	return true;
-    }
+		return true;
+	}
 
-    private Calendar getCalendar(String siteId) throws IdUnusedException, PermissionException {
-    	if (siteService.siteExists(siteId)) {
-    		String calRef = calendarService.calendarReference(siteId, siteService.MAIN_CONTAINER);
-    		return calendarService.getCalendar(calRef);
-    	} else {
-    		throw new IdUnusedException("Site does not exist");
-    	}
-    }
+	private Calendar getCalendar(String siteId) throws IdUnusedException, PermissionException {
+		if (siteService.siteExists(siteId)) {
+			String calRef = calendarService.calendarReference(siteId, siteService.MAIN_CONTAINER);
+			return calendarService.getCalendar(calRef);
+		} else {
+			throw new IdUnusedException("Site does not exist");
+		}
+	}
 
-    private String getSiteId(String catalog_nbr, String session_id, String session_code, String section) {
-    	String siteId = FormatUtils.formatCourseId(catalog_nbr);
-    	siteId += "." + FormatUtils.getSessionName(session_id);
+	private String getSiteId(String catalog_nbr, String session_id, String session_code, String section) {
+		String siteId = FormatUtils.formatCourseId(catalog_nbr);
+		siteId += "." + FormatUtils.getSessionName(session_id);
 
-    	if (!session_code.equals("1"))
-    		siteId += "." + session_code;
+		if (!session_code.equals("1"))
+			siteId += "." + session_code;
 
-    	siteId += "." + section;
+		siteId += "." + section;
 
-    	return siteId;
-    }
+		return siteId;
+	}
 
 	private String getEventTitle(String siteId, String type, Integer seq_num) {
 

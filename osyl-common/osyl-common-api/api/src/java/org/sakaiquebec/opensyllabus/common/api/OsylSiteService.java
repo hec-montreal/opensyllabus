@@ -8,6 +8,7 @@ import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.EntityProducer;
 import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
@@ -244,6 +245,13 @@ public interface OsylSiteService extends EntityProducer {
      */
     public COSerialized getSerializedCourseOutlineForEditor(String siteId,
 	    String webappDir) throws Exception;
+
+    /**
+     * Returns the draft CourseOutline of the given site id as an object.
+     *
+     * @return the CourseOutline corresponding to the current context.
+     */
+    public COModeledServer getCourseOutlineForTenjinImport(String siteId) throws PermissionException, Exception;
 
     /**
      * Returns the CourseOutline of the current context (version unfusionned).

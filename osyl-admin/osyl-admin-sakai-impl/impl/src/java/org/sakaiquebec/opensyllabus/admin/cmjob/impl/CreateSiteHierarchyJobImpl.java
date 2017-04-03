@@ -88,6 +88,7 @@ public class CreateSiteHierarchyJobImpl extends OsylAbstractQuartzJobImpl  imple
 			null, null, SiteService.SortType.NONE, null);
 
 	Site site = null;
+	String [] providerIds = null;
 
 	log.info("CreateSiteHierarchyJobImpl: sites to add properties:"
 		+ allSites.size());
@@ -96,46 +97,53 @@ public class CreateSiteHierarchyJobImpl extends OsylAbstractQuartzJobImpl  imple
 
 	    site = allSites.get(i);
 
+
+		if (site.getTitle().indexOf(".E2017") == -1) {
+			continue;
+		}
 	    if (site.getProviderGroupId() != null) {
 		
 		 Section section = null;
-		
-		 try{
-			section = cmService.getSection(site.getProviderGroupId());
-		 }catch(Exception ex){
-		     log.error("No section for site: "+site.getTitle());
-		 }
-		 
-		 
-		 if(section != null){
-		     
-		     String acadDepartment = cmService.getSectionCategoryDescription(section.getCategory());
 
-		     
-		     CourseOffering co = null;
-		     
-		     try{
-			 co = cmService.getCourseOffering(section.getCourseOfferingEid());
-		     }catch(Exception ex){
-			 log.error("No course offering for site: "+site.getTitle());
-		     }
-		     
-		     
-		     String acadCareer = null;
-		     
-		     if(co!=null){			 
-			 acadCareer = getAcademicCareer(co.getAcademicCareer());
-		     }
-			 		     
-		     if(!propertiesExist(site, acadDepartment, acadCareer)){
-			 
-			 addHierarchyProperties(site, acadDepartment, acadCareer);
-			 
-		     }
-		       
-		     
-		 }//end if section!=null		 
-		 
+		 providerIds = site.getProviderGroupId().split("\\+");
+
+		 for (String providerId: providerIds) {
+			 try {
+				 section = cmService.getSection(providerId);
+			 } catch (Exception ex) {
+				 log.error("No section for site: " + site.getTitle());
+			 }
+
+
+			 if (section != null) {
+
+				 String acadDepartment = cmService.getSectionCategoryDescription(section.getCategory());
+
+
+				 CourseOffering co = null;
+
+				 try {
+					 co = cmService.getCourseOffering(section.getCourseOfferingEid());
+				 } catch (Exception ex) {
+					 log.error("No course offering for site: " + site.getTitle());
+				 }
+
+
+				 String acadCareer = null;
+
+				 if (co != null) {
+					 acadCareer = getAcademicCareer(co.getAcademicCareer());
+				 }
+
+				 if (!propertiesExist(site, acadDepartment, acadCareer)) {
+
+					 addHierarchyProperties(site, acadDepartment, acadCareer);
+
+				 }
+
+
+			 }//end if section!=null
+		 }
 	    }//end if providerGroupId!=null
 	    else{
 		log.error("No provider group id for site: "+site.getTitle());

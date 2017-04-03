@@ -1,7 +1,5 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import java.io.IOException;
-
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 

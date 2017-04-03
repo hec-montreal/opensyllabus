@@ -1138,6 +1138,40 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return thisCo;
     } // getSerializedCourseOutlineForEditor
 
+	public COModeledServer getCourseOutlineForTenjinImport(String siteId) throws PermissionException, Exception {
+
+		COSerialized thisCo = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+
+		if (!osylSecurityService.isActionAllowedInSite(
+				getSiteReference(siteId), SecurityInterface.OSYL_FUNCTION_EDIT)) {
+
+			throw new PermissionException(sessionManager.getCurrentSession().getUserEid(), 
+					SecurityInterface.OSYL_FUNCTION_EDIT, siteId);
+		}
+
+		// convert citation library urls
+		COModeledServer model = new COModeledServer(thisCo);
+		model.XML2Model();
+
+		try {
+			String parentId = coRelationDao.getParentOfCourseOutline(siteId);
+			COModeledServer coModelParent = null;
+
+			// fusion with parent (partageable)
+			if (parentId != null) {
+				coModelParent = getFusionnedPrePublishedHierarchy(parentId);
+			}
+
+			if (coModelParent != null) {
+				model.fusion(coModelParent);
+			}
+		} catch (Exception e) {
+			// do nothing, there's simply no parent.
+		}
+
+		return model;
+	}
+
     public synchronized COSerialized getSerializedCourseOutlineAndLockIt(
 	    String siteId, String webappDir) throws Exception {
 

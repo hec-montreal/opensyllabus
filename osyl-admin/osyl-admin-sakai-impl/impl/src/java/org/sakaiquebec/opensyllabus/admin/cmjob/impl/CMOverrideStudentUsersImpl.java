@@ -22,12 +22,6 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
@@ -36,13 +30,14 @@ import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
-import org.sakaiproject.coursemanagement.api.Membership;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.SiteService.SelectionType;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CMOverrideStudentUsers;
+
+import java.util.*;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -76,7 +71,8 @@ public class CMOverrideStudentUsersImpl extends OsylAbstractQuartzJobImpl
 
 		List<String> terms = getActiveTerms();
 		Map<String, String> criteria = null;
-		String providerId = null;
+		String siteProviderId = null;
+		String [] providerIds = null;
 		EnrollmentSet es = null;
 		Section cmSection = null;
 		boolean isProvided = false;
@@ -96,42 +92,44 @@ public class CMOverrideStudentUsersImpl extends OsylAbstractQuartzJobImpl
 		    
 		    for (Site site : sites) {
 		    	guestUsers = site.getUsersHasRole(ROLE_GUEST);
-		    	providerId = site.getProviderGroupId();
-		    	if (cmService.isSectionDefined(providerId) && guestUsers != null && guestUsers.size() >0){
-		    		
-			    	for (String userId: guestUsers){
-			    		try {
-							userMatricule = userDirectoryService.getUserEid(userId);
-							cmSection = cmService.getSection(providerId);
-							es = cmSection.getEnrollmentSet();
-							if (es == null)
-								isProvided = false;
-							else
-								isProvided = cmService.isEnrolled(userMatricule, es.getEid());
-				    		
-				    		if (isProvided){
-				    			authzGroupIds = authzGroupService.getAuthzGroupIds(providerId);
-				    			for (String authzGroupId : authzGroupIds) {
-				    				 try {
-										azGroup = authzGroupService.getAuthzGroup(authzGroupId);
-										azGroup.removeMember(userId);
-										changedEntries.add(userMatricule);
-										authzGroupService.save(azGroup);
-									} catch (GroupNotDefinedException e) {
-											e.printStackTrace();
-									} catch (AuthzPermissionException e) {
-											e.printStackTrace();
-									}
-				    			}
-				    		}
-							
-						} catch (UserNotDefinedException e) {
-							e.printStackTrace();
-						}
-			    		
-			    	}
-		    	}
+		    	siteProviderId = site.getProviderGroupId();
+		    	providerIds = siteProviderId.split("\\+");
+		    	for (String providerId: providerIds) {
+					if (cmService.isSectionDefined(providerId) && guestUsers != null && guestUsers.size() > 0) {
 
+						for (String userId : guestUsers) {
+							try {
+								userMatricule = userDirectoryService.getUserEid(userId);
+								cmSection = cmService.getSection(providerId);
+								es = cmSection.getEnrollmentSet();
+								if (es == null)
+									isProvided = false;
+								else
+									isProvided = cmService.isEnrolled(userMatricule, es.getEid());
+
+								if (isProvided) {
+									authzGroupIds = authzGroupService.getAuthzGroupIds(providerId);
+									for (String authzGroupId : authzGroupIds) {
+										try {
+											azGroup = authzGroupService.getAuthzGroup(authzGroupId);
+											azGroup.removeMember(userId);
+											changedEntries.add(userMatricule);
+											authzGroupService.save(azGroup);
+										} catch (GroupNotDefinedException e) {
+											e.printStackTrace();
+										} catch (AuthzPermissionException e) {
+											e.printStackTrace();
+										}
+									}
+								}
+
+							} catch (UserNotDefinedException e) {
+								e.printStackTrace();
+							}
+
+						}
+					}
+				}
 		    }
 
 		}
