@@ -93,6 +93,9 @@ public class CMOverrideStudentUsersImpl extends OsylAbstractQuartzJobImpl
 		    for (Site site : sites) {
 		    	guestUsers = site.getUsersHasRole(ROLE_GUEST);
 		    	siteProviderId = site.getProviderGroupId();
+		    	if (siteProviderId == null)
+		    		continue;
+
 		    	providerIds = siteProviderId.split("\\+");
 		    	for (String providerId: providerIds) {
 					if (cmService.isSectionDefined(providerId) && guestUsers != null && guestUsers.size() > 0) {

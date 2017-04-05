@@ -89,6 +89,9 @@ public class CMOverrideSiteUsersImpl extends OsylAbstractQuartzJobImpl
 	    for (Site site : sites) {
 
 			siteProviderId = site.getProviderGroupId();
+			if (siteProviderId == null)
+				continue;
+
 			providerIds = siteProviderId.split("\\+");
 			for (String providerId: providerIds){
 				if (cmService.isSectionDefined(providerId)|| cmService.isCourseOfferingDefined(providerId)) {
