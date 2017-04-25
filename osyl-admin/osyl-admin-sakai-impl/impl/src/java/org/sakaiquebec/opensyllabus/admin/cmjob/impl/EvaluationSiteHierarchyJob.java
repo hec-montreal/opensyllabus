@@ -144,11 +144,16 @@ public class EvaluationSiteHierarchyJob implements Job{
 		}
 
 		for (Site site : sites) {
-			String providerGroup = site.getProviderGroupId();
+			if (site.getProviderGroupId() ==null)
+				continue;
+
+			String [] providerIds = site.getProviderGroupId().split("\\+");
+
+			for (String providerGroup: providerIds) {
 			// skip if provider group id is null or ends in 00 (means it's a shareable site), or DF1
 			if (providerGroup == null ||
-					providerGroup.substring(providerGroup.length()-2).equals("00") ||
-					providerGroup.substring(providerGroup.length()-3).startsWith("DF")) {
+						providerGroup.substring(providerGroup.length() - 2).equals("00") ||
+						providerGroup.substring(providerGroup.length() - 3).startsWith("DF")) {
 				continue;
 			}
 
@@ -171,15 +176,14 @@ public class EvaluationSiteHierarchyJob implements Job{
 				if (nodeMap.containsKey(nodeKey)) {
 					Set<String> siteRefs = nodeMap.get(nodeKey);
 					siteRefs.add(site.getReference());
-				}
-				else {
+					} else {
 					Set<String> siteRefs = new HashSet<String>();
 					siteRefs.add(site.getReference());
 					nodeMap.put(nodeKey, siteRefs);
 				}
+				} catch (IdNotFoundException e) {
+					log.debug("Section or CourseOffering not found for " + site.getId());
 			}
-			catch (IdNotFoundException e) {
-				log.debug("Section or CourseOffering not found for "+site.getId());
 			}
 		}
 		return nodeMap;
