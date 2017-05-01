@@ -199,12 +199,16 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		for (HecEvent event : eventsUpdate) {
 
 			//Continue if course is to be in E2017 pilote
-			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017))
+			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017)) {
+				log.debug("Skipping event for " + event.getCatalogNbr()+event.getSessionId() + " because it is in section-aware pilot.");
 				continue;
+			}
 
 			//ZCII-2821: Do not sync data during and after A2017
-			if (OsylAbstractQuartzJobImpl.isAfterA2017Limite(Integer.parseInt(event.getSessionId())))
+			if (OsylAbstractQuartzJobImpl.isAfterA2017Limite(Integer.parseInt(event.getSessionId()))) {
+				log.debug("Skipping event for " + event.getCatalogNbr() + event.getSessionId() + " because it's session is equal to or after A2017.");
 				continue;
+			}
 
 			String siteId = getSiteId(
 					event.getCatalogNbr(),

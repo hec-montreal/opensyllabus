@@ -306,6 +306,6 @@ public abstract class OsylAbstractQuartzJobImpl implements
     }
 
     public static final boolean isAfterA2017Limite(int strm){
-        return  FINAL_DATE > strm;
+        return  FINAL_DATE <= strm;
     }
 }
