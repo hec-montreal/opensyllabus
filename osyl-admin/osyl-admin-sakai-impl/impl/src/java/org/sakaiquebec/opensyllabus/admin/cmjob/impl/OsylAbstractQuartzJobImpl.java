@@ -305,7 +305,7 @@ public abstract class OsylAbstractQuartzJobImpl implements
         return false;
     }
 
-    public static final boolean isAfterA2017Limite(int strm){
-        return  FINAL_DATE <= strm;
+    public static final boolean isBeforeA2017(int strm){
+        return  FINAL_DATE > strm;
     }
 }

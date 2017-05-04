@@ -51,7 +51,7 @@ public class GenericDetailSessionsMapFactory {
 	    entry.setStrmId(token[9]);
 
 		//ZCII-2783: Do not sync data during and after A2017
-		if (OsylAbstractQuartzJobImpl.isAfterA2017Limite(Integer.parseInt(entry.getStrm())))
+		if (OsylAbstractQuartzJobImpl.isBeforeA2017(Integer.parseInt(entry.getStrm())))
 	    map.put(entry);
 	}
 

@@ -62,7 +62,7 @@ public class GenericProfCoursMapFactory {
 			} else {
 				entry = new ProfCoursMapEntry();
 				//ZCII-2783: Do not sync data during and after A2017
-				if (OsylAbstractQuartzJobImpl.isAfterA2017Limite(Integer.parseInt(strm)))
+				if (OsylAbstractQuartzJobImpl.isBeforeA2017(Integer.parseInt(strm)))
 				map.put(key, entry);
 			}
 

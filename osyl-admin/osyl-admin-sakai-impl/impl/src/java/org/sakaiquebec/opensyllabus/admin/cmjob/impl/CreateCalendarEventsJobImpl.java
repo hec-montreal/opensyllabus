@@ -205,7 +205,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 			}
 
 			//ZCII-2821: Do not sync data during and after A2017
-			if (OsylAbstractQuartzJobImpl.isAfterA2017Limite(Integer.parseInt(event.getSessionId()))) {
+			if (!OsylAbstractQuartzJobImpl.isBeforeA2017(Integer.parseInt(event.getSessionId()))) {
 				log.debug("Skipping event for " + event.getCatalogNbr() + event.getSessionId() + " because it's session is equal to or after A2017.");
 				continue;
 			}
