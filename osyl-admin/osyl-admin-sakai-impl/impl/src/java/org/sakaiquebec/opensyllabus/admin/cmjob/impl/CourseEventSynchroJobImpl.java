@@ -71,7 +71,9 @@ public class CourseEventSynchroJobImpl implements CourseEventSynchroJob {
 
 		final ArrayList<String[]> extractLines = new ArrayList<String[]>();
 		while ((line = bufferedReader.readLine()) != null) {
-			extractLines.add(line.split(SEPARATOR));
+			String strm = (line.split(SEPARATOR))[1];
+			if (!strm.equalsIgnoreCase("2181") && !strm.equalsIgnoreCase("2173"))
+				extractLines.add(line.split(SEPARATOR));
 		}
 		bufferedReader.close();
 
