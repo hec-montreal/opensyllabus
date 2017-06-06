@@ -50,7 +50,7 @@ public class GenericDetailSessionsMapFactory {
 	    entry.setSessionCode(token[8]);
 	    entry.setStrmId(token[9]);
 
-		//ZCII-2783: Do not sync data during and after A2017
+		//ZCII-2783: Do not sync data after A2017
 		if (OsylAbstractQuartzJobImpl.isBeforeA2017(Integer.parseInt(entry.getStrm())))
 	    map.put(entry);
 	}

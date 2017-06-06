@@ -91,6 +91,7 @@ public abstract class OsylAbstractQuartzJobImpl implements
     protected UsageSessionService usageSessionService;
     protected UserDirectoryService userDirectoryService;
 
+
     public void setAdminConfigService(ConfigurationService adminConfigService) {
 	this.adminConfigService = adminConfigService;
     }
@@ -306,6 +307,6 @@ public abstract class OsylAbstractQuartzJobImpl implements
     }
 
     public static final boolean isBeforeA2017(int strm){
-        return  FINAL_DATE > strm;
+        return  FINAL_DATE >= strm;
     }
 }

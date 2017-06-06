@@ -1,9 +1,10 @@
 package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
-import java.util.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * Represente les donnees provenant de l'extract detail_cours.dat<br/>
@@ -31,6 +32,7 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     private String acadCareer;
     private String classStat;
     private String unitsMinimum ;
+    private String instructionMode;
     private Vector<String> etudiants;
     private Vector<MatriculeNomMapEntry> stagiaires;
     private Vector<ExamenMapEntry> examens;
@@ -152,6 +154,14 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 
     public String getClassStat() {
 	return classStat;
+    }
+
+    public void setInstructionMode (String instructionMode) {
+        this.instructionMode = instructionMode;
+    }
+
+    public String getInstructionMode() {
+        return instructionMode;
     }
 
     public void setUnitsMinimum(String unitsMinimum) {

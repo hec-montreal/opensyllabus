@@ -88,6 +88,13 @@ public class GenericDetailCoursMapFactory {
 		entry.setTypeEvaluation(null);
 	    }
 
+		try {
+			entry.setInstructionMode(tokens[i++]);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			//on met null si pas de valeur associée à la mode d'instruction
+			entry.setInstructionMode(null);
+		}
+
 	    //-----------------------------------------------------------------------
 		//DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG MODE-DEBUG
 		if (debugCourses != null && debugCourses.length > 0)

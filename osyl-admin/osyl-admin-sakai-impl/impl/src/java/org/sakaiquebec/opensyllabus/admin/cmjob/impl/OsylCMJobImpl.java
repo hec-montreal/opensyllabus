@@ -24,6 +24,8 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static ca.hec.jobs.api.HECCMSynchroJob.ENROLLMENT_STATUS;
+import static ca.hec.jobs.api.HECCMSynchroJob.GRADING_SCHEME;
 import static org.sakaiquebec.opensyllabus.admin.api.ConfigurationService.*;
 import static org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob.SUMMER;
 import static org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob.WINTER;
@@ -392,7 +394,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 							newSection =
 									cmAdmin.createSection(courseSectionId, title,
 											description, category, null,
-											courseOfferingId, null, lang, typeEvaluation);
+											courseOfferingId, null, lang, typeEvaluation, coursEntry.getInstructionMode() );
 
 						} else {
 							// We update
@@ -402,6 +404,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 							newSection.setTitle(title);
 							newSection.setLang(lang);
 							newSection.setTypeEvaluation(typeEvaluation);
+							newSection.setInstructionMode(coursEntry.getInstructionMode());
 							cmAdmin.updateSection(newSection);
 						}
 
@@ -594,6 +597,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 		String category = coursEntry.getAcadOrg();
 		String lang = coursEntry.getLangue();
 		String typeEvaluation = coursEntry.getTypeEvaluation();
+		String instructionMode = coursEntry.getInstructionMode();
 
 		if (!cmService.isSectionDefined(courseSectionId)) {
 
@@ -601,7 +605,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 					+ ", " + category + ", " + courseOfferingId + ", " + lang);
 			newSection =
 					cmAdmin.createSection(courseSectionId, title, description,
-							category, null, courseOfferingId, null, lang, typeEvaluation);
+							category, null, courseOfferingId, null, lang, typeEvaluation, instructionMode);
 
 		} else {
 			// We update
@@ -610,6 +614,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 			newSection.setDescription(description);
 			newSection.setTitle(title);
 			newSection.setLang(lang);
+			newSection.setInstructionMode(instructionMode);
 			cmAdmin.updateSection(newSection);
 		}
 
