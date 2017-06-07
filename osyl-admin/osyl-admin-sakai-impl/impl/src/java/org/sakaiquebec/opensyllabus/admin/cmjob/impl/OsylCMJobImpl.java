@@ -24,12 +24,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.Map.Entry;
 
-import static ca.hec.jobs.api.HECCMSynchroJob.ENROLLMENT_STATUS;
-import static ca.hec.jobs.api.HECCMSynchroJob.GRADING_SCHEME;
 import static org.sakaiquebec.opensyllabus.admin.api.ConfigurationService.*;
-import static org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob.SUMMER;
-import static org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob.WINTER;
-import static org.sakaiquebec.opensyllabus.common.api.OsylSiteService.FALL;
 
 /******************************************************************************
  * $Id: $
