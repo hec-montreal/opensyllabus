@@ -25,6 +25,9 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import static org.sakaiquebec.opensyllabus.admin.api.ConfigurationService.*;
+import static org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob.SUMMER;
+import static org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob.WINTER;
+import static org.sakaiquebec.opensyllabus.common.api.OsylSiteService.FALL;
 
 /******************************************************************************
  * $Id: $
