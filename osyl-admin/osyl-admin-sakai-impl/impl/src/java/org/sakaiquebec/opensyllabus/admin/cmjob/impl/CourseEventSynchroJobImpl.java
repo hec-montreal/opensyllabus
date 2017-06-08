@@ -1,5 +1,14 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.sakaiquebec.opensyllabus.admin.cmjob.api.CourseEventSynchroJob;
+import org.sakaiquebec.opensyllabus.admin.cmjob.api.InvalidStateException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,16 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import javax.sql.DataSource;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.sakaiquebec.opensyllabus.admin.cmjob.api.CourseEventSynchroJob;
-import org.sakaiquebec.opensyllabus.admin.cmjob.api.InvalidStateException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Job de synchro du fichier d'extract contenant les événements de cours avec la
@@ -71,8 +70,8 @@ public class CourseEventSynchroJobImpl implements CourseEventSynchroJob {
 
 		final ArrayList<String[]> extractLines = new ArrayList<String[]>();
 		while ((line = bufferedReader.readLine()) != null) {
-			String strm = (line.split(SEPARATOR))[1];
-			if (!strm.equalsIgnoreCase("2181") && !strm.equalsIgnoreCase("2173"))
+			int strm = Integer.parseInt(line.split(SEPARATOR)[1]);
+			if (2173 <= strm)
 				extractLines.add(line.split(SEPARATOR));
 		}
 		bufferedReader.close();

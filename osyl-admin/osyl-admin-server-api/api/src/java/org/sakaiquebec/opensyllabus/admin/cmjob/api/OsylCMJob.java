@@ -1,3 +1,4 @@
+
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
 /******************************************************************************
@@ -27,7 +28,7 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.api;
  * teachers. This class can be used to implement the methods to provide the job
  * used to populate tables and a service to request or send information to the
  * course management.
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -50,11 +51,11 @@ public interface OsylCMJob extends OsylAbstractQuartzJob {
     public final static String PROG_ETUD_FILE = "programme_etudes.dat";
 
     public final static String CHARGE_FORMATION = "charge_formation.dat";
-    
+
     public final static String REQUIREMENTS = "cours_exigence.dat";
 
     public final static String EXTRACTS_PATH_CONFIG_KEY =
-	    "coursemanagement.extract.files.path";
+            "coursemanagement.extract.files.path";
 
     public final static String SECRETARY_ROLE = "SEC";
 
@@ -96,5 +97,4 @@ public interface OsylCMJob extends OsylAbstractQuartzJob {
      * Le programme du certificat
      */
     public final static String CERTIFICAT = "CERT";
-
 }

@@ -14,7 +14,7 @@ import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CourseEventSynchroJob;
-import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
+import org.sakaiquebec.opensyllabus.admin.cmjob.api.*;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.*;
 
 import java.io.File;
@@ -161,78 +161,79 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				CourseOffering offering = cmService.getCourseOffering(section.getCourseOfferingEid());
 				EnrollmentSet enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
 
-				// add official instructors
-				enrollmentSet.setOfficialInstructors(profCoursEntry.getInstructors());
-				cmAdmin.updateEnrollmentSet(enrollmentSet);
+				if (isSynchedTheOldWay(Integer.parseInt(offering.getAcademicSession().getEid()), offering.getAcademicCareer())) {
+					System.out.println(profCoursEntry.toString());
+					// add official instructors
+					enrollmentSet.setOfficialInstructors(profCoursEntry.getInstructors());
+					cmAdmin.updateEnrollmentSet(enrollmentSet);
 
-				log.info("Set instructors for " + enrollmentSetId + ": " + enrollmentSet.getOfficialInstructors());
+					log.info("Set instructors for " + enrollmentSetId + ": " + enrollmentSet.getOfficialInstructors());
 
-				// retrieve coordinators for current course offering or section (if we haven't yet)
-				Set<String> coordinatorSet = null;
-				Set<Membership> memberships = null;
-				try {
-					if ("CERT".equals(offering.getAcademicCareer()) ||
-							"QUAL.COMM.".equals(section.getCategory())) {
+					// retrieve coordinators for current course offering or section (if we haven't yet)
+					Set<String> coordinatorSet = null;
+					Set<Membership> memberships = null;
+					try {
+						if ("CERT".equals(offering.getAcademicCareer()) ||
+								"QUAL.COMM.".equals(section.getCategory())) {
 
-						if (!actualCoordinators.containsKey(offering.getEid())) {
-							coordinatorSet = new HashSet<String>();
-							actualCoordinators.put(offering.getEid(), coordinatorSet);
-							memberships = cmService.getCourseOfferingMemberships(offering.getEid());
+							if (!actualCoordinators.containsKey(offering.getEid())) {
+								coordinatorSet = new HashSet<String>();
+								actualCoordinators.put(offering.getEid(), coordinatorSet);
+								memberships = cmService.getCourseOfferingMemberships(offering.getEid());
+							} else {
+								coordinatorSet = actualCoordinators.get(offering.getEid());
+							}
 						} else {
-							coordinatorSet = actualCoordinators.get(offering.getEid());
+							if (!actualCoordinators.containsKey(offering.getEid() + SHARABLE_SECTION)) {
+								coordinatorSet = new HashSet<String>();
+								actualCoordinators.put(offering.getEid() + SHARABLE_SECTION, coordinatorSet);
+								memberships = cmService.getSectionMemberships(offering.getEid() + SHARABLE_SECTION);
+							} else {
+								coordinatorSet = actualCoordinators.get(offering.getEid() + SHARABLE_SECTION);
+							}
 						}
-					} else {
-						if (!actualCoordinators.containsKey(offering.getEid() + SHARABLE_SECTION)) {
-							coordinatorSet =  new HashSet<String>();
-							actualCoordinators.put(offering.getEid() + SHARABLE_SECTION, coordinatorSet);
-							memberships = cmService.getSectionMemberships(offering.getEid() + SHARABLE_SECTION);
-						} else {
-							coordinatorSet = actualCoordinators.get(offering.getEid() + SHARABLE_SECTION);
+					} catch (IdNotFoundException infe) {
+						log.error("CourseManagement memberships not found: " + infe.getMessage());
+					}
+
+					// add the coordinators to the map
+					if (memberships != null) {
+						for (Membership m : memberships) {
+							if (m.getRole().equals(COORDONNATEUR_ROLE)) {
+								coordinatorSet.add(m.getUserId());
+							}
 						}
 					}
-				}
-				catch (IdNotFoundException infe) {
-					log.error("CourseManagement memberships not found: " + infe.getMessage());
-				}
 
-				// add the coordinators to the map
-				if (memberships != null) {
-					for (Membership m : memberships) {
-						if (m.getRole().equals(COORDONNATEUR_ROLE)) {
-							coordinatorSet.add(m.getUserId());
-						}
-					}
-				}
+					// add the coordinators to the course offering or shareable section membership
+					for (String coordinator : profCoursEntry.getCoordinators()) {
+						if (("CERT".equals(offering.getAcademicCareer()) || "QUAL.COMM.".equals(section.getCategory()))) {
 
-				// add the coordinators to the course offering or shareable section membership
-				for (String coordinator : profCoursEntry.getCoordinators()) {
-					if (("CERT".equals(offering.getAcademicCareer()) || "QUAL.COMM.".equals(section.getCategory()))) {
+							// if we haven't yet added this coordinator to the CM, do it now
+							if (!addedCoordinators.contains(offering.getEid() + coordinator)) {
+								cmAdmin.addOrUpdateCourseOfferingMembership(
+										coordinator, COORDONNATEUR_ROLE, offering.getEid(), ACTIVE_STATUS);
 
-						// if we haven't yet added this coordinator to the CM, do it now
-						if (!addedCoordinators.contains(offering.getEid()+coordinator)) {
-							cmAdmin.addOrUpdateCourseOfferingMembership(
-									coordinator, COORDONNATEUR_ROLE, offering.getEid(), ACTIVE_STATUS);
+								//record that we've added this coordinator so we don't do it again
+								addedCoordinators.add(offering.getEid() + coordinator);
+								coordinatorSet.remove(coordinator);
+
+								log.info("Coordinator added to CourseOffering " + offering.getEid() + ": " + coordinator);
+							}
+						} else if (!addedCoordinators.contains(offering.getEid() + SHARABLE_SECTION + coordinator)) {
+
+							// Add coordinator to sharable site for other courses
+							cmAdmin.addOrUpdateSectionMembership(
+									coordinator, COORDONNATEUR_ROLE, offering.getEid() + SHARABLE_SECTION, ACTIVE_STATUS);
 
 							//record that we've added this coordinator so we don't do it again
-							addedCoordinators.add(offering.getEid()+coordinator);
+							addedCoordinators.add(offering.getEid() + SHARABLE_SECTION + coordinator);
 							coordinatorSet.remove(coordinator);
 
-							log.info("Coordinator added to CourseOffering " + offering.getEid() + ": " + coordinator);
+							log.info("Coordinator added to shareable Section "
+									+ offering.getEid() + SHARABLE_SECTION + ": "
+									+ coordinator);
 						}
-					}
-					else if (!addedCoordinators.contains(offering.getEid()+SHARABLE_SECTION+coordinator)){
-
-						// Add coordinator to sharable site for other courses
-						cmAdmin.addOrUpdateSectionMembership(
-								coordinator, COORDONNATEUR_ROLE, offering.getEid() + SHARABLE_SECTION, ACTIVE_STATUS);
-
-						//record that we've added this coordinator so we don't do it again
-						addedCoordinators.add(offering.getEid()+SHARABLE_SECTION+coordinator);
-						coordinatorSet.remove(coordinator);
-
-						log.info("Coordinator added to shareable Section "
-								+ offering.getEid() + SHARABLE_SECTION + ": "
-								+ coordinator);
 					}
 				}
 			} catch (IdNotFoundException infe) {
@@ -245,20 +246,24 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 		for (Map.Entry<String, Set<String>> entry : actualCoordinators.entrySet()) {
 			String courseId = entry.getKey();
 			Set<String> coordinatorsToRemove = entry.getValue();
+			CourseOffering courseOffering = cmService.getCourseOffering(courseId);
+			AcademicSession session = courseOffering.getAcademicSession();
 
-			if (coordinatorsToRemove.size() > 0) {
-				if (courseId.endsWith("00")) {
-					for(String coordinator : coordinatorsToRemove) { 
-						cmAdmin.removeSectionMembership(coordinator, courseId);
-						log.info("Coordinator removed from shareable Section for "
-								+ courseId + ": " + coordinator);
-					}
-				} else {
-					for(String coordinator : coordinatorsToRemove) {
-						cmAdmin.removeCourseOfferingMembership(coordinator, courseId);
-						log.info("Coordinator removed from CourseOffering for "
-								+ courseId + ": " + coordinator);
+			if (isSynchedTheOldWay(Integer.parseInt(session.getEid()), courseOffering.getAcademicCareer())) {
+				if (coordinatorsToRemove.size() > 0) {
+					if (courseId.endsWith("00")) {
+						for (String coordinator : coordinatorsToRemove) {
+							cmAdmin.removeSectionMembership(coordinator, courseId);
+							log.info("Coordinator removed from shareable Section for "
+									+ courseId + ": " + coordinator);
+						}
+					} else {
+						for (String coordinator : coordinatorsToRemove) {
+							cmAdmin.removeCourseOfferingMembership(coordinator, courseId);
+							log.info("Coordinator removed from CourseOffering for "
+									+ courseId + ": " + coordinator);
 
+						}
 					}
 				}
 			}
@@ -283,180 +288,182 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 		Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
 		Set<CourseOffering> courseOfferingSet = new HashSet<CourseOffering>();
 		CanonicalCourse canCourse = null;
-
 		Iterator<DetailCoursMapEntry> cours =
 				detailCoursMap.values().iterator();
 		
 		while (cours.hasNext()) {
 			coursEntry = (DetailCoursMapEntry) cours.next();
 
-			// Truncate title to 100 bytes max
+			if (isSynchedTheOldWay(Integer.parseInt(coursEntry.getStrm()), coursEntry.getAcadCareer())) {
+				System.out.println("Le cours " + coursEntry.toString());
+				// Truncate title to 100 bytes max
 
-			//we do not make any processing for ZC1 courses
-			if (!"ZC1".equals(coursEntry.getClassSection())) {
-				if (!DetailCoursMapEntry.CLASS_STATUS_CANCELLED.equals(coursEntry
-						.getClassStat())) {
-					canonicalCourseId = getCanonicalCourseId(coursEntry);
-					title = truncateStringBytes(coursEntry.getCourseTitleLong(), MAX_TITLE_BYTE_LENGTH, Charset.forName("utf-8"));
-					description = coursEntry.getCourseTitleLong();
-					courseSetId = coursEntry.getAcadOrg();
+				//we do not make any processing for ZC1 courses
+				if (!"ZC1".equals(coursEntry.getClassSection())) {
+					if (!DetailCoursMapEntry.CLASS_STATUS_CANCELLED.equals(coursEntry
+							.getClassStat())) {
+						canonicalCourseId = getCanonicalCourseId(coursEntry);
+						title = truncateStringBytes(coursEntry.getCourseTitleLong(), MAX_TITLE_BYTE_LENGTH, Charset.forName("utf-8"));
+						description = coursEntry.getCourseTitleLong();
+						courseSetId = coursEntry.getAcadOrg();
 
-					// create the canonical course
-					if (!cmService.isCanonicalCourseDefined(canonicalCourseId)) {
-						canCourse =
-								cmAdmin.createCanonicalCourse(canonicalCourseId,
-										title, description);
-						cc.add(canCourse);
-						cmAdmin.setEquivalentCanonicalCourses(cc);
+						// create the canonical course
+						if (!cmService.isCanonicalCourseDefined(canonicalCourseId)) {
+							canCourse =
+									cmAdmin.createCanonicalCourse(canonicalCourseId,
+											title, description);
+							cc.add(canCourse);
+							cmAdmin.setEquivalentCanonicalCourses(cc);
 
-					} else {
-						// we update
-						canCourse = cmService.getCanonicalCourse(canonicalCourseId);
-						canCourse.setDescription(description);
-						canCourse.setTitle(title);
-					}
-
-					// Check wether there is a directory site
-					//hasDirectorySite(canCourse);
-
-					if (cmService.isCourseSetDefined(courseSetId)) {
-						cmAdmin.removeCanonicalCourseFromCourseSet(courseSetId,
-								canonicalCourseId);
-						cmAdmin.addCanonicalCourseToCourseSet(courseSetId,
-								canonicalCourseId);
-					}
-					// create course offering
-					session = cmService.getAcademicSession(coursEntry.getStrmId());
-					CourseOffering courseOff;
-					if (cmService.isAcademicSessionDefined(coursEntry.getStrmId())) {
-						courseOfferingId = getCourseOfferingId(coursEntry);
-						lang = coursEntry.getLangue();
-						typeEvaluation = coursEntry.getTypeEvaluation();
-						credits = coursEntry.getUnitsMinimum();
-						ProgrammeEtudesMapEntry programmeEtudesMapEntry =
-								programmeEtudesMap.get(coursEntry.getAcadCareer());
-						RequirementsCoursMapEntry requirementsCoursMapEntry =
-								requirementsCoursMap.get(coursEntry.getCourseId());
-						try {
-							requirements = requirementsCoursMapEntry.getDescription(lang);
-						} catch (NullPointerException e) {
-//							log.warn("requirementsCoursMapEntry is null for course"
-//									+ canonicalCourseId);
-							requirements = null;
-						}
-						career = programmeEtudesMapEntry.getAcadCareer();
-
-						if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
-							courseOff =
-									cmAdmin.createCourseOffering(courseOfferingId,
-											title, description, COURSE_OFF_STATUS,
-											session.getEid(), canonicalCourseId,
-											session.getStartDate(), session
-											.getEndDate(), lang, career,
-											credits, requirements);
-							courseOfferingSet.add(courseOff);
 						} else {
-							// We update
-							courseOff =
-									cmService.getCourseOffering(courseOfferingId);
-							courseOff.setTitle(title);
-							courseOff.setDescription(description);
-							courseOff.setEndDate(session.getEndDate());
-							courseOff.setStartDate(session.getStartDate());
-							courseOff.setStatus(COURSE_OFF_STATUS);
-							courseOff.setAcademicSession(session);
-							courseOfferingSet.add(courseOff);
-							courseOff.setLang(lang);
-							courseOff.setAcademicCareer(career);
-							courseOff.setCredits(credits);
-							courseOff.setRequirements(requirements);
-							cmAdmin.updateCourseOffering(courseOff);
+							// we update
+							canCourse = cmService.getCanonicalCourse(canonicalCourseId);
+							canCourse.setDescription(description);
+							canCourse.setTitle(title);
 						}
+
+						// Check wether there is a directory site
+						//hasDirectorySite(canCourse);
 
 						if (cmService.isCourseSetDefined(courseSetId)) {
-							cmAdmin.removeCourseOfferingFromCourseSet(courseSetId,
-									courseOfferingId);
-							cmAdmin.addCourseOfferingToCourseSet(courseSetId,
-									courseOfferingId);
+							cmAdmin.removeCanonicalCourseFromCourseSet(courseSetId,
+									canonicalCourseId);
+							cmAdmin.addCanonicalCourseToCourseSet(courseSetId,
+									canonicalCourseId);
 						}
+						// create course offering
+						session = cmService.getAcademicSession(coursEntry.getStrmId());
+						CourseOffering courseOff;
+						if (cmService.isAcademicSessionDefined(coursEntry.getStrmId())) {
+							courseOfferingId = getCourseOfferingId(coursEntry);
+							lang = coursEntry.getLangue();
+							typeEvaluation = coursEntry.getTypeEvaluation();
+							credits = coursEntry.getUnitsMinimum();
+							ProgrammeEtudesMapEntry programmeEtudesMapEntry =
+									programmeEtudesMap.get(coursEntry.getAcadCareer());
+							RequirementsCoursMapEntry requirementsCoursMapEntry =
+									requirementsCoursMap.get(coursEntry.getCourseId());
+							try {
+								requirements = requirementsCoursMapEntry.getDescription(lang);
+							} catch (NullPointerException e) {
+								//							log.warn("requirementsCoursMapEntry is null for course"
+								//									+ canonicalCourseId);
+								requirements = null;
+							}
+							career = programmeEtudesMapEntry.getAcadCareer();
 
-						// Add section for sharable site
-						createOrUpdateSpecialCourseSection(coursEntry);
+							if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
+								courseOff =
+										cmAdmin.createCourseOffering(courseOfferingId,
+												title, description, COURSE_OFF_STATUS,
+												session.getEid(), canonicalCourseId,
+												session.getStartDate(), session
+														.getEndDate(), lang, career,
+												credits, requirements);
+								courseOfferingSet.add(courseOff);
+							} else {
+								// We update
+								courseOff =
+										cmService.getCourseOffering(courseOfferingId);
+								courseOff.setTitle(title);
+								courseOff.setDescription(description);
+								courseOff.setEndDate(session.getEndDate());
+								courseOff.setStartDate(session.getStartDate());
+								courseOff.setStatus(COURSE_OFF_STATUS);
+								courseOff.setAcademicSession(session);
+								courseOfferingSet.add(courseOff);
+								courseOff.setLang(lang);
+								courseOff.setAcademicCareer(career);
+								courseOff.setCredits(credits);
+								courseOff.setRequirements(requirements);
+								cmAdmin.updateCourseOffering(courseOff);
+							}
 
-						// create course section
-						category = coursEntry.getAcadOrg();
-						courseSectionId = getCourseSectionId(coursEntry);
-						Section newSection = null;
-						if (!cmService.isSectionDefined(courseSectionId)) {
+							if (cmService.isCourseSetDefined(courseSetId)) {
+								cmAdmin.removeCourseOfferingFromCourseSet(courseSetId,
+										courseOfferingId);
+								cmAdmin.addCourseOfferingToCourseSet(courseSetId,
+										courseOfferingId);
+							}
 
-							newSection =
-									cmAdmin.createSection(courseSectionId, title,
-											description, category, null,
-											courseOfferingId, null, lang, typeEvaluation, coursEntry.getInstructionMode() );
+							// Add section for sharable site
+							createOrUpdateSpecialCourseSection(coursEntry);
 
-						} else {
-							// We update
-							newSection = cmService.getSection(courseSectionId);
-							newSection.setCategory(category);
-							newSection.setDescription(description);
-							newSection.setTitle(title);
-							newSection.setLang(lang);
-							newSection.setTypeEvaluation(typeEvaluation);
-							newSection.setInstructionMode(coursEntry.getInstructionMode());
-							cmAdmin.updateSection(newSection);
-						}
+							// create course section
+							category = coursEntry.getAcadOrg();
+							courseSectionId = getCourseSectionId(coursEntry);
+							Section newSection = null;
+							if (!cmService.isSectionDefined(courseSectionId)) {
 
-						// INFO: Create the enrollment set as soon as the section
-						// exists so the students
-						// can see the site even though the teacher is not in the
-						// system yet.
-						String enrollmentSetId =
-								getCourseSectionEnrollmentSetId(coursEntry);
-						if (newSection.getEnrollmentSet() == null) {
+								newSection =
+										cmAdmin.createSection(courseSectionId, title,
+												description, category, null,
+												courseOfferingId, null, lang, typeEvaluation, coursEntry.getInstructionMode());
 
-							// Create the enrollment set
-							EnrollmentSet enrollmentSet = null;
+							} else {
+								// We update
+								newSection = cmService.getSection(courseSectionId);
+								newSection.setCategory(category);
+								newSection.setDescription(description);
+								newSection.setTitle(title);
+								newSection.setLang(lang);
+								newSection.setTypeEvaluation(typeEvaluation);
+								newSection.setInstructionMode(coursEntry.getInstructionMode());
+								cmAdmin.updateSection(newSection);
+							}
 
-							if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
-								try {
+							// INFO: Create the enrollment set as soon as the section
+							// exists so the students
+							// can see the site even though the teacher is not in the
+							// system yet.
+							String enrollmentSetId =
+									getCourseSectionEnrollmentSetId(coursEntry);
+							if (newSection.getEnrollmentSet() == null) {
+
+								// Create the enrollment set
+								EnrollmentSet enrollmentSet = null;
+
+								if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
+									try {
+										enrollmentSet =
+												cmAdmin.createEnrollmentSet(
+														enrollmentSetId, title,
+														description, courseSetId,
+														CREDITS, courseOfferingId,
+														new HashSet<String>());
+									} catch (IdExistsException e) {
+										log.info(enrollmentSetId + " does not exist");
+									}
+								} else
 									enrollmentSet =
-											cmAdmin.createEnrollmentSet(
-													enrollmentSetId, title,
-													description, courseSetId,
-													CREDITS, courseOfferingId,
-													new HashSet<String>());
-								} catch (IdExistsException e) {
-                                    log.info(enrollmentSetId + " does not exist");
+											cmService.getEnrollmentSet(enrollmentSetId);
+								newSection.setEnrollmentSet(enrollmentSet);
+								cmAdmin.updateSection(newSection);
+							}
+
+						}
+
+					} else {
+						// section de cours annulée
+						courseOfferingId = getCourseOfferingId(coursEntry);
+						courseSectionId = getCourseSectionId(coursEntry);
+						try {
+							Section section = cmService.getSection(courseSectionId);
+							String siteId = getSiteName(section);
+							boolean siteExist = osylSiteService.siteExists(siteId);
+							if (siteExist) {
+								Site site = siteService.getSite(siteId);
+								if (osylSiteService.hasBeenPublished(siteId)) {
+									osylPublishService.unpublish(siteId, webappDir);
 								}
-							} else
-								enrollmentSet =
-								cmService.getEnrollmentSet(enrollmentSetId);
-							newSection.setEnrollmentSet(enrollmentSet);
-							cmAdmin.updateSection(newSection);
-						}
-
-					}
-
-				} else {
-					// section de cours annulée
-					courseOfferingId = getCourseOfferingId(coursEntry);
-					courseSectionId = getCourseSectionId(coursEntry);
-					try {
-						Section section = cmService.getSection(courseSectionId);
-						String siteId = getSiteName(section);
-						boolean siteExist = osylSiteService.siteExists(siteId);
-						if (siteExist) {
-							Site site = siteService.getSite(siteId);
-							if (osylSiteService.hasBeenPublished(siteId)) {
-								osylPublishService.unpublish(siteId, webappDir);
+								if (site.getProviderGroupId() != null
+										&& !"".equals(site.getProviderGroupId())) {
+									osylManagerService.dissociateFromCM(siteId);
+								}
 							}
-							if (site.getProviderGroupId() != null
-									&& !"".equals(site.getProviderGroupId())) {
-								osylManagerService.dissociateFromCM(siteId);
-							}
+						} catch (Exception e) {
+							log.info(courseSectionId + " does not exist");
 						}
-					} catch (Exception e) {
-                        log.info(courseSectionId + " does not exist");
 					}
 				}
 			}
@@ -670,44 +677,47 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				detailSessionMap.values().iterator();
 
 		while (sessions.hasNext()) {
+
 			sessionEntry = (DetailSessionsMapEntry) sessions.next();
-			eid = sessionEntry.getUniqueKey();
-			description = sessionEntry.getDescAnglais();
-			try {
-				startDate =
-						DateFormat.getDateInstance().parse(
-								sessionEntry.getBeginDate());
-				title = getSessionName(eid, startDate);
-				endDate =
-						DateFormat.getDateInstance().parse(
-								sessionEntry.getEndDate());
-			} catch (ParseException e) {
-                log.info (sessionEntry + "does not contain valid dates");
-			}
 
-			if (!cmService.isAcademicSessionDefined(eid)) {
-				aSession =
-						cmAdmin.createAcademicSession(eid, title, description,
-								startDate, endDate);
-			} else {
-				// We update
-				aSession = cmService.getAcademicSession(eid);
-				aSession.setDescription(description);
-				aSession.setEndDate(endDate);
-				aSession.setStartDate(startDate);
-				aSession.setTitle(title);
-				cmAdmin.updateAcademicSession(aSession);
-			}
+			if (isSynchedTheOldWay(Integer.parseInt(sessionEntry.getStrm()), null)) {
+				eid = sessionEntry.getUniqueKey();
+				description = sessionEntry.getDescAnglais();
+				try {
+					startDate =
+							DateFormat.getDateInstance().parse(
+									sessionEntry.getBeginDate());
+					title = getSessionName(eid, startDate);
+					endDate =
+							DateFormat.getDateInstance().parse(
+									sessionEntry.getEndDate());
+				} catch (ParseException e) {
+					log.info(sessionEntry + "does not contain valid dates");
+				}
 
-			if (currentSessions == null) {
-				currentSessions = new ArrayList<String>();
-			}
-			if ((now.compareTo(startDate)) >= 0 && now.compareTo(endDate) <= 0) {
-				currentSessions.add(aSession.getEid());
-			} else
-				currentSessions.remove(aSession.getEid());
-			cmAdmin.setCurrentAcademicSessions(currentSessions);
+				if (!cmService.isAcademicSessionDefined(eid)) {
+					aSession =
+							cmAdmin.createAcademicSession(eid, title, description,
+									startDate, endDate);
+				} else {
+					// We update
+					aSession = cmService.getAcademicSession(eid);
+					aSession.setDescription(description);
+					aSession.setEndDate(endDate);
+					aSession.setStartDate(startDate);
+					aSession.setTitle(title);
+					cmAdmin.updateAcademicSession(aSession);
+				}
 
+				if (currentSessions == null) {
+					currentSessions = new ArrayList<String>();
+				}
+				if ((now.compareTo(startDate)) >= 0 && now.compareTo(endDate) <= 0) {
+					currentSessions.add(aSession.getEid());
+				} else
+					currentSessions.remove(aSession.getEid());
+				cmAdmin.setCurrentAcademicSessions(currentSessions);
+			}
 		}
 	}
 
@@ -940,21 +950,23 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 		try{
 			while (sessions.hasNext()) {
 				sessionEntry = sessions.next();
-				sessionId = sessionEntry.getUniqueKey();
-				if (actualStartDate == null)
-	    		    actualStartDate =
-	    			    DateFormat.getDateInstance().parse(
-	    				    sessionEntry.getBeginDate());
-	    		if (cmService.isAcademicSessionDefined(sessionId)) {
-	    		    academicSession = cmService.getAcademicSession(sessionId);
-	    		    academicSessions.add(academicSession);
-	    		}
 
-	    		if (!sessions.hasNext())
-	    		    actualEndIntervalDate =
-	    			    DateFormat.getDateInstance().parse(
-	    				    sessionEntry.getEndDate());
+				if (isSynchedTheOldWay(Integer.parseInt(sessionEntry.getStrm()), null)) {
+					sessionId = sessionEntry.getUniqueKey();
+					if (actualStartDate == null)
+						actualStartDate =
+								DateFormat.getDateInstance().parse(
+										sessionEntry.getBeginDate());
+					if (cmService.isAcademicSessionDefined(sessionId)) {
+						academicSession = cmService.getAcademicSession(sessionId);
+						academicSessions.add(academicSession);
+					}
 
+					if (!sessions.hasNext())
+						actualEndIntervalDate =
+								DateFormat.getDateInstance().parse(
+										sessionEntry.getEndDate());
+				}
 			}
       	} catch (ParseException e) {
             log.info (sessionEntry + " does not have valid dates");
@@ -989,6 +1001,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 					enrollmentS = cmService.getEnrollmentSets(courseOfferingId);
 
 					for (EnrollmentSet es : enrollmentS) {
+						if (isSynchedTheOldWay(Integer.parseInt(session.getEid()), course.getAcademicCareer()))
 						enrollmentSetId = es.getEid();
 						enrollments = cmService.getEnrollments(enrollmentSetId);
 						for (Enrollment e : enrollments) {
@@ -1039,36 +1052,39 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 
 				enrollmentSet = null;
 				enrollmentSetId = null;
-				try {
-					coursSection =
-							cmService.getSection(getCourseSectionId(cours));
 
-					enrollmentSet = coursSection.getEnrollmentSet();
-					if (enrollmentSet != null)
-						enrollmentSetId = enrollmentSet.getEid();
+				if (isSynchedTheOldWay(Integer.parseInt(cours.getStrm()), cours.getAcadCareer())) {
+					try {
+						coursSection =
+								cmService.getSection(getCourseSectionId(cours));
 
-				} catch (IdNotFoundException e) {
-					log.error("Il n'y a pas d'enrollment associe pour le "
-							+ enrollmentSetId);
-				}
+						enrollmentSet = coursSection.getEnrollmentSet();
+						if (enrollmentSet != null)
+							enrollmentSetId = enrollmentSet.getEid();
 
-				if (enrollmentSetId != null)
-					// The student is not enrolled
-					if (!cmService.isEnrolled(userId, enrollmentSetId)) {
-						// new enrollment: we create it
-						enrollment =
-								cmAdmin.addOrUpdateEnrollment(userId,
-										enrollmentSetId, ENROLLMENT_STATUS,
-										CREDITS, GRADING_SCHEME);
-						// the enrollment was been removed but it is added again
-						if (enrollment.isDropped())
-							enrollment.setDropped(false);
-					} else {
-						// the student is already enrolled
-						if (actualStudents != null) {
-							actualStudents.remove(userId + enrollmentSetId);
-						}
+					} catch (IdNotFoundException e) {
+						log.error("Il n'y a pas d'enrollment associe pour le "
+								+ enrollmentSetId);
 					}
+
+					if (enrollmentSetId != null)
+						// The student is not enrolled
+						if (!cmService.isEnrolled(userId, enrollmentSetId)) {
+							// new enrollment: we create it
+							enrollment =
+									cmAdmin.addOrUpdateEnrollment(userId,
+											enrollmentSetId, ENROLLMENT_STATUS,
+											CREDITS, GRADING_SCHEME);
+							// the enrollment was been removed but it is added again
+							if (enrollment.isDropped())
+								enrollment.setDropped(false);
+						} else {
+							// the student is already enrolled
+							if (actualStudents != null) {
+								actualStudents.remove(userId + enrollmentSetId);
+							}
+						}
+				}
 			}
 
 		}
@@ -1079,33 +1095,40 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 		enrollment = null;
 		Set<String> keys = actualStudents.keySet();
 		Set<String> realms = null;
+		CourseOffering courseOff = null;
+		AcademicSession session = null;
+
 		for (String key : keys) {
 			enrollment = actualStudents.get(key);
 			enrollment.setDropped(true);
 			userId = enrollment.getUserId();
 			enrollmentSetId = key.substring(userId.length());
+			courseOff = cmService.getCourseOffering((cmService.getSection(enrollmentSetId)).getCourseOfferingEid());
+			session = courseOff.getAcademicSession();
 
-			if (cmAdmin.removeEnrollment(userId, enrollmentSetId)) {
-				realms = authzGroupService.getAuthzGroupIds(enrollmentSetId);
+			if (isSynchedTheOldWay(Integer.parseInt(session.getEid()), courseOff.getAcademicCareer())) {
+				if (cmAdmin.removeEnrollment(userId, enrollmentSetId)) {
+					realms = authzGroupService.getAuthzGroupIds(enrollmentSetId);
 
-				if (realms != null && realms.size() > 0)
-					for (String groupId : realms) {
-						try {
-							group = authzGroupService.getAuthzGroup(groupId);
-							group.removeMember(userDirectoryService
-									.getUserId(userId));
-							authzGroupService.save(group);
-						} catch (GroupNotDefinedException e) {
-                            log.info(groupId + " is not defined.");
-						} catch (UserNotDefinedException e) {
-                            log.error(userId + "is not defined");
-						} catch (AuthzPermissionException e) {
-                            log.error("You are not allowed to remove " + userId + " from " + groupId);
+					if (realms != null && realms.size() > 0)
+						for (String groupId : realms) {
+							try {
+								group = authzGroupService.getAuthzGroup(groupId);
+								group.removeMember(userDirectoryService
+										.getUserId(userId));
+								authzGroupService.save(group);
+							} catch (GroupNotDefinedException e) {
+								log.info(groupId + " is not defined.");
+							} catch (UserNotDefinedException e) {
+								log.error(userId + "is not defined");
+							} catch (AuthzPermissionException e) {
+								log.error("You are not allowed to remove " + userId + " from " + groupId);
+							}
 						}
-					}
-				log.info("L'utilisateur " + userId + " du cours "
-						+ enrollmentSetId + " a ete enleve");
+					log.info("L'utilisateur " + userId + " du cours "
+							+ enrollmentSetId + " a ete enleve");
 
+				}
 			}
 		}
 	}

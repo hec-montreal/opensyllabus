@@ -39,10 +39,22 @@ public interface OsylAbstractQuartzJob extends Job{
     
     public final static String DIRECTORY_SITE = "directory";
     
-    public static final int FINAL_DATE = 2173;
-
     public PropertyResourceBundle getResouceBundle(ContentResource resource);
     
-    public List<String> getActiveTerms(); 
+    public List<String> getActiveTerms();
+
+    public boolean isBeforeA2017(int strm);
+
+    public final static String CERT_PILOTE_A2017 = "CERT";
+
+    /**
+     * Method used to see if the data value is synched with the old synchronizing job
+     *
+     * @param strm
+     * @return
+     */
+    public boolean isSynchedTheOldWay (int strm, String department);
+
+
 }
 
