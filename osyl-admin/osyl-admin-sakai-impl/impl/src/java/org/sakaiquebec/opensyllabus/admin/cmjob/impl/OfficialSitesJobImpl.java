@@ -78,6 +78,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	List<String> programs = adminConfigService.getPrograms();
 	List<String> servEns = adminConfigService.getServEns();
 	List<String> piloteE2017 = adminConfigService.getPiloteE2017();
+	List<String> piloteA2017 = adminConfigService.getPiloteA2017();
 
 	// If we have an interval of time, we take the courses defined in that
 	// period of time
@@ -160,8 +161,9 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	if (courseOffs != null) {
 	    for (CourseOffering courseOff : courseOffs) {
 
-	    	//Continue if course is to be in E2017 pilote
-			if (adminConfigService.inE2017Pilote(courseOff.getEid(), piloteE2017))
+	    	//Continue if course is to be in E2017 pilote or A2017 pilote
+			if (adminConfigService.inE2017Pilote(courseOff.getEid(), piloteE2017) ||
+					adminConfigService.inA2017Pilote(courseOff.getEid(), piloteA2017))
 				continue;
 
 

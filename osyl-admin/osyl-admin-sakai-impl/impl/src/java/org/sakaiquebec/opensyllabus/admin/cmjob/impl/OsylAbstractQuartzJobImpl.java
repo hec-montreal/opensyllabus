@@ -91,7 +91,9 @@ public abstract class OsylAbstractQuartzJobImpl implements
     protected UsageSessionService usageSessionService;
     protected UserDirectoryService userDirectoryService;
 
-    public static final int FINAL_DATE = 2173;
+    public static final int A2017_SESSION_LIMIT = 2173;
+
+    public static final int H2018_SESSION_LIMIT = 2173;
 
     public void setAdminConfigService(ConfigurationService adminConfigService) {
 	this.adminConfigService = adminConfigService;
@@ -308,14 +310,18 @@ public abstract class OsylAbstractQuartzJobImpl implements
     }
 
     public boolean isBeforeA2017(int strm){
-        return  FINAL_DATE >= strm;
+        return  A2017_SESSION_LIMIT > strm;
+    }
+
+    public boolean isBeforeH2018(int strm){
+        return  H2018_SESSION_LIMIT > strm;
     }
 
     public boolean isSynchedTheOldWay (int strm, String department){
         boolean oldWay = true;
             if ( department == null)
-                return FINAL_DATE >= strm;
+                return A2017_SESSION_LIMIT >= strm;
             else
-                return FINAL_DATE >= strm && !department.equalsIgnoreCase(CERT_PILOTE_A2017);
+                return A2017_SESSION_LIMIT >= strm && !department.equalsIgnoreCase(CERT_PILOTE_A2017);
     }
 }

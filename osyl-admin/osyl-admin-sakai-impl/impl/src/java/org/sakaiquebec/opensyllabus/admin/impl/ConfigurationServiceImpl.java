@@ -73,6 +73,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private List <String> piloteE2017 = null;
 
+	private List <String> piloteA2017 = null;
+
     private String removedRole = null;
 
     private String functionsRole = null;
@@ -248,7 +250,29 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		return false;
 	}
 
-    private void setEndDate(String endDate) {
+	private void setPiloteA2017 (String piloteA2017){
+		this.piloteA2017 = new ArrayList<String>();
+		if (piloteA2017 != null && !piloteA2017.isEmpty()){
+			this.piloteA2017 = new ArrayList<String>();
+			Collections.addAll(this.piloteA2017, piloteA2017.split(","));
+		}
+	}
+
+	@Override
+	public List<String> getPiloteA2017() {
+		return piloteA2017;
+	}
+
+	public boolean inA2017Pilote (String courseOfferingId, List<String> piloteA2017){
+		for (String exception: piloteA2017){
+			exception = exception + "2173";
+			if (courseOfferingId.startsWith(exception ))
+				return true;
+		}
+		return false;
+	}
+
+	private void setEndDate(String endDate) {
 	this.endDate = endDate;
     }
 
@@ -462,6 +486,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    setPrograms(null);
 		    setServEns(null);
 		    setPiloteE2017(null);
+		    setPiloteA2017(null);
 
 		}
 		if (fileName.contains(FUNCTIONSSCONFIGFILE)) {
@@ -590,6 +615,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		String programs = retrieveParameter(document, PROGRAMS);
 		String servEns = retrieveParameter(document, SERVENS);
 		String piloteE2017 = retrieveParameter(document, PILOTE_E2017);
+		String piloteA2017 = retrieveParameter(document, PILOTE_A2017);
 
 		setCourses(courses);
 		setStartDate(startDate);
@@ -597,6 +623,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		setPrograms(programs);
 		setServEns(servEns);
 		setPiloteE2017(piloteE2017);
+		setPiloteA2017(piloteA2017);
 	    }
 
 	    if (configurationXml.contains(ROLE_FOLDER)) {

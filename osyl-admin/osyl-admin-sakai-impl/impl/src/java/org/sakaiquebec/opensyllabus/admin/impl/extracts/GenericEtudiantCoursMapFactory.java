@@ -79,8 +79,6 @@ public class GenericEtudiantCoursMapFactory {
 		entry = map.get(emplId);
 	    } else {
 		entry = new EtudiantCoursMapEntry(emplId);
-			//ZCII-2783: Do not sync data during and after A2017
-			//if (OsylAbstractQuartzJobImpl.isBeforeA2017(Integer.parseInt(strm)))
 		map.put(entry);
 	    }
 

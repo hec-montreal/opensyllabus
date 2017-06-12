@@ -295,7 +295,6 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 			coursEntry = (DetailCoursMapEntry) cours.next();
 
 			if (isSynchedTheOldWay(Integer.parseInt(coursEntry.getStrm()), coursEntry.getAcadCareer())) {
-				System.out.println("Le cours " + coursEntry.toString());
 				// Truncate title to 100 bytes max
 
 				//we do not make any processing for ZC1 courses
@@ -992,25 +991,29 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				sessionId = session.getEid();
 				courseOff =
 						cmService.findCourseOfferings(courseSetId, sessionId);
-				courseOfferings.addAll(courseOff);
+
 
 				for (CourseOffering course : courseOff) {
 					courseOfferingId = course.getEid();
 
-					// We retrieve the enrollments sets and enrollments
-					enrollmentS = cmService.getEnrollmentSets(courseOfferingId);
+					if (isSynchedTheOldWay(Integer.parseInt(session.getEid()), course.getAcademicCareer())) {
+						courseOfferings.add(course);
 
-					for (EnrollmentSet es : enrollmentS) {
-						if (isSynchedTheOldWay(Integer.parseInt(session.getEid()), course.getAcademicCareer()))
-						enrollmentSetId = es.getEid();
-						enrollments = cmService.getEnrollments(enrollmentSetId);
-						for (Enrollment e : enrollments) {
-							student = e.getUserId() + enrollmentSetId;
-							// We only consider students enrolled
-							// if removed they stay in database with dropped =
-							// true
-							if (!e.isDropped())
-								actualStudents.put(student, e);
+						// We retrieve the enrollments sets and enrollments
+						enrollmentS = cmService.getEnrollmentSets(courseOfferingId);
+
+						for (EnrollmentSet es : enrollmentS) {
+							if (isSynchedTheOldWay(Integer.parseInt(session.getEid()), course.getAcademicCareer()))
+								enrollmentSetId = es.getEid();
+							enrollments = cmService.getEnrollments(enrollmentSetId);
+							for (Enrollment e : enrollments) {
+								student = e.getUserId() + enrollmentSetId;
+								// We only consider students enrolled
+								// if removed they stay in database with dropped =
+								// true
+								if (!e.isDropped())
+									actualStudents.put(student, e);
+							}
 						}
 					}
 				}

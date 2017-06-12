@@ -102,9 +102,7 @@ public class GenericDetailCoursMapFactory {
 				continue;
 		//END DEBUG MODE-END DEBUG MODE-END DEBUG MODE-END DEBUG MODE-END DEBUG MODE
 		//--------------------------------------------------------------------------
-		//ZCII-2783: Do not sync data during and after A2017
-		//if (OsylAbstractQuartzJobImpl.isBeforeA2017(Integer.parseInt(entry.getStrm())))
-	    map.put(entry);
+    	map.put(entry);
 	}
 
 	// ferme le reader

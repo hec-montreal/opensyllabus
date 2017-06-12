@@ -45,6 +45,8 @@ public interface OsylAbstractQuartzJob extends Job{
 
     public boolean isBeforeA2017(int strm);
 
+    public boolean isBeforeH2018(int strm);
+
     public final static String CERT_PILOTE_A2017 = "CERT";
 
     /**
