@@ -114,7 +114,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 					event.getSection());
 
 			//Continue if course is to be in E2017 pilote or A2017 pilote
-			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) ||
+			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) &&
 					adminConfigService.inA2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteA2017))
 				continue;
 
@@ -202,7 +202,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		for (HecEvent event : eventsUpdate) {
 
 			//Continue if course is to be in E2017 pilote or pilote A2017
-			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) ||
+			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) &&
 					adminConfigService.inA2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteA2017)) {
 				log.debug("Skipping event for " + event.getCatalogNbr()+event.getSessionId() + " because it is in section-aware pilot.");
 				continue;
