@@ -870,6 +870,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 						GenericRequirementsCoursMapFactory.buildMap(directory
                                 + File.separator + REQUIREMENTS, getDebugCourses());
 
+/*
 				// We first retrieve the current values in the system for the same
 				log.info("Finished reading extracts. Now updating the Course Management");
 				// time period as the extracts
@@ -904,6 +905,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				// We synchronize students to their classes
 				syncEnrollments();
 				log.info("Enrollments updated successfully");
+*/
 
 				// course events synch
 				courseEventSynchroJob.execute(directory + File.separator

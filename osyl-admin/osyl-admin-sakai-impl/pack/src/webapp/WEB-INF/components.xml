@@ -432,6 +432,24 @@
 	</bean>
 
 	<bean
+			id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.courseEventSynchroJob"
+			class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+			init-method="init">
+
+		<property name="beanId">
+			<value>courseEventSynchroJob</value>
+		</property>
+
+		<property name="jobName">
+			<value>Course event</value>
+		</property>
+
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osyltransferjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		init-method="init">
