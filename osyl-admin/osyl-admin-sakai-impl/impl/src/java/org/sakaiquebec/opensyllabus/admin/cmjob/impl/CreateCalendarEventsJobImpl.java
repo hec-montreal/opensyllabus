@@ -31,9 +31,6 @@ import org.sakaiproject.calendar.api.Calendar;
 import org.sakaiproject.calendar.api.CalendarEvent;
 import org.sakaiproject.calendar.api.CalendarEventEdit;
 import org.sakaiproject.calendar.api.CalendarService;
-import org.sakaiproject.coursemanagement.api.CourseOffering;
-import org.sakaiproject.coursemanagement.api.Section;
-import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
@@ -114,7 +111,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 					event.getSection());
 
 			//Continue if course is to be in E2017 pilote or A2017 pilote
-			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) &&
+			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) ||
 					adminConfigService.inA2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteA2017))
 				continue;
 
@@ -202,15 +199,9 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		for (HecEvent event : eventsUpdate) {
 
 			//Continue if course is to be in E2017 pilote or pilote A2017
-			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) &&
+			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) ||
 					adminConfigService.inA2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteA2017)) {
 				log.debug("Skipping event for " + event.getCatalogNbr()+event.getSessionId() + " because it is in section-aware pilot.");
-				continue;
-			}
-
-			//ZCII-2821: Do not sync data during and after A2017
-			if (!isBeforeA2017(Integer.parseInt(event.getSessionId()))) {
-				log.debug("Skipping event for " + event.getCatalogNbr() + event.getSessionId() + " because it's session is equal to or after A2017.");
 				continue;
 			}
 
@@ -220,6 +211,7 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 					event.getSessionCode(),
 					event.getSection());
 
+			System.out.println(" Create calendar event update " + siteId);
 			boolean updateSuccess = false;
 
 			if (!siteId.equals(previousSiteId))
