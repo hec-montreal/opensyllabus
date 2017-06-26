@@ -441,7 +441,7 @@
 		</property>
 
 		<property name="jobName">
-			<value>Course event</value>
+			<value>Course event sync (included in OsylCMJob)</value>
 		</property>
 
 		<property name="schedulerManager">
