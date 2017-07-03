@@ -79,8 +79,8 @@ public class CourseEventSynchroJobImpl implements CourseEventSynchroJob {
 		log.info("Chargement de la table HEC_EVENT_EXTRACT avec les événements du fichier");
 		jdbcTemplate
 				.batchUpdate(
-						"insert into HEC_EVENT_EXTRACT (CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, SEQ, CLASS_EXAM_TYPE, DATE_HEURE_DEBUT, DATE_HEURE_FIN, FACILITY_ID, DESCR_FACILITY, DESCR) "
-								+ "values (?, ?, ?, ?, ?, ?, to_date(?, 'yyyy-mm-dd hh24:mi'),  to_date(?, 'yyyy-mm-dd hh24:mi'), ?, ?, ?)",
+						"insert into HEC_EVENT_EXTRACT (CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, SEQ, CLASS_EXAM_TYPE, DATE_HEURE_DEBUT, DATE_HEURE_FIN, FACILITY_ID, DESCR_FACILITY, DESCR, INSTRUCTION_MODE) "
+								+ "values (?, ?, ?, ?, ?, ?, to_date(?, 'yyyy-mm-dd hh24:mi'),  to_date(?, 'yyyy-mm-dd hh24:mi'), ?, ?, ?, ?)",
 						new BatchPreparedStatementSetter() {
 
 							@Override
@@ -110,6 +110,8 @@ public class CourseEventSynchroJobImpl implements CourseEventSynchroJob {
 										.indexOf("DESCR_FACILITY")]);
 								ps.setString(11, columnValues[columnNames
 										.indexOf("DESCR")]);
+								ps.setString(12, columnValues[columnNames
+										.indexOf(("INSTRUCTION_MODE"))]);
 							}
 
 							@Override
@@ -129,8 +131,8 @@ public class CourseEventSynchroJobImpl implements CourseEventSynchroJob {
 
 		log.info("Ajout des nouveaux événements");
 		jdbcTemplate
-				.update("insert into HEC_EVENT (CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, SEQ, CLASS_EXAM_TYPE, DATE_HEURE_DEBUT, DATE_HEURE_FIN, FACILITY_ID, DESCR_FACILITY, DESCR, STATE)"
-						+ "select CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, SEQ, CLASS_EXAM_TYPE, DATE_HEURE_DEBUT, DATE_HEURE_FIN, FACILITY_ID, DESCR_FACILITY, DESCR, 'A' "
+				.update("insert into HEC_EVENT (CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, SEQ, CLASS_EXAM_TYPE, DATE_HEURE_DEBUT, DATE_HEURE_FIN, FACILITY_ID, DESCR_FACILITY, DESCR, STATE, INSTRUCTION_MODE)"
+						+ "select CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, SEQ, CLASS_EXAM_TYPE, DATE_HEURE_DEBUT, DATE_HEURE_FIN, FACILITY_ID, DESCR_FACILITY, DESCR, 'A', INSTRUCTION_MODE "
 						+ "from HEC_EVENT_EXTRACT "
 						+ "where (CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, SEQ, CLASS_EXAM_TYPE) not in ("
 						+ "select CATALOG_NBR, STRM, SESSION_CODE, CLASS_SECTION, SEQ, CLASS_EXAM_TYPE from HEC_EVENT)");
