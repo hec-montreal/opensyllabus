@@ -21,8 +21,6 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
@@ -34,6 +32,8 @@ import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CreateSiteHierarchyJob;
+
+import java.util.List;
 
 /**
 * Create a hierarchy for HEC course site
@@ -97,11 +97,7 @@ public class CreateSiteHierarchyJobImpl extends OsylAbstractQuartzJobImpl  imple
 
 	    site = allSites.get(i);
 
-
-		if (site.getTitle().indexOf(".E2017") == -1) {
-			continue;
-		}
-	    if (site.getProviderGroupId() != null) {
+		if (site.getProviderGroupId() != null) {
 		
 		 Section section = null;
 
