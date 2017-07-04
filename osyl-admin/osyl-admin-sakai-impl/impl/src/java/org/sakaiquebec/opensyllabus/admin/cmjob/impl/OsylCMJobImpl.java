@@ -151,6 +151,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 		// tenir compte des coordonnateurs actuel dans les sites pour savoir lesquels aller supprimer
 		Map<String, Set<String>> actualCoordinators = new HashMap<String, Set<String>>();
 		Set<String> addedCoordinators = new HashSet<String>();
+		String strm, strmEid;
 
 		for (String enrollmentSetId : profCoursMap.keySet()) {
 
@@ -160,9 +161,10 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				Section section = cmService.getSection(enrollmentSetId);
 				CourseOffering offering = cmService.getCourseOffering(section.getCourseOfferingEid());
 				EnrollmentSet enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
+				strmEid = offering.getAcademicSession().getEid();
+				strm = strmEid.substring(0,3);
 
-				if (isSynchedTheOldWay(Integer.parseInt(offering.getAcademicSession().getEid()), offering.getAcademicCareer())) {
-					System.out.println(profCoursEntry.toString());
+				if (isSynchedTheOldWay(Integer.parseInt(strm), offering.getAcademicCareer())) {
 					// add official instructors
 					enrollmentSet.setOfficialInstructors(profCoursEntry.getInstructors());
 					cmAdmin.updateEnrollmentSet(enrollmentSet);
@@ -248,8 +250,10 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 			Set<String> coordinatorsToRemove = entry.getValue();
 			CourseOffering courseOffering = cmService.getCourseOffering(courseId);
 			AcademicSession session = courseOffering.getAcademicSession();
+			strmEid = session.getEid();
+			strm = strmEid.substring(0,3);
 
-			if (isSynchedTheOldWay(Integer.parseInt(session.getEid()), courseOffering.getAcademicCareer())) {
+			if (isSynchedTheOldWay(Integer.parseInt(strm), courseOffering.getAcademicCareer())) {
 				if (coordinatorsToRemove.size() > 0) {
 					if (courseId.endsWith("00")) {
 						for (String coordinator : coordinatorsToRemove) {
@@ -942,7 +946,6 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 		List<AcademicSession> academicSessions =
 				new ArrayList<AcademicSession>();
 		AcademicSession academicSession;
-
 		Iterator<DetailSessionsMapEntry> sessions =
 				detailSessionMap.values().iterator();
 
@@ -981,7 +984,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 		Set<CourseOffering> courseOff = null;
 
 		Set<EnrollmentSet> enrollmentS = null;
-
+		String strm;
 
 		Set<Enrollment> enrollments = null;
 
@@ -991,19 +994,19 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				sessionId = session.getEid();
 				courseOff =
 						cmService.findCourseOfferings(courseSetId, sessionId);
-
+				strm = sessionId.substring(0,3);
 
 				for (CourseOffering course : courseOff) {
 					courseOfferingId = course.getEid();
 
-					if (isSynchedTheOldWay(Integer.parseInt(session.getEid()), course.getAcademicCareer())) {
+					if (isSynchedTheOldWay(Integer.parseInt(strm), course.getAcademicCareer())) {
 						courseOfferings.add(course);
 
 						// We retrieve the enrollments sets and enrollments
 						enrollmentS = cmService.getEnrollmentSets(courseOfferingId);
 
 						for (EnrollmentSet es : enrollmentS) {
-							if (isSynchedTheOldWay(Integer.parseInt(session.getEid()), course.getAcademicCareer()))
+							if (isSynchedTheOldWay(Integer.parseInt(strm), course.getAcademicCareer()))
 								enrollmentSetId = es.getEid();
 							enrollments = cmService.getEnrollments(enrollmentSetId);
 							for (Enrollment e : enrollments) {
@@ -1100,6 +1103,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 		Set<String> realms = null;
 		CourseOffering courseOff = null;
 		AcademicSession session = null;
+		String strm, strmEid;
 
 		for (String key : keys) {
 			enrollment = actualStudents.get(key);
@@ -1108,8 +1112,10 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 			enrollmentSetId = key.substring(userId.length());
 			courseOff = cmService.getCourseOffering((cmService.getSection(enrollmentSetId)).getCourseOfferingEid());
 			session = courseOff.getAcademicSession();
+			strmEid = session.getEid();
+			strm = strmEid.substring(0,3);
 
-			if (isSynchedTheOldWay(Integer.parseInt(session.getEid()), courseOff.getAcademicCareer())) {
+			if (isSynchedTheOldWay(Integer.parseInt(strm), courseOff.getAcademicCareer())) {
 				if (cmAdmin.removeEnrollment(userId, enrollmentSetId)) {
 					realms = authzGroupService.getAuthzGroupIds(enrollmentSetId);
 
