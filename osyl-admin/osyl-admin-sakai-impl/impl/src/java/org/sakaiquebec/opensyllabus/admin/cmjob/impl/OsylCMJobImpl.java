@@ -248,8 +248,15 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 		for (Map.Entry<String, Set<String>> entry : actualCoordinators.entrySet()) {
 			String courseId = entry.getKey();
 			Set<String> coordinatorsToRemove = entry.getValue();
-			CourseOffering courseOffering = cmService.getCourseOffering(courseId);
-			AcademicSession session = courseOffering.getAcademicSession();
+			AcademicSession session = null;
+			CourseOffering courseOffering = null;
+
+			if (courseId.endsWith("00")){
+				Section section = cmService.getSection(courseId);
+				courseOffering = cmService.getCourseOffering(section.getCourseOfferingEid());
+			}else
+				courseOffering = cmService.getCourseOffering(courseId);
+			session = courseOffering.getAcademicSession();
 			strmEid = session.getEid();
 			strm = strmEid.substring(0,3);
 
@@ -921,7 +928,9 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 						getAdminZoneCours2EMail(),
 						"Synchronization with PeopleSoft failed", message, null,
 						null, null);
+				e.printStackTrace();
                 log.info(message);
+
 			}
 
 			logoutFromSakai();
@@ -1043,7 +1052,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 		Iterator<EtudiantCoursMapEntry> etudiantCoursMap =
 				etudCoursMap.getEtudiants();
 
-		while (etudiantCoursMap.hasNext()) {
+			while (etudiantCoursMap.hasNext()) {
 			etudiantCoursEntry = etudiantCoursMap.next();
 			coursMap = etudiantCoursEntry.getCours();
 			userId = etudiantCoursEntry.getMatricule();
