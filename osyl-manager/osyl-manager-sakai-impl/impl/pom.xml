@@ -139,5 +139,10 @@
 			<artifactId>delegatedaccess-api</artifactId>
 			<version>3.0</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>ca.hec</groupId>
+            <artifactId>tenjin-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -21,11 +21,6 @@
 
 package org.sakaiquebec.opensyllabus.manager.api;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
@@ -33,6 +28,11 @@ import org.sakaiquebec.opensyllabus.shared.exception.SessionCompatibilityExcepti
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This is the service that provides the necessary methods to manage a course
@@ -173,7 +173,7 @@ public interface OsylManagerService {
 
     public List<CMAcademicSession> getAcademicSessions();
 
-    public void copySite(String siteFrom, String siteTo) throws Exception,
+    public String copySite(String siteFrom, String siteTo) throws Exception,
 	    OsylPermissionException;
 
     public void deleteSite(String siteId) throws OsylPermissionException,

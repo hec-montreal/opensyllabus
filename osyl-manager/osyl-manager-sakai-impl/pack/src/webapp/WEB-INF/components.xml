@@ -88,6 +88,10 @@
 			ref="org.sakaiproject.tool.api.ToolManager" />
 		<property name="projectLogic"
 			ref="org.sakaiproject.delegatedaccess.logic.ProjectLogic" />
+		<property name="syllabusService" ref="ca.hec.tenjin.api.SyllabusService" />
+		<property name="citationService"
+				  ref="org.sakaiproject.citation.api.CitationService" />
+
 	</bean>
 
 </beans>

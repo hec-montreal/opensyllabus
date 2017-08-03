@@ -21,31 +21,8 @@
 
 package org.sakaiquebec.opensyllabus.manager.impl;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.Vector;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
+import ca.hec.tenjin.api.SyllabusService;
+import ca.hec.tenjin.api.model.syllabus.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,36 +39,14 @@ import org.sakaiproject.citation.api.Citation;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.sakaiproject.content.api.ContentCollection;
-import org.sakaiproject.content.api.ContentCollectionEdit;
-import org.sakaiproject.content.api.ContentEntity;
-import org.sakaiproject.content.api.ContentHostingService;
-import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.content.api.ContentResourceEdit;
-import org.sakaiproject.coursemanagement.api.AcademicSession;
-import org.sakaiproject.coursemanagement.api.CanonicalCourse;
-import org.sakaiproject.coursemanagement.api.CourseManagementService;
-import org.sakaiproject.coursemanagement.api.CourseOffering;
-import org.sakaiproject.coursemanagement.api.CourseSet;
-import org.sakaiproject.coursemanagement.api.Enrollment;
-import org.sakaiproject.coursemanagement.api.EnrollmentSet;
-import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.content.api.*;
+import org.sakaiproject.coursemanagement.api.*;
 import org.sakaiproject.delegatedaccess.logic.ProjectLogic;
 import org.sakaiproject.delegatedaccess.model.SiteSearchResult;
-import org.sakaiproject.entity.api.EntityManager;
-import org.sakaiproject.entity.api.EntityProducer;
-import org.sakaiproject.entity.api.EntityTransferrer;
-import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.entity.api.*;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.NotificationService;
-import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.IdUsedException;
-import org.sakaiproject.exception.InUseException;
-import org.sakaiproject.exception.OverQuotaException;
-import org.sakaiproject.exception.PermissionException;
-import org.sakaiproject.exception.ServerOverloadException;
-import org.sakaiproject.exception.TypeException;
+import org.sakaiproject.exception.*;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
@@ -118,16 +73,15 @@ import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.exception.SessionCompatibilityException;
-import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
-import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
-import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
-import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
-import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
-import org.sakaiquebec.opensyllabus.shared.model.COSite;
+import org.sakaiquebec.opensyllabus.shared.model.*;
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 import org.xml.sax.ContentHandler;
+
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -158,7 +112,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     
     private final static String RESOURCES_TOOL_ID = "sakai.resources";
 
-    private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
+	private final static String TENJIN_TOOL_ID = "sakai.tenjin";
+
+	private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
 
     public final static String SHARABLE_SECTION = "00";
 
@@ -241,6 +197,17 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	this.osylContentService = osylContentService;
     }
 
+	public void setCitationService(CitationService citationService) {
+		this.citationService = citationService;
+	}
+
+	public CitationService citationService;
+
+    private SyllabusService syllabusService;
+
+    public void setSyllabusService (SyllabusService syllabusService){
+    	this.syllabusService = syllabusService;
+	}
     /**
      * Sakai usr session manager injected by Spring.
      */
@@ -2002,7 +1969,134 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return academicSession;
     }
 
-    public void copySite(String siteFrom, String siteTo) throws Exception {
+	public String copySite(String siteFrom, String siteTo) throws Exception {
+		// get the tool id list
+		List<String> oldSiteToolIdList = new Vector<String>();
+		List<String> newSiteToolIdList = new Vector<String>();
+		Site newSite = null;
+		Site oldSite = null;
+		String mainToolCopied = null;
+
+		newSite = siteService.getSite(siteTo);
+		oldSite = siteService.getSite(siteFrom);
+
+		// list all site tools which are displayed on its own page
+		@SuppressWarnings("unchecked")
+		List<SitePage> sitePages = oldSite.getPages();
+		if (sitePages != null) {
+			for (SitePage page : sitePages) {
+				@SuppressWarnings("unchecked")
+				List<ToolConfiguration> pageToolsList = page.getTools(0);
+				// we only handle one tool per page case
+				if (page.getLayout() == SitePage.LAYOUT_SINGLE_COL
+						&& pageToolsList.size() == 1) {
+					oldSiteToolIdList.add(pageToolsList.get(0).getToolId());
+				}
+			}
+		}
+
+		sitePages = newSite.getPages();
+		if (sitePages != null) {
+			for (SitePage page : sitePages) {
+				@SuppressWarnings("unchecked")
+				List<ToolConfiguration> pageToolsList = page.getTools(0);
+				// we only handle one tool per page case
+				if (page.getLayout() == SitePage.LAYOUT_SINGLE_COL
+						&& pageToolsList.size() == 1) {
+					newSiteToolIdList.add(pageToolsList.get(0).getToolId());
+				}
+			}
+		}
+
+		if (oldSiteToolIdList.contains("sakai.opensyllabus.tool") && newSiteToolIdList.contains("sakai.opensyllabus.tool")) {
+			copySiteWithOpenSyllabus(siteFrom, siteTo);
+			mainToolCopied = "OPENSYLLABUS";
+		}
+		if (oldSiteToolIdList.contains(TENJIN_TOOL_ID) && newSiteToolIdList.contains(TENJIN_TOOL_ID)) {
+			copySiteWithTenjin(newSiteToolIdList, oldSite, newSite);
+			mainToolCopied = "TENJIN";
+		}
+
+		return mainToolCopied;
+	}
+
+	private void copySiteWithTenjin(List<String> toolIdList, Site oldSite, Site newSite) throws Exception {
+
+ 		// import  tools
+		for (int i = 0; i < toolIdList.size(); i++) {
+			String toolId = (String) toolIdList.get(i);
+			if (!toolId.equalsIgnoreCase(RESOURCES_TOOL_ID)
+					&& !toolId.equalsIgnoreCase(VIA_TOOL_ID)
+					&& !toolId.equalsIgnoreCase(SCHEDULE_TOOL_ID)
+					&& !toolId.equalsIgnoreCase(CALENDAR_TOOL_ID)) {
+				String fromSiteId = oldSite.getId();
+				String toSiteId = newSite.getId();
+				transferCopyEntitiesMigrate(toolId, fromSiteId, toSiteId);
+			}
+		}
+
+		//For all syllabi in new site, copy resource and update like
+		List<Syllabus> syllabi = syllabusService.getSyllabusList(newSite.getId());
+		Syllabus structuredSyllabus = null;
+		for (Syllabus syllabus:syllabi){
+			structuredSyllabus = syllabusService.getSyllabus(syllabus.getId());
+			for (int i = 0; i < structuredSyllabus.getElements().size(); i++) {
+				updateResourcesLinks(structuredSyllabus.getElements().get(i), oldSite.getId(), newSite.getId());
+			}
+		}
+	}
+
+	private void updateResourcesLinks (AbstractSyllabusElement element, String oldSiteId, String newSiteId){
+    	Map<String, String> elements = element.getAttributes();
+		String resourceId, savedNewResourceId, newResourceId ;
+		String citationRefId, citationResourceId, newCitationResourceId, citationId, newCitationCollectionId;
+		ContentResourceEdit newCitationList = null, oldCitationList;
+		CitationCollection newCitationCollectionList, oldCitationCollectionList;
+    	if (elements != null){
+			try {
+			if (element instanceof SyllabusDocumentElement){
+				resourceId = elements.get("documentId");
+				newResourceId = (elements.get("documentId")).replace(oldSiteId, newSiteId);
+				savedNewResourceId = contentHostingService.copy(resourceId, newResourceId);
+				elements.put("documentId", savedNewResourceId);
+				syllabusService.saveOrUpdateElement(element);
+			}
+			if (element instanceof SyllabusCitationElement){
+				citationRefId = elements.get("citationId");
+				citationResourceId = citationRefId.substring(0,citationRefId.lastIndexOf("/"));
+				citationId = citationRefId.substring(citationResourceId.length(), citationRefId.length());
+
+			}
+			} catch (PermissionException e) {
+				e.printStackTrace();
+			} catch (IdUnusedException e) {
+				e.printStackTrace();
+			} catch (TypeException e) {
+				e.printStackTrace();
+			} catch (InUseException e) {
+				log.warn("The resource already exist: " );
+			} catch (OverQuotaException e) {
+				e.printStackTrace();
+			} catch (IdUsedException e) {
+				e.printStackTrace();
+			} catch (ServerOverloadException e) {
+				e.printStackTrace();
+			}
+
+
+		}
+		if (element.isComposite()) {
+			SyllabusCompositeElement comp = (SyllabusCompositeElement) element;
+
+			for (int i = 0; i < comp.getElements().size(); i++) {
+				AbstractSyllabusElement child = comp.getElements().get(i);
+
+				updateResourcesLinks(child, oldSiteId, newSiteId);
+			}
+		}
+	}
+
+    private void copySiteWithOpenSyllabus(String siteFrom, String siteTo) throws Exception {
 	if (!osylSecurityService
 		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_COPY)) {
 	    throw new OsylPermissionException(sessionManager
