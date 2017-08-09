@@ -237,6 +237,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 									+ coordinator);
 						}
 					}
+				} else {
+					log.debug("1 - Do not use old sync on Offering: " + offering.getEid());
 				}
 			} catch (IdNotFoundException infe) {
 				log.error("Id Not Found: " + infe.getMessage());
@@ -277,6 +279,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 						}
 					}
 				}
+			} else {
+				log.debug("2 - Do not use old sync on Offering: " + courseOffering.getEid());
 			}
 		}
 	}
@@ -476,6 +480,9 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 						}
 					}
 				}
+			} else {
+				log.debug("3 - Do not use old sync on coursEntry: " + coursEntry.getCatalogNbr() + coursEntry.getStrm() + coursEntry.getClassSection());
+
 			}
 		}
 
@@ -727,6 +734,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				} else
 					currentSessions.remove(aSession.getEid());
 				cmAdmin.setCurrentAcademicSessions(currentSessions);
+			} else {
+				log.debug("4 - Do not use old sync on session: " + sessionEntry.getStrm());
 			}
 		}
 	}
@@ -977,6 +986,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 						actualEndIntervalDate =
 								DateFormat.getDateInstance().parse(
 										sessionEntry.getEndDate());
+				} else {
+					log.debug("5 - Do not use old sync on session: " + sessionEntry.getStrm());
 				}
 			}
       	} catch (ParseException e) {
@@ -1015,8 +1026,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 						enrollmentS = cmService.getEnrollmentSets(courseOfferingId);
 
 						for (EnrollmentSet es : enrollmentS) {
-							if (isSynchedTheOldWay(Integer.parseInt(strm), course.getAcademicCareer()))
-								enrollmentSetId = es.getEid();
+							enrollmentSetId = es.getEid();
 							enrollments = cmService.getEnrollments(enrollmentSetId);
 							for (Enrollment e : enrollments) {
 								student = e.getUserId() + enrollmentSetId;
@@ -1027,6 +1037,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 									actualStudents.put(student, e);
 							}
 						}
+					} else {
+						log.debug("6 - Do not use old sync on course: " + course.getEid());
 					}
 				}
 
@@ -1099,6 +1111,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 								actualStudents.remove(userId + enrollmentSetId);
 							}
 						}
+				} else {
+					log.debug("7 - Do not use old sync on course: " + cours.getCatalogNbr() + cours.getStrm() + cours.getClassSection());
 				}
 			}
 
@@ -1147,6 +1161,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 							+ enrollmentSetId + " a ete enleve");
 
 				}
+			} else {
+				log.debug("8 - Do not use old sync on course Offering: " + courseOff.getEid());
 			}
 		}
 	}

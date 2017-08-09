@@ -322,6 +322,8 @@ public abstract class OsylAbstractQuartzJobImpl implements
             if ( department == null)
                 return A2017_SESSION_LIMIT >= strm;
             else
-                return A2017_SESSION_LIMIT >= strm && !department.equalsIgnoreCase(CERT_PILOTE_A2017);
+                // use old sync for all courses before A2017, and all departments other than Certificat during A2017
+                // TODO: update for H2018!
+                return A2017_SESSION_LIMIT > strm || (A2017_SESSION_LIMIT == strm && !department.equalsIgnoreCase(CERT_PILOTE_A2017));
     }
 }
