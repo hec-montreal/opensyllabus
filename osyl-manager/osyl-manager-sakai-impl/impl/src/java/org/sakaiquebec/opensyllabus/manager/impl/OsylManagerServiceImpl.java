@@ -2049,41 +2049,51 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	private void updateResourcesLinks (AbstractSyllabusElement element, String oldSiteId, String newSiteId){
     	Map<String, String> elements = element.getAttributes();
 		String resourceId, savedNewResourceId, newResourceId ;
-		String citationRefId, citationResourceId, newCitationResourceId, citationId, newCitationCollectionId;
-		ContentResourceEdit newCitationList = null, oldCitationList;
-		CitationCollection newCitationCollectionList, oldCitationCollectionList;
-    	if (elements != null){
-			try {
+		String citationRefId, citationResourceId, newCitationResourceId, savedNewCitationResourceId, citationId, newCitationCollectionId;
+		ContentResource newCitationList = null;
+		ContentResource oldCitationList = null;
+		Citation oldCitation = null;
+		Citation newCitation = null;
+		CitationCollection newCitationCollectionList = null;
+		CitationCollection oldCitationCollectionList = null;
+	   	if (elements != null){
 			if (element instanceof SyllabusDocumentElement){
+				try {
 				resourceId = elements.get("documentId");
 				newResourceId = (elements.get("documentId")).replace(oldSiteId, newSiteId);
 				savedNewResourceId = contentHostingService.copy(resourceId, newResourceId);
 				elements.put("documentId", savedNewResourceId);
 				syllabusService.saveOrUpdateElement(element);
+				} catch (PermissionException | IdUnusedException | TypeException | InUseException | OverQuotaException
+						| IdUsedException | ServerOverloadException e) {
+					e.printStackTrace();
+				}
 			}
 			if (element instanceof SyllabusCitationElement){
 				citationRefId = elements.get("citationId");
+				//Retrieve resourceId and citationId
 				citationResourceId = citationRefId.substring(0,citationRefId.lastIndexOf("/"));
-				citationId = citationRefId.substring(citationResourceId.length(), citationRefId.length());
+				citationId = citationRefId.substring(citationResourceId.length()+1, citationRefId.length());
+				//Build resourceId in new site
+				newCitationResourceId = citationResourceId.replaceAll(oldSiteId, newSiteId);
+				try {
+					//Always create new resource
+					newCitationCollectionList = createCitationResource(citationResourceId, newCitationResourceId);
+					//Get old resource, old citation collection and citation to copy
+					oldCitationList = contentHostingService.getResource(citationResourceId);
+					oldCitationCollectionList = citationService.getCollection(new String(oldCitationList.getContent()));
+					oldCitation = oldCitationCollectionList.getCitation(citationId);
+				} catch (PermissionException | TypeException |ServerOverloadException e) {
+					e.printStackTrace();
+				} catch (IdUnusedException e){}
 
+				newCitation = citationService.copyCitation(oldCitation);
+				citationService.save(newCitation);
+				newCitationCollectionList.add(newCitation);
+				citationService.save(newCitationCollectionList);
+				elements.put("citationId", newCitationResourceId+"/"+newCitation.getId());
+				syllabusService.saveOrUpdateElement(element);
 			}
-			} catch (PermissionException e) {
-				e.printStackTrace();
-			} catch (IdUnusedException e) {
-				e.printStackTrace();
-			} catch (TypeException e) {
-				e.printStackTrace();
-			} catch (InUseException e) {
-				log.warn("The resource already exist: " );
-			} catch (OverQuotaException e) {
-				e.printStackTrace();
-			} catch (IdUsedException e) {
-				e.printStackTrace();
-			} catch (ServerOverloadException e) {
-				e.printStackTrace();
-			}
-
-
 		}
 		if (element.isComposite()) {
 			SyllabusCompositeElement comp = (SyllabusCompositeElement) element;
@@ -2094,6 +2104,61 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 				updateResourcesLinks(child, oldSiteId, newSiteId);
 			}
 		}
+	}
+
+	private CitationCollection createCitationResource ( String oldCitationRef, String newCitationRef){
+		CitationCollection newCitationCollection = null;
+		CitationCollection tempCitationCollection = null;
+
+		String newResourceCollection = newCitationRef.substring(0, newCitationRef.lastIndexOf("/"));
+		String oldResourceCollection = oldCitationRef.substring(0, oldCitationRef.lastIndexOf("/"));
+		String resourceName = newCitationRef.substring(newResourceCollection.length()+1);
+		String newResourceId = null;
+		ContentResourceEdit newResource = null;
+
+		try {
+			newResource = contentHostingService.editResource(newCitationRef);
+			newCitationCollection = citationService.getCollection(new String (newResource.getContent()));
+		} catch (PermissionException | IdUnusedException | TypeException | ServerOverloadException e) {
+			log.info(" The resource will be created " + newCitationRef);
+			try {
+				newResourceId = contentHostingService.copy(oldCitationRef, newCitationRef);
+				newResource = contentHostingService.editResource(newResourceId);
+				tempCitationCollection = citationService.getCollection(new String(newResource.getContent()));
+				citationService.removeCollection(tempCitationCollection);
+			} catch (PermissionException | IdUnusedException | IdUsedException |
+					TypeException | ServerOverloadException | OverQuotaException | InUseException e1) {
+				e1.printStackTrace();
+			}
+			newCitationCollection = citationService.addCollection();
+			newResource.setContent(newCitationCollection.getId().getBytes());
+			newResource.setResourceType(CitationService.CITATION_LIST_ID);
+			newResource.setContentType(ResourceType.MIME_TYPE_HTML);
+
+			ResourcePropertiesEdit props = newResource.getPropertiesEdit();
+			props.addProperty(
+					ContentHostingService.PROP_ALTERNATE_REFERENCE,
+					org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
+			props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
+					ResourceType.MIME_TYPE_HTML);
+			props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
+					resourceName);
+
+			try {
+				contentHostingService.commitResource(newResource, NotificationService.NOTI_NONE);
+			} catch (OverQuotaException | ServerOverloadException e2) {
+				e2.printStackTrace();
+			}
+		} catch (InUseException e3){
+			try {
+				newCitationCollection = citationService.getCollection(new String (contentHostingService.getResource(newCitationRef).getContent()));
+			} catch (IdUnusedException  | ServerOverloadException | TypeException | PermissionException e4) {
+				e4.printStackTrace();
+			}
+		}
+
+
+		return newCitationCollection;
 	}
 
     private void copySiteWithOpenSyllabus(String siteFrom, String siteTo) throws Exception {
