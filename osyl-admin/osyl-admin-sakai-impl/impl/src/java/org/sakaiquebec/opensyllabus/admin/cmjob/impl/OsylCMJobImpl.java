@@ -898,7 +898,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				retrieveCurrentCMContent();
 
 				// We load academic careers
-				loadAcademicCareers();
+/*				loadAcademicCareers();
 				log.info("Academic Careers updated successfully");
 
 				// We load sessions
@@ -919,7 +919,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 
 				// We assign teachers
 				loadMembership();
-				log.info("Membership updated successfully");
+				log.info("Membership updated successfully");*/
 
 				// We synchronize students to their classes
 				syncEnrollments();
@@ -1014,7 +1014,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				sessionId = session.getEid();
 				courseOff =
 						cmService.findCourseOfferings(courseSetId, sessionId);
-				strm = sessionId.substring(0,3);
+				strm = sessionId.substring(0,4);
 
 				for (CourseOffering course : courseOff) {
 					courseOfferingId = course.getEid();
@@ -1136,7 +1136,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 			courseOff = cmService.getCourseOffering((cmService.getSection(enrollmentSetId)).getCourseOfferingEid());
 			session = courseOff.getAcademicSession();
 			strmEid = session.getEid();
-			strm = strmEid.substring(0,3);
+			strm = strmEid.substring(0,4);
 
 			if (isSynchedTheOldWay(Integer.parseInt(strm), courseOff.getAcademicCareer())) {
 				if (cmAdmin.removeEnrollment(userId, enrollmentSetId)) {
