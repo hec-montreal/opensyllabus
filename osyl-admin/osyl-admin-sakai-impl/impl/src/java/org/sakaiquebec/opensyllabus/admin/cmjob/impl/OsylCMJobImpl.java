@@ -898,7 +898,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				retrieveCurrentCMContent();
 
 				// We load academic careers
-/*				loadAcademicCareers();
+				loadAcademicCareers();
 				log.info("Academic Careers updated successfully");
 
 				// We load sessions
@@ -919,7 +919,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 
 				// We assign teachers
 				loadMembership();
-				log.info("Membership updated successfully");*/
+				log.info("Membership updated successfully");
 
 				// We synchronize students to their classes
 				syncEnrollments();
