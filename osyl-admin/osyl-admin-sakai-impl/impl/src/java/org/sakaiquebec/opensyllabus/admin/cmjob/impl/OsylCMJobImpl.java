@@ -162,7 +162,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				CourseOffering offering = cmService.getCourseOffering(section.getCourseOfferingEid());
 				EnrollmentSet enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
 				strmEid = offering.getAcademicSession().getEid();
-				strm = strmEid.substring(0,3);
+				strm = strmEid.substring(0,4);
 
 				if (isSynchedTheOldWay(Integer.parseInt(strm), offering.getAcademicCareer())) {
 					// add official instructors
@@ -260,7 +260,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				courseOffering = cmService.getCourseOffering(courseId);
 			session = courseOffering.getAcademicSession();
 			strmEid = session.getEid();
-			strm = strmEid.substring(0,3);
+			strm = strmEid.substring(0,4);
 
 			if (isSynchedTheOldWay(Integer.parseInt(strm), courseOffering.getAcademicCareer())) {
 				if (coordinatorsToRemove.size() > 0) {
