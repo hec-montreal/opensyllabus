@@ -104,7 +104,7 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 										.getAuthzGroup(REALM_PREFIX
 												+ site.getId());
 						processRealm(siteRealm, configRole);
-						System.out.println("Traiter le site " + site.getId());
+						log.info("Traiter le site " + site.getId());
 					}
 					else{
 						siteGroups =  site.getGroups();
@@ -112,7 +112,7 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 							if (group.getProviderGroupId() != null) {
 								groupRealm = authzGroupService.getAuthzGroup( REALM_PREFIX + site.getId() + REALM_GROUP_PREFIX + group.getId());
 								processRealm(groupRealm, configRole);
-								System.out.println("Traiter le group " + REALM_PREFIX + site.getId() + REALM_GROUP_PREFIX + group.getId());
+								log.info("Traiter le group " + REALM_PREFIX + site.getId() + REALM_GROUP_PREFIX + group.getId());
 							}
 						}
 					}
