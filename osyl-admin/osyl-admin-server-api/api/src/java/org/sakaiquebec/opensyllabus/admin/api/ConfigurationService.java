@@ -78,6 +78,8 @@ public interface ConfigurationService {
 
     public final static String FUNCTIONS = "functions";
 
+    public final static String UPDATE_GROUPS = "updateGroup";
+
     // For adding a role with
 
     public final static String FUNCTIONS_ROLE = "role";

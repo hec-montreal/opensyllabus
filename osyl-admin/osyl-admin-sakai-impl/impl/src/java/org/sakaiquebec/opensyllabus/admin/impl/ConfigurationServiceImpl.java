@@ -111,6 +111,16 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private List<String> removedUsers;
     private List<String> replacedUsers;
 
+	public boolean isUpdateGroup() {
+		return updateGroup;
+	}
+
+	public void setUpdateGroup(boolean updateGroup) {
+		this.updateGroup = updateGroup;
+	}
+
+	private boolean updateGroup;
+
     private Map<String, String> printVersionJobParams = null;
 
     protected ContentHostingService contentHostingService = null;
@@ -641,6 +651,9 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
 		String replacedUsers = retrieveParameter(document, REPLACEDUSERS);
 		String functions = retrieveParameter(document, FUNCTIONS);
+			boolean updateGroup =
+					Boolean.parseBoolean(retrieveParameter(document,
+							UPDATE_GROUPS));
 
 		setDescription(description);
 		setCourseManagement(courseManagement);
@@ -650,6 +663,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		setRemovedUsers(removedUsers);
 		setReplacedUsers(replacedUsers);
 		setFunctions(functions);
+		setUpdateGroup(updateGroup);
+
 
 		values.put(ADDEDUSERS, this.addedUsers);
 		values.put(REMOVEDUSERS, this.removedUsers);
@@ -659,6 +674,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		values.put(COURSEMANAGEMENT, this.courseManagement);
 		values.put(INCLUDING_DIR_SITES, includingDirSites);
 		values.put(INCLUDING_FROZEN_SITES, includingFrozenSites);
+		values.put(UPDATE_GROUPS, updateGroup);
 
 		if (role != null) {
 		    if (updatedRoles == null)
