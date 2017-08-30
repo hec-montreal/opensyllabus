@@ -926,8 +926,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 				log.info("Enrollments updated successfully");
 
 				// course events synch
-				courseEventSynchroJob.execute(directory + File.separator
-						+ HORAIRES_FILE);
+				//courseEventSynchroJob.execute(directory + File.separator
+				//		+ HORAIRES_FILE);
 
 			} catch (Exception e) {
 				String message =
