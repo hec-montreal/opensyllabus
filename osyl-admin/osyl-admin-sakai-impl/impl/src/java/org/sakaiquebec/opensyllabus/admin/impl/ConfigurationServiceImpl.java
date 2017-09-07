@@ -106,6 +106,15 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private boolean includingDirSites;
 
+	public boolean isUpdateGroup() {
+		return updateGroup;
+	}
+
+	public void setUpdateGroup(boolean updateGroup) {
+		this.updateGroup = updateGroup;
+	}
+
+	private boolean updateGroup;
     private List<String> functions;
     private List<String> addedUsers;
     private List<String> removedUsers;
@@ -637,6 +646,9 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		boolean includingDirSites =
 			Boolean.parseBoolean(retrieveParameter(document,
 				INCLUDING_DIR_SITES));
+			boolean updateGroup =
+					Boolean.parseBoolean(retrieveParameter(document,
+							ConfigurationService.UPDATE_GROUP));
 		String addedUsers = retrieveParameter(document, ADDEDUSERS);
 		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
 		String replacedUsers = retrieveParameter(document, REPLACEDUSERS);
@@ -646,6 +658,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		setCourseManagement(courseManagement);
 		setIncludingFrozenSites(includingFrozenSites);
 		setIncludingDirSites(includingDirSites);
+		setUpdateGroup(updateGroup);
 		setAddedUsers(addedUsers);
 		setRemovedUsers(removedUsers);
 		setReplacedUsers(replacedUsers);
@@ -659,6 +672,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		values.put(COURSEMANAGEMENT, this.courseManagement);
 		values.put(INCLUDING_DIR_SITES, includingDirSites);
 		values.put(INCLUDING_FROZEN_SITES, includingFrozenSites);
+		values.put(ConfigurationService.UPDATE_GROUP, updateGroup);
 
 		if (role != null) {
 		    if (updatedRoles == null)
@@ -666,7 +680,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 				new HashMap<String, Map<String, Object>>();
 
 		    if (updatedRoles.containsKey(role))
-			updatedRoles.remove(role);
+				updatedRoles.remove(role);
 		    updatedRoles.put(role, values);
 		    configFiles.put(configurationXml, role);
 		}
@@ -682,7 +696,11 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		boolean includingDirSites =
 			Boolean.parseBoolean(retrieveParameter(document,
 				INCLUDING_DIR_SITES));
-		String allowedFunctions =
+			boolean updateGroup =
+					Boolean.parseBoolean(retrieveParameter(document,
+							ConfigurationService.UPDATE_GROUP));
+
+			String allowedFunctions =
 			retrieveParameter(document, ALLOWED_FUNCTIONS);
 		String disallowedFunctions =
 			retrieveParameter(document, DISALLOWED_FUNCTIONS);
