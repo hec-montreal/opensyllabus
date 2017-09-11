@@ -78,7 +78,7 @@ public interface ConfigurationService {
 
     public final static String FUNCTIONS = "functions";
 
-    public final static String UPDATE_GROUPS = "updateGroup";
+    public final static String REMOVE_FUNCTIONS = "removefunctions";
 
     // For adding a role with
 
@@ -123,6 +123,8 @@ public interface ConfigurationService {
 
     public final static String INCLUDING_DIR_SITES =
 	    "includingDirSites";
+
+    public final static String UPDATE_GROUP = "updateGroup";
 
     public final static String CM_EXCEPTIONS_FOLDER = CONFIG_FOLDER + "cm_exceptions/";
     

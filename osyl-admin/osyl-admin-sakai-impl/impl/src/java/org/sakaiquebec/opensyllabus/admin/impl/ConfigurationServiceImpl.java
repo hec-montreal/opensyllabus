@@ -106,11 +106,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private boolean includingDirSites;
 
-    private List<String> functions;
-    private List<String> addedUsers;
-    private List<String> removedUsers;
-    private List<String> replacedUsers;
-
 	public boolean isUpdateGroup() {
 		return updateGroup;
 	}
@@ -120,6 +115,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	}
 
 	private boolean updateGroup;
+    private List<String> functions;
+    private List<String> addedUsers;
+    private List<String> removedUsers;
+    private List<String> replacedUsers;
 
     private Map<String, String> printVersionJobParams = null;
 
@@ -647,23 +646,23 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		boolean includingDirSites =
 			Boolean.parseBoolean(retrieveParameter(document,
 				INCLUDING_DIR_SITES));
+			boolean updateGroup =
+					Boolean.parseBoolean(retrieveParameter(document,
+							ConfigurationService.UPDATE_GROUP));
 		String addedUsers = retrieveParameter(document, ADDEDUSERS);
 		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
 		String replacedUsers = retrieveParameter(document, REPLACEDUSERS);
 		String functions = retrieveParameter(document, FUNCTIONS);
-			boolean updateGroup =
-					Boolean.parseBoolean(retrieveParameter(document,
-							UPDATE_GROUPS));
 
 		setDescription(description);
 		setCourseManagement(courseManagement);
 		setIncludingFrozenSites(includingFrozenSites);
 		setIncludingDirSites(includingDirSites);
+		setUpdateGroup(updateGroup);
 		setAddedUsers(addedUsers);
 		setRemovedUsers(removedUsers);
 		setReplacedUsers(replacedUsers);
 		setFunctions(functions);
-		setUpdateGroup(updateGroup);
 
 
 		values.put(ADDEDUSERS, this.addedUsers);
@@ -674,7 +673,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		values.put(COURSEMANAGEMENT, this.courseManagement);
 		values.put(INCLUDING_DIR_SITES, includingDirSites);
 		values.put(INCLUDING_FROZEN_SITES, includingFrozenSites);
-		values.put(UPDATE_GROUPS, updateGroup);
+		values.put(ConfigurationService.UPDATE_GROUP, updateGroup);
 
 		if (role != null) {
 		    if (updatedRoles == null)
@@ -698,6 +697,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		boolean includingDirSites =
 			Boolean.parseBoolean(retrieveParameter(document,
 				INCLUDING_DIR_SITES));
+			boolean updateGroup =
+					Boolean.parseBoolean(retrieveParameter(document,
+							ConfigurationService.UPDATE_GROUP));
+
 		String allowedFunctions =
 			retrieveParameter(document, ALLOWED_FUNCTIONS);
 		String disallowedFunctions =

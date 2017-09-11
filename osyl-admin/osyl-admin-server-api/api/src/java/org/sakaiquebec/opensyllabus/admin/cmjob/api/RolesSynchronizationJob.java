@@ -34,8 +34,7 @@ public interface RolesSynchronizationJob extends OsylAbstractQuartzJob {
 
     public final static String REALM_PREFIX = "/site/";
 
-    public final static String REALM_GROUP_PREFIX = "/group/";
+    public final static String TEMPLATE_ID = "/site/hec-template";
 
-    public final static String TEMPLATE_ID = "!site.template.course";
-
+    public final static String GROUP_TEMPLATE_ID = "!group.template.course";
 }
