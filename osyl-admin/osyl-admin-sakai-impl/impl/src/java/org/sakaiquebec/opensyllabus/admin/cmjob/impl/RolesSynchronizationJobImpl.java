@@ -72,7 +72,7 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 										.getAuthzGroup(REALM_PREFIX
 												+ site.getId());
                         addOrUpdateRoles(site);
-                        log.info("Le site à traiter est " + site.getId());
+                        log.info("Le site Ã  traiter est " + site.getId());
                     } catch (GroupNotDefinedException e) {
                         log.error(e.getMessage());
 					}
@@ -106,7 +106,7 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 
                     try {
                         siteService.saveGroupMembership(site);
-                        log.info("Le groupe " + group.getId() + " a été traité");
+                        log.info("Le groupe " + group.getId() + " a Ã©tÃ© traitÃ©");
                     } catch (IdUnusedException e) {
                         e.printStackTrace();
                     } catch (PermissionException e) {
