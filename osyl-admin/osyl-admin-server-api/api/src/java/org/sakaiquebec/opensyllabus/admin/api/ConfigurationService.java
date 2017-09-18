@@ -162,9 +162,7 @@ public interface ConfigurationService {
 
     public List<String> getPrograms();
 
-    public Map<String, Map<String, Object>> getUdatedRoles();
-
-    public String getFunctionsRole();
+   public String getFunctionsRole();
 
     public String getDescription();
 
@@ -202,4 +200,6 @@ public interface ConfigurationService {
 
     public boolean inA2017Pilote (String courseId, List<String> piloteA2017);
 
+
+    List<RoleSynchronizationPOJO> getRoles();
 }

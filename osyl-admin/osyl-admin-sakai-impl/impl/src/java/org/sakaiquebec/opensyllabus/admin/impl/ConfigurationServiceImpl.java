@@ -37,10 +37,12 @@ import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
+import org.sakaiquebec.opensyllabus.admin.api.RoleSynchronizationPOJO;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
@@ -71,9 +73,9 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private List<String> disallowedFunctions = null;
 
-    private List <String> piloteE2017 = null;
+    private List<String> piloteE2017 = null;
 
-	private List <String> piloteA2017 = null;
+    private List<String> piloteA2017 = null;
 
     private String removedRole = null;
 
@@ -83,7 +85,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private String courseOutlineXsl = null;
 
-    private Map<String, Map<String, Object>> updatedRoles = null;
+    List<RoleSynchronizationPOJO> roles = null;
 
     private Map<String, Map<String, String>> cmExceptions = null;
 
@@ -101,20 +103,20 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private String description;
     private boolean courseManagement;
-    
+
     private boolean includingFrozenSites;
 
     private boolean includingDirSites;
 
-	public boolean isUpdateGroup() {
-		return updateGroup;
-	}
+    public boolean isUpdateGroup() {
+        return updateGroup;
+    }
 
-	public void setUpdateGroup(boolean updateGroup) {
-		this.updateGroup = updateGroup;
-	}
+    public void setUpdateGroup(boolean updateGroup) {
+        this.updateGroup = updateGroup;
+    }
 
-	private boolean updateGroup;
+    private boolean updateGroup;
     private List<String> functions;
     private List<String> addedUsers;
     private List<String> removedUsers;
@@ -125,674 +127,658 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     protected ContentHostingService contentHostingService = null;
 
     public void setContentHostingService(ContentHostingService service) {
-	contentHostingService = service;
+        contentHostingService = service;
     }
 
     private EventTrackingService eventTrackingService;
 
     public void setEventTrackingService(
-	    EventTrackingService eventTrackingService) {
-	this.eventTrackingService = eventTrackingService;
+            EventTrackingService eventTrackingService) {
+        this.eventTrackingService = eventTrackingService;
     }
 
     private EntityManager entityManager;
 
     public void setEntityManager(EntityManager entityManager) {
-	this.entityManager = entityManager;
+        this.entityManager = entityManager;
     }
 
     private SecurityService securityService;
 
     public void setSecurityService(SecurityService securityService) {
-	this.securityService = securityService;
+        this.securityService = securityService;
     }
 
     public void init() {
-	log.info("initialize OsylAdmin configuration service");
+        log.info("initialize OsylAdmin configuration service");
 
-	eventTrackingService.addObserver(this);
+        eventTrackingService.addObserver(this);
 
-	configFiles = new HashMap<String, String>();
-	updateConfig(CONFIG_FOLDER + OFFSITESCONFIGFILE);
-	updateConfig(ROLE_FOLDER);
-	updateConfig(ADMIN_CONTENT_FOLDER + XSL_FILENAME);
-	updateConfig(CONFIG_FOLDER + FUNCTIONSSCONFIGFILE);
-	updateConfig(CONFIG_FOLDER + PRINT_VERSION_CONFIG);
-	updateConfig(CM_EXCEPTIONS_FOLDER);
+        configFiles = new HashMap<String, String>();
+        updateConfig(CONFIG_FOLDER + OFFSITESCONFIGFILE);
+        updateConfig(ROLE_FOLDER);
+        updateConfig(ADMIN_CONTENT_FOLDER + XSL_FILENAME);
+        updateConfig(CONFIG_FOLDER + FUNCTIONSSCONFIGFILE);
+        updateConfig(CONFIG_FOLDER + PRINT_VERSION_CONFIG);
+        updateConfig(CM_EXCEPTIONS_FOLDER);
     }
 
     public String getFunctionsRole() {
-	return functionsRole;
+        return functionsRole;
     }
 
     private void setFunctionsRole(String functionsRole) {
-	this.functionsRole = functionsRole;
+        this.functionsRole = functionsRole;
     }
 
     public List<String> getAllowedFunctions() {
-	return allowedFunctions;
+        return allowedFunctions;
     }
 
     private void setAllowedFunctions(String allowedFunctions) {
-	this.allowedFunctions = new ArrayList<String>();
-	if (allowedFunctions != null && allowedFunctions.length() > 0) {
-	    String[] allowedFunctionsTable =
-		    allowedFunctions.split(LIST_DELIMITER);
-	    for (int i = 0; i < allowedFunctionsTable.length; i++) {
-		this.allowedFunctions.add(allowedFunctionsTable[i].trim());
-	    }
-	}
+        this.allowedFunctions = new ArrayList<String>();
+        if (allowedFunctions != null && allowedFunctions.length() > 0) {
+            String[] allowedFunctionsTable =
+                    allowedFunctions.split(LIST_DELIMITER);
+            for (int i = 0; i < allowedFunctionsTable.length; i++) {
+                this.allowedFunctions.add(allowedFunctionsTable[i].trim());
+            }
+        }
     }
 
-    
-   
+
     public List<String> getDisallowedFunctions() {
-	return disallowedFunctions;
+        return disallowedFunctions;
     }
 
     private void setDisallowedFunctions(String disallowedFunctions) {
-	this.disallowedFunctions = new ArrayList<String>();
-	if (disallowedFunctions != null && disallowedFunctions.length() > 0) {
-	    String[] disallowedFunctionsTable =
-		    disallowedFunctions.split(LIST_DELIMITER);
-	    for (int i = 0; i < disallowedFunctionsTable.length; i++) {
-		this.disallowedFunctions
-			.add(disallowedFunctionsTable[i].trim());
-	    }
-	}
+        this.disallowedFunctions = new ArrayList<String>();
+        if (disallowedFunctions != null && disallowedFunctions.length() > 0) {
+            String[] disallowedFunctionsTable =
+                    disallowedFunctions.split(LIST_DELIMITER);
+            for (int i = 0; i < disallowedFunctionsTable.length; i++) {
+                this.disallowedFunctions
+                        .add(disallowedFunctionsTable[i].trim());
+            }
+        }
     }
 
     public String getRemovedRole() {
-	return removedRole;
+        return removedRole;
     }
 
     private void setRemovedRole(String removedRole) {
-	this.removedRole = removedRole;
+        this.removedRole = removedRole;
     }
 
     public void destroy() {
-	log.info("destroy OsylAdmin configuration service");
+        log.info("destroy OsylAdmin configuration service");
     }
 
     public Date getStartDate() {
-	return getDate(startDate);
+        return getDate(startDate);
     }
 
     private void setStartDate(String startDate) {
-	this.startDate = startDate;
+        this.startDate = startDate;
     }
 
     private void setPrograms(String programs) {
-	this.programs = new ArrayList<String>();
-	if (programs != null && programs.length() > 0) {
-	    String[] programsTable = programs.split(LIST_DELIMITER);
-	    for (int i = 0; i < programsTable.length; i++) {
-		this.programs.add(programsTable[i].trim());
-	    }
-	}
+        this.programs = new ArrayList<String>();
+        if (programs != null && programs.length() > 0) {
+            String[] programsTable = programs.split(LIST_DELIMITER);
+            for (int i = 0; i < programsTable.length; i++) {
+                this.programs.add(programsTable[i].trim());
+            }
+        }
     }
 
     private void setServEns(String servEns) {
-	this.servEns = new ArrayList<String>();
-	if (servEns != null && servEns.length() > 0) {
-	    String[] servEnsTable = servEns.split(LIST_DELIMITER);
-	    for (int i = 0; i < servEnsTable.length; i++) {
-		this.servEns.add(servEnsTable[i].trim());
-	    }
-	}
+        this.servEns = new ArrayList<String>();
+        if (servEns != null && servEns.length() > 0) {
+            String[] servEnsTable = servEns.split(LIST_DELIMITER);
+            for (int i = 0; i < servEnsTable.length; i++) {
+                this.servEns.add(servEnsTable[i].trim());
+            }
+        }
     }
 
-    private void setPiloteE2017 (String piloteE2017){
-    	this.piloteE2017 = new ArrayList<String>();
-     	if (piloteE2017 != null && !piloteE2017.isEmpty()){
-			this.piloteE2017 = new ArrayList<String>();
-			Collections.addAll(this.piloteE2017, piloteE2017.split(","));
-		}
-	}
+    private void setPiloteE2017(String piloteE2017) {
+        this.piloteE2017 = new ArrayList<String>();
+        if (piloteE2017 != null && !piloteE2017.isEmpty()) {
+            this.piloteE2017 = new ArrayList<String>();
+            Collections.addAll(this.piloteE2017, piloteE2017.split(","));
+        }
+    }
 
-	public boolean inE2017Pilote (String courseOfferingId, List<String> piloteE2017){
-		for (String exception: piloteE2017){
-			exception = exception + "2172";
-			if (courseOfferingId.startsWith(exception ))
-				return true;
-		}
-		return false;
-	}
+    public boolean inE2017Pilote(String courseOfferingId, List<String> piloteE2017) {
+        for (String exception : piloteE2017) {
+            exception = exception + "2172";
+            if (courseOfferingId.startsWith(exception))
+                return true;
+        }
+        return false;
+    }
 
-	private void setPiloteA2017 (String piloteA2017){
-		this.piloteA2017 = new ArrayList<String>();
-		if (piloteA2017 != null && !piloteA2017.isEmpty()){
-			this.piloteA2017 = new ArrayList<String>();
-			Collections.addAll(this.piloteA2017, piloteA2017.split(","));
-		}
-	}
+    private void setPiloteA2017(String piloteA2017) {
+        this.piloteA2017 = new ArrayList<String>();
+        if (piloteA2017 != null && !piloteA2017.isEmpty()) {
+            this.piloteA2017 = new ArrayList<String>();
+            Collections.addAll(this.piloteA2017, piloteA2017.split(","));
+        }
+    }
 
-	@Override
-	public List<String> getPiloteA2017() {
-		return piloteA2017;
-	}
+    @Override
+    public List<String> getPiloteA2017() {
+        return piloteA2017;
+    }
 
-	public boolean inA2017Pilote (String courseOfferingId, List<String> piloteA2017){
-		for (String exception: piloteA2017){
-			exception = exception + "2173";
-			if (courseOfferingId.startsWith(exception ))
-				return true;
-		}
-		return false;
-	}
+    public boolean inA2017Pilote(String courseOfferingId, List<String> piloteA2017) {
+        for (String exception : piloteA2017) {
+            exception = exception + "2173";
+            if (courseOfferingId.startsWith(exception))
+                return true;
+        }
+        return false;
+    }
 
-	private void setEndDate(String endDate) {
-	this.endDate = endDate;
+    @Override
+    public List<RoleSynchronizationPOJO> getRoles() {
+        return roles;
+    }
+
+    private void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public Date getEndDate() {
-	return getDate(endDate);
+        return getDate(endDate);
     }
 
     public String getSessionId() {
-	return sessionId;
+        return sessionId;
     }
 
     public void setSessionId(String sessionId) {
-	this.sessionId = sessionId;
+        this.sessionId = sessionId;
     }
 
     public String getRoleId() {
-	return roleId;
+        return roleId;
     }
 
     public void setRoleId(String roleId) {
-	this.roleId = roleId;
+        this.roleId = roleId;
     }
 
     public String getPermissions() {
-	return permissions;
+        return permissions;
     }
 
     public void setPermissions(String permissions) {
-	this.frozenPermissions = new ArrayList<String>();
-	if (permissions != null && permissions.length() > 0) {
-	    String[] permissionsTable = permissions.split(LIST_DELIMITER);
-	    for (int i = 0; i < permissionsTable.length; i++) {
-		this.frozenPermissions.add(permissionsTable[i].trim());
-	    }
-	}
+        this.frozenPermissions = new ArrayList<String>();
+        if (permissions != null && permissions.length() > 0) {
+            String[] permissionsTable = permissions.split(LIST_DELIMITER);
+            for (int i = 0; i < permissionsTable.length; i++) {
+                this.frozenPermissions.add(permissionsTable[i].trim());
+            }
+        }
     }
 
     public List<String> getFrozenPermissions() {
-	return frozenPermissions;
+        return frozenPermissions;
     }
 
     public void setFrozenPermissions(List<String> frozenPermissions) {
-	this.frozenPermissions = frozenPermissions;
+        this.frozenPermissions = frozenPermissions;
     }
 
     public HashMap<String, List<String>> getFrozenFunctionsToAllow() {
-	return frozenFunctionsToAllow;
+        return frozenFunctionsToAllow;
     }
 
     public void setFrozenFunctionsToAllow(
-	    HashMap<String, List<String>> frozenFunctionsToAllow) {
-	this.frozenFunctionsToAllow = frozenFunctionsToAllow;
+            HashMap<String, List<String>> frozenFunctionsToAllow) {
+        this.frozenFunctionsToAllow = frozenFunctionsToAllow;
     }
 
     /**
      * Called when an observed object changes.
-     * 
+     *
      * @param ob
      * @param o
      */
     public void update(Observable ob, Object o) {
-	if (o instanceof Event) {
+        if (o instanceof Event) {
 
-	    Event event = (Event) o;
+            Event event = (Event) o;
 
-	    if (event.getModify()) {
-		String referenceString = event.getResource();
+            if (event.getModify()) {
+                String referenceString = event.getResource();
 
-		// If the offSitesConfig.xml update, we update the values
-		if (referenceString.contains(OFFSITESCONFIGFILE)) {
-		    log.info("Updating official sites config from "
-			    + referenceString);
-		    updateConfig(referenceString);
-		}
+                // If the offSitesConfig.xml update, we update the values
+                if (referenceString.contains(OFFSITESCONFIGFILE)) {
+                    log.info("Updating official sites config from "
+                            + referenceString);
+                    updateConfig(referenceString);
+                }
 
-		// If the content of the role folder update, we update the
-		// values
-		if (referenceString.contains(ROLE_FOLDER)) {
-		    log.info("Updating roles config files from "
-			    + referenceString);
-		    updateConfig(referenceString);
-		}
+                // If the content of the role folder update, we update the
+                // values
+                if (referenceString.contains(ROLE_FOLDER)) {
+                    log.info("Updating roles config files from "
+                            + referenceString);
+                    updateConfig(referenceString);
+                }
 
-		// If the functions files updated we change the values
-		if (referenceString.contains(FUNCTIONSSCONFIGFILE)) {
-		    log.info("Updating permissions config files from "
-			    + referenceString);
-		    updateConfig(referenceString);
-		}
+                // If the functions files updated we change the values
+                if (referenceString.contains(FUNCTIONSSCONFIGFILE)) {
+                    log.info("Updating permissions config files from "
+                            + referenceString);
+                    updateConfig(referenceString);
+                }
 
-		if (referenceString.contains(XSL_FILENAME)) {
-		    log.info("Updating XSL in resource" + referenceString);
-		    updateConfig(referenceString);
-		}
+                if (referenceString.contains(XSL_FILENAME)) {
+                    log.info("Updating XSL in resource" + referenceString);
+                    updateConfig(referenceString);
+                }
 
-		if (referenceString.contains(PRINT_VERSION_CONFIG)) {
-		    log.info("Updating 'createPrintVersion' job config"
-			    + referenceString);
-		    updateConfig(referenceString);
-		}
-		if (referenceString.contains(CM_EXCEPTIONS_FOLDER)) {
-		    log.info("Updating CM exceptions" + referenceString);
-		    updateConfig(referenceString);
-		}
+                if (referenceString.contains(PRINT_VERSION_CONFIG)) {
+                    log.info("Updating 'createPrintVersion' job config"
+                            + referenceString);
+                    updateConfig(referenceString);
+                }
+                if (referenceString.contains(CM_EXCEPTIONS_FOLDER)) {
+                    log.info("Updating CM exceptions" + referenceString);
+                    updateConfig(referenceString);
+                }
 
-	    }
-	}
+            }
+        }
     }
 
     private void updateConfig(String fileName) {
 
-	Reference reference = entityManager.newReference(fileName);
+        Reference reference = entityManager.newReference(fileName);
 
-	if (reference != null) {
+        if (reference != null) {
 
-	    ContentResource resource = null;
+            ContentResource resource = null;
 
-	    try {
-		log.info("*** securityService.pushAdvisor(new SecurityAdvisor() ConfigurationServiceImpl *** ");
+            try {
+                log.info("*** securityService.pushAdvisor(new SecurityAdvisor() ConfigurationServiceImpl *** ");
 
-		// We allow access to the file
+                // We allow access to the file
 
-		securityService.pushAdvisor(new SecurityAdvisor() {
-		    public SecurityAdvice isAllowed(String userId,
-			    String function, String reference) {
-			if (function.equals("content.read"))
-			    return SecurityAdvice.ALLOWED;
-			return SecurityAdvice.NOT_ALLOWED;
-		    }
-		});
+                securityService.pushAdvisor(new SecurityAdvisor() {
+                    public SecurityAdvice isAllowed(String userId,
+                                                    String function, String reference) {
+                        if (function.equals("content.read"))
+                            return SecurityAdvice.ALLOWED;
+                        return SecurityAdvice.NOT_ALLOWED;
+                    }
+                });
 
-		if (fileName.contains(ROLE_FOLDER)) {
-		    ContentCollection collection;
-		    if (!contentHostingService.isCollection(reference.getId())) {
-			resource =
-				contentHostingService.getResource(reference
-					.getId());
+                if (fileName.contains(ROLE_FOLDER)) {
+                    ContentCollection collection;
+                    if (!contentHostingService.isCollection(reference.getId())) {
+                        resource =
+                                contentHostingService.getResource(reference
+                                        .getId());
 
-			collection = resource.getContainingCollection();
-		    } else {
-			collection =
-				contentHostingService.getCollection(reference
-					.getId());
-		    }
-		    List<ContentResource> resources =
-			    contentHostingService.getAllResources(collection
-				    .getId());
+                        collection = resource.getContainingCollection();
+                    } else {
+                        collection =
+                                contentHostingService.getCollection(reference
+                                        .getId());
+                    }
+                    List<ContentResource> resources =
+                            contentHostingService.getAllResources(collection
+                                    .getId());
 
-		    for (ContentResource ress : resources) {
-			if (ress != null)
-			    retrieveConfigs(ress.getReference(),
-				    ress.streamContent());
-		    }
-		} else if (fileName.contains(CM_EXCEPTIONS_FOLDER)) {
-		    ContentCollection collection;
-		    if (!contentHostingService.isCollection(reference.getId())) {
-			resource =
-				contentHostingService.getResource(reference
-					.getId());
+                    for (ContentResource ress : resources) {
+                        if (ress != null)
+                            retrieveConfigs(ress.getReference(),
+                                    ress.streamContent());
+                    }
+                } else if (fileName.contains(CM_EXCEPTIONS_FOLDER)) {
+                    ContentCollection collection;
+                    if (!contentHostingService.isCollection(reference.getId())) {
+                        resource =
+                                contentHostingService.getResource(reference
+                                        .getId());
 
-			collection = resource.getContainingCollection();
-		    } else {
-			collection =
-				contentHostingService.getCollection(reference
-					.getId());
-		    }
-		    List<ContentResource> resources =
-			    contentHostingService.getAllResources(collection
-				    .getId());
+                        collection = resource.getContainingCollection();
+                    } else {
+                        collection =
+                                contentHostingService.getCollection(reference
+                                        .getId());
+                    }
+                    List<ContentResource> resources =
+                            contentHostingService.getAllResources(collection
+                                    .getId());
 
-		    for (ContentResource ress : resources) {
-			if (ress != null)
-			    retrieveCmExceptions(ress.getReference(),
-				    ress.streamContent());
-		    }
-		} else if (fileName.contains(XSL_FILENAME)) {
-		    resource =
-			    contentHostingService
-				    .getResource(reference.getId());
-		    try {
-			setCourseOutlineXsl(new String(resource.getContent(),
-				"UTF-8"));
-		    } catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		    }
-		} else {
-		    resource =
-			    contentHostingService
-				    .getResource(reference.getId());
-		    if (resource != null)
-			retrieveConfigs(fileName, resource.streamContent());
-		}
+                    for (ContentResource ress : resources) {
+                        if (ress != null)
+                            retrieveCmExceptions(ress.getReference(),
+                                    ress.streamContent());
+                    }
+                } else if (fileName.contains(XSL_FILENAME)) {
+                    resource =
+                            contentHostingService
+                                    .getResource(reference.getId());
+                    try {
+                        setCourseOutlineXsl(new String(resource.getContent(),
+                                "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    resource =
+                            contentHostingService
+                                    .getResource(reference.getId());
+                    if (resource != null)
+                        retrieveConfigs(fileName, resource.streamContent());
+                }
 
-	    } catch (PermissionException e) {
-		log.info("You are not allowed to access this resource");
-	    } catch (IdUnusedException e) {
-		// The file has been removed - remove config in list
-		if (configFiles != null) {
-		    if (fileName.contains(ROLE_FOLDER)) {
-			String role = configFiles.get(fileName);
-			configFiles.remove(fileName);
-			if (updatedRoles != null) {
-			    updatedRoles.remove(role);
-			}
-		    }
-		}
-		if (fileName.contains(OFFSITESCONFIGFILE)) {
-		    setCourses(null);
-		    setStartDate(null);
-		    setEndDate(null);
-		    setPrograms(null);
-		    setServEns(null);
-		    setPiloteE2017(null);
-		    setPiloteA2017(null);
+            } catch (PermissionException e) {
+                log.info("You are not allowed to access this resource");
+            } catch (IdUnusedException e) {
+                // The file has been removed - remove config in list
+                if (configFiles != null) {
+                    if (fileName.contains(ROLE_FOLDER)) {
+                        String role = configFiles.get(fileName);
+                        configFiles.remove(fileName);
+                    }
+                }
+                if (fileName.contains(OFFSITESCONFIGFILE)) {
+                    setCourses(null);
+                    setStartDate(null);
+                    setEndDate(null);
+                    setPrograms(null);
+                    setServEns(null);
+                    setPiloteE2017(null);
+                    setPiloteA2017(null);
 
-		}
-		if (fileName.contains(FUNCTIONSSCONFIGFILE)) {
-		    setFunctionsRole(null);
-		    setDescription(null);
-		    setRemovedRole(null);
-		    setAllowedFunctions(null);
-		    setDisallowedFunctions(null);
+                }
+                if (fileName.contains(FUNCTIONSSCONFIGFILE)) {
+                    setFunctionsRole(null);
+                    setDescription(null);
+                    setRemovedRole(null);
+                    setAllowedFunctions(null);
+                    setDisallowedFunctions(null);
 
-		}
-		
+                }
 
 
-		log.info("There is no " + fileName + " has been removed ");
-	    } catch (TypeException e) {
-		log.info("The resource requested has the wrong type");
-	    } catch (ServerOverloadException e) {
-		log.info(e.getMessage());
-	    }
-	} else {
-	    securityService.popAdvisor();
-	    log.warn("There is no " + fileName + " file ");
-	}
+                log.info("There is no " + fileName + " has been removed ");
+            } catch (TypeException e) {
+                log.info("The resource requested has the wrong type");
+            } catch (ServerOverloadException e) {
+                log.info(e.getMessage());
+            }
+        } else {
+            securityService.popAdvisor();
+            log.warn("There is no " + fileName + " file ");
+        }
     }
 
     private void retrieveCmExceptions(String configurationXml,
-	    InputStream stream) {
-	org.w3c.dom.Document document;
+                                      InputStream stream) {
+        org.w3c.dom.Document document;
 
 	/*
-	 * Parse the XML - if that fails, give up now
+     * Parse the XML - if that fails, give up now
 	 */
-	if ((document = parseXmlFromStream(stream)) == null) {
-	    log.warn("retrieveConfigs: XML document is null");
-	    return;
-	}
+        if ((document = parseXmlFromStream(stream)) == null) {
+            log.warn("retrieveConfigs: XML document is null");
+            return;
+        }
 
-	synchronized (this) {
+        synchronized (this) {
 
-	    String users = retrieveParameter(document, CM_EXCEPTIONS_USERS);
-	    String courses = retrieveParameter(document, CM_EXCEPTIONS_COURSES);
-	    String category =
-		    retrieveParameter(document, CM_EXCEPTIONS_CATEGORY);
-	    String program = retrieveParameter(document, CM_EXCEPTIONS_PROGRAM);
-	    String role = retrieveParameter(document, CM_EXCEPTIONS_ROLE);
+            String users = retrieveParameter(document, CM_EXCEPTIONS_USERS);
+            String courses = retrieveParameter(document, CM_EXCEPTIONS_COURSES);
+            String category =
+                    retrieveParameter(document, CM_EXCEPTIONS_CATEGORY);
+            String program = retrieveParameter(document, CM_EXCEPTIONS_PROGRAM);
+            String role = retrieveParameter(document, CM_EXCEPTIONS_ROLE);
 
-	    if (cmExceptions == null)
-		cmExceptions = new HashMap<String, Map<String, String>>();
-	    HashMap<String, String> map = new HashMap<String, String>();
-	    map.put(CM_EXCEPTIONS_USERS, users);
-	    map.put(CM_EXCEPTIONS_COURSES, courses);
-	    map.put(CM_EXCEPTIONS_CATEGORY, category);
-	    map.put(CM_EXCEPTIONS_PROGRAM, program);
-	    map.put(CM_EXCEPTIONS_ROLE, role);
+            if (cmExceptions == null)
+                cmExceptions = new HashMap<String, Map<String, String>>();
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put(CM_EXCEPTIONS_USERS, users);
+            map.put(CM_EXCEPTIONS_COURSES, courses);
+            map.put(CM_EXCEPTIONS_CATEGORY, category);
+            map.put(CM_EXCEPTIONS_PROGRAM, program);
+            map.put(CM_EXCEPTIONS_ROLE, role);
 
-	    cmExceptions.put(configurationXml, map);
+            cmExceptions.put(configurationXml, map);
 
-	}
+        }
     }
 
     public void getFrozenSessionIdConfig() {
-	String fileName = CONFIG_FOLDER + UNFROZENSITESCONFIG;
-	Reference reference = entityManager.newReference(fileName);
-	if (reference != null) {
-	    ContentResource resource = null;
-	    try {
-		resource = contentHostingService.getResource(reference.getId());
-		if (resource != null)
-		    retrieveConfigs(fileName, resource.streamContent());
-	    } catch (PermissionException e) {
-		log.info("You are not allowed to access this resource");
-	    } catch (IdUnusedException e) {
-		if (fileName.contains(UNFROZENSITESCONFIG)) {
-		    setSessionId(null);
-		}
-		log.info("There is no " + fileName + " has been removed ");
-	    } catch (TypeException e) {
-		log.info("The resource requested has the wrong type");
-	    } catch (ServerOverloadException e) {
-		log.info(e.getMessage());
-	    }
-	}
+        String fileName = CONFIG_FOLDER + UNFROZENSITESCONFIG;
+        Reference reference = entityManager.newReference(fileName);
+        if (reference != null) {
+            ContentResource resource = null;
+            try {
+                resource = contentHostingService.getResource(reference.getId());
+                if (resource != null)
+                    retrieveConfigs(fileName, resource.streamContent());
+            } catch (PermissionException e) {
+                log.info("You are not allowed to access this resource");
+            } catch (IdUnusedException e) {
+                if (fileName.contains(UNFROZENSITESCONFIG)) {
+                    setSessionId(null);
+                }
+                log.info("There is no " + fileName + " has been removed ");
+            } catch (TypeException e) {
+                log.info("The resource requested has the wrong type");
+            } catch (ServerOverloadException e) {
+                log.info(e.getMessage());
+            }
+        }
     }
 
     public void getConfigToFreeze() {
-	String fileName = CONFIG_FOLDER + FROZENSITESCONFIG;
-	Reference reference = entityManager.newReference(fileName);
-	if (reference != null) {
-	    ContentResource resource = null;
-	    try {
-		resource = contentHostingService.getResource(reference.getId());
-		if (resource != null)
-		    retrieveConfigs(fileName, resource.streamContent());
-	    } catch (PermissionException e) {
-		log.info("You are not allowed to access this resource");
-	    } catch (IdUnusedException e) {
-		if (fileName.contains(FROZENSITESCONFIG)) {
-		    setSessionId(null);
-		    setFrozenFunctionsToAllow(null);
-		}
-		log.info("There is no " + fileName + " has been removed ");
-	    } catch (TypeException e) {
-		log.info("The resource requested has the wrong type");
-	    } catch (ServerOverloadException e) {
-		log.info(e.getMessage());
-	    }
-	}
+        String fileName = CONFIG_FOLDER + FROZENSITESCONFIG;
+        Reference reference = entityManager.newReference(fileName);
+        if (reference != null) {
+            ContentResource resource = null;
+            try {
+                resource = contentHostingService.getResource(reference.getId());
+                if (resource != null)
+                    retrieveConfigs(fileName, resource.streamContent());
+            } catch (PermissionException e) {
+                log.info("You are not allowed to access this resource");
+            } catch (IdUnusedException e) {
+                if (fileName.contains(FROZENSITESCONFIG)) {
+                    setSessionId(null);
+                    setFrozenFunctionsToAllow(null);
+                }
+                log.info("There is no " + fileName + " has been removed ");
+            } catch (TypeException e) {
+                log.info("The resource requested has the wrong type");
+            } catch (ServerOverloadException e) {
+                log.info(e.getMessage());
+            }
+        }
     }
 
     private void retrieveConfigs(String configurationXml, InputStream stream) {
-	org.w3c.dom.Document document;
+        org.w3c.dom.Document document;
 
 	/*
 	 * Parse the XML - if that fails, give up now
 	 */
-	if ((document = parseXmlFromStream(stream)) == null) {
-	    log.warn("retrieveConfigs: XML document is null");
-	    return;
-	}
+        if ((document = parseXmlFromStream(stream)) == null) {
+            log.warn("retrieveConfigs: XML document is null");
+            return;
+        }
 
-	synchronized (this) {
-	    if (configurationXml.contains(OFFSITESCONFIGFILE)) {
-		String courses = retrieveParameter(document, COURSES);
-		String endDate = retrieveParameter(document, ENDDATE);
-		String startDate = retrieveParameter(document, STARTDATE);
-		String programs = retrieveParameter(document, PROGRAMS);
-		String servEns = retrieveParameter(document, SERVENS);
-		String piloteE2017 = retrieveParameter(document, PILOTE_E2017);
-		String piloteA2017 = retrieveParameter(document, PILOTE_A2017);
+        synchronized (this) {
+            if (configurationXml.contains(OFFSITESCONFIGFILE)) {
+                String courses = retrieveParameter(document, COURSES);
+                String endDate = retrieveParameter(document, ENDDATE);
+                String startDate = retrieveParameter(document, STARTDATE);
+                String programs = retrieveParameter(document, PROGRAMS);
+                String servEns = retrieveParameter(document, SERVENS);
+                String piloteE2017 = retrieveParameter(document, PILOTE_E2017);
+                String piloteA2017 = retrieveParameter(document, PILOTE_A2017);
 
-		setCourses(courses);
-		setStartDate(startDate);
-		setEndDate(endDate);
-		setPrograms(programs);
-		setServEns(servEns);
-		setPiloteE2017(piloteE2017);
-		setPiloteA2017(piloteA2017);
-	    }
+                setCourses(courses);
+                setStartDate(startDate);
+                setEndDate(endDate);
+                setPrograms(programs);
+                setServEns(servEns);
+                setPiloteE2017(piloteE2017);
+                setPiloteA2017(piloteA2017);
+            }
 
-	    if (configurationXml.contains(ROLE_FOLDER)) {
-		Map<String, Object> values = new HashMap<String, Object>();
-		String role = retrieveParameter(document, ROLE);
-		String description = retrieveParameter(document, DESCRIPTION);
-		String courseManagement = retrieveParameter(document, COURSEMANAGEMENT);
-		boolean includingFrozenSites =
-			Boolean.parseBoolean(retrieveParameter(document,
-				INCLUDING_FROZEN_SITES));
-		boolean includingDirSites =
-			Boolean.parseBoolean(retrieveParameter(document,
-				INCLUDING_DIR_SITES));
-			boolean updateGroup =
-					Boolean.parseBoolean(retrieveParameter(document,
-							ConfigurationService.UPDATE_GROUP));
-		String addedUsers = retrieveParameter(document, ADDEDUSERS);
-		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
-		String replacedUsers = retrieveParameter(document, REPLACEDUSERS);
-		String functions = retrieveParameter(document, FUNCTIONS);
+            if (configurationXml.contains(ROLE_FOLDER)) {
+                Map<String, Object> values = new HashMap<String, Object>();
+                RoleSynchronizationPOJO rolePojo = new RoleSynchronizationPOJO();
+                String role = retrieveParameter(document, ROLE);
+                String description = retrieveParameter(document, DESCRIPTION);
+                String courseManagement = retrieveParameter(document, COURSEMANAGEMENT);
+                boolean includingFrozenSites =
+                        Boolean.parseBoolean(retrieveParameter(document,
+                                INCLUDING_FROZEN_SITES));
+                boolean includingDirSites =
+                        Boolean.parseBoolean(retrieveParameter(document,
+                                INCLUDING_DIR_SITES));
+                boolean updateGroup =
+                        Boolean.parseBoolean(retrieveParameter(document,
+                                ConfigurationService.UPDATE_GROUP));
+                String addedUsers = retrieveParameter(document, ADDEDUSERS);
+                String removedUsers = retrieveParameter(document, REMOVEDUSERS);
+                String replacedUsers = retrieveParameter(document, REPLACEDUSERS);
+                String functions = retrieveParameter(document, FUNCTIONS);
+                String removedFunctions = retrieveParameter(document, REMOVE_FUNCTIONS);
 
-		setDescription(description);
-		setCourseManagement(courseManagement);
-		setIncludingFrozenSites(includingFrozenSites);
-		setIncludingDirSites(includingDirSites);
-		setUpdateGroup(updateGroup);
-		setAddedUsers(addedUsers);
-		setRemovedUsers(removedUsers);
-		setReplacedUsers(replacedUsers);
-		setFunctions(functions);
+                rolePojo.setRole(role);
+                rolePojo.setFunctions(functions);
+                rolePojo.setUpdatedGroup(updateGroup);
+                rolePojo.setDescription(description);
+                rolePojo.setRemovedFunctions(removedFunctions);
 
-		values.put(ADDEDUSERS, this.addedUsers);
-		values.put(REMOVEDUSERS, this.removedUsers);
-		values.put(FUNCTIONS, this.functions);
-		values.put(DESCRIPTION, this.description);
-		values.put(REPLACEDUSERS, this.replacedUsers);
-		values.put(COURSEMANAGEMENT, this.courseManagement);
-		values.put(INCLUDING_DIR_SITES, includingDirSites);
-		values.put(INCLUDING_FROZEN_SITES, includingFrozenSites);
-		values.put(ConfigurationService.UPDATE_GROUP, updateGroup);
+                if (roles == null)
+                    roles = new ArrayList<RoleSynchronizationPOJO>();
 
-		if (role != null) {
-		    if (updatedRoles == null)
-			updatedRoles =
-				new HashMap<String, Map<String, Object>>();
+                roles.add(rolePojo);
+                configFiles.put(configurationXml, role);
+            }
+        }
 
-		    if (updatedRoles.containsKey(role))
-				updatedRoles.remove(role);
-		    updatedRoles.put(role, values);
-		    configFiles.put(configurationXml, role);
-		}
-	    }
+        if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
+            String fuctionsRole = retrieveParameter(document, ROLE);
+            String description = retrieveParameter(document, DESCRIPTION);
+            String removedRole = retrieveParameter(document, REMOVED_ROLE);
+            boolean includingFrozenSites =
+                    Boolean.parseBoolean(retrieveParameter(document,
+                            INCLUDING_FROZEN_SITES));
+            boolean includingDirSites =
+                    Boolean.parseBoolean(retrieveParameter(document,
+                            INCLUDING_DIR_SITES));
+            boolean updateGroup =
+                    Boolean.parseBoolean(retrieveParameter(document,
+                            ConfigurationService.UPDATE_GROUP));
 
-	    if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
-		String fuctionsRole = retrieveParameter(document, ROLE);
-		String description = retrieveParameter(document, DESCRIPTION);
-		String removedRole = retrieveParameter(document, REMOVED_ROLE);
-		boolean includingFrozenSites =
-			Boolean.parseBoolean(retrieveParameter(document,
-				INCLUDING_FROZEN_SITES));
-		boolean includingDirSites =
-			Boolean.parseBoolean(retrieveParameter(document,
-				INCLUDING_DIR_SITES));
-			boolean updateGroup =
-					Boolean.parseBoolean(retrieveParameter(document,
-							ConfigurationService.UPDATE_GROUP));
+            String allowedFunctions =
+                    retrieveParameter(document, ALLOWED_FUNCTIONS);
+            String disallowedFunctions =
+                    retrieveParameter(document, DISALLOWED_FUNCTIONS);
 
-			String allowedFunctions =
-			retrieveParameter(document, ALLOWED_FUNCTIONS);
-		String disallowedFunctions =
-			retrieveParameter(document, DISALLOWED_FUNCTIONS);
+            setFunctionsRole(fuctionsRole);
+            setDescription(description);
+            setRemovedRole(removedRole);
+            setIncludingFrozenSites(includingFrozenSites);
+            setIncludingDirSites(includingDirSites);
+            setAllowedFunctions(allowedFunctions);
+            setDisallowedFunctions(disallowedFunctions);
+        }
 
-		setFunctionsRole(fuctionsRole);
-		setDescription(description);
-		setRemovedRole(removedRole);
-		setIncludingFrozenSites(includingFrozenSites);
-		setIncludingDirSites(includingDirSites);
-		setAllowedFunctions(allowedFunctions);
-		setDisallowedFunctions(disallowedFunctions);
-	    }
+        if (configurationXml.contains(FROZENSITESCONFIG)) {
+            String sessionId = retrieveParameter(document, SESSIONID);
+            setSessionId(sessionId);
+            setFrozenFunctionsToAllow(getFrozenPermissionsByRole(document));
+        }
 
-	    if (configurationXml.contains(FROZENSITESCONFIG)) {
-		String sessionId = retrieveParameter(document, SESSIONID);
-		setSessionId(sessionId);
-		setFrozenFunctionsToAllow(getFrozenPermissionsByRole(document));
-	    }
+        if (configurationXml.contains(UNFROZENSITESCONFIG)) {
+            String frozenSessionId = retrieveParameter(document, SESSIONID);
+            setSessionId(frozenSessionId);
+        }
 
-	    if (configurationXml.contains(UNFROZENSITESCONFIG)) {
-		String frozenSessionId = retrieveParameter(document, SESSIONID);
-		setSessionId(frozenSessionId);
-	    }
+        if (configurationXml.contains(PRINT_VERSION_CONFIG)) {
+            printVersionJobParams = new HashMap<String, String>();
+            printVersionJobParams.put(INCLUDING_DIR_SITES,
+                    retrieveParameter(document, INCLUDING_DIR_SITES));
+            printVersionJobParams.put(INCLUDING_FROZEN_SITES,
+                    retrieveParameter(document, INCLUDING_FROZEN_SITES));
+        }
 
-	    if (configurationXml.contains(PRINT_VERSION_CONFIG)) {
-		printVersionJobParams = new HashMap<String, String>();
-		printVersionJobParams.put(INCLUDING_DIR_SITES,
-			retrieveParameter(document, INCLUDING_DIR_SITES));
-		printVersionJobParams.put(INCLUDING_FROZEN_SITES,
-			retrieveParameter(document, INCLUDING_FROZEN_SITES));
-	    }
-	}
     }
 
     private HashMap<String, List<String>> getFrozenPermissionsByRole(
-	    Document document) {
-	HashMap<String, List<String>> rolesToFrozen =
-		new HashMap<String, List<String>>();
-	// get the root element
-	Element docEle = document.getDocumentElement();
-	// get a nodelist of elements
-	NodeList nl = docEle.getElementsByTagName(ROLESET);
-	if (nl != null && nl.getLength() > 0) {
-	    for (int i = 0; i < nl.getLength(); i++) {
-		// get the role element
-		Element element = (Element) nl.item(i);
-		// get the role object
-		String roleId = element.getAttribute(ROLEID);
-		String permissions = element.getTextContent();
-		setPermissions(permissions);
-		// add it to list
-		List<String> permissionsAllowed = this.getFrozenPermissions();
-		rolesToFrozen.put(roleId, permissionsAllowed);
-	    }
-	    return rolesToFrozen;
-	}
-	return rolesToFrozen;
+            Document document) {
+        HashMap<String, List<String>> rolesToFrozen =
+                new HashMap<String, List<String>>();
+        // get the root element
+        Element docEle = document.getDocumentElement();
+        // get a nodelist of elements
+        NodeList nl = docEle.getElementsByTagName(ROLESET);
+        if (nl != null && nl.getLength() > 0) {
+            for (int i = 0; i < nl.getLength(); i++) {
+                // get the role element
+                Element element = (Element) nl.item(i);
+                // get the role object
+                String roleId = element.getAttribute(ROLEID);
+                String permissions = element.getTextContent();
+                setPermissions(permissions);
+                // add it to list
+                List<String> permissionsAllowed = this.getFrozenPermissions();
+                rolesToFrozen.put(roleId, permissionsAllowed);
+            }
+            return rolesToFrozen;
+        }
+        return rolesToFrozen;
     }
 
     private Date getDate(String date) {
-	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-	Date convertedDate = null;
-	try {
-	    convertedDate = dateFormat.parse(date);
-	} catch (ParseException e) {
-	    e.printStackTrace();
-	}
-	return convertedDate;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        Date convertedDate = null;
+        try {
+            convertedDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return convertedDate;
 
     }
 
     private void setCourses(String courses) {
-	List<String> allCourses = new ArrayList<String>();
-	if (courses != null && courses.length() > 0) {
-	    String[] coursesTable = courses.split(LIST_DELIMITER);
-	    for (int i = 0; i < coursesTable.length; i++) {
-		allCourses.add(coursesTable[i].trim());
-	    }
-	}
-	this.courses = allCourses;
+        List<String> allCourses = new ArrayList<String>();
+        if (courses != null && courses.length() > 0) {
+            String[] coursesTable = courses.split(LIST_DELIMITER);
+            for (int i = 0; i < coursesTable.length; i++) {
+                allCourses.add(coursesTable[i].trim());
+            }
+        }
+        this.courses = allCourses;
     }
 
     public List<String> getCourses() {
-	return courses;
+        return courses;
     }
 
     private void setDescription(String description) {
-	this.description = description;
+        this.description = description;
     }
 
     public String getDescription() {
-	return description;
+        return description;
     }
 
     public boolean isCourseManagement() {
@@ -807,198 +793,197 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
      * @return the includingFrozenSites value.
      */
     public boolean isIncludingFrozenSites() {
-	return includingFrozenSites;
+        return includingFrozenSites;
     }
 
     /**
      * @param includingFrozenSites the new value of includingFrozenSites.
      */
     private void setIncludingFrozenSites(boolean includingFrozenSites) {
-	this.includingFrozenSites = includingFrozenSites;
+        this.includingFrozenSites = includingFrozenSites;
     }
 
     /**
      * @return the includingDirSites value.
      */
     public boolean isIncludingDirSites() {
-	return includingDirSites;
+        return includingDirSites;
     }
 
     /**
      * @param includingDirSites the new value of includingDirSites.
      */
     private void setIncludingDirSites(boolean includingDirSites) {
-	this.includingDirSites = includingDirSites;
+        this.includingDirSites = includingDirSites;
     }
 
     private void setFunctions(String functions) {
-	this.functions = new ArrayList<String>();
-	if (functions != null && functions.length() > 0) {
-	    String[] functionsTable = functions.split(LIST_DELIMITER);
-	    for (int i = 0; i < functionsTable.length; i++) {
-		this.functions.add(functionsTable[i].trim());
-	    }
-	}
+        this.functions = new ArrayList<String>();
+        if (functions != null && functions.length() > 0) {
+            String[] functionsTable = functions.split(LIST_DELIMITER);
+            for (int i = 0; i < functionsTable.length; i++) {
+                this.functions.add(functionsTable[i].trim());
+            }
+        }
     }
 
     private void setAddedUsers(String addedUsers) {
-	this.addedUsers = new ArrayList<String>();
-	if (addedUsers != null && addedUsers.length() > 0) {
-	    String[] addedUsersTable = addedUsers.split(LIST_DELIMITER);
-	    for (int i = 0; i < addedUsersTable.length; i++) {
-		this.addedUsers.add(addedUsersTable[i].trim());
-	    }
-	}
+        this.addedUsers = new ArrayList<String>();
+        if (addedUsers != null && addedUsers.length() > 0) {
+            String[] addedUsersTable = addedUsers.split(LIST_DELIMITER);
+            for (int i = 0; i < addedUsersTable.length; i++) {
+                this.addedUsers.add(addedUsersTable[i].trim());
+            }
+        }
     }
 
     private void setRemovedUsers(String removedUsers) {
-	this.removedUsers = new ArrayList<String>();
-	if (removedUsers != null && removedUsers.length() > 0) {
-	    String[] removedUsersTable = removedUsers.split(LIST_DELIMITER);
-	    for (int i = 0; i < removedUsersTable.length; i++) {
-		this.removedUsers.add(removedUsersTable[i].trim());
-	    }
-	}
+        this.removedUsers = new ArrayList<String>();
+        if (removedUsers != null && removedUsers.length() > 0) {
+            String[] removedUsersTable = removedUsers.split(LIST_DELIMITER);
+            for (int i = 0; i < removedUsersTable.length; i++) {
+                this.removedUsers.add(removedUsersTable[i].trim());
+            }
+        }
     }
-    
+
     private void setReplacedUsers(String replacedUsers) {
-	this.replacedUsers = new ArrayList<String>();
-	if (replacedUsers != null && replacedUsers.length() > 0) {
-	    String[] replacedUsersTable = replacedUsers.split(LIST_DELIMITER);
-	    for (int i = 0; i < replacedUsersTable.length; i++) {
-		this.replacedUsers.add(replacedUsersTable[i].trim());
-	    }
-	}
+        this.replacedUsers = new ArrayList<String>();
+        if (replacedUsers != null && replacedUsers.length() > 0) {
+            String[] replacedUsersTable = replacedUsers.split(LIST_DELIMITER);
+            for (int i = 0; i < replacedUsersTable.length; i++) {
+                this.replacedUsers.add(replacedUsersTable[i].trim());
+            }
+        }
     }
-    
+
 
     /**
      * Lookup and rerieve one dynamic configuration parameter
-     * 
-     * @param Configuration XML
-     * @param name Parameter name
+     *
+     * @param document Document
+     * @param name     Parameter name
      */
     private String retrieveParameter(org.w3c.dom.Document document, String name) {
-	String value = getText(document.getDocumentElement(), name);
-	if ((value) != null) {
-	    return value;
-	} else
-	    return null;
+        String value = getText(document.getDocumentElement(), name);
+        if ((value) != null) {
+            return value;
+        } else
+            return null;
     }
 
     /**
      * Get the text associated with this element
-     * 
+     *
      * @param root The root node of the text element
      * @return Text (trimmed of leading/trailing whitespace, null if none)
      */
     private String getText(Element root, String elementName) {
-	NodeList nodeList;
-	Node parent;
-	String text;
+        NodeList nodeList;
+        Node parent;
+        String text;
 
-	nodeList = root.getElementsByTagName(elementName);
-	if (nodeList.getLength() == 0) {
-	    return null;
-	}
+        nodeList = root.getElementsByTagName(elementName);
+        if (nodeList.getLength() == 0) {
+            return null;
+        }
 
-	text = null;
-	parent = (Element) nodeList.item(0);
+        text = null;
+        parent = (Element) nodeList.item(0);
 
-	for (Node child = parent.getFirstChild(); child != null; child =
-		child.getNextSibling()) {
-	    switch (child.getNodeType()) {
-	    case Node.TEXT_NODE:
-		text = normalizeText(text, child.getNodeValue());
-		break;
+        for (Node child = parent.getFirstChild(); child != null; child =
+                child.getNextSibling()) {
+            switch (child.getNodeType()) {
+                case Node.TEXT_NODE:
+                    text = normalizeText(text, child.getNodeValue());
+                    break;
 
-	    default:
-		break;
-	    }
-	}
-	return text == null ? text : text.trim();
+                default:
+                    break;
+            }
+        }
+        return text == null ? text : text.trim();
     }
 
     /**
      * "Normalize" XML text node content to create a simple string
-     * 
+     *
      * @param original Original text
-     * @param update Text to add to the original string (a space separates the
-     *            two)
+     * @param update   Text to add to the original string (a space separates the
+     *                 two)
      * @return Concatenated contents (trimmed)
      */
     private String normalizeText(String original, String update) {
-	StringBuilder result;
+        StringBuilder result;
 
-	if (original == null) {
-	    return (update == null) ? "" : update.trim();
-	}
+        if (original == null) {
+            return (update == null) ? "" : update.trim();
+        }
 
-	result = new StringBuilder(original.trim());
-	result.append(' ');
-	result.append(update.trim());
+        result = new StringBuilder(original.trim());
+        result.append(' ');
+        result.append(update.trim());
 
-	return result.toString();
+        return result.toString();
     }
 
     /**
      * Parse an XML resource
-     * 
-     * @param filename The filename (or URI) to parse
+     *
+     * @param stream The filename (or URI) to parse
      * @return DOM Document (null if parse fails)
      */
     private Document parseXmlFromStream(InputStream stream) {
-	try {
-	    DocumentBuilderFactory factory;
+        try {
+            DocumentBuilderFactory factory;
 
-	    factory = DocumentBuilderFactory.newInstance();
-	    factory.setNamespaceAware(false);
+            factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(false);
 
-	    DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+            DocumentBuilder documentBuilder = factory.newDocumentBuilder();
 
-	    if (documentBuilder != null) {
-		return documentBuilder.parse(stream);
-	    }
-	} catch (Exception exception) {
-	    log.warn("XML parse on \"" + stream + "\" failed: " + exception);
-	}
-	return null;
-    }
-
-    public Map<String, Map<String, Object>> getUdatedRoles() {
-	return updatedRoles;
+            if (documentBuilder != null) {
+                return documentBuilder.parse(stream);
+            }
+        } catch (Exception exception) {
+            log.warn("XML parse on \"" + stream + "\" failed: " + exception);
+        }
+        return null;
     }
 
     public Map<String, Map<String, String>> getCmExceptions() {
-	return cmExceptions;
+        return cmExceptions;
     }
 
     public String getRoleToRemove() {
-	return removedRole;
+        return removedRole;
     }
 
     public void setCourseOutlineXsl(String courseOutlineXsl) {
-	this.courseOutlineXsl = courseOutlineXsl;
+        this.courseOutlineXsl = courseOutlineXsl;
     }
 
     public String getCourseOutlineXsl() {
-	return courseOutlineXsl;
+        return courseOutlineXsl;
     }
 
     public List<String> getServEns() {
-	return servEns;
+        return servEns;
     }
 
-    public List<String> getPiloteE2017(){ return piloteE2017; }
+    public List<String> getPiloteE2017() {
+        return piloteE2017;
+    }
 
     public List<String> getPrograms() {
-	return programs;
+        return programs;
     }
 
     /**
      * @return the printVersionJobParams value.
      */
     public Map<String, String> getPrintVersionJobParams() {
-	return printVersionJobParams;
+        return printVersionJobParams;
     }
 }
+

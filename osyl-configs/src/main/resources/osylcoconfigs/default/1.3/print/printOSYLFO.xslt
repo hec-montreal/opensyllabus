@@ -545,71 +545,152 @@
 		<xsl:choose>
 			<xsl:when test="$lang='FR'">
 				<fo:block>
-					<xsl:text>
-						Les étudiants sont priés de prendre connaissance des actes et des gestes qui sont considérés comme étant du plagiat ou
-						une autre infraction de nature pédagogique, de la procédure et des sanctions, qui peuvent aller jusqu'à la suspension et
-						même l'expulsion de HEC Montréal. Toute infraction sera analysée en fonction des faits et des circonstances, et une
-						sanction sera appliquée en conséquence.
-					</xsl:text>
-					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
-						<fo:basic-link>
-							<xsl:attribute name="external-destination">http://www.hec.ca/plagiat</xsl:attribute>
-							<xsl:text>En savoir plus sur le plagiat...</xsl:text>
-						</fo:basic-link>
-					</fo:inline>
+					<fo:block font-weight="bold">
+						<xsl:text>Mon principal devoir: être présent en classe</xsl:text>
+					</fo:block>
+					<fo:block>
+						<xsl:text>Selon le</xsl:text>
+						<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+							<fo:basic-link>
+								<xsl:attribute name="external-destination">http://www.hec.ca/direction_services/secretariat_general/juridique/reglements_politiques/documents/Reglement_pedagogique.pdf</xsl:attribute>
+								<xsl:text> règlement de l'École</xsl:text>
+							</fo:basic-link>
+						</fo:inline>
+						<xsl:text>, la présence de l'étudiant en classe (ou aux activités du cours) est présumée. Ainsi, l'enseignant n'est pas tenu de fournir de l'aide ou d'adapter le cours ou son évaluation en raison d'une absence.</xsl:text>
+					</fo:block>
+					<fo:block font-weight="bold">
+						<xsl:text>L'intégrité intellectuelle: tout le monde y gagne!</xsl:text>
+					</fo:block>
+					<fo:block>
+						<xsl:text>Notez que toute évaluation peut faire l'objet d'une analyse par un logiciel de détection de similitudes. Informez-vous sur </xsl:text>
+						<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+							<fo:basic-link>
+								<xsl:attribute name="external-destination">http://www.hecca/integrite/bonnes-pratiques-et-ressources/index.html</xsl:attribute>
+								<xsl:text>les façons d'éviter le plagiat</xsl:text>
+							</fo:basic-link>
+						</fo:inline>
+						<xsl:text>et attention aux travaux d'équipe et à la collaboration hors-classe! </xsl:text>
+						<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+							<fo:basic-link>
+								<xsl:attribute name="external-destination">http://www.hec.ca/integrite/index.html</xsl:attribute>
+								<xsl:text>Pour en savoir plus sur l'intégrité intellectuelle…</xsl:text>
+							</fo:basic-link>
+						</fo:inline>
+					</fo:block>
+					<fo:block font-weight="bold">
+						<xsl:text>Les examens: à vérifier avant le jour J!</xsl:text>
+					</fo:block>
+					<fo:block>
+						<fo:block>1- La validité de sa carte d’étudiant.
+							<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+								<fo:basic-link>
+									<xsl:attribute name="external-destination">http://www.hec.ca/etudiant_actuel/rentree-scolaire/carte-etudiante/carte-etudiante.html</xsl:attribute>
+									<xsl:text>En savoir plus...</xsl:text>
+								</fo:basic-link>
+							</fo:inline>
+						</fo:block>
+						<fo:block>2- L'horaire et la salle de l'examen (dans
+							<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+								<fo:basic-link>
+									<xsl:attribute name="external-destination">http://www.hec.ca/etudiant_actuel/rentree-scolaire/carte-etudiante/carte-etudiante.html</xsl:attribute>
+									<xsl:text>HEC en ligne</xsl:text>
+								</fo:basic-link>
+							</fo:inline>
+							<xsl:text> )</xsl:text>
+						</fo:block>
+						<fo:block>3- La documentation autorisée a l'examen (dans mon site
+							<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+								<fo:basic-link>
+									<xsl:attribute name="external-destination">https://zonecours.hec.ca/</xsl:attribute>
+									<xsl:text>ZoneCours</xsl:text>
+								</fo:basic-link>
+							</fo:inline>
+							<xsl:text> )</xsl:text>
+						</fo:block>
+						<fo:block>4- La conformité de ma calculatrice.
+							<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+								<fo:basic-link>
+									<xsl:attribute name="external-destination">http://www.hec.ca/etudiant_actuel/services-offerts/ressources-technologiques/calculatrices/calculatrices.html</xsl:attribute>
+									<xsl:text>En savoir plus</xsl:text>
+								</fo:basic-link>
+							</fo:inline>
+						</fo:block>
+					</fo:block>
 				</fo:block>
 			</xsl:when>
 			<xsl:otherwise>
 				<fo:block>
-					<xsl:text>
-						Please consult the acts and gestures that are considered plagiarism or another academic
-						violation, along with the applicable procedure and sanctions, which range up to suspension and
-						even expulsion from HEC Montréal. Violations are analyzed  based on the facts and circumstances,
-						and sanctions are applied accordingly.
-					</xsl:text>
-					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
-						<fo:basic-link>
-							<xsl:attribute name="external-destination">http://www.hec.ca/en/programs_training/plagiarism.html</xsl:attribute><xsl:text>Learn more about plagiarism...</xsl:text>
-						</fo:basic-link>
-					</fo:inline>
-				</fo:block>
-			</xsl:otherwise>
-		</xsl:choose>
-	</fo:block>
-	<xsl:call-template name="RubricTitle">
-		<xsl:with-param name="label">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Calculatrices</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>Calculators</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:with-param>
-	</xsl:call-template>
-	<fo:block space-after="10px">
-		<xsl:choose>
-			<xsl:when test="$lang='FR'">
-				<fo:block>
-					<xsl:text>Les étudiants sont priés de prendre connaissance de la politique d'utilisation de calculatrices lors d'examens lorsque celles-ci sont autorisées.</xsl:text>
-					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
-						<fo:basic-link>
-							<xsl:attribute name="external-destination">http://www.hec.ca/etudiant_actuel/technologies/calculatrices_autorisees/calculatrices.html</xsl:attribute>
-							<xsl:text> En savoir plus sur la politique d'usage de calculatrices...</xsl:text>
-						</fo:basic-link>
-					</fo:inline>
-				</fo:block>
-			</xsl:when>
-			<xsl:otherwise>
-				<fo:block>
-					<xsl:text>Please consult the </xsl:text>
-					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
-						<fo:basic-link>
-							<xsl:attribute name="external-destination">http://www.hec.ca/en/current_student/technologies/authorized_calculators/calculators.html</xsl:attribute><xsl:text>calculator usage policy</xsl:text>
-						</fo:basic-link>
-					</fo:inline>
-					<xsl:text> during exams when applicable.</xsl:text>
+					<fo:block font-weight="bold">
+						<xsl:text>Mon principal devoir: être présent en classe</xsl:text>
+					</fo:block>
+					<fo:block>
+						<xsl:text>Selon le</xsl:text>
+						<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+							<fo:basic-link>
+								<xsl:attribute name="external-destination">http://www.hec.ca/direction_services/secretariat_general/juridique/reglements_politiques/documents/Reglement_pedagogique.pdf</xsl:attribute>
+								<xsl:text> règlement de l'École</xsl:text>
+							</fo:basic-link>
+						</fo:inline>
+						<xsl:text>, la présence de l'étudiant en classe (ou aux activités du cours) est présumée. Ainsi, l'enseignant n'est pas tenu de fournir de l'aide ou d'adapter le cours ou son évaluation en raison d'une absence.</xsl:text>
+					</fo:block>
+					<fo:block font-weight="bold">
+						<xsl:text>L'intégrité intellectuelle: tout le monde y gagne!</xsl:text>
+					</fo:block>
+					<fo:block>
+						<xsl:text>Notez que toute évaluation peut faire l'objet d'une analyse par un logiciel de détection de similitudes. Informez-vous sur </xsl:text>
+						<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+							<fo:basic-link>
+								<xsl:attribute name="external-destination">http://www.hecca/integrite/bonnes-pratiques-et-ressources/index.html</xsl:attribute>
+								<xsl:text>les façons d'éviter le plagiat</xsl:text>
+							</fo:basic-link>
+						</fo:inline>
+						<xsl:text>et attention aux travaux d'équipe et à la collaboration hors-classe! </xsl:text>
+						<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+							<fo:basic-link>
+								<xsl:attribute name="external-destination">http://www.hec.ca/integrite/index.html</xsl:attribute>
+								<xsl:text>Pour en savoir plus sur l'intégrité intellectuelle…</xsl:text>
+							</fo:basic-link>
+						</fo:inline>
+					</fo:block>
+					<fo:block font-weight="bold">
+						<xsl:text>Les examens: à vérifier avant le jour J!</xsl:text>
+					</fo:block>
+					<fo:block>
+						<fo:block>1- La validité de sa carte d’étudiant.
+							<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+								<fo:basic-link>
+									<xsl:attribute name="external-destination">http://www.hec.ca/etudiant_actuel/rentree-scolaire/carte-etudiante/carte-etudiante.html</xsl:attribute>
+									<xsl:text>En savoir plus...</xsl:text>
+								</fo:basic-link>
+							</fo:inline>
+						</fo:block>
+						<fo:block>2- L'horaire et la salle de l'examen (dans
+							<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+								<fo:basic-link>
+									<xsl:attribute name="external-destination">http://www.hec.ca/etudiant_actuel/rentree-scolaire/carte-etudiante/carte-etudiante.html</xsl:attribute>
+									<xsl:text>HEC en ligne</xsl:text>
+								</fo:basic-link>
+							</fo:inline>
+							<xsl:text> )</xsl:text>
+						</fo:block>
+						<fo:block>3- La documentation autorisée a l'examen (dans mon site
+							<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+								<fo:basic-link>
+									<xsl:attribute name="external-destination">https://zonecours.hec.ca/</xsl:attribute>
+									<xsl:text>ZoneCours</xsl:text>
+								</fo:basic-link>
+							</fo:inline>
+							<xsl:text> )</xsl:text>
+						</fo:block>
+						<fo:block>4- La conformité de ma calculatrice.
+							<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+								<fo:basic-link>
+									<xsl:attribute name="external-destination">http://www.hec.ca/etudiant_actuel/services-offerts/ressources-technologiques/calculatrices/calculatrices.html</xsl:attribute>
+									<xsl:text>En savoir plus</xsl:text>
+								</fo:basic-link>
+							</fo:inline>
+						</fo:block>
+					</fo:block>
 				</fo:block>
 			</xsl:otherwise>
 		</xsl:choose>

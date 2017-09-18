@@ -13,11 +13,13 @@ import org.sakaiproject.site.api.Group;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.user.api.UserNotDefinedException;
-import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
+import org.sakaiquebec.opensyllabus.admin.api.RoleSynchronizationPOJO;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.RolesSynchronizationJob;
 
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
         implements RolesSynchronizationJob {
@@ -27,7 +29,7 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 
     private List<Site> allSites;
 
-    private List<ConfigRole> rolesToConfig = null;
+    private List<RoleSynchronizationPOJO> rolesToConfig = null;
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
@@ -36,12 +38,9 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
         long start = System.currentTimeMillis();
         log.info("Starting");
 
-        // Retrieve information from the xml file
-        init();
-
+        rolesToConfig = adminConfigService.getRoles();
         Site site = null;
         AuthzGroup siteRealm = null;
-
         if (rolesToConfig != null) {
 
             allSites = siteService.getSites(SiteService.SelectionType.ANY,
@@ -50,6 +49,7 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 
             //Do templates first
             // Check role in template realm
+
             try {
                 //hec-template
                 AuthzGroup templateRealm =
@@ -63,10 +63,10 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
                 e.printStackTrace();
             }
 
-
+            int count = 0;
             for (int i = 0; i < allSites.size(); i++) {
                 site = allSites.get(i);
-                if (site.getTools("sakai.tenjin").size() > 0) {
+                if (site.getTools("sakai.tenjin") != null && site.getTools("sakai.tenjin").size() > 0) {
                     try {
                         siteRealm =
                                 authzGroupService
@@ -77,16 +77,14 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
                     } catch (GroupNotDefinedException e) {
                         log.error(e.getMessage());
                     }
-
+                    //System.out.println (i + " Le nombre " + count++ );
                 }
-
-                log.info("completed in " + (System.currentTimeMillis() - start)
-                        + " ms");
             }
         }
 
+        log.info("completed in " + (System.currentTimeMillis() - start)
+                + " ms");
         logoutFromSakai();
-
     }
 
 
@@ -95,14 +93,9 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
         AuthzGroup siteRealm = null;
         Collection<Group> siteGroups = null;
 
-        for (ConfigRole configRole : rolesToConfig) {
+        for (RoleSynchronizationPOJO configRole : rolesToConfig) {
 
-            // remove users in course management
-            if (configRole.getCourseManagement()) {
-                removeUsersInCM(configRole.getRemovedUsers(), configRole.getAddedUsers());
-            }
-
-            if (configRole.isUpdateGroup()) {
+            if (configRole.getUpdatedGroup()) {
                 siteGroups = site.getGroups();
                 for (Group group : siteGroups) {
                     processRealm(group, configRole);
@@ -132,26 +125,19 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 
                 }
             }
-
         }
-
-
     }
 
     private void addOrUpdateRoles(AuthzGroup siteRealm) {
 
 
-        for (ConfigRole configRole : rolesToConfig) {
-            // remove users in course management
-            if (configRole.getCourseManagement()) {
-                removeUsersInCM(configRole.getRemovedUsers(), configRole.getAddedUsers());
-            }
+        for (RoleSynchronizationPOJO configRole : rolesToConfig) {
             processRealm(siteRealm, configRole);
 
         }
     }
 
-    private void processRealm(AuthzGroup siteRealm, ConfigRole configRole) {
+    private void processRealm(AuthzGroup siteRealm, RoleSynchronizationPOJO configRole) {
         boolean roleExists = false;
 
         if (siteRealm != null) {
@@ -159,98 +145,22 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
             // We check if the role with the required
             // permissions
             // exists in the site
-            roleExists = isRoleInRealm(siteRealm, configRole.getConfigRole());
+            roleExists = isRoleInRealm(siteRealm, configRole.getRole());
             if (!roleExists) {
-                addRole(siteRealm, configRole.getConfigRole(),
+                addRole(siteRealm, configRole.getRole(),
                         configRole.getFunctions(), configRole.getDescription());
             } else {
-                addFunctions(siteRealm, configRole.getConfigRole(),
+                addFunctions(siteRealm, configRole.getRole(),
                         configRole.getFunctions());
-                if (configRole.getRemoveFunctions() != null && configRole.getRemoveFunctions().size() > 0)
-                    removeFunctions(siteRealm, configRole.getConfigRole(), configRole.getRemoveFunctions());
+                if (configRole.getRemovedFunctions() != null && configRole.getRemovedFunctions().size() > 0)
+                    removeFunctions(siteRealm, configRole.getRole(), configRole.getRemovedFunctions());
             }
-            // We add the new users
-            addUsers(siteRealm, configRole.getConfigRole(),
-                    configRole.getAddedUsers());
-
-
-            // We remove the specified users and replace them with new users
-            removeOrRemoveUsers(siteRealm, configRole.getConfigRole(),
-                    configRole.getRemovedUsers(),
-                    configRole.getReplacedUsers(),
-                    configRole.getCourseManagement());
-
         }
-
     }
 
+
     private void init() {
-        if (rolesToConfig == null) {
-            rolesToConfig = new ArrayList<ConfigRole>();
-        }
 
-        Map<String, Map<String, Object>> roles =
-                adminConfigService.getUdatedRoles();
-
-        String role;
-        String description;
-        List<String> removedUsers;
-        List<String> addedUsers;
-        List<String> functions;
-        List<String> removeFunctions;
-        List<String> replacedUsers;
-        boolean updateGroup;
-        boolean includingFrozenSites;
-        boolean includingDirSites;
-        boolean courseManagement;
-        ConfigRole configRole;
-        Map<String, Object> values;
-
-        for (Entry<String, Map<String, Object>> entry : roles.entrySet()) {
-            role = entry.getKey();
-            values = entry.getValue();
-            removedUsers =
-                    (List<String>) values
-                            .get(ConfigurationService.REMOVEDUSERS);
-            addedUsers =
-                    (List<String>) values.get(ConfigurationService.ADDEDUSERS);
-            functions =
-                    (List<String>) values.get(ConfigurationService.FUNCTIONS);
-            removeFunctions =
-                    (List<String>) values.get(ConfigurationService.REMOVE_FUNCTIONS);
-            description = (String) values.get(ConfigurationService.DESCRIPTION);
-            replacedUsers =
-                    (List<String>) values
-                            .get(ConfigurationService.REPLACEDUSERS);
-            courseManagement =
-                    ((Boolean) values.get(ConfigurationService.COURSEMANAGEMENT))
-                            .booleanValue();
-            includingFrozenSites = ((Boolean) values
-                    .get(ConfigurationService.INCLUDING_FROZEN_SITES))
-                    .booleanValue();
-            includingDirSites = ((Boolean) values
-                    .get(ConfigurationService.INCLUDING_DIR_SITES))
-                    .booleanValue();
-
-            updateGroup = ((Boolean) values
-                    .get(ConfigurationService.UPDATE_GROUP))
-                    .booleanValue();
-            configRole = new ConfigRole();
-            configRole.setConfigRole(role);
-            configRole.setDescription(description);
-            configRole.setAddedUsers(addedUsers);
-            configRole.setRemovedUsers(removedUsers);
-            configRole.setFunctions(functions);
-            configRole.setIncludingFrozenSites(includingFrozenSites);
-            configRole.setIncludingDirSites(includingDirSites);
-            configRole.setReplacedUsers(replacedUsers);
-            configRole.setCourseManagement(courseManagement);
-            configRole.setUpdateGroup(updateGroup);
-            configRole.setRemoveFunctions(removeFunctions);
-
-
-            rolesToConfig.add(configRole);
-        }
     }
 
     /**
