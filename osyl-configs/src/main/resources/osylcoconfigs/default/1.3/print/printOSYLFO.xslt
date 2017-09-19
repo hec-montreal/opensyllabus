@@ -619,7 +619,7 @@
 				</fo:block>
 			</xsl:when>
 			<xsl:otherwise>
-				<fo:block>
+				<!--<fo:block>
 					<fo:block font-weight="bold">
 						<xsl:text>Mon principal devoir: être présent en classe</xsl:text>
 					</fo:block>
@@ -691,10 +691,62 @@
 							</fo:inline>
 						</fo:block>
 					</fo:block>
+				</fo:block>-->
+				<fo:block>
+					<xsl:text>
+						Please consult the acts and gestures that are considered plagiarism or another academic
+						violation, along with the applicable procedure and sanctions, which range up to suspension and
+						even expulsion from HEC Montréal. Violations are analyzed  based on the facts and circumstances,
+						and sanctions are applied accordingly.
+					</xsl:text>
+					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+						<fo:basic-link>
+							<xsl:attribute name="external-destination">http://www.hec.ca/en/programs_training/plagiarism.html</xsl:attribute><xsl:text>Learn more about plagiarism...</xsl:text>
+						</fo:basic-link>
+					</fo:inline>
+				</fo:block>
+				<xsl:call-template name="RubricTitle">
+					<xsl:with-param name="label">
+						<xsl:choose>
+							<xsl:when test="$lang = 'FR'">
+								<xsl:text>Calculatrices</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>Calculators</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:with-param>
+				</xsl:call-template>
+				<fo:block space-after="10px">
+					<xsl:choose>
+						<xsl:when test="$lang='FR'">
+							<fo:block>
+								<xsl:text>Les étudiants sont priés de prendre connaissance de la politique d'utilisation de calculatrices lors d'examens lorsque celles-ci sont autorisées.</xsl:text>
+								<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+									<fo:basic-link>
+										<xsl:attribute name="external-destination">http://www.hec.ca/etudiant_actuel/technologies/calculatrices_autorisees/calculatrices.html</xsl:attribute>
+										<xsl:text> En savoir plus sur la politique d'usage de calculatrices...</xsl:text>
+									</fo:basic-link>
+								</fo:inline>
+							</fo:block>
+						</xsl:when>
+						<xsl:otherwise>
+							<fo:block>
+								<xsl:text>Please consult the </xsl:text>
+								<fo:inline font-size="10pt" color="blue" text-decoration="underline">
+									<fo:basic-link>
+										<xsl:attribute name="external-destination">http://www.hec.ca/en/current_student/technologies/authorized_calculators/calculators.html</xsl:attribute><xsl:text>calculator usage policy</xsl:text>
+									</fo:basic-link>
+								</fo:inline>
+								<xsl:text> during exams when applicable.</xsl:text>
+							</fo:block>
+						</xsl:otherwise>
+					</xsl:choose>
 				</fo:block>
 			</xsl:otherwise>
 		</xsl:choose>
 	</fo:block>
+
 </xsl:template>
 
 <!-- ===================================== -->
