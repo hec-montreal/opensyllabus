@@ -2069,6 +2069,18 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 					e.printStackTrace();
 				}
 			}
+			if (element instanceof SyllabusImageElement){
+				try {
+					resourceId = elements.get("imageId");
+					newResourceId = (elements.get("imageId")).replace(oldSiteId, newSiteId);
+					savedNewResourceId = contentHostingService.copy(resourceId, newResourceId);
+					elements.put("imageId", savedNewResourceId);
+					syllabusService.saveOrUpdateElement(element);
+				} catch (PermissionException | IdUnusedException | TypeException | InUseException | OverQuotaException
+						| IdUsedException | ServerOverloadException e) {
+					e.printStackTrace();
+				}
+			}
 			if (element instanceof SyllabusCitationElement){
 				citationRefId = elements.get("citationId");
 				//Retrieve resourceId and citationId
