@@ -47,7 +47,7 @@ public interface OsylAbstractQuartzJob extends Job{
 
     public boolean isBeforeH2018(int strm);
 
-    public final static String CERT_PILOTE_A2017 = "CERT";
+    public final static String CERT_PILOTE = "CERT";
 
     /**
      * Method used to see if the data value is synched with the old synchronizing job

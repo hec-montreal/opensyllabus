@@ -77,6 +77,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private List<String> piloteA2017 = null;
 
+    private List<String> piloteH2018 = null;
+
     private String removedRole = null;
 
     private String functionsRole = null;
@@ -254,6 +256,28 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     public boolean inE2017Pilote(String courseOfferingId, List<String> piloteE2017) {
         for (String exception : piloteE2017) {
             exception = exception + "2172";
+            if (courseOfferingId.startsWith(exception))
+                return true;
+        }
+        return false;
+    }
+
+    private void setPiloteH2018(String piloteH2018) {
+        this.piloteH2018 = new ArrayList<String>();
+        if (piloteH2018 != null && !piloteH2018.isEmpty()) {
+            this.piloteH2018 = new ArrayList<String>();
+            Collections.addAll(this.piloteH2018, piloteH2018.split(","));
+        }
+    }
+
+    @Override
+    public List<String> getPiloteH2018() {
+        return piloteH2018;
+    }
+
+    public boolean inH2018Pilote(String courseOfferingId, List<String> piloteH2018) {
+        for (String exception : piloteH2018) {
+            exception = exception + "2181";
             if (courseOfferingId.startsWith(exception))
                 return true;
         }
@@ -627,6 +651,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
                 String servEns = retrieveParameter(document, SERVENS);
                 String piloteE2017 = retrieveParameter(document, PILOTE_E2017);
                 String piloteA2017 = retrieveParameter(document, PILOTE_A2017);
+                String piloteH2018 = retrieveParameter(document, PILOTE_H2018);
 
                 setCourses(courses);
                 setStartDate(startDate);
@@ -635,6 +660,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
                 setServEns(servEns);
                 setPiloteE2017(piloteE2017);
                 setPiloteA2017(piloteA2017);
+                setPiloteH2018(piloteH2018);
             }
 
             if (configurationXml.contains(ROLE_FOLDER)) {

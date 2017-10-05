@@ -51,6 +51,8 @@ public interface ConfigurationService {
 
     public final static String PILOTE_A2017 = "pilote-a2017";
 
+    public final static String PILOTE_H2018 = "pilote-h2018";
+
     // For updating all courses sites to frozen sites
     public final static String FROZENPERMISSIONS = "permissions";
 
@@ -200,6 +202,9 @@ public interface ConfigurationService {
 
     public boolean inA2017Pilote (String courseId, List<String> piloteA2017);
 
+    public List<String> getPiloteH2018();
+
+    public boolean inH2018Pilote (String courseId, List<String> piloteH2018);
 
     List<RoleSynchronizationPOJO> getRoles();
 }

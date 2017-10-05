@@ -93,7 +93,7 @@ public abstract class OsylAbstractQuartzJobImpl implements
 
     public static final int A2017_SESSION_LIMIT = 2173;
 
-    public static final int H2018_SESSION_LIMIT = 2173;
+    public static final int H2018_SESSION_LIMIT = 2181;
 
     public void setAdminConfigService(ConfigurationService adminConfigService) {
 	this.adminConfigService = adminConfigService;
@@ -320,10 +320,11 @@ public abstract class OsylAbstractQuartzJobImpl implements
     public boolean isSynchedTheOldWay (int strm, String department){
         boolean oldWay = true;
             if ( department == null)
-                return A2017_SESSION_LIMIT >= strm;
+                return H2018_SESSION_LIMIT >= strm;
             else
                 // use old sync for all courses before A2017, and all departments other than Certificat during A2017
                 // TODO: update for H2018!
-                return A2017_SESSION_LIMIT > strm || (A2017_SESSION_LIMIT == strm && !department.equalsIgnoreCase(CERT_PILOTE_A2017));
+                return A2017_SESSION_LIMIT > strm || (A2017_SESSION_LIMIT == strm && !department.equalsIgnoreCase(CERT_PILOTE)
+                        || (H2018_SESSION_LIMIT == strm && !department.equalsIgnoreCase(CERT_PILOTE)));
     }
 }

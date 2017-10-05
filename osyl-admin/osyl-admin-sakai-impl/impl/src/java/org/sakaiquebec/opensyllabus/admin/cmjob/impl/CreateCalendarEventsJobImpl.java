@@ -102,6 +102,8 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 
 		List<String> piloteA2017 = adminConfigService.getPiloteA2017();
 
+		List<String> piloteH2018 = adminConfigService.getPiloteH2018();
+
 		log.info("loop and add " + eventsAdd.size() + " events");
 		for (HecEvent event : eventsAdd) {
 			String siteId = getSiteId(
@@ -110,9 +112,10 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 					event.getSessionCode(),
 					event.getSection());
 
-			//Continue if course is to be in E2017 pilote or A2017 pilote
+			//Continue if course is to be in E2017 pilote or A2017 pilote or H2018 pilote
 			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) ||
-					adminConfigService.inA2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteA2017))
+					adminConfigService.inA2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteA2017) ||
+					adminConfigService.inH2018Pilote(event.getCatalogNbr()+event.getSessionId(), piloteH2018))
 				continue;
 
 			String eventId = null;
@@ -198,9 +201,10 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		log.info("loop and update "+ eventsUpdate.size() + " events");
 		for (HecEvent event : eventsUpdate) {
 
-			//Continue if course is to be in E2017 pilote or pilote A2017
+			//Continue if course is to be in E2017 pilote or pilote A2017 or pilote H2018
 			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) ||
-					adminConfigService.inA2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteA2017)) {
+					adminConfigService.inA2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteA2017) ||
+					adminConfigService.inH2018Pilote(event.getCatalogNbr()+event.getSessionId(), piloteH2018)) {
 				log.debug("Skipping event for " + event.getCatalogNbr()+event.getSessionId() + " because it is in section-aware pilot.");
 				continue;
 			}

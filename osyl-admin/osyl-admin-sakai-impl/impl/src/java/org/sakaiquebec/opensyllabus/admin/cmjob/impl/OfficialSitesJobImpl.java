@@ -20,34 +20,21 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import ca.hec.commons.utils.FormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.coursemanagement.api.AcademicSession;
-import org.sakaiproject.coursemanagement.api.CourseOffering;
-import org.sakaiproject.coursemanagement.api.CourseSet;
-import org.sakaiproject.coursemanagement.api.Enrollment;
-import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.coursemanagement.api.*;
 import org.sakaiproject.email.api.ContentType;
 import org.sakaiproject.email.api.EmailAddress;
 import org.sakaiproject.email.api.EmailAddress.RecipientType;
 import org.sakaiproject.email.api.EmailMessage;
-import org.sakaiproject.site.api.Site;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
 
-import ca.hec.commons.utils.FormatUtils;
-
-import org.sakaiproject.component.cover.ServerConfigurationService;
-
-import static org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob.WINTER;
+import java.util.*;
 
 
 /**
@@ -79,6 +66,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	List<String> servEns = adminConfigService.getServEns();
 	List<String> piloteE2017 = adminConfigService.getPiloteE2017();
 	List<String> piloteA2017 = adminConfigService.getPiloteA2017();
+	List<String> piloteH2018 = adminConfigService.getPiloteH2018();
 
 	// If we have an interval of time, we take the courses defined in that
 	// period of time
@@ -163,7 +151,8 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	    	//Continue if course is to be in E2017 pilote or A2017 pilote
 			if (adminConfigService.inE2017Pilote(courseOff.getEid(), piloteE2017) ||
-					adminConfigService.inA2017Pilote(courseOff.getEid(), piloteA2017))
+					adminConfigService.inA2017Pilote(courseOff.getEid(), piloteA2017) ||
+					adminConfigService.inH2018Pilote(courseOff.getEid(), piloteH2018))
 				continue;
 
 
