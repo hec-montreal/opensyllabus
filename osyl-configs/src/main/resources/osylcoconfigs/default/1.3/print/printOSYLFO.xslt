@@ -619,7 +619,7 @@
 				</fo:block>
 			</xsl:when>
 			<xsl:otherwise>
-				<<fo:block>
+				<fo:block>
 					<fo:block font-weight="bold">
 						<xsl:text>Your main duty: attending class</xsl:text>
 					</fo:block>
