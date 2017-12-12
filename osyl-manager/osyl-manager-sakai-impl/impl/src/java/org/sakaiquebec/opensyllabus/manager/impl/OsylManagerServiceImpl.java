@@ -2025,95 +2025,17 @@ public class OsylManagerServiceImpl implements OsylManagerService {
  		// import  tools
 		for (int i = 0; i < toolIdList.size(); i++) {
 			String toolId = (String) toolIdList.get(i);
-			if (!toolId.equalsIgnoreCase(RESOURCES_TOOL_ID)
-					&& !toolId.equalsIgnoreCase(VIA_TOOL_ID)
+			if (!toolId.equalsIgnoreCase(VIA_TOOL_ID)
 					&& !toolId.equalsIgnoreCase(SCHEDULE_TOOL_ID)
 					&& !toolId.equalsIgnoreCase(CALENDAR_TOOL_ID)) {
 				String fromSiteId = oldSite.getId();
 				String toSiteId = newSite.getId();
-				transferCopyEntitiesMigrate(toolId, fromSiteId, toSiteId);
-			}
-		}
 
-		//For all syllabi in new site, copy resource and update like
-		List<Syllabus> syllabi = syllabusService.getSyllabusList(newSite.getId());
-		Syllabus structuredSyllabus = null;
-		for (Syllabus syllabus:syllabi){
-			structuredSyllabus = syllabusService.getSyllabus(syllabus.getId());
-			for (int i = 0; i < structuredSyllabus.getElements().size(); i++) {
-				updateResourcesLinks(structuredSyllabus.getElements().get(i), oldSite.getId(), newSite.getId());
-			}
-		}
-	}
-
-	private void updateResourcesLinks (AbstractSyllabusElement element, String oldSiteId, String newSiteId){
-    	Map<String, String> elements = element.getAttributes();
-		String resourceId, savedNewResourceId, newResourceId ;
-		String citationRefId, citationResourceId, newCitationResourceId, savedNewCitationResourceId, citationId, newCitationCollectionId;
-		ContentResource newCitationList = null;
-		ContentResource oldCitationList = null;
-		Citation oldCitation = null;
-		Citation newCitation = null;
-		CitationCollection newCitationCollectionList = null;
-		CitationCollection oldCitationCollectionList = null;
-	   	if (elements != null){
-			if (element instanceof SyllabusDocumentElement){
-				try {
-				resourceId = elements.get("documentId");
-				newResourceId = (elements.get("documentId")).replace(oldSiteId, newSiteId);
-				savedNewResourceId = contentHostingService.copy(resourceId, newResourceId);
-				elements.put("documentId", savedNewResourceId);
-				syllabusService.saveOrUpdateElement(element);
-				} catch (PermissionException | IdUnusedException | TypeException | InUseException | OverQuotaException
-						| IdUsedException | ServerOverloadException e) {
-					e.printStackTrace();
+				if (toolId.equalsIgnoreCase(RESOURCES_TOOL_ID)) {
+					transferCopyEntitiesMigrate(toolId, "/group/"+fromSiteId+"/", "/group/"+toSiteId+"/");
+				} else {
+					transferCopyEntitiesMigrate(toolId, fromSiteId, toSiteId);
 				}
-			}
-			if (element instanceof SyllabusImageElement){
-				try {
-					resourceId = elements.get("imageId");
-					newResourceId = (elements.get("imageId")).replace(oldSiteId, newSiteId);
-					savedNewResourceId = contentHostingService.copy(resourceId, newResourceId);
-					elements.put("imageId", savedNewResourceId);
-					syllabusService.saveOrUpdateElement(element);
-				} catch (PermissionException | IdUnusedException | TypeException | InUseException | OverQuotaException
-						| IdUsedException | ServerOverloadException e) {
-					e.printStackTrace();
-				}
-			}
-			if (element instanceof SyllabusCitationElement){
-				citationRefId = elements.get("citationId");
-				//Retrieve resourceId and citationId
-				citationResourceId = citationRefId.substring(0,citationRefId.lastIndexOf("/"));
-				citationId = citationRefId.substring(citationResourceId.length()+1, citationRefId.length());
-				//Build resourceId in new site
-				newCitationResourceId = citationResourceId.replaceAll(oldSiteId, newSiteId);
-				try {
-					//Always create new resource
-					newCitationCollectionList = createCitationResource(citationResourceId, newCitationResourceId);
-					//Get old resource, old citation collection and citation to copy
-					oldCitationList = contentHostingService.getResource(citationResourceId);
-					oldCitationCollectionList = citationService.getCollection(new String(oldCitationList.getContent()));
-					oldCitation = oldCitationCollectionList.getCitation(citationId);
-				} catch (PermissionException | TypeException |ServerOverloadException e) {
-					e.printStackTrace();
-				} catch (IdUnusedException e){}
-
-				newCitation = citationService.copyCitation(oldCitation);
-				citationService.save(newCitation);
-				newCitationCollectionList.add(newCitation);
-				citationService.save(newCitationCollectionList);
-				elements.put("citationId", newCitationResourceId+"/"+newCitation.getId());
-				syllabusService.saveOrUpdateElement(element);
-			}
-		}
-		if (element.isComposite()) {
-			SyllabusCompositeElement comp = (SyllabusCompositeElement) element;
-
-			for (int i = 0; i < comp.getElements().size(); i++) {
-				AbstractSyllabusElement child = comp.getElements().get(i);
-
-				updateResourcesLinks(child, oldSiteId, newSiteId);
 			}
 		}
 	}
@@ -2586,8 +2508,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 		    // if this producer claims this tool id
 		    if (ArrayUtil.contains(et.myToolIds(), toolId)) {
-			et.transferCopyEntities(fromContext, toContext,
-				new Vector(), true);
+			et.transferCopyEntities(fromContext, toContext, null, true);
 		    }
 		} catch (Throwable t) {
 		    log.warn(
