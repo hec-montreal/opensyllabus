@@ -2040,61 +2040,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		}
 	}
 
-	private CitationCollection createCitationResource ( String oldCitationRef, String newCitationRef){
-		CitationCollection newCitationCollection = null;
-		CitationCollection tempCitationCollection = null;
-
-		String newResourceCollection = newCitationRef.substring(0, newCitationRef.lastIndexOf("/"));
-		String oldResourceCollection = oldCitationRef.substring(0, oldCitationRef.lastIndexOf("/"));
-		String resourceName = newCitationRef.substring(newResourceCollection.length()+1);
-		String newResourceId = null;
-		ContentResourceEdit newResource = null;
-
-		try {
-			newResource = contentHostingService.editResource(newCitationRef);
-			newCitationCollection = citationService.getCollection(new String (newResource.getContent()));
-		} catch (PermissionException | IdUnusedException | TypeException | ServerOverloadException e) {
-			log.info(" The resource will be created " + newCitationRef);
-			try {
-				newResourceId = contentHostingService.copy(oldCitationRef, newCitationRef);
-				newResource = contentHostingService.editResource(newResourceId);
-				tempCitationCollection = citationService.getCollection(new String(newResource.getContent()));
-				citationService.removeCollection(tempCitationCollection);
-			} catch (PermissionException | IdUnusedException | IdUsedException |
-					TypeException | ServerOverloadException | OverQuotaException | InUseException e1) {
-				e1.printStackTrace();
-			}
-			newCitationCollection = citationService.addCollection();
-			newResource.setContent(newCitationCollection.getId().getBytes());
-			newResource.setResourceType(CitationService.CITATION_LIST_ID);
-			newResource.setContentType(ResourceType.MIME_TYPE_HTML);
-
-			ResourcePropertiesEdit props = newResource.getPropertiesEdit();
-			props.addProperty(
-					ContentHostingService.PROP_ALTERNATE_REFERENCE,
-					org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
-			props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
-					ResourceType.MIME_TYPE_HTML);
-			props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
-					resourceName);
-
-			try {
-				contentHostingService.commitResource(newResource, NotificationService.NOTI_NONE);
-			} catch (OverQuotaException | ServerOverloadException e2) {
-				e2.printStackTrace();
-			}
-		} catch (InUseException e3){
-			try {
-				newCitationCollection = citationService.getCollection(new String (contentHostingService.getResource(newCitationRef).getContent()));
-			} catch (IdUnusedException  | ServerOverloadException | TypeException | PermissionException e4) {
-				e4.printStackTrace();
-			}
-		}
-
-
-		return newCitationCollection;
-	}
-
     private void copySiteWithOpenSyllabus(String siteFrom, String siteTo) throws Exception {
 	if (!osylSecurityService
 		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_COPY)) {
