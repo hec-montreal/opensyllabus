@@ -2008,13 +2008,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			}
 		}
 
-		if (oldSiteToolIdList.contains("sakai.opensyllabus.tool") && newSiteToolIdList.contains("sakai.opensyllabus.tool")) {
-			copySiteWithOpenSyllabus(siteFrom, siteTo);
-			mainToolCopied = "OPENSYLLABUS";
-		}
+
 		if (oldSiteToolIdList.contains(TENJIN_TOOL_ID) && newSiteToolIdList.contains(TENJIN_TOOL_ID)) {
 			copySiteWithTenjin(newSiteToolIdList, oldSite, newSite);
 			mainToolCopied = "TENJIN";
+		}else if (oldSiteToolIdList.contains("sakai.opensyllabus.tool") && newSiteToolIdList.contains("sakai.opensyllabus.tool")) {
+			copySiteWithOpenSyllabus(siteFrom, siteTo);
+			mainToolCopied = "OPENSYLLABUS";
 		}
 
 		return mainToolCopied;
