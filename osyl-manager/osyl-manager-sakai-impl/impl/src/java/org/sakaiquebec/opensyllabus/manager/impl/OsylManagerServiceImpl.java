@@ -114,6 +114,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	private final static String TENJIN_TOOL_ID = "sakai.tenjin";
 
+	private final static String OPENSYLLABUS_TOOL_ID = "sakai.opensyllabus.tool";
+
 	private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
 
     public final static String SHARABLE_SECTION = "00";
@@ -2027,7 +2029,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			String toolId = (String) toolIdList.get(i);
 			if (!toolId.equalsIgnoreCase(VIA_TOOL_ID)
 					&& !toolId.equalsIgnoreCase(SCHEDULE_TOOL_ID)
-					&& !toolId.equalsIgnoreCase(CALENDAR_TOOL_ID)) {
+					&& !toolId.equalsIgnoreCase(CALENDAR_TOOL_ID)
+					&& !toolId.equalsIgnoreCase(OPENSYLLABUS_TOOL_ID)) {
 				String fromSiteId = oldSite.getId();
 				String toSiteId = newSite.getId();
 
