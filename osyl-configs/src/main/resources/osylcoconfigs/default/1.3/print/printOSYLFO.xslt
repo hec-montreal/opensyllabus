@@ -565,7 +565,7 @@
 						<xsl:text>Notez que toute évaluation peut faire l'objet d'une analyse par un logiciel de détection de similitudes. Informez-vous sur </xsl:text>
 						<fo:inline font-size="10pt" color="blue" text-decoration="underline">
 							<fo:basic-link>
-								<xsl:attribute name="external-destination">http://www.hecca/integrite/bonnes-pratiques-et-ressources/index.html</xsl:attribute>
+								<xsl:attribute name="external-destination">http://www.hec.ca/integrite/bonnes-pratiques-et-ressources/index.html</xsl:attribute>
 								<xsl:text>les façons d'éviter le plagiat</xsl:text>
 							</fo:basic-link>
 						</fo:inline>
@@ -592,7 +592,7 @@
 						<fo:block>2- L'horaire et la salle de l'examen (dans
 							<fo:inline font-size="10pt" color="blue" text-decoration="underline">
 								<fo:basic-link>
-									<xsl:attribute name="external-destination">http://www.hec.ca/etudiant_actuel/rentree-scolaire/carte-etudiante/carte-etudiante.html</xsl:attribute>
+									<xsl:attribute name="external-destination">https://enligne.hec.ca/psp/GAPET/HEL/HRMS/?cmd=login&languageCd=CFR</xsl:attribute>
 									<xsl:text>HEC en ligne</xsl:text>
 								</fo:basic-link>
 							</fo:inline>
