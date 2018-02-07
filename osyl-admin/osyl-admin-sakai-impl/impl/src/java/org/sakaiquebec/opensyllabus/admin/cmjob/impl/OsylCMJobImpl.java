@@ -1094,21 +1094,23 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements OsylCMJo
 								+ enrollmentSetId);
 					}
 
-					if (enrollmentSetId != null) {
-						//Add or update student enrollment
-						enrollment =
-								cmAdmin.addOrUpdateEnrollment(userId,
-										enrollmentSetId, ENROLLMENT_STATUS,
-										CREDITS, GRADING_SCHEME);
-						//if it was a dropped enrollment activate it again
-						if (enrollment.isDropped()) {
-							enrollment.setDropped(false);
+					if (enrollmentSetId != null)
+						// The student is not enrolled
+						if (!cmService.isEnrolled(userId, enrollmentSetId)) {
+							// new enrollment: we create it
+							enrollment =
+									cmAdmin.addOrUpdateEnrollment(userId,
+											enrollmentSetId, ENROLLMENT_STATUS,
+											CREDITS, GRADING_SCHEME);
+							// the enrollment was been removed but it is added again
+							if (enrollment.isDropped())
+								enrollment.setDropped(false);
+						} else {
+							// the student is already enrolled
+							if (actualStudents != null) {
+								actualStudents.remove(userId + enrollmentSetId);
+							}
 						}
-						//remove it from students to be dropped later
-						if (actualStudents != null) {
-							actualStudents.remove(userId + enrollmentSetId);
-						}
-					}
 				} else {
 					log.debug("7 - Do not use old sync on course: " + cours.getCatalogNbr() + cours.getStrm() + cours.getClassSection());
 				}
