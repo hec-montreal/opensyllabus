@@ -592,7 +592,7 @@
 						<fo:block>2- L'horaire et la salle de l'examen (dans
 							<fo:inline font-size="10pt" color="blue" text-decoration="underline">
 								<fo:basic-link>
-									<xsl:attribute name="external-destination">https://enligne.hec.ca/psp/GAPET/HEL/HRMS/?cmd=login&languageCd=CFR</xsl:attribute>
+									<xsl:attribute name="external-destination">https://enligne.hec.ca/psp/GAPET/HEL/HRMS/?cmd=login&amp;languageCd=CFR</xsl:attribute>
 									<xsl:text>HEC en ligne</xsl:text>
 								</fo:basic-link>
 							</fo:inline>
