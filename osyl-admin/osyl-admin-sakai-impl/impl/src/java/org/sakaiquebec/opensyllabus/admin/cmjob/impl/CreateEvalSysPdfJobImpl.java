@@ -151,8 +151,13 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 //			    (ByteArrayOutputStream) buildPDFReport(eval,
 //				    ((EvalGroup) evalGs.get(j)), lang);
 
+			String realmId = groupIds[0];
+			if (realmId.contains("/section")) {
+				realmId = realmId.substring(0, realmId.indexOf("/section"));
+			}
+
 		    // Get the department and create folder
-		    departmentFolderName = getDepartment(groupIds[0]);
+		    departmentFolderName = getDepartment(realmId);
 		    departmentFolderName = removeAccents(departmentFolderName);
 		    departmentFolderId =
 			    evalsysReportsFolder + DEPARTMENT_FOLDER_NAME + "/"
@@ -162,7 +167,7 @@ public class CreateEvalSysPdfJobImpl extends OsylAbstractQuartzJobImpl
 				    departmentFolderName);
 
 		    // Get le programme and create folder
-		    progFolderName = getProgramme(groupIds[0]);
+		    progFolderName = getProgramme(realmId);
 		    progFolderId =
 			    evalsysReportsFolder + PROG_FORLDER_NAME + "/"
 				    + progFolderName + "/";
