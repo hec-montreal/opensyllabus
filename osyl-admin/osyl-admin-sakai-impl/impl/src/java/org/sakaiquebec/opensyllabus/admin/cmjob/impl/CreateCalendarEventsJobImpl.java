@@ -115,7 +115,8 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 			//Continue if course is to be in E2017 pilote or A2017 pilote or H2018 pilote
 			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) ||
 					adminConfigService.inA2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteA2017) ||
-					adminConfigService.inH2018Pilote(event.getCatalogNbr()+event.getSessionId(), piloteH2018))
+					adminConfigService.inH2018Pilote(event.getCatalogNbr()+event.getSessionId(), piloteH2018) ||
+					Integer.valueOf(event.getSessionId()) >= 2182)
 				continue;
 
 			String eventId = null;
@@ -201,10 +202,11 @@ public class CreateCalendarEventsJobImpl extends OsylAbstractQuartzJobImpl imple
 		log.info("loop and update "+ eventsUpdate.size() + " events");
 		for (HecEvent event : eventsUpdate) {
 
-			//Continue if course is to be in E2017 pilote or pilote A2017 or pilote H2018
+			//Continue if course is to be in E2017 pilote or pilote A2017 or pilote H2018 or anything from E2018
 			if (adminConfigService.inE2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteE2017) ||
 					adminConfigService.inA2017Pilote(event.getCatalogNbr()+event.getSessionId(), piloteA2017) ||
-					adminConfigService.inH2018Pilote(event.getCatalogNbr()+event.getSessionId(), piloteH2018)) {
+					adminConfigService.inH2018Pilote(event.getCatalogNbr()+event.getSessionId(), piloteH2018) ||
+					Integer.valueOf(event.getSessionId()) >= 2182) {
 				log.debug("Skipping event for " + event.getCatalogNbr()+event.getSessionId() + " because it is in section-aware pilot.");
 				continue;
 			}

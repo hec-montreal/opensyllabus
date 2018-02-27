@@ -43,10 +43,6 @@ public interface OsylAbstractQuartzJob extends Job{
     
     public List<String> getActiveTerms();
 
-    public boolean isBeforeA2017(int strm);
-
-    public boolean isBeforeH2018(int strm);
-
     public final static String CERT_PILOTE = "CERT";
 
     /**
