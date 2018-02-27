@@ -309,14 +309,6 @@ public abstract class OsylAbstractQuartzJobImpl implements
         return false;
     }
 
-    public boolean isBeforeA2017(int strm){
-        return  A2017_SESSION_LIMIT > strm;
-    }
-
-    public boolean isBeforeH2018(int strm){
-        return  H2018_SESSION_LIMIT > strm;
-    }
-
     public boolean isSynchedTheOldWay (int strm, String department){
         boolean oldWay = true;
             if ( department == null)
