@@ -750,7 +750,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    log.info("Added agenda page");
 		    addTool(site, "sakai.announcements");
 		    log.info("Added announcement page");
-		    addTool(site, "sakai.opensyllabus.tool");
+		    addTool(site, "sakai.tenjin");
 		    log.info("Added opensyllabus page");
 		    addTool(site, "sakai.assignment.grades");
 		    log.info("Added assignment page");
