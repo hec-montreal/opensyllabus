@@ -754,7 +754,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    log.info("Added opensyllabus page");
 		    addTool(site, "sakai.assignment.grades");
 		    log.info("Added assignment page");
-		    addTool(site, "sakai.resources", true);
+		    addTool(site, "sakai.resources");
 		    log.info("Added resources page");
 		    addTool(site, "sakai.site.roster2");
 		    log.info("Added roster tool");
@@ -769,14 +769,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 		// we add the directories
 		String directoryId;
-
-		osylContentService.initSiteAttachments(site);
 		directoryId =
 			contentHostingService.getSiteCollection(site.getId());
-		ContentCollectionEdit cce =
-			contentHostingService.editCollection(directoryId);
-		cce.setHidden();
-		contentHostingService.commitCollection(cce);
 
 		// we add the default citationList
 		// TODO I18N
