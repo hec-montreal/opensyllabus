@@ -1922,7 +1922,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    cmAcadSession.setEndDate(acadSession.getEndDate());
 	    cmAcadSessionsList.add(cmAcadSession);
 	}
-	Collections.sort(cmAcadSessionsList);
+	Collections.sort(cmAcadSessionsList,  Collections.reverseOrder());
 	return cmAcadSessionsList;
     }
 
