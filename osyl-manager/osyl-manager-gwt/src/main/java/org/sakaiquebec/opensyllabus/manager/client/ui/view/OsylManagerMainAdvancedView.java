@@ -144,8 +144,8 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 		courseListView.setSearchTerm(selectSiteInput.getText());
 		courseListView.setSelectedAcadSession(acadSessionListBox
 			.getValue(acadSessionListBox.getSelectedIndex()));
-		courseListView
-			.setWithFrozenSites(showFrozenCheckBox.getValue());
+		/*courseListView
+			.setWithFrozenSites(showFrozenCheckBox.getValue());*/
 		courseListView.refresh(true);
 	    }
 	});
@@ -186,8 +186,8 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	hzSiteSelectionPanel2.add(selectSiteActionBtn);
 	hzSiteSelectionPanel2.add(trimesterLbl);
 	hzSiteSelectionPanel2.add(acadSessionListBox);
-	hzSiteSelectionPanel2.add(showFrozenLbl);
-	hzSiteSelectionPanel2.add(showFrozenCheckBox);
+	//hzSiteSelectionPanel2.add(showFrozenLbl);
+	//hzSiteSelectionPanel2.add(showFrozenCheckBox);
 	
 	hzSiteSelectionPanel2.setCellVerticalAlignment(showFrozenCheckBox,
 		HasVerticalAlignment.ALIGN_MIDDLE);
