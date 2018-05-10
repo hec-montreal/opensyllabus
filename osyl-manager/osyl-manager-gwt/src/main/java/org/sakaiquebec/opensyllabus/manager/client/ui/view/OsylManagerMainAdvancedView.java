@@ -222,7 +222,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	    commandsPanel.add(hz2);
 	}
 */
-	if (getController().getPermissions().get(
+/*	if (getController().getPermissions().get(
 		SecurityInterface.OSYL_MANAGER_FUNCTION_ATTACH)) {
 	    HorizontalPanel hz3 = new HorizontalPanel();
 	    hz3.add(new AttachToCmAction(getController()));
@@ -230,7 +230,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	    hz3.add(new UnattachFromCmAction(getController()));
 	    hz3.setStyleName("OsylManager-mainView-actionList");
 	    commandsPanel.add(hz3);
-	}
+	}*/
 
 	HorizontalPanel hz4 = new HorizontalPanel();
 	if (getController().getPermissions().get(
