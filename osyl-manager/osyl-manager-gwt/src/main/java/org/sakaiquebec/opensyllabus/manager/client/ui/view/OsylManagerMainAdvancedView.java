@@ -89,12 +89,12 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	    };
 
     private void initView() {
-	Label mainLabel =
+/*	Label mainLabel =
 		new Label(getController().getMessages().mainView_label());
 	mainLabel.setStylePrimaryName("OsylManager-mainView-label");
 	mainPanel.add(mainLabel);
 
-	VerticalPanel vSiteSelectionPanel = new VerticalPanel();
+*/	VerticalPanel vSiteSelectionPanel = new VerticalPanel();
 
 	HorizontalPanel hzSiteSelectionPanel2 = new HorizontalPanel();
 	hzSiteSelectionPanel2.setStylePrimaryName("OsylManager-panel");
@@ -276,5 +276,13 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	    hPanel.add(new ImportNewSiteAction(getController()));
 	    mainPanel.add(hPanel);
 	}
+	
+	Label mainLabel =
+		new Label(getController().getMessages().mainView_label());
+	mainLabel.setStylePrimaryName("OsylManager-mainView-label-important");
+	mainPanel.add(hzPanel4);
+	mainPanel.add(mainLabel);
+
+
     }
 }

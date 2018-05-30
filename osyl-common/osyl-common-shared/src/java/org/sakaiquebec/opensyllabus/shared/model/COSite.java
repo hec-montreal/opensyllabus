@@ -37,8 +37,21 @@ public class COSite implements java.io.Serializable {
     private static final long serialVersionUID = 7458511802764084049L;
 
     private String siteId;
-
+    
     /**
+     * tenjin or opensyllabus
+     */
+    private String toolId;
+
+    public String getToolId() {
+		return toolId;
+	}
+
+	public void setToolId(String toolId) {
+		this.toolId = toolId;
+	}
+
+	/**
      * The name of the site
      */
     private String siteName;
