@@ -200,15 +200,19 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 
 	HorizontalPanel hz1 = new HorizontalPanel();
 	hz1.add(new EditAction(getController()));
-	hz1.add(new HTML(" | "));
-	hz1.add(new PublishAction(getController()));
-	hz1.add(new HTML(" | "));
-	hz1.add(new UnpublishAction(getController()));
 	if (getController().getPermissions().get(
 		SecurityInterface.OSYL_MANAGER_FUNCTION_COPY)) {
 	    hz1.add(new HTML(" | "));
 	    hz1.add(new CopyAction(getController()));
 	}
+
+	if (getController().getPermissions().get(
+		SecurityInterface.OSYL_MANAGER_FUNCTION_DELETE)) {
+	    if (hz1.getWidgetCount() > 0)
+		hz1.add(new HTML(" | "));
+	    hz1.add(new DeleteAction(getController()));
+	}
+
 	hz1.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz1);
 
@@ -243,12 +247,10 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 		hz4.add(new HTML(" | "));
 	    hz4.add(new ExportAction(getController()));
 	}
-	if (getController().getPermissions().get(
-		SecurityInterface.OSYL_MANAGER_FUNCTION_DELETE)) {
-	    if (hz4.getWidgetCount() > 0)
-		hz4.add(new HTML(" | "));
-	    hz4.add(new DeleteAction(getController()));
-	}
+	hz4.add(new HTML(" | "));
+	hz4.add(new PublishAction(getController()));
+	hz4.add(new HTML(" | "));
+	hz4.add(new UnpublishAction(getController()));
 	if (hz4.getWidgetCount() > 0) {
 	    hz4.setStyleName("OsylManager-mainView-actionList");
 	    commandsPanel.add(hz4);
@@ -259,6 +261,12 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	mainPanel.add(vSiteSelectionPanel);
 	mainPanel.add(hzPanel2);
 	mainPanel.add(hzPanel3);
+	mainPanel.add(hzPanel4);
+	
+	Label mainLabel =
+		new Label(getController().getMessages().mainView_label());
+	mainLabel.setStylePrimaryName("OsylManager-mainView-label-important");
+	mainPanel.add(mainLabel);
 	mainPanel.add(hzPanel4);
 
 	Label newSiteCreationLbl =
@@ -277,12 +285,6 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	    mainPanel.add(hPanel);
 	}
 	
-	Label mainLabel =
-		new Label(getController().getMessages().mainView_label());
-	mainLabel.setStylePrimaryName("OsylManager-mainView-label-important");
-	mainPanel.add(hzPanel4);
-	mainPanel.add(mainLabel);
-
 
     }
 }
