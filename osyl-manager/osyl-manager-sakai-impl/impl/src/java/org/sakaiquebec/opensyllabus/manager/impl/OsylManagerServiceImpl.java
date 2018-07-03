@@ -1282,7 +1282,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    rp.addProperty(PROP_SITE_TERM_EID, null);
 	    rp.addProperty(PROP_SITE_TITLE, null);
 	    rp.addProperty(PROP_SITE_ISFROZEN, null);
-
+	    
 	    site.setProviderGroupId(null);
 	    siteService.save(site);
 	}

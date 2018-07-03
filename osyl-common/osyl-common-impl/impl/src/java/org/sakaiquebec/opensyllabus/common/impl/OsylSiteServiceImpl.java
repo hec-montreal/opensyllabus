@@ -2165,7 +2165,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	try {
 	    securityService.pushAdvisor(advisor);
 	    site = getSite(siteId);
-	    siteService.removeSite(site);
+	    
+	    //Do not allow sites with providerId to be deleted
+	    if (site.getProviderGroupId() == null){
+	    	siteService.removeSite(site);
+	    }
 	} catch (IdUnusedException e) {
 	    log.info("User " + sessionManager.getCurrentSession().getUserEid()
 		    + " can not delete the site " + siteId
