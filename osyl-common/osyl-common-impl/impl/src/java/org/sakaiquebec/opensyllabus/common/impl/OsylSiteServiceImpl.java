@@ -715,134 +715,54 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     /**
      * {@inheritDoc}
      */
-    public String createSite(String siteTitle, String configRef, String lang)
-	    throws Exception {
-	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] creates site [" + siteTitle + "]");
-	long start = System.currentTimeMillis();
-	Site site = null;
-	siteTitle = siteTitle.replaceAll(" ", "");
-	if (!siteService.siteExists(siteTitle)) {
+	public String createSite(String siteTitle, String configRef, String lang) throws Exception {
+		log.info("user [" + sessionManager.getCurrentSession().getUserEid() + "] creates site [" + siteTitle + "]");
+		long start = System.currentTimeMillis();
+		Site createdSite = null;
+		siteTitle = siteTitle.replaceAll(" ", "");
+		if (!siteService.siteExists(siteTitle)) {
+			SecurityAdvisor advisor = new SecurityAdvisor() {
+				public SecurityAdvice isAllowed(String userId, String function, String reference) {
+					return SecurityAdvice.ALLOWED;
+				}
+			};
+			try {
+				securityService.pushAdvisor(advisor);
+				Site templateSite = siteService.getSite(HEC_UNOFFICIAL_TEMPLATE_ID);
 
-	    SecurityAdvisor advisor = new SecurityAdvisor() {
-		public SecurityAdvice isAllowed(String userId, String function,
-			String reference) {
-		    return SecurityAdvice.ALLOWED;
-		}
-	    };
+				if (!siteService.siteExists(siteTitle)) {
+					createdSite = siteService.addSite(siteTitle, templateSite);
+				} else {
+					createdSite = siteService.getSite(siteTitle);
+				}
 
-	    try {
-		securityService.pushAdvisor(advisor);
-		String template =
-			ServerConfigurationService.getString(
-				"opensyllabus.course.template.prefix", null);
-		if (template != null) {
-		    site =
-			    siteService.addSite(siteTitle,
-				    siteService.getSite(template + lang));
-		    site.getPropertiesEdit().addProperty("template", "false");
+				if (lang.equals("en")) {
+					createdSite.getPropertiesEdit().addProperty("hec_syllabus_locale", "en_US");
+				} else if (lang.equals("es")) {
+					createdSite.getPropertiesEdit().addProperty("hec_syllabus_locale", "es_ES");
+				} else {
+					createdSite.getPropertiesEdit().addProperty("hec_syllabus_locale", "fr_CA");
+				}
+				createdSite.setTitle(siteTitle);
+				createdSite.setPublished(true);
+				createdSite.setJoinable(false);
+
+				siteService.save(createdSite);
+
+			} finally {
+				securityService.popAdvisor();
+			}
 		} else {
-		    site = siteService.addSite(siteTitle, SITE_TYPE);
-		    // we add the tools
-		    addHomePage(site, lang);
-		    log.info("Added home page");
-		    addTool(site, "sakai.schedule");
-		    log.info("Added agenda page");
-		    addTool(site, "sakai.announcements");
-		    log.info("Added announcement page");
-		    addTool(site, "sakai.tenjin");
-		    log.info("Added opensyllabus page");
-		    addTool(site, "sakai.assignment.grades");
-		    log.info("Added assignment page");
-		    addTool(site, "sakai.resources");
-		    log.info("Added resources page");
-		    addTool(site, "sakai.site.roster2");
-		    log.info("Added roster tool");
-		    addTool(site, "sakai.siteinfo", true);
-		    log.info("Added site info page");
+			log.error("Could not create site because site with title='" + siteTitle + "' already exists");
+			throw new Exception("Could not create site because site with title='" + siteTitle + "' already exists");
 		}
-		site.setTitle(siteTitle);
-		site.setPublished(true);
-		site.setJoinable(false);
-
-		siteService.save(site);
-
-		// we add the directories
-		String directoryId;
-		directoryId =
-			contentHostingService.getSiteCollection(site.getId());
-
-		// we add the default citationList
-		// TODO I18N
-		String citationListName =
-			"Références bibliographiques du cours";
-		CitationCollection citationList =
-			citationService.addCollection();
-		ContentResourceEdit cre =
-			contentHostingService.addResource(directoryId,
-				citationListName, null, 1);
-		cre.setResourceType(CitationService.CITATION_LIST_ID);
-		cre.setContentType(ResourceType.MIME_TYPE_HTML);
-
-		ResourcePropertiesEdit props = cre.getPropertiesEdit();
-		props.addProperty(
-			ContentHostingService.PROP_ALTERNATE_REFERENCE,
-			org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
-		props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
-			ResourceType.MIME_TYPE_HTML);
-		props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
-			citationListName);
-
-		cre.setContent(citationList.getId().getBytes());
-		contentHostingService.commitResource(cre,
-			NotificationService.NOTI_NONE);
-
-		COConfigSerialized coConfig = null;
-		COSerialized co = null;
-
-		String configPath =
-			ServerConfigurationService.getString(
-				"opensyllabus.configs.path", null);
-		if (configPath == null)
-		    configPath =
-			    System.getProperty("catalina.home")
-				    + File.separator + "webapps"
-				    + File.separator + "osyl-editor-sakai-tool";// TODO
-		// SAKAI-860
-		SchemaHelper schemaHelper = new SchemaHelper(configPath);
-		String version = schemaHelper.getSchemaVersion();
-
-		try {
-		    coConfig = configDao.getConfigByRef(configRef);
-		    co =
-			    new COSerialized(idManager.createUuid(), lang,
-				    "shared", "", site.getId(), "sectionId",
-				    coConfig, null, "shortDescription",
-				    "description", "title", false, null, null,
-				    version);
-		    resourceDao.createOrUpdateCourseOutline(co);
-
-		} catch (Exception e) {
-		    log.error("createSite", e);
-		}
-
-	    } finally {
-		securityService.popAdvisor();
-	    }
-	} else {
-	    log.error("Could not create site because site with title='"
-		    + siteTitle + "' already exists");
-	    throw new Exception(
-		    "Could not create site because site with title='"
-			    + siteTitle + "' already exists");
+		log.info("Site [" + siteTitle + "] created in " + (System.currentTimeMillis() - start) + " ms ");
+		return createdSite.getId();
 	}
-	log.info("Site [" + siteTitle + "] created in "
-		+ (System.currentTimeMillis() - start) + " ms ");
-	return site.getId();
-    }
 
     /**
-     * {@inheritDoc}
+     * @deprecated
+     * {@inheritDoc} 
      */
     public String createSharableSite(String siteTitle, String configRef,
 	    String lang) throws Exception {

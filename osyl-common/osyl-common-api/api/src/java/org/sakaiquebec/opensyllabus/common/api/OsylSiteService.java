@@ -124,6 +124,10 @@ public interface OsylSiteService extends EntityProducer {
     public static final String HEC_MONTREAL_RULES_FILE_EXTENSION =
 	    HTML_FILE_EXTENSION;
 
+    
+    public static final String HEC_UNOFFICIAL_TEMPLATE_ID = "HECManuelle";
+    
+    
     /**
      * Get a valid resource reference base site URL to be used in later calls.
      * Will get deprecated very soon!
@@ -150,16 +154,12 @@ public interface OsylSiteService extends EntityProducer {
     public boolean siteExists(String siteTitle) throws Exception;
 
     /**
-     * From the information given by the user, we create a new Site that will
-     * contain a course outline that will be associated to a course of the
-     * course management or will be a work site.
+     * From the information given by the user, we create a new unofficial or 
+     * draft site.
      *
      * @param siteId
      * @param siteTitle
-     * @param siteSession
-     * @param siteGroup
-     * @param siteProf
-     * @return the id of the site
+     * @param lang
      * @throws Exception
      */
     public String createSite(String siteTitle, String configRef, String lang)
