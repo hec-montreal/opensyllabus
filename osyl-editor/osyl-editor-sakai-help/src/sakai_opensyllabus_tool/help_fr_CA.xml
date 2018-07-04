@@ -130,7 +130,7 @@
       <property name="categories">
          <list>
             <bean id="opensyllabusCategory" class="org.sakaiproject.component.app.help.model.CategoryBean">
-               <property name="name"><value>Plan de cours</value></property>
+               <property name="name"><value>Ancien plan de cours</value></property>
                <property name="resources">
                   <list>
                      <ref bean="opensyllabusOverview"/>
