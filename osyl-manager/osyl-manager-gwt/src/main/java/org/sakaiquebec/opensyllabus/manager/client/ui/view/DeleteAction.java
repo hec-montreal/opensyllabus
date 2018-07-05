@@ -191,7 +191,7 @@ public class DeleteAction extends OsylManagerAbstractAction {
 			    new DeleteAsynCallBack(0));
 		}
 	    });
-	    conf.setWidth("450px");
+	    conf.setWidth("460px");
 	    conf.show();
 	    conf.centerAndFocus();
 	}
