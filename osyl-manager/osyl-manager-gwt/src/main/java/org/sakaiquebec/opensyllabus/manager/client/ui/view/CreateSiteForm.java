@@ -57,7 +57,8 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 
     private TextBox nameTextBox;
 
-    private ListBox configListBox;
+    //Deactivate configuration box
+    //private ListBox configListBox;
 
     private ListBox langListBox;
 
@@ -82,7 +83,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 			warning.centerAndFocus();
 			createSite.setEnabled(false);
 		    } else {
-			for (Entry<String, String> entry : result.entrySet()) {
+			/*for (Entry<String, String> entry : result.entrySet()) {
 			    String configRef = entry.getValue();
 			    try {
 				String configTitle =
@@ -91,7 +92,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 				configListBox.addItem(configTitle, configRef);
 			    } catch (Exception e) {
 			    }
-			}
+			}*/
 		    }
 		}
 
@@ -120,9 +121,9 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 	mainPanel.add(createPanel(langTitle, langListBox));
 
 	Label configTitle = new Label(messages.chooseConfig());
-	configListBox = new ListBox();
+	/*configListBox = new ListBox();
 	controller.getOsylConfigs(configListAsyncCallback);
-	mainPanel.add(createPanel(configTitle, configListBox));
+	mainPanel.add(createPanel(configTitle, configListBox));*/
 
 	createSite = new PushButton(messages.create());
 	createSite.setWidth("40px");
@@ -148,15 +149,15 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 		    if (!create){
 			    Window.alert(messages.siteNameOfficialRestriction());
 		    } else {
-			if (configListBox.getSelectedIndex() != -1) {
+			//if (configListBox.getSelectedIndex() != -1) {
 			    spinner.setVisible(true);
-			    String configRef =
-				    configListBox.getValue(configListBox
-					    .getSelectedIndex());
+			    String configRef = null;
+				    //configListBox.getValue(configListBox
+					//    .getSelectedIndex());
 			    controller.createSite(name, configRef, lang);
-			} else {
+			/*} else {
 			    Window.alert(messages.noConfig());
-			}
+			}*/
 		    }
 		} else {
 		    Window.alert(messages.siteNameNotValid());

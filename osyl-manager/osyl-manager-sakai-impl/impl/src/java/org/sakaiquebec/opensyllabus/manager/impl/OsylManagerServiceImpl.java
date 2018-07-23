@@ -1282,7 +1282,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    rp.addProperty(PROP_SITE_TERM_EID, null);
 	    rp.addProperty(PROP_SITE_TITLE, null);
 	    rp.addProperty(PROP_SITE_ISFROZEN, null);
-
+	    
 	    site.setProviderGroupId(null);
 	    siteService.save(site);
 	}
@@ -1663,7 +1663,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    info.setCoIsFrozen(getFrozenValue(site));
 
 	    // Retrieve CM info
-	    String siteProviderId = site.getProviderGroupId();
+	    String siteProviderId = (site.getProviderGroupId() != null && site.getProviderGroupId().contains("+") 
+	    		? site.getProviderGroupId().substring(0, site.getProviderGroupId().indexOf("+")): site.getProviderGroupId() );
 	    if (siteProviderId != null) {
 		if (courseManagementService.isSectionDefined(siteProviderId)) {
 		    Section section =
@@ -1696,7 +1697,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			}
 		    }
 		    info.setCourseNumber(canCourse.getEid());
-		    info.setCourseName(section.getTitle());
+		    if (site.getToolForCommonId("sakai.tenjin") == null){
+		    	info.setCourseName(section.getTitle());
+		    } else {
+		    	info.setCourseName(courseOff.getTitle());
+		    }
 		    info.setCourseSection(siteProviderId
 			    .substring(siteProviderId.length() - 3));
 		    info.setCourseSession(courseOff.getAcademicSession()
@@ -1922,7 +1927,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    cmAcadSession.setEndDate(acadSession.getEndDate());
 	    cmAcadSessionsList.add(cmAcadSession);
 	}
-	Collections.sort(cmAcadSessionsList);
+	Collections.sort(cmAcadSessionsList,  Collections.reverseOrder());
 	return cmAcadSessionsList;
     }
 
