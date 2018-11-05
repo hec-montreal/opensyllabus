@@ -352,14 +352,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	    public void update(Observable o, Object arg) {
 		Event e = (Event) arg;
-		if (e.getEvent().equals(UsageSessionService.EVENT_LOGIN)) {
-		    // ##### LOGIN ####//
-		    DateFormat df =
-			    new SimpleDateFormat("dd/MM/yyyy 'at' HH:mm");
-		    log.info("user ["
-			    + sessionManager.getCurrentSession().getUserEid()
-			    + "] login " + df.format(new Date()));
-		} else if (e.getEvent()
+		if (e.getEvent()
 			.equals(UsageSessionService.EVENT_LOGOUT)) {
 		    // ##### LOGOUT ####//
 		    // we unlocks all CO locks by current user
