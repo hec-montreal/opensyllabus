@@ -736,9 +736,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 				} else {
 					createdSite.getPropertiesEdit().addProperty("hec_syllabus_locale", "fr_CA");
 				}
-				if (templateId != null) {
-					createdSite.getPropertiesEdit().addProperty("tenjin_template", "2");
-				}
+
+				// set tenjin template id
+				createdSite.getPropertiesEdit().addProperty("tenjin_template", "2");
+				
 				createdSite.setTitle(siteTitle);
 				createdSite.setPublished(true);
 				createdSite.setJoinable(false);
