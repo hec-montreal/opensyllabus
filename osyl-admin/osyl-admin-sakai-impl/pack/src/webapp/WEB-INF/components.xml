@@ -281,11 +281,6 @@
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
 	</bean>
 
-	<bean id="courseEventSynchroJob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CourseEventSynchroJobImpl">
-		<property name="dataSource" ref="javax.sql.DataSource" />
-	</bean>
-
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="javax.sql.DataSource" />
@@ -293,34 +288,6 @@
 
 	<!-- enable the configuration of transactional behavior based on annotations -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
-
-	<bean id="osylcmjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImpl"
-		parent="osylAbstractQuartzJob">
-		<property name="courseEventSynchroJob" ref="courseEventSynchroJob"/>
-	</bean>
-
-	<bean id="offSitesjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl"
-		parent="osylAbstractQuartzJob">
-	</bean>
-
-	<bean id="resetCodeOfConductJob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ResetCodeOfConductJobImpl"
-		parent="osylAbstractQuartzJob">
-			<property name="dataSource" ref="javax.sql.DataSource" />
-	</bean>
-	
-	<bean id="createEvalSysPdfJob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreateEvalSysPdfJobImpl"
-		parent="osylAbstractQuartzJob">
-		<property name="evaluationService"
-			ref="org.sakaiproject.evaluation.logic.EvalEvaluationService" />
-		<property name="contentHostingService"
-			ref="org.sakaiproject.content.api.ContentHostingService" />
-		<property name="entityManager"
-			ref="org.sakaiproject.entity.api.EntityManager" />
- 	</bean>
 
 
 	<bean id="roleSynchrojob"
@@ -378,59 +345,6 @@
 		parent="osylAbstractQuartzJob">
 	</bean>
 
-	<bean id="deleteAllMyWorkspaces"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.DeleteAllMyWorkspaceJobImpl"
-		parent="osylAbstractQuartzJob">
-	</bean>
-
-	<bean id="createSiteHierarchyjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreateSiteHierarchyJobImpl"
-		parent="osylAbstractQuartzJob">
-	</bean>
-
-	<bean id="cmoverridesiteusers"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CMOverrideSiteUsersImpl"
-		parent="osylAbstractQuartzJob">
-	</bean>
-
-	<bean id="cmoverridestudentusers"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CMOverrideStudentUsersImpl"
-		parent="osylAbstractQuartzJob">
-	</bean>
-
-	<bean id="removeUsersFromSitejob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RemoveUsersFromSiteJobImpl"
-		parent="osylAbstractQuartzJob">
-		<property name="entityManager" ref="org.sakaiproject.entity.api.EntityManager" />
-	</bean>
-
-	<bean id="removeUsersFromCMjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RemoveUsersFromCMJobImpl"
-		parent="osylAbstractQuartzJob">
-		<property name="entityManager" ref="org.sakaiproject.entity.api.EntityManager" />
-	</bean>
-
-	<bean id="createCalendarEventsJob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreateCalendarEventsJobImpl"
-		parent="osylAbstractQuartzJob">
-		<property name="calendarService" ref="org.sakaiproject.calendar.api.CalendarService" />
-		<property name="jdbcTemplate">
-			<bean class="org.springframework.jdbc.core.JdbcTemplate">
-				<constructor-arg type="javax.sql.DataSource">
-					<ref bean="javax.sql.DataSource" />
-				</constructor-arg>
-				<property name="ignoreWarnings" value="false" />
-			</bean>
-		</property>
-	</bean>
-
-	<bean id="evaluationSiteHierarchyJob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.EvaluationSiteHierarchyJob">
-		<property name="courseManagementService" ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="evalHierarchyLogic"
-			ref="org.sakaiproject.evaluation.logic.externals.ExternalHierarchyLogic" />
-	</bean>
-
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osyltransferjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
@@ -461,108 +375,6 @@
 		<property name="jobName">
 			<value>Update existing sites to add Section title if related to the
 				CM</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>osylcmjob</value>
-		</property>
-
-		<property name="jobName">
-			<value>OpenSyllabus Course Management Job Synchronizer</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.offSitesjob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>offSitesjob</value>
-		</property>
-
-		<property name="jobName">
-			<value>Official Sites Creation Job - with OpenSyllabus</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.resetCodeOfConductJob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>resetCodeOfConductJob</value>
-		</property>
-
-		<property name="jobName">
-			<value>Reset/Delete all the entries in the Code Of Conduct table job</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.createEvalSysPdfJob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>createEvalSysPdfJob</value>
-		</property>
-
-		<property name="jobName">
-			<value>Create all the PDF generated by EvalSys for a selected term - ROULER LA NUIT ET PRÉVENIR LES DBA</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.cmoverridesiteusers"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>cmoverridesiteusers</value>
-		</property>
-
-		<property name="jobName">
-			<value>Synchronize and override if necessary site users role from Course Management</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.cmoverridestudentusers"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>cmoverridestudentusers</value>
-		</property>
-
-		<property name="jobName">
-			<value>Synchronize and override if necessary students added in sites as guest</value>
 		</property>
 
 		<property name="schedulerManager">
@@ -728,113 +540,6 @@
 		<property name="jobName">
 			<value>Apply xsl on course outline (xsl must be in opensyllabus admin
 				site and named courseOutline.xsl)</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.deleteAllMyWorkspaces"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>deleteAllMyWorkspaces</value>
-		</property>
-
-		<property name="jobName">
-			<value>Deletes all "My Workspace" sites.</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.createSiteHierarchyjob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>createSiteHierarchyjob</value>
-		</property>
-
-		<property name="jobName">
-			<value>Create HEC site hierarchy (1st step)</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.removeUsersFromSitejob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>removeUsersFromSitejob</value>
-		</property>
-
-		<property name="jobName">
-			<value>Remove users from zc2 sites</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-
-	</bean>
-
-	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.removeUsersFromCMjob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>removeUsersFromCMjob</value>
-		</property>
-
-		<property name="jobName">
-			<value>Remove users from zc2 course management</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.createCalendarEventsJob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>createCalendarEventsJob</value>
-		</property>
-
-		<property name="jobName">
-			<value>Create Calendar Events Job</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.evaluationSiteHierarchyJob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		init-method="init">
-
-		<property name="beanId">
-			<value>evaluationSiteHierarchyJob</value>
-		</property>
-
-		<property name="jobName">
-			<value>Evaluation Site Hierarchy Job</value>
 		</property>
 
 		<property name="schedulerManager">
