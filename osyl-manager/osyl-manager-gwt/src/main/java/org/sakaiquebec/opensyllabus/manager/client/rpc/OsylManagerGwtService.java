@@ -48,7 +48,7 @@ public interface OsylManagerGwtService extends RemoteService {
      * @param siteTitle
      * @return
      */
-    public String createSite(String siteTitle, String configId, String lang)
+    public String createSite(String siteTitle, String configId, String lang, String templateId)
 	    throws Exception, OsylPermissionException;
 
     public Map<String, String> getOsylConfigs();

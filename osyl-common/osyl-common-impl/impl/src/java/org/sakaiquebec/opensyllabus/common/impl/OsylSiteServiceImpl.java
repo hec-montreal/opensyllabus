@@ -410,7 +410,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     /**
      * {@inheritDoc}
      */
-	public String createSite(String siteTitle, String configRef, String lang) throws Exception {
+	public String createSite(String siteTitle, String configRef, String lang, String templateId) throws Exception {
 		log.info("user [" + sessionManager.getCurrentSession().getUserEid() + "] creates site [" + siteTitle + "]");
 		long start = System.currentTimeMillis();
 		Site createdSite = null;
@@ -440,7 +440,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 				}
 
 				// set tenjin template id
-				createdSite.getPropertiesEdit().addProperty("tenjin_template", "2");
+				createdSite.getPropertiesEdit().addProperty("tenjin_template", templateId);
 				
 				createdSite.setTitle(siteTitle);
 				createdSite.setPublished(true);

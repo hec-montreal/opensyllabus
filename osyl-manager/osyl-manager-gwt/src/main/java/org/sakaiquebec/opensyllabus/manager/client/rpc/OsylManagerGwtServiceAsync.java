@@ -44,7 +44,7 @@ public interface OsylManagerGwtServiceAsync {
      * @param siteTitle
      * @param callback
      */
-    public void createSite(String siteTitle, String configRef, String lang,
+    public void createSite(String siteTitle, String configRef, String lang, String templateId,
 	    AsyncCallback<String> callback);
 
     public void getOsylConfigs(AsyncCallback<Map<String, String>> callback);

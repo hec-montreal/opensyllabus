@@ -91,6 +91,8 @@ public interface Messages extends ConstantsWithLookup {
 
     String chooseLang();
 
+    String chooseTemplate();
+
     String siteNameNotValid();
 
     String siteNameOfficialRestriction();
@@ -111,6 +113,12 @@ public interface Messages extends ConstantsWithLookup {
 
     String language_fr_CA();
 
+    String template_1();
+
+    String template_2();
+    
+    String template_3();
+    
     String infoView_associatedCourse();
 
     String infoView_label();

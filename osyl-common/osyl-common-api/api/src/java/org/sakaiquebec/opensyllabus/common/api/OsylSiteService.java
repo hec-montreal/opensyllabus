@@ -162,7 +162,7 @@ public interface OsylSiteService extends EntityProducer {
      * @param lang
      * @throws Exception
      */
-    public String createSite(String siteTitle, String configRef, String lang)
+    public String createSite(String siteTitle, String configRef, String lang, String templateId)
 	    throws Exception;
 
     /**

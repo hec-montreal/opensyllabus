@@ -53,14 +53,19 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 
     private static List<String> supportedLang =
 	    Arrays.asList(new String[] {  "fr_CA", "en", "es", });// TODO to be
-    // parameterized
+	// parameterized
+	
+	// template ids (must be in database)
+	private static List<String> supportedTemplates = 
+		Arrays.asList(new String[] { "1", "2", "3" });
 
     private TextBox nameTextBox;
 
     //Deactivate configuration box
     //private ListBox configListBox;
 
-    private ListBox langListBox;
+	private ListBox langListBox;
+	private ListBox templateListBox;
 
     private PushButton createSite;
     
@@ -120,10 +125,13 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 	}
 	mainPanel.add(createPanel(langTitle, langListBox));
 
-	Label configTitle = new Label(messages.chooseConfig());
-	/*configListBox = new ListBox();
-	controller.getOsylConfigs(configListAsyncCallback);
-	mainPanel.add(createPanel(configTitle, configListBox));*/
+	Label templateTitle = new Label(messages.chooseTemplate());
+	templateListBox = new ListBox();
+	for (Iterator<String> templateIterator = supportedTemplates.iterator(); templateIterator.hasNext();) {
+	    String templateId = templateIterator.next();
+	    templateListBox.addItem(messages.getString("template_" + templateId), templateId);
+	}
+	mainPanel.add(createPanel(templateTitle, templateListBox));
 
 	createSite = new PushButton(messages.create());
 	createSite.setWidth("40px");
@@ -134,6 +142,8 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 		String name = nameTextBox.getText();
 		String lang =
 			langListBox.getValue(langListBox.getSelectedIndex());
+		String template =
+			templateListBox.getValue(templateListBox.getSelectedIndex());
 		nameValid =
 			(name != null
 				&& name
@@ -154,7 +164,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 			    String configRef = null;
 				    //configListBox.getValue(configListBox
 					//    .getSelectedIndex());
-			    controller.createSite(name, configRef, lang);
+			    controller.createSite(name, configRef, lang, template);
 			/*} else {
 			    Window.alert(messages.noConfig());
 			}*/

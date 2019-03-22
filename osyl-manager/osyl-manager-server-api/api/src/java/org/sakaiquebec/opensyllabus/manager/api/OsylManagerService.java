@@ -179,7 +179,7 @@ public interface OsylManagerService {
     public void deleteSite(String siteId) throws OsylPermissionException,
 	    Exception;
 
-    public String createSite(String siteTitle, String configRef, String lang)
+    public String createSite(String siteTitle, String configRef, String lang, String templateId)
 	    throws Exception, OsylPermissionException;
 
     public Map<String, Boolean> getPermissions();

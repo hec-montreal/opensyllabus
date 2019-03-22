@@ -199,7 +199,14 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	VerticalPanel commandsPanel = new VerticalPanel();
 
 	HorizontalPanel hz1 = new HorizontalPanel();
+	if (getController().getPermissions().get(
+		SecurityInterface.OSYL_MANAGER_FUNCTION_CREATE)) {
+		hz1.add(new CreateSiteAction(getController()));
+		hz1.add(new HTML(" | "));
+	}
+
 	hz1.add(new EditAction(getController()));
+
 	if (getController().getPermissions().get(
 		SecurityInterface.OSYL_MANAGER_FUNCTION_COPY)) {
 	    hz1.add(new HTML(" | "));
@@ -215,26 +222,6 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 
 	hz1.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz1);
-
-	/*if (getController().getPermissions().get(
-		SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
-	    HorizontalPanel hz2 = new HorizontalPanel();
-	    hz2.add(new AssociateAction(getController()));
-	    hz2.add(new HTML(" | "));
-	    hz2.add(new DissociateAction(getController()));
-	    hz2.setStyleName("OsylManager-mainView-actionList");
-	    commandsPanel.add(hz2);
-	}
-*/
-/*	if (getController().getPermissions().get(
-		SecurityInterface.OSYL_MANAGER_FUNCTION_ATTACH)) {
-	    HorizontalPanel hz3 = new HorizontalPanel();
-	    hz3.add(new AttachToCmAction(getController()));
-	    hz3.add(new HTML(" | "));
-	    hz3.add(new UnattachFromCmAction(getController()));
-	    hz3.setStyleName("OsylManager-mainView-actionList");
-	    commandsPanel.add(hz3);
-	}*/
 
 	HorizontalPanel hz4 = new HorizontalPanel();
 	if (getController().getPermissions().get(
@@ -268,23 +255,5 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	mainLabel.setStylePrimaryName("OsylManager-mainView-label-important");
 	mainPanel.add(mainLabel);
 	mainPanel.add(hzPanel4);
-
-	Label newSiteCreationLbl =
-		new Label(getController().getMessages()
-			.mainView_creationOfNewSite());
-	newSiteCreationLbl.setStylePrimaryName("OsylManager-mainView-label");
-	mainPanel.add(newSiteCreationLbl);
-
-	if (getController().getPermissions().get(
-		SecurityInterface.OSYL_MANAGER_FUNCTION_CREATE)) {
-	    HorizontalPanel hPanel = new HorizontalPanel();
-	    hPanel.add(new CreateSiteAction(getController()));
-	    hPanel.add(new HTML("&nbsp;"
-		    + getController().getMessages().mainView_or() + "&nbsp;"));
-	    hPanel.add(new ImportNewSiteAction(getController()));
-	    mainPanel.add(hPanel);
-	}
-	
-
     }
 }

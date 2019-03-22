@@ -75,7 +75,7 @@ public class OsylManagerRPCController {
      * @param lang
      */
     public void createSite(final OsylManagerController osylManagerController,
-	    String title, String configRef, String lang) {
+	    String title, String configRef, String lang, String templateId) {
 	final OsylManagerController caller = osylManagerController;
 	// We first create a call-back for this method call
 	AsyncCallback<String> callback = new AsyncCallback<String>() {
@@ -94,7 +94,7 @@ public class OsylManagerRPCController {
 			.siteNotCreated());
 	    }
 	};
-	serviceProxy.createSite(title, configRef, lang, callback);
+	serviceProxy.createSite(title, configRef, lang, templateId, callback);
     }
 
     public void getOsylConfigs(AsyncCallback<Map<String, String>> callback) {

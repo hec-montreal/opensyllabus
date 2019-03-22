@@ -2483,7 +2483,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	osylSiteService.deleteSite(siteId);
     }
 
-    public String createSite(String siteTitle, String configRef, String lang)
+    public String createSite(String siteTitle, String configRef, String lang, String templateId)
 	    throws Exception, OsylPermissionException {
 	if (!osylSecurityService
 		.isActionAllowedInSite(siteService.siteReference(toolManager.getCurrentPlacement().getContext()),SecurityInterface.OSYL_MANAGER_FUNCTION_CREATE)) {
@@ -2491,7 +2491,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    .getCurrentSession().getUserEid(),
 		    SecurityInterface.OSYL_MANAGER_FUNCTION_CREATE);
 	}
-	return osylSiteService.createSite(siteTitle, configRef, lang);
+	return osylSiteService.createSite(siteTitle, configRef, lang, templateId);
     }
 
     public Map<String, Boolean> getPermissions() {

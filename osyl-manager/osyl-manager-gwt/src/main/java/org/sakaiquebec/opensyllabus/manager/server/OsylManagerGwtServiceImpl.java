@@ -79,12 +79,12 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     /**
      * {@inheritDoc}
      */
-    public String createSite(String siteTitle, String configRef, String lang)
+    public String createSite(String siteTitle, String configRef, String lang, String templateId)
 	    throws Exception, PermissionException {
 
 	if (osylManagerServices != null) {
 	    return osylManagerServices.getOsylManagerService().createSite(
-		    siteTitle, configRef, lang);
+		    siteTitle, configRef, lang, templateId);
 	} else {
 	    log.warn("Unable to create site: bean osylManagerMainBean is null");
 	}
