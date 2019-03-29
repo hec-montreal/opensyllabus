@@ -20,7 +20,6 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.impl;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.SecurityAdvisor;
@@ -73,12 +72,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private List<String> disallowedFunctions = null;
 
-    private List<String> piloteE2017 = null;
-
-    private List<String> piloteA2017 = null;
-
-    private List<String> piloteH2018 = null;
-
     private String removedRole = null;
 
     private String functionsRole = null;
@@ -119,10 +112,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     }
 
     private boolean updateGroup;
-    private List<String> functions;
-    private List<String> addedUsers;
-    private List<String> removedUsers;
-    private List<String> replacedUsers;
 
     private Map<String, String> printVersionJobParams = null;
 
@@ -188,7 +177,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
         }
     }
 
-
     public List<String> getDisallowedFunctions() {
         return disallowedFunctions;
     }
@@ -243,67 +231,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
                 this.servEns.add(servEnsTable[i].trim());
             }
         }
-    }
-
-    private void setPiloteE2017(String piloteE2017) {
-        this.piloteE2017 = new ArrayList<String>();
-        if (piloteE2017 != null && !piloteE2017.isEmpty()) {
-            this.piloteE2017 = new ArrayList<String>();
-            Collections.addAll(this.piloteE2017, piloteE2017.split(","));
-        }
-    }
-
-    public boolean inE2017Pilote(String courseOfferingId, List<String> piloteE2017) {
-        for (String exception : piloteE2017) {
-            exception = exception + "2172";
-            if (courseOfferingId.startsWith(exception))
-                return true;
-        }
-        return false;
-    }
-
-    private void setPiloteH2018(String piloteH2018) {
-        this.piloteH2018 = new ArrayList<String>();
-        if (piloteH2018 != null && !piloteH2018.isEmpty()) {
-            this.piloteH2018 = new ArrayList<String>();
-            Collections.addAll(this.piloteH2018, piloteH2018.split(","));
-        }
-    }
-
-    @Override
-    public List<String> getPiloteH2018() {
-        return piloteH2018;
-    }
-
-    public boolean inH2018Pilote(String courseOfferingId, List<String> piloteH2018) {
-        for (String exception : piloteH2018) {
-            exception = exception + "2181";
-            if (courseOfferingId.startsWith(exception))
-                return true;
-        }
-        return false;
-    }
-
-    private void setPiloteA2017(String piloteA2017) {
-        this.piloteA2017 = new ArrayList<String>();
-        if (piloteA2017 != null && !piloteA2017.isEmpty()) {
-            this.piloteA2017 = new ArrayList<String>();
-            Collections.addAll(this.piloteA2017, piloteA2017.split(","));
-        }
-    }
-
-    @Override
-    public List<String> getPiloteA2017() {
-        return piloteA2017;
-    }
-
-    public boolean inA2017Pilote(String courseOfferingId, List<String> piloteA2017) {
-        for (String exception : piloteA2017) {
-            exception = exception + "2173";
-            if (courseOfferingId.startsWith(exception))
-                return true;
-        }
-        return false;
     }
 
     @Override
@@ -511,7 +438,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
                 // The file has been removed - remove config in list
                 if (configFiles != null) {
                     if (fileName.contains(ROLE_FOLDER)) {
-                        String role = configFiles.get(fileName);
                         configFiles.remove(fileName);
                     }
                 }
@@ -521,9 +447,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
                     setEndDate(null);
                     setPrograms(null);
                     setServEns(null);
-                    setPiloteE2017(null);
-                    setPiloteA2017(null);
-
                 }
                 if (fileName.contains(FUNCTIONSSCONFIGFILE)) {
                     setFunctionsRole(null);
@@ -531,10 +454,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
                     setRemovedRole(null);
                     setAllowedFunctions(null);
                     setDisallowedFunctions(null);
-
                 }
-
-
                 log.info("There is no " + fileName + " has been removed ");
             } catch (TypeException e) {
                 log.info("The resource requested has the wrong type");
@@ -649,38 +569,21 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
                 String startDate = retrieveParameter(document, STARTDATE);
                 String programs = retrieveParameter(document, PROGRAMS);
                 String servEns = retrieveParameter(document, SERVENS);
-                String piloteE2017 = retrieveParameter(document, PILOTE_E2017);
-                String piloteA2017 = retrieveParameter(document, PILOTE_A2017);
-                String piloteH2018 = retrieveParameter(document, PILOTE_H2018);
 
                 setCourses(courses);
                 setStartDate(startDate);
                 setEndDate(endDate);
                 setPrograms(programs);
                 setServEns(servEns);
-                setPiloteE2017(piloteE2017);
-                setPiloteA2017(piloteA2017);
-                setPiloteH2018(piloteH2018);
             }
 
             if (configurationXml.contains(ROLE_FOLDER)) {
-                Map<String, Object> values = new HashMap<String, Object>();
                 RoleSynchronizationPOJO rolePojo = new RoleSynchronizationPOJO();
                 String role = retrieveParameter(document, ROLE);
                 String description = retrieveParameter(document, DESCRIPTION);
-                String courseManagement = retrieveParameter(document, COURSEMANAGEMENT);
-                boolean includingFrozenSites =
-                        Boolean.parseBoolean(retrieveParameter(document,
-                                INCLUDING_FROZEN_SITES));
-                boolean includingDirSites =
-                        Boolean.parseBoolean(retrieveParameter(document,
-                                INCLUDING_DIR_SITES));
                 boolean updateGroup =
                         Boolean.parseBoolean(retrieveParameter(document,
                                 ConfigurationService.UPDATE_GROUP));
-                String addedUsers = retrieveParameter(document, ADDEDUSERS);
-                String removedUsers = retrieveParameter(document, REMOVEDUSERS);
-                String replacedUsers = retrieveParameter(document, REPLACEDUSERS);
                 String functions = retrieveParameter(document, FUNCTIONS);
                 String removedFunctions = retrieveParameter(document, REMOVE_FUNCTIONS);
 
@@ -708,9 +611,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
             boolean includingDirSites =
                     Boolean.parseBoolean(retrieveParameter(document,
                             INCLUDING_DIR_SITES));
-            boolean updateGroup =
-                    Boolean.parseBoolean(retrieveParameter(document,
-                            ConfigurationService.UPDATE_GROUP));
 
             String allowedFunctions =
                     retrieveParameter(document, ALLOWED_FUNCTIONS);
@@ -843,47 +743,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
         this.includingDirSites = includingDirSites;
     }
 
-    private void setFunctions(String functions) {
-        this.functions = new ArrayList<String>();
-        if (functions != null && functions.length() > 0) {
-            String[] functionsTable = functions.split(LIST_DELIMITER);
-            for (int i = 0; i < functionsTable.length; i++) {
-                this.functions.add(functionsTable[i].trim());
-            }
-        }
-    }
-
-    private void setAddedUsers(String addedUsers) {
-        this.addedUsers = new ArrayList<String>();
-        if (addedUsers != null && addedUsers.length() > 0) {
-            String[] addedUsersTable = addedUsers.split(LIST_DELIMITER);
-            for (int i = 0; i < addedUsersTable.length; i++) {
-                this.addedUsers.add(addedUsersTable[i].trim());
-            }
-        }
-    }
-
-    private void setRemovedUsers(String removedUsers) {
-        this.removedUsers = new ArrayList<String>();
-        if (removedUsers != null && removedUsers.length() > 0) {
-            String[] removedUsersTable = removedUsers.split(LIST_DELIMITER);
-            for (int i = 0; i < removedUsersTable.length; i++) {
-                this.removedUsers.add(removedUsersTable[i].trim());
-            }
-        }
-    }
-
-    private void setReplacedUsers(String replacedUsers) {
-        this.replacedUsers = new ArrayList<String>();
-        if (replacedUsers != null && replacedUsers.length() > 0) {
-            String[] replacedUsersTable = replacedUsers.split(LIST_DELIMITER);
-            for (int i = 0; i < replacedUsersTable.length; i++) {
-                this.replacedUsers.add(replacedUsersTable[i].trim());
-            }
-        }
-    }
-
-
     /**
      * Lookup and rerieve one dynamic configuration parameter
      *
@@ -995,10 +854,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     public List<String> getServEns() {
         return servEns;
-    }
-
-    public List<String> getPiloteE2017() {
-        return piloteE2017;
     }
 
     public List<String> getPrograms() {

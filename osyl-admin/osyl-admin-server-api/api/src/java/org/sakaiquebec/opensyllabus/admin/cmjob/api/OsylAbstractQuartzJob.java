@@ -42,17 +42,5 @@ public interface OsylAbstractQuartzJob extends Job{
     public PropertyResourceBundle getResouceBundle(ContentResource resource);
     
     public List<String> getActiveTerms();
-
-    public final static String CERT_PILOTE = "CERT";
-
-    /**
-     * Method used to see if the data value is synched with the old synchronizing job
-     *
-     * @param strm
-     * @return
-     */
-    public boolean isSynchedTheOldWay (int strm, String department);
-
-
 }
 

@@ -47,12 +47,6 @@ public interface ConfigurationService {
 
     public final static String SERVENS = "servEns";
 
-    public final static String PILOTE_E2017= "pilote-e2017";
-
-    public final static String PILOTE_A2017 = "pilote-a2017";
-
-    public final static String PILOTE_H2018 = "pilote-h2018";
-
     // For updating all courses sites to frozen sites
     public final static String FROZENPERMISSIONS = "permissions";
 
@@ -140,18 +134,15 @@ public interface ConfigurationService {
     
     public final static String CM_EXCEPTIONS_PROGRAM= "program";
     
-    
     /*
      * Parameters used for evalsys
      * */
     public final static String EVALSYS_TERMS_FILE = "evalsysTerm.properties";
     
-    
     /*
      * Parameters used for overriding site users with cm users
      * */
     public final static String OVERRIDESIREUSERS_CONFIG_FILE_NAME = "overrideSiteUsers.properties";
-    
     
     // Parameters used in the official sites synchronisation job
     public Date getEndDate();
@@ -193,18 +184,6 @@ public interface ConfigurationService {
     public Map<String, String> getPrintVersionJobParams();
     
     public Map<String,Map<String,String>> getCmExceptions();
-
-    public List<String> getPiloteE2017();
-
-    public boolean inE2017Pilote (String courseId, List<String> piloteE2017);
-
-    public List<String> getPiloteA2017();
-
-    public boolean inA2017Pilote (String courseId, List<String> piloteA2017);
-
-    public List<String> getPiloteH2018();
-
-    public boolean inH2018Pilote (String courseId, List<String> piloteH2018);
 
     List<RoleSynchronizationPOJO> getRoles();
 }
