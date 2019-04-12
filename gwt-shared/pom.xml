@@ -9,7 +9,7 @@
 	<parent>
 		<artifactId>osyl</artifactId>
 		<groupId>org.sakaiquebec.opensyllabus</groupId>
-		<version>11-SNAPSHOT</version>
+		<version>${sakai.opensyllabus.version}</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 

@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.sakaiquebec.opensyllabus</groupId>
     <artifactId>osyl-editor</artifactId>
-    <version>11-SNAPSHOT</version>
+    <version>${sakai.opensyllabus.version}</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 

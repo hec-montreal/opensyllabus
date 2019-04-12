@@ -5,13 +5,13 @@
   <parent>
     <groupId>org.sakaiproject</groupId>
     <artifactId>master</artifactId>
-    <version>11.3</version>
+    <version>19.0</version>
     <relativePath>../master/pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
   <artifactId>osyl</artifactId>
-  <version>11-SNAPSHOT</version>
+  <version>${sakai.opensyllabus.version}</version>
   <packaging>pom</packaging>
 
   <name>Sakai Quebec OpenSyllabus</name>
@@ -194,7 +194,7 @@
 		<dependency>
 			<groupId>org.sakaiproject.evaluation</groupId>
 			<artifactId>sakai-evaluation-api</artifactId>
-			<version>11-SNAPSHOT</version>
+			<version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
 <!-- 		<dependency> -->

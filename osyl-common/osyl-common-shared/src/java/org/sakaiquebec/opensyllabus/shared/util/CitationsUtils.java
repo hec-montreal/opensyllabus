@@ -18,12 +18,16 @@ public class CitationsUtils {
 	//Change citation url from old to new format (return parameter)
 	public static String formatCitationUrl(String oldCitationUrl) {
 		
-		if (oldCitationUrl.startsWith("http://taos.hec.ca")) {
+		// Depuis 19.0 la méthode getSiteConfigLibraryUrlResolverAddress n'existe plus dans configService
+		// On enlève le code qui traite les citations qui sont sur taos.hec.ca
+
+		/* if (oldCitationUrl.startsWith("http://taos.hec.ca")) {
 			String query = oldCitationUrl.substring(oldCitationUrl.lastIndexOf('=')+1);
 			
 			return configService.getSiteConfigLibraryUrlResolverAddress() + 
 					query.replaceAll(" ", " AND ");
-		}
+		} */
+
 		// ZCII-2002 : permettre de spécifier une liste d'url dans sakai.properties
 		//             qui devraient être remplacé par celui qui est dans la config
 		//             lorsqu'on charge un plan de cours
