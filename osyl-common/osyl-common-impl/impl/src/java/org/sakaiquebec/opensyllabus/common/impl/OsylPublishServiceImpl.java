@@ -91,8 +91,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.tidy.Tidy;
 
-import ca.hec.archive.api.HecCourseArchiveService;
-
 public class OsylPublishServiceImpl implements OsylPublishService {
 
     private static Log log = LogFactory.getLog(OsylPublishServiceImpl.class);
@@ -181,15 +179,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	this.cmService = cmService;
     }
 
-    // BEGIN HEC ONLY ARCHIVE MODULE
-    private HecCourseArchiveService hecCourseArchiveService;
-
-    public void setHecCourseArchiveService(HecCourseArchiveService hecCourseArchiveService) {
-	this.hecCourseArchiveService = hecCourseArchiveService;
-    }
-
-    // END HEC ONLY ARCHIVE MODULE
-    
     // END SPRING INJECTION
 
     /**
@@ -1121,10 +1110,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
 	// see ZCII-400 (02-13-2013)
-	
-	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)) {
-	    hecCourseArchiveService.saveCourseMetadataToArchive(publishedCO);
-	}	 
 	 
 	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_ATTENDEE)) {
 
@@ -1236,9 +1221,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	COSerialized co =
 		osylSiteService.getSerializedCourseOutline(siteId, webappDir);
 	
-	// remove section from archive table
-	hecCourseArchiveService.deleteArchiveCourseSection(siteId);
-
 	// remove publication date in DB
 	resourceDao.setPublicationDate(co.getCoId(), null);
 

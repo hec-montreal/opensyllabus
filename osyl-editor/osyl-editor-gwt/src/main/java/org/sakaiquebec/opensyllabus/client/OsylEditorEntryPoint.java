@@ -366,47 +366,49 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @return number of pixels for the desired height for the tool.
      */
     private static int getDesiredToolHeight() {
-	int viewportHeight = getViewportHeight();
-	int diff = 0;
-	Element sakaiLeftMenu = getSakaiLeftMenu();
-	if (sakaiLeftMenu != null) {
-	    int totalHeight = getTotalHeight();
-	    int footerHeight = getSakaiFooterHeight();
-	    int scrollY = getGlobalScrollY();
-	    int sakaiLeftMenuMaxHeight =
-		    sakaiLeftMenu.getOffsetHeight()
-			    + sakaiLeftMenu.getAbsoluteTop();
-	    if (viewportHeight > sakaiLeftMenuMaxHeight) {
-		if (viewportHeight < (sakaiLeftMenuMaxHeight + footerHeight)) {
-		    int bottom = totalHeight - scrollY - viewportHeight;
-		    if (bottom < footerHeight) {
-			diff -= bottom + scrollY;
-		    }
-		    /*
-		     * Sometimes a space is inserted between the Sakai footer
-		     * and the left menu this fix remove it.
-		     */
-		    int fix =
-			    Math.max(totalHeight
-				    - (sakaiLeftMenuMaxHeight + footerHeight),
-				    0);
-		    if (fix > 0) {
-			diff += fix;
-		    }
-
-		}
-		diff += footerHeight;
-	    }
-	    if (sakaiLeftMenuMaxHeight >= (scrollY + viewportHeight)) {
-		diff -= scrollY;
-	    } else {
-		if (viewportHeight < sakaiLeftMenuMaxHeight) {
-		    diff -= (sakaiLeftMenuMaxHeight - viewportHeight);
-		}
-	    }
-	}
-	return Math.max(viewportHeight - getToolAbsoluteTop() - diff,
-		MIN_TOOL_HEIGHT);
+//	int viewportHeight = getViewportHeight();
+//	int diff = 0;
+//	Element sakaiLeftMenu = getSakaiLeftMenu();
+//	if (sakaiLeftMenu != null) {
+//	    int totalHeight = getTotalHeight();
+//	    int footerHeight = getSakaiFooterHeight();
+//	    int scrollY = getGlobalScrollY();
+//	    int sakaiLeftMenuMaxHeight =
+//		    sakaiLeftMenu.getOffsetHeight()
+//			    + sakaiLeftMenu.getAbsoluteTop();
+//	    if (viewportHeight > sakaiLeftMenuMaxHeight) {
+//		if (viewportHeight < (sakaiLeftMenuMaxHeight + footerHeight)) {
+//		    int bottom = totalHeight - scrollY - viewportHeight;
+//		    if (bottom < footerHeight) {
+//			diff -= bottom + scrollY;
+//		    }
+//		    /*
+//		     * Sometimes a space is inserted between the Sakai footer
+//		     * and the left menu this fix remove it.
+//		     */
+//		    int fix =
+//			    Math.max(totalHeight
+//				    - (sakaiLeftMenuMaxHeight + footerHeight),
+//				    0);
+//		    if (fix > 0) {
+//			diff += fix;
+//		    }
+//
+//		}
+//		diff += footerHeight;
+//	    }
+//	    if (sakaiLeftMenuMaxHeight >= (scrollY + viewportHeight)) {
+//		diff -= scrollY;
+//	    } else {
+//		if (viewportHeight < sakaiLeftMenuMaxHeight) {
+//		    diff -= (sakaiLeftMenuMaxHeight - viewportHeight);
+//		}
+//	    }
+//	}
+//	return Math.max(viewportHeight - getToolAbsoluteTop() - diff,
+//		MIN_TOOL_HEIGHT);
+    	
+    	return getViewportHeight() - 200;
     }
 
     /**

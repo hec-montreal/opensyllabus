@@ -89,9 +89,6 @@
 		<property name="coRelationDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 
- 		<property name="hecCourseArchiveService" 
-			ref="ca.hec.archive.api.HecCourseArchiveService" /> 
-
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />

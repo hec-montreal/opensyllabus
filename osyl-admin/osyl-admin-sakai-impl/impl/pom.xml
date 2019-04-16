@@ -71,10 +71,10 @@
       <groupId>org.sakaiproject.hierarchy</groupId>
       <artifactId>hierarchy-api</artifactId>
     </dependency>
-    <dependency>
+    <!-- <dependency>
        <groupId>org.sakaiproject.evaluation</groupId>
        <artifactId>sakai-evaluation-api</artifactId>
-    </dependency>
+    </dependency> -->
      <!-- spring and hibernate -->
     <dependency>
       <groupId>${sakai.spring.groupId}</groupId>
