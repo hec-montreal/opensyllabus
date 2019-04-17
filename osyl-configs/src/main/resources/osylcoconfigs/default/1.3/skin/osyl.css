@@ -1,4 +1,4 @@
-﻿/* ---- CSS definitions specific to OpenSyllabus ------------------- */
+/* ---- CSS definitions specific to OpenSyllabus ------------------- */
 /* Main panel of Osyl -----------------------------------------------------------------------------------*/
 .Osyl-MainPanel {
 	width:100%;
@@ -1590,4 +1590,24 @@ a.Osyl-collapseButton.collapse.down {background-position: -40px 0}
 
 .Mrphs-userNav__popup {
 	margin-left: 0;
+}
+
+/* Hide save & publish for Sakai 19 */
+.Osyl-MenuItem-Add {
+	display: none;
+}
+
+/* Enregistrer */
+#gwt-uid-3 {
+	display: none;
+}
+
+/* Publish */
+#gwt-uid-4 {
+	display: none;
+}
+
+/* Separators */
+.gwt-MenuItemSeparator {
+	display: none;
 }
