@@ -6,13 +6,13 @@
   <parent>
      <groupId>org.sakaiquebec.opensyllabus</groupId>
      <artifactId>osyl</artifactId>
-     <version>${sakai.opensyllabus.version}</version>
+     <version>19.0</version>
      <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
   <artifactId>osyl-admin</artifactId>
-  <version>${sakai.opensyllabus.version}</version>
+  <version>19.0</version>
   <packaging>pom</packaging>
 
   <modules>

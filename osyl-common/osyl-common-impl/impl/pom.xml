@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.sakaiquebec.opensyllabus</groupId>
 		<artifactId>osyl-common</artifactId>
-		<version>${sakai.opensyllabus.version}</version>
+		<version>19.0</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -164,13 +164,6 @@
 			<artifactId>sakai-announcement-api</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>
-		</dependency>
-		<!-- used for publication in order to write metadatas to hec-course-archive 
-			table -->
-		<dependency>
-			<groupId>ca.hec</groupId>
-			<artifactId>hec-course-archive-api</artifactId>
-			<version>1.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

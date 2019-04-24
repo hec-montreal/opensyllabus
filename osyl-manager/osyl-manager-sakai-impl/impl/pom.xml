@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.sakaiquebec.opensyllabus</groupId>
 		<artifactId>osyl-manager</artifactId>
-		<version>${sakai.opensyllabus.version}</version>
+		<version>19.0</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -139,10 +139,10 @@
 			<artifactId>delegatedaccess-api</artifactId>
 			<version>3.0</version>
 		</dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>ca.hec</groupId>
             <artifactId>tenjin-api</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
+        </dependency> -->
     </dependencies>
 </project>

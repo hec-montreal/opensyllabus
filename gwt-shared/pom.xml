@@ -9,13 +9,13 @@
 	<parent>
 		<artifactId>osyl</artifactId>
 		<groupId>org.sakaiquebec.opensyllabus</groupId>
-		<version>${sakai.opensyllabus.version}</version>
+		<version>19.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<groupId>org.sakaiquebec.opensyllabus</groupId>
 	<artifactId>gwt-shared-lib</artifactId>
-
+	<version>19.0</version>
 
 	<properties>
 		<deploy.target>shared</deploy.target>
