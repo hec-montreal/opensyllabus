@@ -1123,7 +1123,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// see ZCII-400 (02-13-2013)
 	
 	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)) {
-	    hecCourseArchiveService.saveCourseMetadataToArchive(publishedCO);
+//	    hecCourseArchiveService.saveCourseMetadataToArchive(publishedCO);
 	}	 
 	 
 	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_ATTENDEE)) {
