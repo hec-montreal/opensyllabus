@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.sakaiquebec.opensyllabus</groupId>
     <artifactId>osyl-admin</artifactId>
-    <version>19.0</version>
+    <version>19.1</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -25,7 +25,7 @@
 	<dependency>
 		<groupId>ca.hec</groupId>
 		<artifactId>hec-utils</artifactId>
-		<version>19.0</version>
+		<version>19.1</version>
 	</dependency>
 
     <!--  opensyllabus -->
@@ -47,7 +47,7 @@
     <dependency>
       <groupId>ca.hec</groupId>
       <artifactId>hec-utils</artifactId>
-      <version>19.0</version>
+      <version>19.1</version>
     </dependency>
 
     <!--  sakai -->
