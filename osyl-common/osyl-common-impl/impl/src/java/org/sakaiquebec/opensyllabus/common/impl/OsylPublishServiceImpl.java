@@ -1110,7 +1110,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
 	// see ZCII-400 (02-13-2013)
-	 
 	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_ATTENDEE)) {
 
 	    String mobileAppFeedURL =
