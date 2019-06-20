@@ -37,8 +37,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
@@ -186,6 +186,13 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	hzSiteSelectionPanel2.add(selectSiteActionBtn);
 	hzSiteSelectionPanel2.add(trimesterLbl);
 	hzSiteSelectionPanel2.add(acadSessionListBox);
+	Label mainLabel =
+			new Label(getController().getMessages().mainView_label());
+		mainLabel.setStylePrimaryName("OsylManager-mainView-label-important");
+		mainPanel.add(mainLabel);
+	
+	hzSiteSelectionPanel2.add(mainLabel);
+		
 	//hzSiteSelectionPanel2.add(showFrozenLbl);
 	//hzSiteSelectionPanel2.add(showFrozenCheckBox);
 	
@@ -249,11 +256,6 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	mainPanel.add(hzPanel2);
 	mainPanel.add(hzPanel3);
 	mainPanel.add(hzPanel4);
-	
-	Label mainLabel =
-		new Label(getController().getMessages().mainView_label());
-	mainLabel.setStylePrimaryName("OsylManager-mainView-label-important");
-	mainPanel.add(mainLabel);
 	mainPanel.add(hzPanel4);
     }
 }
