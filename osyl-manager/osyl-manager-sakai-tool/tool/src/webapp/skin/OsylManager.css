@@ -161,7 +161,9 @@ cursor:pointer;
 
 .OsylManager-mainView-label-important{
 	font-weight: bold;
-	font-size: 16px;
+	font-size: 12px;
+	padding-top: 5px;
+	padding-left: 5px;
 }
 
 .OsylManager-mainView-tabBar {}

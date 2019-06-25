@@ -230,26 +230,6 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	hz1.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz1);
 
-	HorizontalPanel hz4 = new HorizontalPanel();
-	if (getController().getPermissions().get(
-		SecurityInterface.OSYL_MANAGER_FUNCTION_IMPORT)) {
-	    hz4.add(new ImportAction(getController()));
-	}
-	if (getController().getPermissions().get(
-		SecurityInterface.OSYL_MANAGER_FUNCTION_EXPORT)) {
-	    if (hz4.getWidgetCount() > 0)
-		hz4.add(new HTML(" | "));
-	    hz4.add(new ExportAction(getController()));
-	}
-	hz4.add(new HTML(" | "));
-	hz4.add(new PublishAction(getController()));
-	hz4.add(new HTML(" | "));
-	hz4.add(new UnpublishAction(getController()));
-	if (hz4.getWidgetCount() > 0) {
-	    hz4.setStyleName("OsylManager-mainView-actionList");
-	    commandsPanel.add(hz4);
-	}
-
 	hzPanel3.add(commandsPanel);
 
 	mainPanel.add(vSiteSelectionPanel);
