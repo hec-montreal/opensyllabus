@@ -101,7 +101,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 		    cosites = result;
 		    mainPanel.clear();
 		    scSiteList.getDataTable().clearAll();
-		    scSiteList.getDataTable().resize(0, 5);
+		    scSiteList.getDataTable().resize(0, 8);
 
 		    if ((result == null || result.isEmpty()) && isShowMessage()) {
 			Window.alert(messages.noCOSite());
@@ -159,7 +159,32 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 				scSiteList.getDataTable()
 					.setHTML(rowNum, 4, "");
 			    }
-
+			    //Publication
+			    if (coSite.getLastPublicationDate() != null) {
+				scSiteList.getDataTable().setHTML(rowNum, 5,
+					dtf.format(coSite
+						.getLastPublicationDate()));
+			    }
+			    //Modification
+			    if (coSite.getLastModifiedDate() != null) {
+				scSiteList.getDataTable().setHTML(rowNum, 6,
+						dtf.format(coSite
+						.getLastModifiedDate()));
+			    }
+			    //Status
+			    String typeSite;
+			    if (coSite.isCoIsFrozen()) {
+				typeSite = FROZEN_SITE;
+			    } else if (coSite.getType().equalsIgnoreCase(
+				    DIRECTORY_TYPE_SITE)) {
+				typeSite = DIRECTORY_SITE;
+			    } else {
+				typeSite = "";
+			    }
+			    scSiteList.getDataTable().setHTML(rowNum, 7,
+				    typeSite);
+			    scSiteList.getDataTable().getCellFormatter()
+				    .setVisible(rowNum, 7, false);
 			    i++;
 			}
 		    }
@@ -214,9 +239,12 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	scSiteList.setColumnWidth(0, 150);
 	scSiteList.setColumnWidth(1, 100);
 	scSiteList.setColumnWidth(2, 100);
-	scSiteList.setColumnWidth(3, 170);
+	scSiteList.setColumnWidth(3, 200);
 	scSiteList.setColumnWidth(4, 150);
-
+	scSiteList.setColumnWidth(5, 120);
+	scSiteList.setColumnWidth(6, 120);
+	scSiteList.setColumnWidth(7, 20);
+	
 	// scSiteList.setMinimumColumnWidth(0, 20);
 	// scSiteList.setMaximumColumnWidth(0, 20);
 
@@ -416,6 +444,17 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 		HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 5, HasVerticalAlignment.ALIGN_TOP);
 
+	headerTable.setHTML(0, 6, messages.CourseListView_scSiteList_col5());
+	formatter.setHorizontalAlignment(0, 6,
+		HasHorizontalAlignment.ALIGN_LEFT);
+	formatter.setVerticalAlignment(0, 6, HasVerticalAlignment.ALIGN_TOP);
+
+	headerTable.setHTML(0, 7, messages.CourseListView_scSiteList_col6());
+	formatter.setHorizontalAlignment(0, 7,
+		HasHorizontalAlignment.ALIGN_LEFT);
+	formatter.setVerticalAlignment(0, 7, HasVerticalAlignment.ALIGN_TOP);
+
+	
 	// headerTable.setHTML(0, 8, "");
 	// formatter.setVisible(0, 8, false);
 

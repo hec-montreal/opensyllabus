@@ -161,9 +161,7 @@ cursor:pointer;
 
 .OsylManager-mainView-label-important{
 	font-weight: bold;
-	font-size: 12px;
-	padding-top: 5px;
-	padding-left: 5px;
+	font-size: 16px;
 }
 
 .OsylManager-mainView-tabBar {}
@@ -301,3 +299,19 @@ background-color : #e7e7e7;
 .OsylManager-SuggestBoxPopup .suggestPopupBottomCenter {}
 
 .OsylManager-SuggestBoxPopup .suggestPopupBottomRightInner {}
+
+/* Hide columns */
+.headerTable tr td:nth-child(6), .headerTable tr td:nth-child(7), .headerTable tr td:nth-child(8) {
+	display: none;
+}
+
+.dataTable tr td:nth-child(6), .dataTable tr td:nth-child(7), .dataTable tr td:nth-child(8) {
+	display: none;
+}
+
+/* Font size */
+.OsylManager-mainView-label-important {
+	font-size: 12px;
+	padding-top: 5px;
+	padding-left: 5px;
+}
