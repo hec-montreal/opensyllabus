@@ -301,11 +301,11 @@ background-color : #e7e7e7;
 .OsylManager-SuggestBoxPopup .suggestPopupBottomRightInner {}
 
 /* Hide columns */
-.headerTable tr td:nth-child(6), .headerTable tr td:nth-child(7), .headerTable tr td:nth-child(8) {
+.headerTable tr td:nth-child(7), .headerTable tr td:nth-child(8) {
 	display: none;
 }
 
-.dataTable tr td:nth-child(6), .dataTable tr td:nth-child(7), .dataTable tr td:nth-child(8) {
+.dataTable tr td:nth-child(7), .dataTable tr td:nth-child(8) {
 	display: none;
 }
 
