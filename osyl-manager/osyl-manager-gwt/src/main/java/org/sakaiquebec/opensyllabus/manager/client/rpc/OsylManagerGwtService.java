@@ -115,7 +115,7 @@ public interface OsylManagerGwtService extends RemoteService {
     public void deleteSite(String siteId) throws Exception,
 	    OsylPermissionException;
 
-    public void copySite(String siteFrom, String siteTo) throws Exception,
+    public String copySite(String siteFrom, String siteTo) throws Exception,
 	    OsylPermissionException;
 
     public void unpublish(String siteId) throws Exception,

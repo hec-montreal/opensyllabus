@@ -21,7 +21,13 @@
 
 package org.sakaiquebec.opensyllabus.manager.server;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Vector;
+
+import javax.servlet.ServletContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.exception.PermissionException;
@@ -37,11 +43,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.ServletContext;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Vector;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -213,7 +215,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		.getAcademicSessions();
     }
 
-    public void copySite(String siteFrom, String siteTo) throws Exception,
+    public String copySite(String siteFrom, String siteTo) throws Exception,
 	    PermissionException {
 	String webappDir = getServletContext().getRealPath("/");
 	String mainToolCopied = osylManagerServices.getOsylManagerService().copySite(siteFrom, siteTo);
@@ -221,6 +223,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		if (mainToolCopied.equalsIgnoreCase("OPENSYLLABUS"))
 			osylManagerServices.getOsylSiteService().updateCOCourseInformations(
 		siteTo, webappDir);
+		
+		return mainToolCopied;
     }
 
     public void unpublish(String siteId) throws Exception,

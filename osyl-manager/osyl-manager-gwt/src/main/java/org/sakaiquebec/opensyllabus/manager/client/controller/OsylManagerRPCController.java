@@ -189,7 +189,7 @@ public class OsylManagerRPCController {
     }
 
     public void copySite(String siteFrom, String siteTo,
-	    AsyncCallback<Void> copyAsyncCallback) {
+	    AsyncCallback<String> copyAsyncCallback) {
 	serviceProxy.copySite(siteFrom, siteTo, copyAsyncCallback);
     }
 

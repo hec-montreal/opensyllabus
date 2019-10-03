@@ -178,6 +178,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public final static String EXPORT_DELETE_DELAY_MINUTES_KEY =
 	    "opensyllabus.manager.deleteExportAfter";
 
+    public final static String SYLLABUS_LOCALE_SITE_PROPERTY_NAME_KEY = "tenjin.syllabusLocale.sitePropertyName";
+    
     // default value: time in minutes to wait before deleting export zip files
     final static int EXPORT_DELETE_DELAY_MINUTES = 30;
 
@@ -2017,6 +2019,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return academicSession;
     }
 
+    private String nullGuard(String s) {
+    	if (s == null) {
+    		return "";
+    	}
+    	
+    	return s;
+    }
+    
 	public String copySite(String siteFrom, String siteTo) throws Exception {
 		// get the tool id list
 		List<String> oldSiteToolIdList = new Vector<String>();
@@ -2027,7 +2037,29 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 		newSite = siteService.getSite(siteTo);
 		oldSite = siteService.getSite(siteFrom);
+		
+		String syllabusLocalePropName = ServerConfigurationService.getString(SYLLABUS_LOCALE_SITE_PROPERTY_NAME_KEY, "hec_syllabus_locale");
 
+		String newSiteLocale = nullGuard(newSite.getProperties().getProperty(syllabusLocalePropName));
+		String oldSiteLocale = nullGuard(oldSite.getProperties().getProperty(syllabusLocalePropName));
+
+		// Refuse to copy if locale is different
+		if (!newSiteLocale.equals(oldSiteLocale)) {
+			return "cannot-copy-locale";
+		}
+
+		String syllabusTemplateIdPropName = "tenjin_template";
+		
+		String newSiteTemplateId = nullGuard(newSite.getProperties().getProperty(syllabusTemplateIdPropName));
+		String oldSiteTemplateId = nullGuard(oldSite.getProperties().getProperty(syllabusTemplateIdPropName));
+		
+		// Refuse to copy if templateId is different, permit if one of them is null
+		if (newSiteTemplateId.length() > 0 && oldSiteTemplateId.length() > 0) {
+			if(!newSiteTemplateId.equals(oldSiteTemplateId)) {
+				return "cannot-copy-template";
+			}
+		}
+		
 		// list all site tools which are displayed on its own page
 		@SuppressWarnings("unchecked")
 		List<SitePage> sitePages = oldSite.getPages();

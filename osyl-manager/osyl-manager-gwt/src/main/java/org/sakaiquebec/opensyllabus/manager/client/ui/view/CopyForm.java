@@ -98,13 +98,14 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 		}
 	    };
 
-    AsyncCallback<Void> copyToAsynCB = new AsyncCallback<Void>() {
+    AsyncCallback<String> copyToAsynCB = new AsyncCallback<String>() {
 
 	public void onFailure(Throwable caught) {
 	    String msg = messages.rpcFailure();
 	    if (caught instanceof OsylPermissionException) {
 		msg = messages.permission_exception();
 	    }
+	    
 	    diag.hide();
 	    OsylOkCancelDialog alert =
 		    new OsylOkCancelDialog(false, true, messages
@@ -113,9 +114,28 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	    alert.centerAndFocus();
 	}
 
-	public void onSuccess(Void result) {
-	    diag.hide();
-	    CopyForm.this.onCopyEnd();
+	public void onSuccess(String result) {
+		diag.hide();
+		
+		String msg = null;
+		
+		if(result != null) {
+			if(result.equals("cannot-copy-locale")) {
+				msg = "Les deux sites ne partagent pas la même langue, impossible de copier";
+			} else if (result.equals("cannot-copy-template")) {
+				msg = "Les deux sites ne partagent pas la même template, impossible de copier";
+			}
+		}
+		
+	    if(msg != null) {
+		    OsylOkCancelDialog alert =
+				    new OsylOkCancelDialog(false, true, messages
+					    .OsylWarning_Title(), msg, true, false);
+			    alert.show();
+			    alert.centerAndFocus();	
+	    } else {
+	    	CopyForm.this.onCopyEnd();
+	    }
 	}
 
     };

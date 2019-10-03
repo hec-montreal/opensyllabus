@@ -357,7 +357,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    resourceDao.getSerializedCourseOutlineBySiteId(siteId);
 	    return co;
 	} catch (Exception e) {
-	    log.error("Unable to retrieve course outline by siteId", e);
+	    // log.error("Unable to retrieve course outline by siteId", e);
 	}
 	return null;
     }

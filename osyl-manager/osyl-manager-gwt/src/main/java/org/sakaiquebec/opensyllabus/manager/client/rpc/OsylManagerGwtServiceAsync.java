@@ -98,7 +98,7 @@ public interface OsylManagerGwtServiceAsync {
 	    AsyncCallback<List<CMAcademicSession>> callback);
 
     public void copySite(String siteFrom, String siteTo,
-	    AsyncCallback<Void> callback);
+	    AsyncCallback<String> callback);
 
     public void unpublish(String siteId,
 	    AsyncCallback<Void> unpublishAsyncCallback);
