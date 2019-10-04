@@ -121,9 +121,9 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 		
 		if(result != null) {
 			if(result.equals("cannot-copy-locale")) {
-				msg = "Les deux sites ne partagent pas la même langue, impossible de copier";
+				msg = "Impossible de faire la copie car les plans de cours ne sont pas de la même langue.";
 			} else if (result.equals("cannot-copy-template")) {
-				msg = "Les deux sites ne partagent pas la même template, impossible de copier";
+				msg = "Impossible de faire la copie car les plans de cours utilisent des gabarits différents.";
 			}
 		}
 		
