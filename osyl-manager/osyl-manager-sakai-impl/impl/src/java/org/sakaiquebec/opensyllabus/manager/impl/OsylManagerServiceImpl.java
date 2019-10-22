@@ -2102,21 +2102,24 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	private void copySiteWithTenjin(List<String> toolIdList, Site oldSite, Site newSite) throws Exception {
 
+		String fromSiteId = oldSite.getId();
+		String toSiteId = newSite.getId();
+
+		if (toolIdList.contains(RESOURCES_TOOL_ID)) {
+			transferCopyEntitiesMigrate(RESOURCES_TOOL_ID, fromSiteId, toSiteId);
+		}
+
  		// import  tools
 		for (int i = 0; i < toolIdList.size(); i++) {
 			String toolId = (String) toolIdList.get(i);
 			if (!toolId.equalsIgnoreCase(VIA_TOOL_ID)
 					&& !toolId.equalsIgnoreCase(SCHEDULE_TOOL_ID)
 					&& !toolId.equalsIgnoreCase(CALENDAR_TOOL_ID)
-					&& !toolId.equalsIgnoreCase(OPENSYLLABUS_TOOL_ID)) {
-				String fromSiteId = oldSite.getId();
-				String toSiteId = newSite.getId();
+					&& !toolId.equalsIgnoreCase(OPENSYLLABUS_TOOL_ID)
+					// Resources are copied before the loop to avoid deleting Tenjin imported citations
+					&& !toolId.equalsIgnoreCase(RESOURCES_TOOL_ID)) {
 
-				if (toolId.equalsIgnoreCase(RESOURCES_TOOL_ID)) {
-					transferCopyEntitiesMigrate(toolId, "/group/"+fromSiteId+"/", "/group/"+toSiteId+"/");
-				} else {
-					transferCopyEntitiesMigrate(toolId, fromSiteId, toSiteId);
-				}
+				transferCopyEntitiesMigrate(toolId, fromSiteId, toSiteId);
 			}
 		}
 	}
