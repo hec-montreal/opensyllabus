@@ -1740,6 +1740,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public Date getCoLastModifiedDate(String siteId) {
 	try {
 	    return resourceDao.getModifiedDate(siteId);
+	} catch (IdUnusedException e) {
+		return null;
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return null;
@@ -1749,6 +1751,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public Date getCoLastPublicationDate(String siteId) {
 	try {
 	    return resourceDao.getPublicationDate(siteId);
+	} catch (IdUnusedException e) {
+		return null;
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return null;

@@ -445,7 +445,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    res = (Date) results.get(0);
 	    return res;
 	} else
-	    throw new Exception("No course outline with site id= " + siteId
+	    throw new IdUnusedException("No course outline with site id= " + siteId
 		    + " and published=false");
     }
 
@@ -469,7 +469,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    res = (Date) results.get(0);
 	    return res;
 	} else
-	    throw new Exception("No course outline with site id= " + siteId
+	    throw new IdUnusedException("No course outline with site id= " + siteId
 		    + " and published=false");
     }
 
