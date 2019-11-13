@@ -2106,7 +2106,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		String toSiteId = newSite.getId();
 
 		if (toolIdList.contains(RESOURCES_TOOL_ID)) {
-			transferCopyEntitiesMigrate(RESOURCES_TOOL_ID, fromSiteId, toSiteId);
+			transferCopyEntitiesMigrate(RESOURCES_TOOL_ID, "/group/"+fromSiteId+"/", "/group/"+toSiteId+"/");
 		}
 
  		// import  tools
