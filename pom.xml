@@ -5,13 +5,13 @@
   <parent>
     <groupId>org.sakaiproject</groupId>
     <artifactId>master</artifactId>
-    <version>19.3</version>
+    <version>19.4</version>
     <relativePath>../master/pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
   <artifactId>osyl</artifactId>
-  <version>19.3</version>
+  <version>19.4</version>
   <packaging>pom</packaging>
 
   <name>Sakai Quebec OpenSyllabus</name>
@@ -77,67 +77,67 @@
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-configs</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-common-shared</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-common-impl</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-common-api</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-editor-server-api</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-editor-sakai-impl</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-admin-server-api</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-admin-sakai-impl</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-manager-server-api</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-manager-sakai-impl</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.managergwt</groupId>
         <artifactId>osyl-manager-gwt</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.editorgwt</groupId>
         <artifactId>osyl-editor-gwt</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.admingwt</groupId>
         <artifactId>osyl-admin-gwt</artifactId>
-        <version>19.3</version>
+        <version>19.4</version>
       </dependency>
       <!--  sakai -->
       <dependency>
