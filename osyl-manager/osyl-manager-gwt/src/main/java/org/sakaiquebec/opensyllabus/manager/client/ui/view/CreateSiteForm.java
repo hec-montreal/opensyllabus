@@ -152,7 +152,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 
 		if (nameValid) {
 		    boolean create = true;
-		    if (name.contains("-") || name.contains(" ")) {
+		    if (name.contains("-") || name.contains(" ") || name.contains(".")) {
 			if (!controller.isSuperUser())
 			    create = false;
 		    }
